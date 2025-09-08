@@ -1,0 +1,52 @@
+/* src/main/webapp/assets/styles/header.css */
+.site-header {
+    flex: 1;
+    background: #800020; /* Burgundy */
+    color: #fff;
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 48px;
+    width: auto;
+}
+
+.logo a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.logo a span {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-left: 12px;
+    vertical-align: middle;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 24px;
+}
+
+.navbar li {
+    display: inline-block;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.navbar a:hover {
+    background: #a52a2a; /* Slightly lighter red for hover */
+}

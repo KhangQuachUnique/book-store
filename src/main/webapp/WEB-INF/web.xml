@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-  <display-name>Archetype Created Web Application</display-name>
+    <display-name>Archetype Created Web Application</display-name>
     <servlet>
         <servlet-name>Book</servlet-name>
         <servlet-class>controller.BookServlet</servlet-class>
@@ -23,6 +23,7 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>
+
 </web-app>
