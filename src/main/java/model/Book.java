@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class Book implements Serializable {
     private Integer id;
@@ -17,12 +18,12 @@ public class Book implements Serializable {
     private double price;
     private double originalPrice;
     private int discount_rate;
-    private String createdAt;
+    private Timestamp createdAt;
 
     public Book() {
     }
 
-    public Book(Integer id, String title, String author, double price, String publisher, int categoryId, int stock, double originalPrice, int discount_rate, String imageUrl, String description, Integer publishYear, Integer pages, double rating, String createdAt) {
+    public Book(Integer id, String title, String author, double price, String publisher, int categoryId, int stock, double originalPrice, int discount_rate, String imageUrl, String description, Integer publishYear, Integer pages, double rating, Timestamp createdAt) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -60,8 +61,8 @@ public class Book implements Serializable {
     public void setRating(double rating) { this.rating = rating; }
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
-    public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
     public int getCategoryId() { return categoryId; }
     public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
     public int getStock() { return stock; }

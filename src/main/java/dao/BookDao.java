@@ -61,7 +61,7 @@ public class BookDao {
             ps.setInt(11, book.getPages());
             ps.setDouble(12, book.getRating());
             ps.setDouble(13, book.getPrice());
-            ps.setString(14, book.getCreatedAt());
+            ps.setTimestamp(14, book.getCreatedAt());
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -88,7 +88,7 @@ public class BookDao {
         b.setOriginalPrice(rs.getDouble("original_price"));
         b.setDiscount_rate(rs.getInt("discount_rate"));
         b.setCategoryId(rs.getInt("category_id"));
-        b.setCreatedAt(rs.getString("created_at"));
+        b.setCreatedAt(rs.getTimestamp("created_at"));
         return b;
     }
 }
