@@ -4,7 +4,6 @@ import dao.BookDao;
 import model.Book;
 
 import javax.servlet.*;
-import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import java.io.IOException;

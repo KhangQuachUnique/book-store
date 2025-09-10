@@ -15,12 +15,13 @@
 
     <servlet>
         <servlet-name>User</servlet-name>
-        <servlet-class>controller.UserServlet</servlet-class>
+        <servlet-class>controller.UserController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>User</servlet-name>
         <url-pattern>/api/user</url-pattern>
     </servlet-mapping>
+
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
