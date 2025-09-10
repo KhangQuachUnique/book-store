@@ -18,6 +18,12 @@ public class DBConnection {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
+        try {
+            return DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            System.err.println("Connection failed: " + e.getMessage());
+            throw e;
+        }
     }
+
 }
