@@ -5,49 +5,49 @@ import java.io.Serializable;
 public class Book implements Serializable {
     private Integer id;
     private String title;
-    private String isbn;
     private String author;
     private String publisher;
-    private String genre;
+    private int categoryId;
     private String imageUrl;
     private String description;
+    private int stock;
     private Integer publishYear;
     private Integer pages;
     private double rating;
     private double price;
+    private double originalPrice;
+    private int discount_rate;
     private String createdAt;
 
     public Book() {
     }
 
-    public Book(Integer id, String title, String author, double price, String isbn, String publisher, String genre, String imageUrl, String description, Integer publishYear, Integer pages, double rating, String createdAt) {
+    public Book(Integer id, String title, String author, double price, String publisher, int categoryId, int stock, double originalPrice, int discount_rate, String imageUrl, String description, Integer publishYear, Integer pages, double rating, String createdAt) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.price = price;
-        this.isbn = isbn;
         this.publisher = publisher;
-        this.genre = genre;
         this.imageUrl = imageUrl;
         this.description = description;
         this.publishYear = publishYear;
         this.pages = pages;
         this.rating = rating;
         this.createdAt = createdAt;
+        this.categoryId = categoryId;
+        this.stock = stock;
+        this.originalPrice = originalPrice;
+        this.discount_rate = discount_rate;
     }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
-    public String getIsbn() { return isbn; }
-    public void setIsbn(String isbn) { this.isbn = isbn; }
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
     public String getPublisher() { return publisher; }
     public void setPublisher(String publisher) { this.publisher = publisher; }
-    public String getGenre() { return genre; }
-    public void setGenre(String genre) { this.genre = genre; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getDescription() { return description; }
@@ -62,9 +62,13 @@ public class Book implements Serializable {
     public void setPrice(double price) { this.price = price; }
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public int getCategoryId() { return categoryId; }
+    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+    public double getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(double originalPrice) { this.originalPrice = originalPrice; }
+    public int getDiscount_rate() { return discount_rate; }
+    public void setDiscount_rate(int discount_rate) { this.discount_rate = discount_rate; }
 
-    @Override
-    public String toString() {
-        return "{ \"id\": " + id + ", \"title\": \"" + title + "\", \"author\": \"" + author + "\" , \"price\": " + price + ", \"isbn\": \"" + isbn + "\", \"publisher\": \"" + publisher + "\", \"genre\": \"" + genre + "\", \"imageUrl\": \"" + imageUrl + "\", \"description\": \"" + description + "\", \"publishYear\": " + publishYear + ", \"pages\": " + pages + ", \"rating\": " + rating + ", \"createdAt\": \"" + createdAt + "\" }";
-    }
 }

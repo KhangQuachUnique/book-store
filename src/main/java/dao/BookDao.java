@@ -26,7 +26,7 @@ public class BookDao {
         return list;
     }
 
-    public Book getBookById(int id) {
+    public static Book getBookById(int id) {
         String sql = "SELECT * FROM books WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -44,20 +44,50 @@ public class BookDao {
         return null;
     }
 
+    public static boolean addBook(Book book) {
+        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, image_url, description, publish_year, pages, rating, price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getAuthor());
+            ps.setString(3, book.getPublisher());
+            ps.setInt(4, book.getCategoryId());
+            ps.setInt(5, book.getStock());
+            ps.setDouble(6, book.getOriginalPrice());
+            ps.setInt(7, book.getDiscount_rate());
+            ps.setString(8, book.getImageUrl());
+            ps.setString(9, book.getDescription());
+            ps.setInt(10, book.getPublishYear());
+            ps.setInt(11, book.getPages());
+            ps.setDouble(12, book.getRating());
+            ps.setDouble(13, book.getPrice());
+            ps.setString(14, book.getCreatedAt());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
     private static Book mapResultSetToBook(ResultSet rs) throws SQLException {
         Book b = new Book();
         b.setId(rs.getInt("id"));
         b.setTitle(rs.getString("title"));
-        b.setIsbn(rs.getString("isbn"));
+        b.setStock(rs.getInt("stock"));
         b.setAuthor(rs.getString("author"));
         b.setPublisher(rs.getString("publisher"));
-        b.setGenre(rs.getString("genre"));
         b.setImageUrl(rs.getString("image_url"));
         b.setDescription(rs.getString("description"));
         b.setPublishYear(rs.getInt("publish_year"));
         b.setPages(rs.getInt("pages"));
         b.setRating(rs.getDouble("rating"));
         b.setPrice(rs.getDouble("price"));
+        b.setOriginalPrice(rs.getDouble("original_price"));
+        b.setDiscount_rate(rs.getInt("discount_rate"));
+        b.setCategoryId(rs.getInt("category_id"));
         b.setCreatedAt(rs.getString("created_at"));
         return b;
     }

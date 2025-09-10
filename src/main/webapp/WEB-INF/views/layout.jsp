@@ -28,7 +28,7 @@
 
     <!-- Main -->
     <main>
-        <jsp:include page="/WEB-INF/views/home.jsp"/>
+        <jsp:include page=""/>
     </main>
 
     <!-- Footer -->
