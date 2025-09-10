@@ -1,7 +1,9 @@
 package controller;
 
+import com.google.gson.Gson;
 import dao.BookDao;
 import model.Book;
+import service.BookService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -14,22 +16,15 @@ public class BookServlet extends HttpServlet {
     private final BookDao dao = new BookDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // port React
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-        List<Book> books = dao.getAllBooks();
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        List<Book> books = BookService.getAllBooks();
         req.setAttribute("books", books);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        if (books.isEmpty()) {
-            resp.getWriter().println("[]");
-        } else {
-            String json = books.get(0).toString();
-            resp.getWriter().write(json);
-        }
+        Gson gson = new Gson();
+        String json = gson.toJson(books); // convert cả list -> JSON
+        resp.getWriter().write(json);
     }
 
     @Override
