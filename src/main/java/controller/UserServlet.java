@@ -1,7 +1,6 @@
 package controller;
 
 import javax.servlet.*;
-import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import java.io.IOException;

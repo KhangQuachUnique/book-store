@@ -39,6 +39,6 @@
     </footer>
 </div>
 <!-- JavaScript -->
-<script src="../../assets/js/app.js"></script>
+<script src="<%= request.getContextPath() %>/assets/js/app.js"></script>
 </body>
 </html>
