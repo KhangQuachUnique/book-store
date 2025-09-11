@@ -1,7 +1,7 @@
 /* src/main/webapp/assets/styles/sidebar.css */
 .sidebar {
     flex: 0 0 250px;
-    background: #f8f0f3; /* Light blush to complement burgundy */
+    background: var(--secondary-color); /* Light blush to complement burgundy */
     min-height: 100vh;
     border-right: 1px solid #e0d0d6;
     box-shadow: 2px 0 8px rgba(128, 0, 32, 0.04);
@@ -17,7 +17,7 @@
 }
 
 .sidebar-nav a {
-    color: #800020; /* Burgundy */
+    color: var(--text-secondary); /* Burgundy */
     text-decoration: none;
     font-weight: 500;
     font-size: 1.08rem;
@@ -29,6 +29,6 @@
 
 .sidebar-nav a:hover,
 .sidebar-nav a:focus {
-    background: #e8d6df; /* Soft highlight */
-    color: #a52a2a; /* Lighter burgundy */
+    background: var(--secondary-color-hover); /* Soft highlight */
+    color: var(--text-secondary); /* Lighter burgundy */
 }

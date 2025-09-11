@@ -1,0 +1,16 @@
+/* global.css */
+:root {
+    /* Màu sắc chủ đạo */
+    --primary-color: #800020;
+    --primary-color-hover: #b33939; /* Màu đỏ nhạt hơn cho hiệu ứng hover */
+
+    --secondary-color: #f8f0f3;
+    --secondary-color-hover: #e0d0d6; /* Màu hồng nhạt hơn cho hiệu ứng hover */
+
+    --accent-color: #a52a2a;  /* Màu đỏ nhạt hơn cho điểm nhấn */
+
+    /* Màu sắc văn bản */
+    --text-primary: #ffffff;
+    --text-secondary: #800020;
+    --text-display: #2c2c2c;
+}

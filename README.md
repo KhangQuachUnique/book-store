@@ -46,39 +46,35 @@ src/
 
 ---
 
-## 5. Giải thích chi tiết các folder chính
+## 5. Các thành phần chính
 
-### 5.1. constant/
+### 5.1. Controller
 
-Chứa các file định nghĩa hằng số, chủ yếu là các đường dẫn API, đường dẫn view JSP, giúp quản lý và sử dụng nhất quán trong toàn project.
+- `BookServlet`: Xử lý API `/api/book` (GET trả về danh sách sách dạng JSON).
+- `UserServlet`: Chuẩn bị cho API `/api/user` (chưa triển khai logic).
 
-### 5.2. controller/
+### 5.2. DAO
 
-Chứa các Servlet, là nơi tiếp nhận và xử lý các HTTP request từ client (trình duyệt hoặc API). Mỗi Servlet sẽ đảm nhận một chức năng như quản lý sách, người dùng...
+- `BookDao`: Truy vấn danh sách sách từ DB.
+- `UserDao`: Chưa triển khai.
 
-### 5.3. dao/
+### 5.3. Model
 
-Chứa các lớp truy xuất dữ liệu (Data Access Object), thực hiện các thao tác với database như lấy danh sách, thêm, sửa, xóa dữ liệu.
+- `Book`: Định nghĩa đối tượng sách.
+- `User`: Chưa triển khai thuộc tính.
 
-### 5.4. model/
+### 5.4. Service
 
-Chứa các lớp mô hình dữ liệu (entity), đại diện cho các đối tượng trong hệ thống như Book, User. Các class này thường chứa thuộc tính và phương thức liên quan đến dữ liệu.
+- `BookService`, `UserService`: Chưa có logic, để mở rộng nghiệp vụ.
 
-### 5.5. service/
+### 5.5. Util
 
-Chứa các lớp xử lý nghiệp vụ, logic phức tạp, tách biệt khỏi controller và dao. Hiện tại chưa triển khai, nhưng sẽ dùng để xử lý các quy trình nghiệp vụ như xác thực, tính toán...
+- `DBConnection`: Quản lý kết nối DB.
+- `JwtUtil`: Để mở rộng xác thực JWT (chưa triển khai).
 
-### 5.6. util/
+### 5.6. Constant
 
-Chứa các lớp tiện ích dùng chung cho toàn project, ví dụ như quản lý kết nối database (`DBConnection`), xử lý JWT (`JwtUtil`).
-
-### 5.7. webapp/assets/
-
-Chứa các tài nguyên tĩnh như hình ảnh, file JavaScript, CSS phục vụ cho giao diện web.
-
-### 5.8. webapp/WEB-INF/
-
-Chứa các file cấu hình (web.xml) và các view JSP (giao diện động). Thư mục này không public trực tiếp ra ngoài, chỉ server mới truy cập được.
+- `PathConstants`: Định nghĩa các đường dẫn API và view.
 
 ---
 
@@ -118,12 +114,5 @@ Chứa các file cấu hình (web.xml) và các view JSP (giao diện động). 
 
 - Không sử dụng mạng trường khi deploy (theo README).
 - Thông tin DB hiện tại là demo, cần bảo mật khi deploy thực tế.
-
----
-
-## 10. Liên hệ & Đóng góp
-
-- Chủ sở hữu: KhangQuachUnique
-- Đóng góp: Tạo pull request hoặc liên hệ qua Github.
 
 ---
