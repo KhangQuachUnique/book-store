@@ -1,7 +1,7 @@
 /* Footer styles for sticky bottom */
 footer {
-    background: #800020; /* Burgundy */
-    color: #fff;
+    background: var(--primary-color); /* Burgundy */
+    color: var(--text-primary);
     text-align: center;
     padding: 16px 0;
     font-size: 1rem;
