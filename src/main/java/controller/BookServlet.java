@@ -10,20 +10,25 @@ import java.io.IOException;
 import java.util.List;
 
 public class BookServlet extends HttpServlet {
-    private BookDao dao = new BookDao();
+    private final BookDao dao = new BookDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // port React
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
         List<Book> books = dao.getAllBooks();
         req.setAttribute("books", books);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // Sample JSON response
-        String json = books.get(0).toString();
-
-        resp.getWriter().write(json);
+        if (books.isEmpty()) {
+            resp.getWriter().println("[]");
+        } else {
+            String json = books.get(0).toString();
+            resp.getWriter().write(json);
+        }
     }
 
     @Override
