@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     hamburgerMenu.addEventListener('click', toggleSidebar);
 
     // Check localStorage on page load to restore sidebar state
-    const isSidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    const isSidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'false';
     if (isSidebarCollapsed) {
         sidebar.classList.add('collapsed');
         mainContent.classList.add('expanded');

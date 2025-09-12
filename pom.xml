@@ -26,11 +26,6 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
-        </dependency>
 
         <!-- Java Servlet API -->
         <dependency>
@@ -44,8 +39,9 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>
+            <version>42.6.1</version> <!-- hoặc 42.7.2 -->
         </dependency>
+
 
         <!-- Gson cho JSON -->
         <dependency>
@@ -72,9 +68,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.32</version> <!-- hoặc mới hơn -->
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>
