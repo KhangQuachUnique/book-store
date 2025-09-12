@@ -22,6 +22,15 @@
         <url-pattern>/api/user</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>WishList</servlet-name>
+        <servlet-class>controller.WishListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WishList</servlet-name>
+        <url-pattern>/wishlist</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>

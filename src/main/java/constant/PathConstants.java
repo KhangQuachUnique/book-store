@@ -11,4 +11,5 @@ public class PathConstants {
     public static final String VIEW_HEADER = "/WEB-INF/views/fragment/header.jsp";
     public static final String VIEW_FOOTER = "/WEB-INF/views/fragment/footer.jsp";
     public static final String VIEW_SIDEBAR = "/WEB-INF/views/fragment/sidebar.jsp";
+    public static final String VIEW_WISHLIST = "/WEB-INF/views/wishList/wishList.jsp";
 }

@@ -1,12 +1,89 @@
 /* src/main/webapp/assets/styles/sidebar.css */
 .sidebar {
     flex: 0 0 250px;
-    background: var(--secondary-color); /* Light blush to complement burgundy */
+    width: 250px;
+    background: var(--accent-color);
     min-height: 100vh;
     border-right: 1px solid #e0d0d6;
     box-shadow: 2px 0 8px rgba(128, 0, 32, 0.04);
-    padding: 20px;
+    padding: 0 20px;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100%;
 }
+
+.sidebar.collapsed {
+    transform: translateX(-250px);
+}
+
+.main-content {
+    transition: all 0.3s ease;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+.main-content.expanded {
+    margin-left: 0;
+    width: 100%;
+}
+
+/* Rest of your sidebar CSS */
+
+.sidebar-logo {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-logo a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.sidebar-logo a span {
+    font-size: 1.3rem;
+    font-weight: 900;
+    vertical-align: middle;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.sidebar-toggle:hover {
+    background: #f8f0f3;
+}
+
+#close-sidebar-button {
+    width: 24px;
+    height: 24px;
+    fill: var(--text-primary);
+    transition: fill 0.1s;
+}
+
+.sidebar-toggle:hover #close-sidebar-button {
+    fill: #800020;
+}
+
+/*.sidebar-logo #close-sidebar-button {*/
+/*    width: 32px;*/
+/*    height: 32px;*/
+/*}*/
 
 .sidebar-nav ul {
     list-style: none;
@@ -17,7 +94,7 @@
 }
 
 .sidebar-nav a {
-    color: var(--text-secondary); /* Burgundy */
+    color: var(--text-primary); /* Burgundy */
     text-decoration: none;
     font-weight: 500;
     font-size: 1.08rem;
@@ -32,3 +109,4 @@
     background: var(--secondary-color-hover); /* Soft highlight */
     color: var(--text-secondary); /* Lighter burgundy */
 }
+
