@@ -31,7 +31,7 @@ public class WhiteListDao {
                 book.setStock(rs.getInt("stock"));
                 book.setOriginalPrice(rs.getDouble("original_price"));
                 book.setDiscount_rate(rs.getInt("discount_rate"));
-                book.setImageUrl(rs.getString("image_url"));
+                book.setthumbnailUrl(rs.getString("image_url"));
                 book.setDescription(rs.getString("description"));
                 book.setPublishYear(rs.getInt("publish_year"));
                 book.setPages(rs.getInt("pages"));

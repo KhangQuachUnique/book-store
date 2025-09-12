@@ -34,11 +34,10 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 My Web App</p>
-    </footer>
+    <%@ include file="fragments/footer.jsp" %>
 </div>
 <!-- JavaScript -->
-<script src="../../assets/js/app.js"></script>
+<!-- Add this line before the closing </body> tag in layout.jsp -->
+<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js"></script>
 </body>
 </html>

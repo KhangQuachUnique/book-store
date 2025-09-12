@@ -22,6 +22,15 @@
         <url-pattern>/api/user</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>WhiteList</servlet-name>
+        <servlet-class>controller.WhiteListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WhiteList</servlet-name>
+        <url-pattern>/whitelist</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>

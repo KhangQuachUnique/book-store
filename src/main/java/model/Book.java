@@ -9,7 +9,7 @@ public class Book implements Serializable {
     private String author;
     private String publisher;
     private int categoryId;
-    private String imageUrl;
+    private String thumbnailUrl;
     private String description;
     private int stock;
     private Integer publishYear;
@@ -29,7 +29,7 @@ public class Book implements Serializable {
         this.author = author;
         this.price = price;
         this.publisher = publisher;
-        this.imageUrl = imageUrl;
+        this.thumbnailUrl = thumbnailUrl;
         this.description = description;
         this.publishYear = publishYear;
         this.pages = pages;
@@ -49,8 +49,8 @@ public class Book implements Serializable {
     public void setAuthor(String author) { this.author = author; }
     public String getPublisher() { return publisher; }
     public void setPublisher(String publisher) { this.publisher = publisher; }
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getthumbnailUrl() { return thumbnailUrl; }
+    public void setthumbnailUrl(String thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public Integer getPublishYear() { return publishYear; }
