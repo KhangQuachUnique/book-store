@@ -36,7 +36,7 @@
                 <form action="/api/user" method="post" style="display:inline;">
                     <input type="hidden" name="action" value="block">
                     <input type="hidden" name="id" value="${user.id}">
-                    <input type="submit" value="Block">
+                    <input type="submit" value="${user.isBlocked ? 'Unblock' : 'Block'}">
                 </form>
             </td>
         </tr>

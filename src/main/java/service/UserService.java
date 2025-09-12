@@ -24,6 +24,9 @@ public class UserService {
     public void blockUser(long id) throws SQLException {
         userDAO.blockUser(id);
     }
+    public void unblockUser(long id) throws SQLException {
+        userDAO.unblockUser(id);
+    }
 
     public void updateUser(User user) throws SQLException {
         userDAO.updateUser(user);

@@ -55,6 +55,14 @@ public class UserDAO {
             pstmt.executeUpdate();
         }
     }
+    public void unblockUser(long id) throws SQLException {
+        String query = "UPDATE users SET is_blocked = false, blocked_until = null, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, id);
+            pstmt.executeUpdate();
+        }
+    }
 
     public void updateUser(User user) throws SQLException {
         String query = "UPDATE users SET name = ?, email = ?, phone = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";

@@ -57,6 +57,9 @@ public class UserServlet extends HttpServlet {
                 case "block":
                     blockUser(request, response);
                     break;
+                case "unblock":
+                    unblockUser(request, response);
+                    break;
                 case "create":
                     createAdmin(request, response);
                     break;
@@ -72,6 +75,7 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/users.jsp");
         dispatcher.forward(request, response);
     }
+
 
     private void viewUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         long id = Long.parseLong(request.getParameter("id"));
@@ -119,6 +123,11 @@ public class UserServlet extends HttpServlet {
     private void blockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = Long.parseLong(request.getParameter("id"));
         userService.blockUser(id);
+        response.sendRedirect("/api/user?action=list");
+    }
+    private void unblockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        long id = Long.parseLong(request.getParameter("id"));
+        userService.unblockUser(id);
         response.sendRedirect("/api/user?action=list");
     }
 

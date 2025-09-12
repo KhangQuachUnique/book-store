@@ -13,10 +13,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Web App</title>
     <!-- CSS -->
-    <link rel="stylesheet" href="../../assets/styles/index.css">
-    <link rel="stylesheet" href="../../assets/styles/header.css">
-    <link rel="stylesheet" href="../../assets/styles/sidebar.css">
-    <link rel="stylesheet" href="../../assets/styles/footer.css">
+    <link rel="stylesheet" href="assets/styles/index.css">
+    <link rel="stylesheet" href="assets/styles/header.css">
+    <link rel="stylesheet" href="assets/styles/sidebar.css">
+    <link rel="stylesheet" href="assets/styles/footer.css">
 </head>
 <body>
 <!-- Sidebar -->
