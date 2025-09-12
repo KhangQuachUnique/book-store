@@ -3,15 +3,15 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 
-public class WhiteListItem implements Serializable {
+public class WishListItem implements Serializable {
     private int userId;
     private Book book;
     private String addedAt;
 
-    public WhiteListItem() {
+    public WishListItem() {
     }
 
-    public WhiteListItem(int userId, Book book, String addedAt) {
+    public WishListItem(int userId, Book book, String addedAt) {
         this.userId = userId;
         this.book = book;
         this.addedAt = addedAt;

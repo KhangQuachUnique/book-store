@@ -9,11 +9,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhiteListDao {
-    public static List<Book> getWhiteListBooks(int userId) {
+public class WishListDao {
+    public static List<Book> getWishListBooks(int userId) {
         // This is a stub implementation. Replace with actual database access code.
-        // For example, you might query a database to get the whitelist books for the given userId.
-        String sql = " SELECT b.* FROM whitelist w JOIN books b ON w.book_id = b.id WHERE w.user_id = ? ";
+        // For example, you might query a database to get the wishlist books for the given userId.
+        String sql = " SELECT b.* FROM wishlist w JOIN books b ON w.book_id = b.id WHERE w.user_id = ? ";
 
         List<Book> books = new ArrayList<>();
 

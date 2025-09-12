@@ -9,7 +9,7 @@
 <body>
 
 <section class="white-list">
-    <h1>White List</h1>
+    <h1>Wish List</h1>
 
     <div class="white-list-item-display">
         <div class="white-list-item">
@@ -33,7 +33,6 @@
             </div>
         </div>
     </div>
-    <p>${books}</p>
 </section>
 <script>
     // src/main/webapp/WEB-INF/views/whiteList/whiteList.jsp
