@@ -13,6 +13,22 @@ public class UserService {
         return userDAO.getAllUsers();
     }
 
+    public List<User> getAdmins() throws SQLException {
+        return userDAO.getAdmins();
+    }
+
+    public List<User> getCustomers() throws SQLException {
+        return userDAO.getCustomers();
+    }
+
+    public List<User> getBlockedUsers() throws SQLException {
+        return userDAO.getBlockedUsers();
+    }
+
+    public List<User> searchUsers(String query) throws SQLException {
+        return userDAO.searchUsers(query);
+    }
+
     public User getUserById(long id) throws SQLException {
         return userDAO.getUserById(id);
     }
@@ -24,6 +40,7 @@ public class UserService {
     public void blockUser(long id) throws SQLException {
         userDAO.blockUser(id);
     }
+
     public void unblockUser(long id) throws SQLException {
         userDAO.unblockUser(id);
     }
@@ -34,5 +51,9 @@ public class UserService {
 
     public void createAdmin(User user) throws SQLException {
         userDAO.createAdmin(user);
+    }
+
+    public void createUser(User user) throws SQLException {
+        userDAO.createUser(user);
     }
 }

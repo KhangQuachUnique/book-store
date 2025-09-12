@@ -10,14 +10,46 @@ import java.util.List;
 public class UserDAO {
 
     public List<User> getAllUsers() throws SQLException {
+        return getUsersByQuery("SELECT * FROM users");
+    }
+
+    public List<User> getAdmins() throws SQLException {
+        return getUsersByQuery("SELECT * FROM users WHERE role = 'admin'");
+    }
+
+    public List<User> getCustomers() throws SQLException {
+        return getUsersByQuery("SELECT * FROM users WHERE role = 'customer'");
+    }
+
+    public List<User> getBlockedUsers() throws SQLException {
+        return getUsersByQuery("SELECT * FROM users WHERE is_blocked = true");
+    }
+
+    public List<User> searchUsers(String query) throws SQLException {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users";
+        String sql = "SELECT * FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            String searchTerm = "%" + query + "%";
+            pstmt.setString(1, searchTerm);
+            pstmt.setString(2, searchTerm);
+            pstmt.setString(3, searchTerm);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(extractUserFromResultSet(rs));
+                }
+            }
+        }
+        return users;
+    }
+
+    private List<User> getUsersByQuery(String query) throws SQLException {
+        List<User> users = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
-                User user = extractUserFromResultSet(rs);
-                users.add(user);
+                users.add(extractUserFromResultSet(rs));
             }
         }
         return users;
@@ -55,6 +87,7 @@ public class UserDAO {
             pstmt.executeUpdate();
         }
     }
+
     public void unblockUser(long id) throws SQLException {
         String query = "UPDATE users SET is_blocked = false, blocked_until = null, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -78,13 +111,22 @@ public class UserDAO {
     }
 
     public void createAdmin(User user) throws SQLException {
-        String query = "INSERT INTO users (name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, 'admin')";
+        createUserWithRole(user, "admin");
+    }
+
+    public void createUser(User user) throws SQLException {
+        createUserWithRole(user, "customer");
+    }
+
+    private void createUserWithRole(User user, String role) throws SQLException {
+        String query = "INSERT INTO users (name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPasswordHash());
             pstmt.setString(4, user.getPhone());
+            pstmt.setString(5, role);
             pstmt.executeUpdate();
         }
     }

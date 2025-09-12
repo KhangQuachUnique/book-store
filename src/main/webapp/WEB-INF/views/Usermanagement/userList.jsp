@@ -2,11 +2,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>User Management</title>
+    <title>User Management - ${listType}</title>
 </head>
 <body>
-<h1>Users</h1>
-<a href="/api/user?action=new">Create Admin</a>
+<h1>${listType}</h1>
+<a href="/api/user?action=list">All Users</a> |
+<a href="/api/user?action=listAdmins">Admins</a> |
+<a href="/api/user?action=listUsers">Customers</a> |
+<a href="/api/user?action=listBlocked">Blocked Users</a><br><br>
+
+<a href="/api/user?action=newAdmin">Create Admin</a> |
+<a href="/api/user?action=newUser">Create User</a><br><br>
+
+<form action="/api/user?action=search" method="get">
+    <input type="hidden" name="action" value="search">
+    <label>Search by Name, Email, or Phone:</label>
+    <input type="text" name="query">
+    <input type="submit" value="Search">
+</form>
+
 <table border="1">
     <tr>
         <th>ID</th>
@@ -34,7 +48,7 @@
                     <input type="submit" value="Delete">
                 </form>
                 <form action="/api/user" method="post" style="display:inline;">
-                    <input type="hidden" name="action" value="block">
+                    <input type="hidden" name="action" value="${user.isBlocked ? 'unblock' : 'block'}">
                     <input type="hidden" name="id" value="${user.id}">
                     <input type="submit" value="${user.isBlocked ? 'Unblock' : 'Block'}">
                 </form>
