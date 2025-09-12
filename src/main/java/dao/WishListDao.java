@@ -13,7 +13,7 @@ public class WishListDao {
     public static List<Book> getWishListBooks(int userId) {
         // This is a stub implementation. Replace with actual database access code.
         // For example, you might query a database to get the wishlist books for the given userId.
-        String sql = " SELECT b.* FROM wishlist w JOIN books b ON w.book_id = b.id WHERE w.user_id = ? ";
+        String sql = " SELECT b.* FROM wishlists w JOIN books b ON w.book_id = b.id WHERE w.user_id = ? ";
 
         List<Book> books = new ArrayList<>();
 
@@ -26,17 +26,17 @@ public class WishListDao {
                 book.setId(rs.getInt("id"));
                 book.setTitle(rs.getString("title"));
                 book.setAuthor(rs.getString("author"));
+                book.setPrice(rs.getDouble("price"));
                 book.setPublisher(rs.getString("publisher"));
                 book.setCategoryId(rs.getInt("category_id"));
                 book.setStock(rs.getInt("stock"));
                 book.setOriginalPrice(rs.getDouble("original_price"));
                 book.setDiscount_rate(rs.getInt("discount_rate"));
-                book.setthumbnailUrl(rs.getString("image_url"));
+                book.setthumbnailUrl(rs.getString("thumbnail_url"));
                 book.setDescription(rs.getString("description"));
                 book.setPublishYear(rs.getInt("publish_year"));
                 book.setPages(rs.getInt("pages"));
-                book.setRating(rs.getDouble("rating"));
-                book.setPrice(rs.getDouble("price"));
+                book.setRating(rs.getDouble("rating_average"));
                 book.setCreatedAt(rs.getTimestamp("created_at"));
 
                 books.add(book);
