@@ -46,6 +46,7 @@ src/
 
 ---
 
+
 ## 5. Giải thích chi tiết các folder chính
 
 ### 5.1. constant/
@@ -79,6 +80,7 @@ Chứa các tài nguyên tĩnh như hình ảnh, file JavaScript, CSS phục v�
 ### 5.8. webapp/WEB-INF/
 
 Chứa các file cấu hình (web.xml) và các view JSP (giao diện động). Thư mục này không public trực tiếp ra ngoài, chỉ server mới truy cập được.
+
 
 ---
 
@@ -125,5 +127,6 @@ Chứa các file cấu hình (web.xml) và các view JSP (giao diện động). 
 
 - Chủ sở hữu: KhangQuachUnique
 - Đóng góp: Tạo pull request hoặc liên hệ qua Github.
+
 
 ---
