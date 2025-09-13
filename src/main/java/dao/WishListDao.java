@@ -46,4 +46,32 @@ public class WishListDao {
         }
         return books;
     }
+
+    public static boolean addBookToWishList(int userId, int bookId) {
+        String sql = " INSERT INTO wishlists (user_id, book_id, added_at) VALUES (?, ?, NOW()) ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, bookId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean deleteBookFromWishList(int userId, int bookId) {
+        String sql = " DELETE FROM wishlists WHERE user_id = ? AND book_id = ? ";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, bookId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

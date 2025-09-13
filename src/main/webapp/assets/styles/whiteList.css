@@ -85,7 +85,7 @@ h1 {
     min-width: 140px;
 }
 
-.actions #heart {
+.actions .heart-icon {
     width: 32px;
     height: 32px;
     cursor: pointer;
@@ -96,19 +96,19 @@ h1 {
     transition: transform 0.2s;
 }
 
-.actions #heart:hover {
+.actions .heart-icon:hover {
     transform: scale(1.2);
 }
 
-.actions #heart path {
+.actions .heart-icon path {
     transition: fill 0.2s, stroke 0.2s;
-    fill: none;
+    fill: #fff;
     stroke: #919191;
-    stroke-width: 40px;
+    stroke-width: 2px;
 }
 
-.actions #heart.selected path {
-    fill: var(--primary-color);
+.actions .heart-icon.selected path {
+    fill: var(--primary-color); /* bright red for wishlist */
     stroke: var(--primary-color);
 }
 
