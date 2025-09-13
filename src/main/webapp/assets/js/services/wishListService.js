@@ -4,10 +4,14 @@ export const wishListApi = {
     getWishList: async () => {
         return await fetchUtil('/wishlist', 'GET');
     },
-    addToWishList: async (item) => {
-        return await fetchUtil('/wishlist', 'POST', item);
+    addToWishList: async (body) => {
+        const response = await fetchUtil('/wishlist', 'POST', { bookId: body.itemId });
+        console.log("Add to wishlist response:", response);
+        return response;
     },
-    removeFromWishList: async (itemId) => {
-        return await fetchUtil(`/wishlist`, 'DELETE');
+    removeFromWishList: async (body) => {
+        const response = await fetchUtil('/wishlist', 'DELETE', { bookId: body.itemId });
+        console.log("Remove from wishlist response:", response);
+        return response;
     }
 }

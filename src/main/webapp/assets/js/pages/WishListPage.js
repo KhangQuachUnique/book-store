@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const bookId = svg.getAttribute('data-book-id');
             if (svg.classList.contains('selected')) {
                 // Add to wishlist (do not remove DOM)
-                await wishListApi.addToWishList({ id: bookId });
+                await wishListApi.addToWishList({ itemId: bookId });
             } else {
                 // Remove from wishlist (do not remove DOM)
-                await wishListApi.removeFromWishList(bookId);
+                await wishListApi.removeFromWishList({ itemId: bookId });
             }
         });
     });
