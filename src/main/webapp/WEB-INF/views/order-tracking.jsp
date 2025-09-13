@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
 <head>
@@ -28,23 +29,32 @@
       </div>
 
       <p><strong>Ngày đặt:</strong> ${order.createdAt}</p>
-      <p class="total"><strong>Tổng tiền:</strong> ${order.totalAmount} VND</p>
       <p><strong>Thanh toán:</strong> ${order.paymentMethod}</p>
 
       <!-- Danh sách sản phẩm -->
       <div class="order-items">
         <h4>Sản phẩm:</h4>
         <ul>
+          <c:set var="orderTotal" value="0"/>
           <c:forEach var="item" items="${order.items}">
             <li>
               <img src="${item.thumbnailUrl}" alt="${item.bookTitle}" class="book-thumbnail"/>
               <div class="book-info">
                 <p class="book"><strong>Tựa sách:</strong> ${item.bookTitle}</p>
+                <p class="price">
+                  <strong>Giá:</strong> <fmt:formatNumber value="${item.price}" type="number"/> VND
+                </p>
                 <p class="qty"><strong>Số lượng:</strong> ${item.quantity}</p>
+<%--                <p class="price">--%>
+<%--                  <strong>Thành tiền:</strong> <fmt:formatNumber value="${item.price * item.quantity}" type="number"/> VND--%>
+<%--                </p>--%>
               </div>
             </li>
+            <!-- Cộng dồn tổng tiền đơn hàng -->
+            <c:set var="orderTotal" value="${orderTotal + (item.price * item.quantity)}"/>
           </c:forEach>
         </ul>
+        <p class="total"><strong>Thành tiền:</strong> <fmt:formatNumber value="${orderTotal}" type="number"/> VND</p>
       </div>
 
     </div> <!-- đóng order-card -->
