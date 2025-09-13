@@ -26,7 +26,9 @@
                 </div>
                 <div class="description">${book.description}</div>
                 <div class="actions">
-                    <svg id="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M305 151.1L320 171.8L335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1L576 231.7C576 343.9 436.1 474.2 363.1 529.9C350.7 539.3 335.5 544 320 544C304.5 544 289.2 539.4 276.9 529.9C203.9 474.2 64 343.9 64 231.7L64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1z"/></svg>
+                    <svg class="heart-icon selected" data-book-id="${book.id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
                     <button class="add-to-cart-button">Add to cart</button>
                     <button class="buy-button">Buy now</button>
                 </div>
@@ -34,12 +36,6 @@
         </div>
     </c:forEach>
 </section>
-<script>
-    // src/main/webapp/WEB-INF/views/whiteList/whiteList.jsp
-    const heartIcon = document.getElementById('heart');
-    heartIcon.addEventListener('click', () => {
-        heartIcon.classList.toggle('selected');
-    });
-</script>
+<script type="module" src="${pageContext.request.contextPath}/assets/js/pages/WishListPage.js"></script>
 </body>
 </html>
