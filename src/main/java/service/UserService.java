@@ -1,13 +1,13 @@
 package service;
 
-import dao.UserDAO;
+import dao.UserDao;
 import model.User;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class UserService {
-    private UserDAO userDAO = new UserDAO();
+    private UserDao userDAO = new UserDao();
 
     public List<User> getAllUsers() throws SQLException {
         return userDAO.getAllUsers();

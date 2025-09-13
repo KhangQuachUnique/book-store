@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO {
+public class UserDao {
 
     public List<User> getAllUsers() throws SQLException {
         return getUsersByQuery("SELECT * FROM users");
