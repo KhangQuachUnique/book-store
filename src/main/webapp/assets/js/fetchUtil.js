@@ -11,14 +11,17 @@ export async function fetchUtil(url, method = 'GET', body = null, headers = {}) 
     }
 
     try {
+        console.log("Request body:", body);
         const response = await fetch(url, options);
         if (!response.ok) {
             return {
                 success: false,
                 status: response.status,
-                message: await response.text(),
+                message: response,
             };
         }
+
+        console.log(response)
 
         return {
             success: true,

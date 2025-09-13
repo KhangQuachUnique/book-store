@@ -48,7 +48,7 @@ public class WishListDao {
     }
 
     public static boolean addBookToWishList(int userId, int bookId) {
-        String sql = " INSERT INTO wishlists (user_id, book_id, added_at) VALUES (?, ?, NOW()) ";
+        String sql = " INSERT INTO wishlists (user_id, book_id) VALUES (?, ?) ";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
