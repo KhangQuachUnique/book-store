@@ -19,7 +19,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>User</servlet-name>
-        <url-pattern>/api/user</url-pattern>
+        <url-pattern>/admin/user</url-pattern>
     </servlet-mapping>
     	<servlet>
 		<servlet-name>RegisterServlet</servlet-name>
