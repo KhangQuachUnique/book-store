@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressDAO {
+public class AddressDao {
 
     public List<Address> getAddressesByUserId(long userId) throws SQLException {
         List<Address> addresses = new ArrayList<>();

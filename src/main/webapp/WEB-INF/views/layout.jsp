@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,10 +14,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Web App</title>
     <!-- CSS -->
-    <link rel="stylesheet" href="assets/styles/index.css">
-    <link rel="stylesheet" href="assets/styles/header.css">
-    <link rel="stylesheet" href="assets/styles/sidebar.css">
-    <link rel="stylesheet" href="assets/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/sidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/footer.css">
 </head>
 <body>
 <!-- Sidebar -->
@@ -28,15 +30,15 @@
 
     <!-- Main -->
     <main>
-        <jsp:include page="/WEB-INF/views/home.jsp"/>
+        <c:import url="${contentPage}" />
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 My Web App</p>
-    </footer>
+    <%@ include file="fragments/footer.jsp" %>
 </div>
 <!-- JavaScript -->
-<script src="../../assets/js/app.js"></script>
+<script src="<%= request.getContextPath() %>/assets/js/app.js"></script>
+<!-- Add this line before the closing </body> tag in layout.jsp -->
+<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js"></script>
 </body>
 </html>

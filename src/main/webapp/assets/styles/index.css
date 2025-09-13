@@ -12,7 +12,14 @@ body {
 }
 
 .main-content {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     background-color: #f4f4f4;
     min-height: 100vh;
 }
+
+main {
+    flex: 1;
+}
+

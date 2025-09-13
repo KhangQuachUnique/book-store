@@ -1,13 +1,13 @@
 package service;
 
-import dao.AddressDAO;
+import dao.AddressDao;
 import model.Address;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class AddressService {
-    private AddressDAO addressDAO = new AddressDAO();
+    private AddressDao addressDAO = new AddressDao();
 
     public List<Address> getAddressesByUserId(long userId) throws SQLException {
         return addressDAO.getAddressesByUserId(userId);
