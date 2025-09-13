@@ -3,6 +3,7 @@ package controller;
 import constant.PathConstants;
 import model.ApiResponse;
 import model.WishListRequest;
+import util.JsonUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,7 @@ public class WishListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        int userId = Integer.parseInt(req.getParameter("userId"));
-        WishListRequest body = utils.JsonUtil.parseJson(req, WishListRequest.class);
+        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         int bookId = body.getBookId();
         ApiResponse response = service.WishListService.addBookToWishList(5, bookId);
         resp.setContentType("application/json");
@@ -37,7 +38,7 @@ public class WishListServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        int userId = Integer.parseInt(req.getParameter("userId"));
-        WishListRequest body = utils.JsonUtil.parseJson(req, WishListRequest.class);
+        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         int bookId = body.getBookId();
         ApiResponse response = service.WishListService.removeBookToWishList(5, bookId);
         resp.setCharacterEncoding("UTF-8");
