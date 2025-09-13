@@ -9,7 +9,7 @@ import java.util.List;
 public class BookDao {
     public List<Book> getAllBooks() {
         List<Book> list = new ArrayList<>();
-        String sql = "SELECT * FROM books";
+        String sql = "SELECT * FROM books LIMIT 5";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

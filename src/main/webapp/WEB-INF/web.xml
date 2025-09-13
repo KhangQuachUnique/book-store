@@ -32,9 +32,21 @@
         <url-pattern>/order-tracking</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>OrderApiServlet</servlet-name>
+        <servlet-class>controller.OrderApiServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderApiServlet</servlet-name>
+        <url-pattern>/api/orders</url-pattern>
+    </servlet-mapping>
+
 
     <welcome-file-list>
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>
+
+
+
