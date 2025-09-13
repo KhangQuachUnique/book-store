@@ -19,6 +19,16 @@ public class AddressService {
             addressDAO.setDefaultAddress(address.getId(), address.getUserId());
         }
     }
+    public void deleteAddress(long addressId, long userId) throws SQLException {
+        Address address = getAddressesByUserId(userId).stream()
+                .filter(a -> a.getId() == addressId)
+                .findFirst()
+                .orElseThrow(() -> new SQLException("Address not found"));
+        if (address.isDefaultAddress()) {
+            throw new SQLException("Cannot delete default address");
+        }
+        addressDAO.deleteAddress(addressId, userId);
+    }
 
     public void setDefaultAddress(long addressId, long userId) throws SQLException {
         addressDAO.setDefaultAddress(addressId, userId);

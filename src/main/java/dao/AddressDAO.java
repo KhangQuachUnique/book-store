@@ -62,4 +62,16 @@ public class AddressDAO {
         address.setCreatedAt(rs.getTimestamp("created_at"));
         return address;
     }
+    public void deleteAddress(long addressId, long userId) throws SQLException {
+        String query = "DELETE FROM addresses WHERE id = ? AND user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, addressId);
+            pstmt.setLong(2, userId);
+            int rows = pstmt.executeUpdate();
+            if (rows == 0) {
+                throw new SQLException("Address ID " + addressId + " not found or does not belong to user " + userId);
+            }
+        }
+    }
 }

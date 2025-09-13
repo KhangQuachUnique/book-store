@@ -79,6 +79,7 @@ public class UserDAO {
         }
     }
 
+
     public void blockUser(long id) throws SQLException {
         String query = "UPDATE users SET is_blocked = true, blocked_until = CURRENT_TIMESTAMP + INTERVAL '1 month', updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
