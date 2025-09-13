@@ -96,6 +96,9 @@ public class UserServlet extends HttpServlet {
                 case "createAddress":
                     createAddress(request, response);
                     break;
+                case "deleteAddress":
+                    deleteAddress(request, response);
+                    break;
                 case "setDefault":
                     setDefaultAddress(request, response);
                     break;
@@ -190,6 +193,12 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("userId", userId);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/createAddress.jsp");
         dispatcher.forward(request, response);
+    }
+    private void deleteAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        long addressId = Long.parseLong(request.getParameter("addressId"));
+        long userId = Long.parseLong(request.getParameter("userId"));
+        addressService.deleteAddress(addressId, userId);
+        response.sendRedirect("/api/user?action=viewAddresses&id=" + userId);
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {

@@ -28,6 +28,7 @@
                     <td>${address.address}</td>
                     <td>${address.defaultAddress}</td>
                     <td>${address.createdAt}</td>
+
                     <td>
                         <c:if test="${!address.defaultAddress}">
                             <form action="/api/user" method="post" style="display:inline;">
@@ -35,6 +36,12 @@
                                 <input type="hidden" name="addressId" value="${address.id}">
                                 <input type="hidden" name="userId" value="${user.id}">
                                 <input type="submit" value="Set Default">
+                            </form>
+                            <form action="/api/user" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="deleteAddress">
+                                <input type="hidden" name="addressId" value="${address.id}">
+                                <input type="hidden" name="userId" value="${user.id}">
+                                <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
                             </form>
                         </c:if>
                     </td>
