@@ -198,7 +198,7 @@ public class UserServlet extends HttpServlet {
         long addressId = Long.parseLong(request.getParameter("addressId"));
         long userId = Long.parseLong(request.getParameter("userId"));
         addressService.deleteAddress(addressId, userId);
-        response.sendRedirect("/api/user?action=viewAddresses&id=" + userId);
+        response.sendRedirect("/admin/user?action=viewAddresses&id=" + userId);
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -214,25 +214,25 @@ public class UserServlet extends HttpServlet {
         user.setPhone(phone);
         user.setRole(role);
         userService.updateUser(user);
-        response.sendRedirect("/api/user?action=list");
+        response.sendRedirect("/admin/user?action=list");
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = Long.parseLong(request.getParameter("id"));
         userService.deleteUser(id);
-        response.sendRedirect("/api/user?action=list");
+        response.sendRedirect("/admin/user?action=list");
     }
 
     private void blockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = Long.parseLong(request.getParameter("id"));
         userService.blockUser(id);
-        response.sendRedirect("/api/user?action=list");
+        response.sendRedirect("/admin/user?action=list");
     }
 
     private void unblockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = Long.parseLong(request.getParameter("id"));
         userService.unblockUser(id);
-        response.sendRedirect("/api/user?action=list");
+        response.sendRedirect("/admin/user?action=list");
     }
 
     private void createAdmin(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -247,7 +247,7 @@ public class UserServlet extends HttpServlet {
         user.setPasswordHash(passwordHash);
         user.setPhone(phone);
         userService.createAdmin(user);
-        response.sendRedirect("/api/user?action=list");
+        response.sendRedirect("/admin/user?action=list");
     }
 
     private void createUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -262,7 +262,7 @@ public class UserServlet extends HttpServlet {
         user.setPasswordHash(passwordHash);
         user.setPhone(phone);
         userService.createUser(user);
-        response.sendRedirect("/api/user?action=list");
+        response.sendRedirect("/admin/user?action=list");
     }
 
     private void createAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -274,13 +274,13 @@ public class UserServlet extends HttpServlet {
         address.setAddress(addressText);
         address.setDefaultAddress(isDefaultAddress);
         addressService.createAddress(address);
-        response.sendRedirect("/api/user?action=viewAddresses&id=" + userId);
+        response.sendRedirect("/admin/user?action=viewAddresses&id=" + userId);
     }
 
     private void setDefaultAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long addressId = Long.parseLong(request.getParameter("addressId"));
         long userId = Long.parseLong(request.getParameter("userId"));
         addressService.setDefaultAddress(addressId, userId);
-        response.sendRedirect("/api/user?action=viewAddresses&id=" + userId);
+        response.sendRedirect("/admin/user?action=viewAddresses&id=" + userId);
     }
 }
