@@ -9,12 +9,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Long id;              // BIGSERIAL
-    private String name;          // name
-    private String email;         // email
-    private String passwordHash;  // password_hash
-    private String phone;         // phone
-    private String role;          // role: 'customer' or 'admin'
-    private Boolean isBlocked;    // is_blocked
-    private Timestamp blockedUntil;  // blocked_until
+    private Long id;
+    private String name;
+    private String email;
+    private String passwordHash;
+    private String phone;
+    private String role;
+    private Boolean isBlocked;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    private Timestamp blockedUntil;
 }

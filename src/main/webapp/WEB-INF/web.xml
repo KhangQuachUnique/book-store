@@ -39,6 +39,15 @@
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 
+    <servlet>
+        <servlet-name>WishList</servlet-name>
+        <servlet-class>controller.WishListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WishList</servlet-name>
+        <url-pattern>/wishlist</url-pattern>
+    </servlet-mapping>
+
 	<servlet>
 		<servlet-name>RefreshTokenServlet</servlet-name>
 		<servlet-class>controller.RefreshTokenServlet</servlet-class>

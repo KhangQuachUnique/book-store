@@ -1,5 +1,5 @@
 // API base url (tự động dùng contextPath)
-const BASE_URL = "/book-store-be";
+const BASE_URL = "";
 const API = {
     login: BASE_URL + "/login",
     register: BASE_URL + "/register",
