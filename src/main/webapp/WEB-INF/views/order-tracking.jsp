@@ -13,7 +13,7 @@
   <c:forEach var="order" items="${orders}">
     <div class="order-card">
 
-      <!-- Header gồm mã đơn + trạng thái -->
+      <!-- Header -->
       <div class="order-header">
         <span class="order-id">Mã đơn: #${order.id}</span>
         <span class="order-status ${order.status}">
@@ -37,15 +37,19 @@
         <ul>
           <c:forEach var="item" items="${order.items}">
             <li>
-              <p class="book"><strong>Tựa sách:</strong> ${item.bookTitle}</p>
-              <p class="qty"><strong>Số lượng:</strong> ${item.quantity}</p>
-                <%-- <p class="price"><strong>Số tiền:</strong> ${item.price} VND</p> --%>
+              <img src="${item.thumbnailUrl}" alt="${item.bookTitle}" class="book-thumbnail"/>
+              <div class="book-info">
+                <p class="book"><strong>Tựa sách:</strong> ${item.bookTitle}</p>
+                <p class="qty"><strong>Số lượng:</strong> ${item.quantity}</p>
+              </div>
             </li>
           </c:forEach>
         </ul>
       </div>
-    </div>
+
+    </div> <!-- đóng order-card -->
   </c:forEach>
 </div>
+
 </body>
 </html>

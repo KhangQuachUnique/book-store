@@ -45,7 +45,7 @@ public class OrderDAO {
     // Lấy danh sách items cho một order
     private List<OrderItem> getOrderItemsByOrderId(Connection conn, int orderId) throws SQLException {
         List<OrderItem> items = new ArrayList<>();
-        String sql = "SELECT oi.*, b.title as book_title " +
+        String sql = "SELECT oi.*, b.title as book_title, b.thumbnail_url " +
                 "FROM order_items oi " +
                 "JOIN books b ON oi.book_id = b.id " +
                 "WHERE oi.order_id = ?";
@@ -59,10 +59,11 @@ public class OrderDAO {
                 item.setBookTitle(rs.getString("book_title"));
                 item.setQuantity(rs.getInt("quantity"));
                 item.setPrice(rs.getInt("price"));
+                item.setThumbnailUrl(rs.getString("thumbnail_url"));  // <-- thêm dòng này
                 items.add(item);
             }
         }
-
         return items;
     }
+
 }

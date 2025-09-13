@@ -115,3 +115,30 @@ body {
     margin: 3px 0;
 }
 
+.book-thumbnail {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.order-items li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.book-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-items li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px; /* thêm khoảng cách giữa ảnh và text */
+}
+

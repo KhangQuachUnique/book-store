@@ -4,15 +4,17 @@ public class OrderItem {
     private String bookTitle;  // ✅ Thêm trường này
     private int quantity;
     private double price;
+    private String thumbnailUrl;
 
     // ✅ Constructor rỗng
     public OrderItem() {}
 
     // Constructor đầy đủ (nếu cần)
-    public OrderItem(String bookTitle, int quantity, double price) {
+    public OrderItem(String bookTitle, int quantity, double price, String thumbnailUrl) {
         this.bookTitle = bookTitle;
         this.quantity = quantity;
         this.price = price;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     // Getter & Setter
@@ -24,4 +26,7 @@ public class OrderItem {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public String getThumbnailUrl() { return thumbnailUrl; }
+    public void setThumbnailUrl(String thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
 }
