@@ -40,9 +40,9 @@ public class UserDao {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapRow(rs));
+            try(ResultSet rs = ps.executeQuery();) {
+                if (rs.next())
+                    return Optional.of(mapRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,9 +55,10 @@ public class UserDao {
         String sql = "SELECT * FROM users WHERE verify_token = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, token);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapRow(rs);
+            try(ResultSet rs = ps.executeQuery();) {
+                if (rs.next())
+                    return mapRow(rs);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,15 +120,16 @@ public class UserDao {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                boolean isBlocked = rs.getBoolean("is_blocked");
-                Timestamp until = rs.getTimestamp("blocked_until");
+            try(ResultSet rs = ps.executeQuery();) {
+                if (rs.next()) {
+                    boolean isBlocked = rs.getBoolean("is_blocked");
+                    Timestamp until = rs.getTimestamp("blocked_until");
 
-                // nếu is_blocked = true hoặc until > now → đang bị block
-                if (isBlocked) return until;
-                if (until != null && until.after(new Timestamp(System.currentTimeMillis()))) {
-                    return until;
+                    // nếu is_blocked = true hoặc until > now → đang bị block
+                    if (isBlocked) return until;
+                    if (until != null && until.after(new Timestamp(System.currentTimeMillis()))) {
+                        return until;
+                    }
                 }
             }
         } catch (Exception e) {
