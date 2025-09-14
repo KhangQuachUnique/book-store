@@ -6,8 +6,8 @@
 </head>
 <body>
 <h1>Addresses for ${user.name} (ID: ${user.id})</h1>
-<a href="/api/user?action=newAddress&id=${user.id}">Add New Address</a><br><br>
-<a href="/api/user?action=view&id=${user.id}">Back to User Details</a><br><br>
+<a href="/admin/user?action=newAddress&id=${user.id}">Add New Address</a><br><br>
+<a href="/admin/user?action=view&id=${user.id}">Back to User Details</a><br><br>
 
 <c:choose>
     <c:when test="${empty addresses}">
@@ -31,13 +31,13 @@
 
                     <td>
                         <c:if test="${!address.defaultAddress}">
-                            <form action="/api/user" method="post" style="display:inline;">
+                            <form action="/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="setDefault">
                                 <input type="hidden" name="addressId" value="${address.id}">
                                 <input type="hidden" name="userId" value="${user.id}">
                                 <input type="submit" value="Set Default">
                             </form>
-                            <form action="/api/user" method="post" style="display:inline;">
+                            <form action="/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="deleteAddress">
                                 <input type="hidden" name="addressId" value="${address.id}">
                                 <input type="hidden" name="userId" value="${user.id}">

@@ -36,9 +36,6 @@
     <!-- Footer -->
     <%@ include file="fragments/footer.jsp" %>
 </div>
-<!-- JavaScript -->
-<script src="<%= request.getContextPath() %>/assets/js/app.js"></script>
-<!-- Add this line before the closing </body> tag in layout.jsp -->
-<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
 </body>
 </html>
