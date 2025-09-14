@@ -153,6 +153,21 @@ public class UserDao {
         return user;
     }
 
+    public User getUserByEmail(String email) throws SQLException {
+        User user = null;
+        String query = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user =  extractUserFromResultSet(rs);
+                }
+            }
+        }
+        return user; // nếu không tìm thấy
+    }
+
     public void deleteUser(long id) throws SQLException {
         String query = "DELETE FROM users WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
