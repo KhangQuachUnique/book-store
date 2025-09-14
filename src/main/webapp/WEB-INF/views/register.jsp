@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <html>
 <head>
@@ -22,24 +22,45 @@
 
 </head>
 <body>
+
 <div class="form-container">
     <h2 class="form-title">Register</h2>
-    <form id="registerForm" class="login-form">
+
+    <%-- Xử lý chuẩn hóa số điện thoại --%>
+    <%
+        String rawPhone = request.getParameter("phone");
+        String phone = null;
+
+        if (rawPhone != null && !rawPhone.isEmpty()) {
+            // Loại bỏ ký tự không phải số
+            phone = rawPhone.replaceAll("[^0-9]", "");
+            // Thêm +84 nếu bắt đầu bằng 0
+            if (phone.startsWith("0")) {
+                phone = "+84" + phone.substring(1);
+            }
+        }
+    %>
+
+    <form id="registerForm" class="login-form" method="post">
         <div class="form-group">
-            <label for="regEmail">Email:</label> <input type="email"
-                                                        id="regEmail" name="email" required>
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail" name="email" required>
         </div>
         <div class="form-group">
-            <label for="regPassword">Password:</label> <input type="password"
-                                                              id="regPassword" name="password" required>
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" name="password" required>
         </div>
         <div class="form-group">
-            <label for="regName">Full Name:</label> <input type="text"
-                                                           id="regName" name="name" required>
+            <label for="regName">Full Name:</label>
+            <input type="text" id="regName" name="name" required>
         </div>
         <div class="form-group">
-            <label for="regPhone">Phone (optional):</label> <input type="text"
-                                                                   id="regPhone" name="phone">
+            <label for="regPhone">Phone:</label>
+            <input type="text" id="regPhone" name="phone" required
+                   placeholder="Ví dụ: 0987654321"
+                   pattern="0[0-9]{9,10}"
+                   title="Nhập số điện thoại hợp lệ, bắt đầu bằng 0, 10 hoặc 11 chữ số"
+                <%= phone != null ? "value='" + phone + "'" : "" %>>
         </div>
 
         <button type="submit" class="btn-submit">Register</button>
