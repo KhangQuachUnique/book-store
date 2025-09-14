@@ -4,28 +4,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+public class BookReview {
     private Integer id;
-    private Integer userId;
-    private String username;
-    private String avatarUrl;
-    private Double rating;
+    private Integer bookId;
+    private List<Review> reviews;
+    private Double averageRating;
+    private Integer totalReviews;
     private Integer fullStars;
     private Double partialFraction;
     private Integer emptyStars;
-    private String comment;
-    private Integer likeCount;
-    private Timestamp date;
 
     public void calculateStars() {
         // This method can be used to calculate star representation if needed
-        this.fullStars = rating.intValue();
-        this.partialFraction = rating - fullStars;
+        this.fullStars = averageRating.intValue();
+        this.partialFraction = averageRating - fullStars;
         this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
     }
 }

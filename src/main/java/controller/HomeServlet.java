@@ -2,6 +2,8 @@ package controller;
 
 import constant.PathConstants;
 import model.Book;
+import model.BookReview;
+import service.BookReviewService;
 import service.BookService;
 
 import javax.servlet.*;
@@ -15,15 +17,10 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        Book book = BookService.getBookById(313607);
-//        double rating = book.getRating(); // vd 4.2
-//        int fullStars = (int) rating;             // 4
-//        double partialFraction = rating - fullStars; // 0.2
-//        int emptyStars = 5 - fullStars - (partialFraction > 0 ? 1 : 0);
 //
-//        request.setAttribute("fullStars", fullStars);
-//        request.setAttribute("partialFraction", partialFraction); // 0 if no partial
-//        request.setAttribute("emptyStars", emptyStars);
+        BookReview bookReview = BookReviewService.getReviewsByBookId(318041);
+
+        request.setAttribute("bookReview", bookReview);
 
         request.setAttribute("contentPage", PathConstants.VIEW_HOME);
         request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);

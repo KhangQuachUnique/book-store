@@ -1,5 +1,6 @@
 package dao;
 
+import model.BookReview;
 import model.Review;
 import util.DBConnection;
 
@@ -11,12 +12,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ReviewDao {
-    public static List<Review> getReviewsByBookId(int bookId) {
-        String sql = "SELECT r.id, r.user_id, r.book_id, r.rating, u.name AS user_name, u.avatar_url, " +
-                "r.comment, r.like_count, r.created_at " +
-                "FROM reviews r JOIN users u ON r.user_id = u.id " +
-                "WHERE r.book_id = ?";
+public class BookReviewDao {
+    public static BookReview getReviewsByBookId(int bookId) {
+        String sql = "SELECT r.id, r.book_id, r.user_id, u.name AS username, u.avatar_url, " +
+                    "r.rating, r.comment, r.like_count, r.created_at " +
+                "FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.book_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -26,11 +26,21 @@ public class ReviewDao {
                 while (rs.next()) {
                     reviews.add(mapRow(rs));
                 }
-                return reviews;
+                double averageRating = reviews.stream()
+                        .mapToDouble(Review::getRating)
+                        .average()
+                        .orElse(0.0);
+                BookReview bookReview = new BookReview();
+                bookReview.setBookId(bookId);
+                bookReview.setReviews(reviews);
+                bookReview.setAverageRating(averageRating);
+                bookReview.setTotalReviews(reviews.size());
+                bookReview.calculateStars();
+                return bookReview;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return null;
         }
     }
 
@@ -38,13 +48,12 @@ public class ReviewDao {
         Review review = new Review();
         review.setId(rs.getInt("id"));
         review.setUserId(rs.getInt("user_id"));
-        review.setBookId(rs.getInt("book_id"));
         review.setRating(rs.getDouble("rating"));
-        review.setUsername(rs.getString("user_name"));
+        review.setUsername(rs.getString("username"));
         review.setComment(rs.getString("comment"));
         review.setLikeCount(rs.getInt("like_count"));
         review.setAvatarUrl(rs.getString("avatar_url"));
-        review.setDate(rs.getString("created_at"));
+        review.setDate(rs.getTimestamp("created_at"));
         review.calculateStars();
         return review;
     }
