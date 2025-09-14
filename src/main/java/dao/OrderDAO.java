@@ -19,22 +19,21 @@ public class OrderDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setId(rs.getInt("id"));
+                    order.setCreatedAt(rs.getTimestamp("created_at").toString());
+                    order.setTotalAmount(rs.getInt("total_amount"));
+                    order.setStatus(rs.getString("status"));
+                    order.setPaymentMethod(rs.getString("payment_method"));
 
-            while (rs.next()) {
-                Order order = new Order();
-                order.setId(rs.getInt("id"));
-                order.setCreatedAt(rs.getTimestamp("created_at").toString());
-                order.setTotalAmount(rs.getInt("total_amount"));
-                order.setStatus(rs.getString("status"));
-                order.setPaymentMethod(rs.getString("payment_method"));
+                    // Lấy items của order
+                    order.setItems(getOrderItemsByOrderId(conn, order.getId()));
 
-                // Lấy items của order
-                order.setItems(getOrderItemsByOrderId(conn, order.getId()));
-
-                orders.add(order);
+                    orders.add(order);
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -52,14 +51,15 @@ public class OrderDAO {
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, orderId);
-            ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                OrderItem item = new OrderItem();
-                item.setBookTitle(rs.getString("book_title"));
-                item.setQuantity(rs.getInt("quantity"));
-                item.setPrice(rs.getInt("price"));
-                items.add(item);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    OrderItem item = new OrderItem();
+                    item.setBookTitle(rs.getString("book_title"));
+                    item.setQuantity(rs.getInt("quantity"));
+                    item.setPrice(rs.getInt("price"));
+                    items.add(item);
+                }
             }
         }
 
