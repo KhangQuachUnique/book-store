@@ -1,7 +1,8 @@
-// Package: controller
-// Các sửa đổi chính: Thêm logger, hằng số BASE_URL, kiểm tra phân quyền, xử lý ngoại lệ, parse parameter an toàn, kiểm tra dữ liệu đầu vào (email, phone), sử dụng BASE_URL cho redirect.
 package controller;
 
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.Validation;
 import model.Address;
 import model.User;
 import service.AddressService;
@@ -17,14 +18,23 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jakarta.validation.ConstraintViolation;
 
 public class UserServlet extends HttpServlet {
     private UserService userService = new UserService();
     private AddressService addressService = new AddressService();
     private static final Logger log = Logger.getLogger(UserServlet.class.getName());
     private static final String BASE_URL = "/admin/user";
+    private Validator validator;
+
+    @Override
+    public void init() throws ServletException {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -34,9 +44,10 @@ public class UserServlet extends HttpServlet {
             action = "list";
         }
         try {
-//            if (!checkAdminPermission(request, response)) {
-//                return;
-//            }
+            // Tạm thời bỏ phân quyền để kiểm tra
+            // if (!checkAdminPermission(request, response)) {
+            //     return;
+            // }
             switch (action) {
                 case "list":
                     listAllUsers(request, response);
@@ -85,9 +96,10 @@ public class UserServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         try {
-//            if (!checkAdminPermission(request, response)) {
-//                return;
-//            }
+            // Tạm thời bỏ phân quyền để kiểm tra
+            // if (!checkAdminPermission(request, response)) {
+            //     return;
+            // }
             switch (action) {
                 case "update":
                     updateUser(request, response);
@@ -126,12 +138,7 @@ public class UserServlet extends HttpServlet {
     }
 
 //    private boolean checkAdminPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        HttpSession session = request.getSession();
-//        User currentUser = (User) session.getAttribute("currentUser");
-//        if (currentUser == null || !"admin".equals(currentUser.getRole())) {
-//            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
-//            return false;
-//        }
+//        // TODO: Khôi phục kiểm tra phân quyền sau khi kiểm tra
 //        return true;
 //    }
 
@@ -143,39 +150,69 @@ public class UserServlet extends HttpServlet {
     }
 
     private void listAllUsers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        List<User> users = userService.getAllUsers();
+        int page = getPageParameter(request);
+        List<User> users = userService.getAllUsers(page);
+        int totalPages = userService.getTotalPages("list", null);
+        setPaginationAttributes(request, page, totalPages);
         request.setAttribute("users", users);
         request.setAttribute("listType", "All Users");
         forwardToList(request, response);
     }
 
     private void listAdmins(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        List<User> users = userService.getAdmins();
+        int page = getPageParameter(request);
+        List<User> users = userService.getAdmins(page);
+        int totalPages = userService.getTotalPages("listAdmins", null);
+        setPaginationAttributes(request, page, totalPages);
         request.setAttribute("users", users);
         request.setAttribute("listType", "Admins");
         forwardToList(request, response);
     }
 
     private void listCustomers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        List<User> users = userService.getCustomers();
+        int page = getPageParameter(request);
+        List<User> users = userService.getCustomers(page);
+        int totalPages = userService.getTotalPages("listUsers", null);
+        setPaginationAttributes(request, page, totalPages);
         request.setAttribute("users", users);
         request.setAttribute("listType", "Customers");
         forwardToList(request, response);
     }
 
     private void listBlocked(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        List<User> users = userService.getBlockedUsers();
+        int page = getPageParameter(request);
+        List<User> users = userService.getBlockedUsers(page);
+        int totalPages = userService.getTotalPages("listBlocked", null);
+        setPaginationAttributes(request, page, totalPages);
         request.setAttribute("users", users);
         request.setAttribute("listType", "Blocked Users");
         forwardToList(request, response);
     }
 
     private void searchUsers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        int page = getPageParameter(request);
         String query = request.getParameter("query");
-        List<User> users = userService.searchUsers(query);
+        List<User> users = userService.searchUsers(query, page);
+        int totalPages = userService.getTotalPages("search", query);
+        setPaginationAttributes(request, page, totalPages);
         request.setAttribute("users", users);
         request.setAttribute("listType", "Search Results for: " + query);
         forwardToList(request, response);
+    }
+
+    private void setPaginationAttributes(HttpServletRequest request, int currentPage, int totalPages) {
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+    }
+
+    private int getPageParameter(HttpServletRequest request) {
+        String pageStr = request.getParameter("page");
+        try {
+            int page = Integer.parseInt(pageStr);
+            return page > 0 ? page : 1;
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     private void forwardToList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -250,23 +287,24 @@ public class UserServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String role = request.getParameter("role");
 
-        if (!util.ValidatorUtil.isValidEmail(email)) {
-            request.setAttribute("errorMessage", "Invalid email format");
-            showEditForm(request, response);
-            return;
-        }
-        if (!util.ValidatorUtil.isValidPhoneNumber(phone)) {
-            request.setAttribute("errorMessage", "Invalid phone number");
-            showEditForm(request, response);
-            return;
-        }
-
         User user = new User();
         user.setId(id);
         user.setName(name);
         user.setEmail(email);
         user.setPhone(phone);
         user.setRole(role);
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder();
+            for (ConstraintViolation<User> violation : violations) {
+                errorMessage.append(violation.getMessage()).append("; ");
+            }
+            request.setAttribute("errorMessage", errorMessage.toString());
+            showEditForm(request, response);
+            return;
+        }
+
         userService.updateUser(user);
         response.sendRedirect(BASE_URL + "?action=list");
     }
@@ -298,23 +336,23 @@ public class UserServlet extends HttpServlet {
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
 
-        if (!util.ValidatorUtil.isValidEmail(email)) {
-            request.setAttribute("errorMessage", "Invalid email format");
-            showNewAdminForm(request, response);
-            return;
-        }
-        if (!util.ValidatorUtil.isValidPhoneNumber(phone)) {
-            request.setAttribute("errorMessage", "Invalid phone number");
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPasswordHash(PasswordUtil.hashPassword(password));
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder();
+            for (ConstraintViolation<User> violation : violations) {
+                errorMessage.append(violation.getMessage()).append("; ");
+            }
+            request.setAttribute("errorMessage", errorMessage.toString());
             showNewAdminForm(request, response);
             return;
         }
 
-        String passwordHash = PasswordUtil.hashPassword(password);
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPasswordHash(passwordHash);
-        user.setPhone(phone);
         userService.createAdmin(user);
         response.sendRedirect(BASE_URL + "?action=list");
     }
@@ -325,23 +363,23 @@ public class UserServlet extends HttpServlet {
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
 
-        if (!util.ValidatorUtil.isValidEmail(email)) {
-            request.setAttribute("errorMessage", "Invalid email format");
-            showNewUserForm(request, response);
-            return;
-        }
-        if (!util.ValidatorUtil.isValidPhoneNumber(phone)) {
-            request.setAttribute("errorMessage", "Invalid phone number");
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPasswordHash(PasswordUtil.hashPassword(password));
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder();
+            for (ConstraintViolation<User> violation : violations) {
+                errorMessage.append(violation.getMessage()).append("; ");
+            }
+            request.setAttribute("errorMessage", errorMessage.toString());
             showNewUserForm(request, response);
             return;
         }
 
-        String passwordHash = PasswordUtil.hashPassword(password);
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPasswordHash(passwordHash);
-        user.setPhone(phone);
         userService.createUser(user);
         response.sendRedirect(BASE_URL + "?action=list");
     }

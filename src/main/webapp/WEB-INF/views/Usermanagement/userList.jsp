@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -27,9 +26,9 @@
             <h2 class="card-title">Search Users</h2>
         </div>
         <div class="card-content">
-            <form action="/admin/user?action=search" method="get" class="search-form">
+            <form action="/admin/user" method="get" class="search-form">
                 <input type="hidden" name="action" value="search">
-                <input type="text" name="query" class="input" placeholder="Search by Name, Email, or Phone">
+                <input type="text" name="query" class="input" placeholder="Search by Name, Email, or Phone" value="${param.query}">
                 <input type="submit" value="Search" class="btn btn-primary">
             </form>
         </div>
@@ -37,6 +36,15 @@
 
     <div class="card">
         <div class="card-content">
+            <div class="pagination">
+                <c:if test="${currentPage > 1}">
+                    <a href="/admin/user?action=${param.action}&page=${currentPage - 1}&query=${param.query}" class="btn btn-secondary">Previous</a>
+                </c:if>
+                <span>Page ${currentPage} of ${totalPages}</span>
+                <c:if test="${currentPage < totalPages}">
+                    <a href="/admin/user?action=${param.action}&page=${currentPage + 1}&query=${param.query}" class="btn btn-secondary">Next</a>
+                </c:if>
+            </div>
             <table class="table">
                 <thead>
                 <tr class="table-header">
@@ -76,6 +84,15 @@
                 </c:forEach>
                 </tbody>
             </table>
+            <div class="pagination">
+                <c:if test="${currentPage > 1}">
+                    <a href="/admin/user?action=${param.action}&page=${currentPage - 1}&query=${param.query}" class="btn btn-secondary">Previous</a>
+                </c:if>
+                <span>Page ${currentPage} of ${totalPages}</span>
+                <c:if test="${currentPage < totalPages}">
+                    <a href="/admin/user?action=${param.action}&page=${currentPage + 1}&query=${param.query}" class="btn btn-secondary">Next</a>
+                </c:if>
+            </div>
         </div>
     </div>
 </div>

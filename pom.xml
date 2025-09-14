@@ -56,6 +56,21 @@
 
 
 
+        <!-- Jakarta EL API -->
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>4.0.0</version> <!-- Phiên bản stable, thay vì 5.0.1 không tồn tại -->
+        </dependency>
+
+        <!-- Jakarta EL Implementation (từ GlassFish) -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>4.0.2</version> <!-- Phiên bản stable -->
+        </dependency>
+
+
         <!-- Gson cho JSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

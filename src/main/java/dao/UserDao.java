@@ -1,5 +1,3 @@
-// Package: dao
-// Các sửa đổi chính: Thêm logger, thay printStackTrace bằng log và ném RuntimeException để thống nhất, kiểm tra null trong mapRow và extractUserFromResultSet, sử dụng PreparedStatement trong getUsersByQuery để tránh SQL Injection tiềm ẩn.
 package dao;
 
 import util.DBConnection;
@@ -13,6 +11,7 @@ import java.util.logging.Logger;
 
 public class UserDao {
     private static final Logger log = Logger.getLogger(UserDao.class.getName());
+    private static final int PAGE_SIZE = 20; // Giới hạn 20 người dùng mỗi trang
 
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
@@ -66,7 +65,6 @@ public class UserDao {
             if (rs.next()) {
                 boolean isBlocked = rs.getBoolean("is_blocked");
                 Timestamp until = rs.getTimestamp("blocked_until");
-
                 if (isBlocked) return until;
                 if (until != null && until.after(new Timestamp(System.currentTimeMillis()))) {
                     return until;
@@ -94,31 +92,33 @@ public class UserDao {
         );
     }
 
-    public List<User> getAllUsers() throws SQLException {
-        return getUsersByQuery("SELECT * FROM users");
+    public List<User> getAllUsers(int page) throws SQLException {
+        return getUsersByQuery("SELECT * FROM users ORDER BY id LIMIT ? OFFSET ?", page);
     }
 
-    public List<User> getAdmins() throws SQLException {
-        return getUsersByQuery("SELECT * FROM users WHERE role = 'admin'");
+    public List<User> getAdmins(int page) throws SQLException {
+        return getUsersByQuery("SELECT * FROM users WHERE role = 'admin' ORDER BY id LIMIT ? OFFSET ?", page);
     }
 
-    public List<User> getCustomers() throws SQLException {
-        return getUsersByQuery("SELECT * FROM users WHERE role = 'customer'");
+    public List<User> getCustomers(int page) throws SQLException {
+        return getUsersByQuery("SELECT * FROM users WHERE role = 'customer' ORDER BY id LIMIT ? OFFSET ?", page);
     }
 
-    public List<User> getBlockedUsers() throws SQLException {
-        return getUsersByQuery("SELECT * FROM users WHERE is_blocked = true");
+    public List<User> getBlockedUsers(int page) throws SQLException {
+        return getUsersByQuery("SELECT * FROM users WHERE is_blocked = true ORDER BY id LIMIT ? OFFSET ?", page);
     }
 
-    public List<User> searchUsers(String query) throws SQLException {
+    public List<User> searchUsers(String query, int page) throws SQLException {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ?";
+        String sql = "SELECT * FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ? ORDER BY id LIMIT ? OFFSET ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String searchTerm = "%" + query + "%";
             pstmt.setString(1, searchTerm);
             pstmt.setString(2, searchTerm);
             pstmt.setString(3, searchTerm);
+            pstmt.setInt(4, PAGE_SIZE);
+            pstmt.setInt(5, (page - 1) * PAGE_SIZE);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     users.add(extractUserFromResultSet(rs));
@@ -128,16 +128,49 @@ public class UserDao {
         return users;
     }
 
-    private List<User> getUsersByQuery(String query) throws SQLException {
+    private List<User> getUsersByQuery(String query, int page) throws SQLException {
         List<User> users = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query);
-             ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                users.add(extractUserFromResultSet(rs));
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, PAGE_SIZE);
+            pstmt.setInt(2, (page - 1) * PAGE_SIZE);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(extractUserFromResultSet(rs));
+                }
             }
         }
         return users;
+    }
+
+    public long countUsers(String queryType, String query) throws SQLException {
+        String sql;
+        if ("search".equals(queryType)) {
+            sql = "SELECT COUNT(*) FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ?";
+        } else if ("listAdmins".equals(queryType)) {
+            sql = "SELECT COUNT(*) FROM users WHERE role = 'admin'";
+        } else if ("listUsers".equals(queryType)) {
+            sql = "SELECT COUNT(*) FROM users WHERE role = 'customer'";
+        } else if ("listBlocked".equals(queryType)) {
+            sql = "SELECT COUNT(*) FROM users WHERE is_blocked = true";
+        } else {
+            sql = "SELECT COUNT(*) FROM users";
+        }
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            if ("search".equals(queryType)) {
+                String searchTerm = "%" + query + "%";
+                pstmt.setString(1, searchTerm);
+                pstmt.setString(2, searchTerm);
+                pstmt.setString(3, searchTerm);
+            }
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        return 0;
     }
 
     public User getUserById(long id) throws SQLException {

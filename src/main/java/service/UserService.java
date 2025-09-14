@@ -1,5 +1,3 @@
-// Package: service
-// Các sửa đổi chính: Thêm kiểm tra dữ liệu đầu vào trong register, tái sử dụng thông tin user để kiểm tra block trong login để tránh truy vấn dư thừa.
 package service;
 
 import dao.UserDao;
@@ -13,6 +11,7 @@ import java.util.Optional;
 
 public class UserService {
     private UserDao userDAO = new UserDao();
+    private static final int PAGE_SIZE = 20;
 
     public boolean register(User user, String rawPassword) {
         Optional<User> existing = userDAO.findByEmail(user.getEmail());
@@ -66,24 +65,28 @@ public class UserService {
         return result;
     }
 
-    public List<User> getAllUsers() throws SQLException {
-        return userDAO.getAllUsers();
+    public List<User> getAllUsers(int page) throws SQLException {
+        return userDAO.getAllUsers(page);
     }
 
-    public List<User> getAdmins() throws SQLException {
-        return userDAO.getAdmins();
+    public List<User> getAdmins(int page) throws SQLException {
+        return userDAO.getAdmins(page);
     }
 
-    public List<User> getCustomers() throws SQLException {
-        return userDAO.getCustomers();
+    public List<User> getCustomers(int page) throws SQLException {
+        return userDAO.getCustomers(page);
     }
 
-    public List<User> getBlockedUsers() throws SQLException {
-        return userDAO.getBlockedUsers();
+    public List<User> getBlockedUsers(int page) throws SQLException {
+        return userDAO.getBlockedUsers(page);
     }
 
-    public List<User> searchUsers(String query) throws SQLException {
-        return userDAO.searchUsers(query);
+    public List<User> searchUsers(String query, int page) throws SQLException {
+        return userDAO.searchUsers(query, page);
+    }
+
+    public long getTotalUsers(String queryType, String query) throws SQLException {
+        return userDAO.countUsers(queryType, query);
     }
 
     public User getUserById(long id) throws SQLException {
@@ -112,5 +115,10 @@ public class UserService {
 
     public void createUser(User user) throws SQLException {
         userDAO.createUser(user);
+    }
+
+    public int getTotalPages(String queryType, String query) throws SQLException {
+        long totalUsers = getTotalUsers(queryType, query);
+        return (int) Math.ceil((double) totalUsers / PAGE_SIZE);
     }
 }

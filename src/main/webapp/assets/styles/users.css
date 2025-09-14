@@ -61,6 +61,10 @@ body {
     margin: 0 auto;
     padding: 1.5rem;
 }
+.pagination{
+    text-align: center;
+
+}
 
 .page-title {
     font-size: 1.875rem;
