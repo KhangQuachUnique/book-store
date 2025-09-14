@@ -69,7 +69,7 @@
                         <td class="action-buttons">
                             <a href="${pageContext.request.contextPath}/admin/user?action=view&id=${user.id}" class="btn btn-outline btn-sm">View</a>
                             <a href="${pageContext.request.contextPath}/admin/user?action=edit&id=${user.id}" class="btn btn-outline btn-sm">Edit</a>
-                            <form action="/admin/user" method="post" style="display:inline;">
+                            <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${user.id}">
                                 <input type="submit" value="Delete" class="btn btn-destructive btn-sm btn-lowe" onclick="return confirm('Are you sure you want to delete this user?')">

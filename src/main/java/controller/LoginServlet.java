@@ -71,7 +71,7 @@ public class LoginServlet extends HttpServlet {
                     Cookie accessCookie = new Cookie("access_token", accessToken);
                     accessCookie.setHttpOnly(true);
                     accessCookie.setPath("/"); // gửi cho toàn bộ domain
-                    accessCookie.setMaxAge(1 * 60); // 15 phút
+                    accessCookie.setMaxAge(15 * 60); // 15 phút
                     resp.addCookie(accessCookie);
 
                     // Cookie cho refresh token (hết hạn sau 7 ngày)
