@@ -1,12 +1,46 @@
 /* src/main/webapp/assets/styles/header.css */
 .site-header {
-    flex: 1;
     background: var(--primary-color); /* Burgundy */
     color: var(--text-primary);
     padding: 16px 40px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 16px;
+}
+
+.hamburger-menu svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--text-primary);
+}
+
+.main-content.expanded .hamburger-menu {
+    display: block;
+}
+
+
+.logo {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.expanded .logo {
+    margin-left: 0;
 }
 
 .logo img {
@@ -22,20 +56,81 @@
 .logo a span {
     font-size: 1.5rem;
     font-weight: 900;
-    margin-left: 12px;
     vertical-align: middle;
 }
 
 .navbar ul {
+    height: 100%;
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
+    align-items: center;
     gap: 24px;
 }
 
 .navbar li {
     display: inline-block;
+}
+.navbar .search-bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.navbar .search-bar .search-input {
+    height: 40px;
+    width: 300px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 0 15px 0 40px; /* Added left padding for the icon */
+}
+
+.navbar .search-bar svg {
+    fill: var(--primary-color);
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.navbar .cart-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.navbar .cart-icon svg {
+    fill: var(--text-primary);
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s ease;
+}
+
+.navbar .cart-icon:hover svg {
+    transform: scale(1.1);
+}
+
+.navbar .cart-icon .cart-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: #ff4757;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .navbar a {
@@ -50,3 +145,4 @@
 .navbar a:hover {
     background: var(--primary-color-hover); /* Slightly lighter red for hover */
 }
+

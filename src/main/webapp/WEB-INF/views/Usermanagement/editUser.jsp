@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Edit User</h1>
-<form action="/api/user" method="post">
+<form action="/admin/user" method="post">
     <input type="hidden" name="action" value="update">
     <input type="hidden" name="id" value="${user.id}">
     <label>Name:</label> <input type="text" name="name" value="${user.name}"><br>
@@ -18,6 +18,6 @@
     </select><br>
     <input type="submit" value="Save">
 </form>
-<a href="/api/user?action=list">Back to List</a>
+<a href="/admin/user?action=list">Back to List</a>
 </body>
 </html>

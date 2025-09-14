@@ -12,6 +12,7 @@
 <p>Role: ${user.role}</p>
 <p>Blocked: ${user.isBlocked}</p>
 <p>Blocked Until: ${user.blockedUntil}</p>
-<a href="/api/user?action=list">Back to List</a>
+<a href="/admin/user?action=viewAddresses&id=${user.id}">View Addresses</a><br>
+<a href="/admin/user?action=list">Back to List</a>
 </body>
 </html>

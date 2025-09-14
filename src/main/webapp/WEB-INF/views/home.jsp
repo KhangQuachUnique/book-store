@@ -1,13 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<html>
+<head>
+    <title>Home</title>
+    <script src="<%= request.getContextPath() %>/assets/js/app.js"></script>
+</head>
+<body>
 <section class="home">
     <h1>Welcome to My Web App</h1>
 
-    <p>
-        Đây là trang <b>Home</b>. Nội dung của nó sẽ được nhúng
-        vào `layout.jsp` qua <code>contentPage</code>.
-    </p>
+    <!-- User info -->
+    <div id="userInfo">Loading user info...</div>
+    <button onclick="logout()">Logout</button>
 
     <hr/>
 
@@ -24,3 +29,18 @@
         <p><i>Chưa có tin tức nào.</i></p>
     </c:if>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const status = await checkUserStatus();
+        const userInfo = document.getElementById("userInfo");
+
+        if (status.loggedIn) {
+            userInfo.innerText = "Logged in as: " + status.email;
+        } else {
+            userInfo.innerText = "Not logged in";
+        }
+    });
+</script>
+</body>
+</html>

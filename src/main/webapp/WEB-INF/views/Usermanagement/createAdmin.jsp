@@ -5,14 +5,14 @@
 </head>
 <body>
 <h1>Create New Admin</h1>
-<form action="/api/user" method="post">
-    <input type="hidden" name="action" value="create">
+<form action="/admin/user" method="post">
+    <input type="hidden" name="action" value="createAdmin">
     <label>Name:</label> <input type="text" name="name"><br>
     <label>Email:</label> <input type="text" name="email"><br>
     <label>Password:</label> <input type="password" name="password"><br>
     <label>Phone:</label> <input type="text" name="phone"><br>
     <input type="submit" value="Create">
 </form>
-<a href="/api/user?action=list">Back to List</a>
+<a href="/admin/user?action=list">Back to List</a>
 </body>
 </html>
