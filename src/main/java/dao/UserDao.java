@@ -16,6 +16,31 @@ public class UserDao {
     private static final Logger log = Logger.getLogger(UserDao.class.getName());
     private static final int PAGE_SIZE = 20; // Giới hạn 20 người dùng mỗi trang
 
+    // Tìm user bằng verify_token
+    public User findByVerifyToken(String token) {
+        String sql = "SELECT * FROM users WHERE verify_token = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void markVerified(long userId) {
+        String sql = "UPDATE users SET is_verified = TRUE, verify_token = NULL, verify_expire = NULL WHERE id=?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = getConnection();
@@ -31,7 +56,6 @@ public class UserDao {
         }
         return Optional.empty();
     }
-
 
     // Lưu user mới
     public boolean save(User user) {
@@ -96,6 +120,7 @@ public class UserDao {
         user.setVerifyExpire(rs.getTimestamp("verify_expire"));
         return user;
     }
+
     // Trả về true/false
     public boolean isUserBlocked(String email) {
         return getBlockInfo(email) != null;
@@ -123,8 +148,6 @@ public class UserDao {
         }
         return null;
     }
-
-
 
     public List<User> getAllUsers(int page) throws SQLException {
         return getUsersByQuery("SELECT * FROM users ORDER BY id LIMIT ? OFFSET ?", page);

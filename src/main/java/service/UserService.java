@@ -17,6 +17,7 @@ import model.User;
 
 public class UserService {
     private UserDao userDao = new UserDao();
+    private static final int PAGE_SIZE = 20;
 
     /**
      * Đăng ký hoặc trả về null nếu email đã tồn tại
@@ -95,53 +96,60 @@ public class UserService {
         return true;
     }
 
-    private UserDao userDAO = new UserDao();
-
-    public List<User> getAllUsers() throws SQLException {
-        return userDAO.getAllUsers();
+    public List<User> getAllUsers(int page) throws SQLException {
+        return userDao.getAllUsers(page);
     }
 
-    public List<User> getAdmins() throws SQLException {
-        return userDAO.getAdmins();
+    public List<User> getAdmins(int page) throws SQLException {
+        return userDao.getAdmins(page);
     }
 
-    public List<User> getCustomers() throws SQLException {
-        return userDAO.getCustomers();
+    public List<User> getCustomers(int page) throws SQLException {
+        return userDao.getCustomers(page);
     }
 
-    public List<User> getBlockedUsers() throws SQLException {
-        return userDAO.getBlockedUsers();
+    public List<User> getBlockedUsers(int page) throws SQLException {
+        return userDao.getBlockedUsers(page);
     }
 
-    public List<User> searchUsers(String query) throws SQLException {
-        return userDAO.searchUsers(query);
+    public List<User> searchUsers(String query, int page) throws SQLException {
+        return userDao.searchUsers(query, page);
+    }
+
+    public long getTotalUsers(String queryType, String query) throws SQLException {
+        return userDao.countUsers(queryType, query);
     }
 
     public User getUserById(long id) throws SQLException {
-        return userDAO.getUserById(id);
+        return userDao.getUserById(id);
     }
 
     public void deleteUser(long id) throws SQLException {
-        userDAO.deleteUser(id);
+        userDao.deleteUser(id);
     }
 
     public void blockUser(long id) throws SQLException {
-        userDAO.blockUser(id);
+        userDao.blockUser(id);
     }
 
     public void unblockUser(long id) throws SQLException {
-        userDAO.unblockUser(id);
+        userDao.unblockUser(id);
     }
 
     public void updateUser(User user) throws SQLException {
-        userDAO.updateUser(user);
+        userDao.updateUser(user);
     }
 
     public void createAdmin(User user) throws SQLException {
-        userDAO.createAdmin(user);
+        userDao.createAdmin(user);
     }
 
     public void createUser(User user) throws SQLException {
-        userDAO.createUser(user);
+        userDao.createUser(user);
+    }
+
+    public int getTotalPages(String queryType, String query) throws SQLException {
+        long totalUsers = getTotalUsers(queryType, query);
+        return (int) Math.ceil((double) totalUsers / PAGE_SIZE);
     }
 }
