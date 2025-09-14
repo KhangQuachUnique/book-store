@@ -1,9 +1,18 @@
+body {
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .form-container {
-    width: 100%;            /* luôn chiếm 100% container cha */
-    max-width: 500px;       /* giới hạn tối đa trên desktop */
-    margin: 60px auto;      /* căn giữa */
-    padding: 30px 25px;
-    background-color: var(--secondary-color);
+    width: 100%;
+    min-height: fit-content;
+    height: fit-content;
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 50px;
+    background-color: var(--text-primary);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     font-family: Montserrat, sans-serif;
@@ -12,9 +21,9 @@
 
 .form-title {
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-secondary);
     margin-bottom: 25px;
 }
 
