@@ -1,5 +1,6 @@
 package controller;
 
+import constant.PathConstants;
 import model.Address;
 import model.User;
 import service.AddressService;
@@ -165,7 +166,7 @@ public class UserServlet extends HttpServlet {
         long id = Long.parseLong(request.getParameter("id"));
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/editUser.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_EDIT_USER);
         dispatcher.forward(request, response);
     }
 

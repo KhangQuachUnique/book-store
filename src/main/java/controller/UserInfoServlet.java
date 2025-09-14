@@ -38,9 +38,9 @@ public class UserInfoServlet extends HttpServlet {
             res.addProperty("email", email);
             res.addProperty("role", role);
         } else {
+            res.addProperty("status", 401);
             res.addProperty("loggedIn", false);
         }
-
         resp.getWriter().print(res.toString());
     }
 }

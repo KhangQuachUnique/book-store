@@ -99,17 +99,22 @@ async function logout() {
 // Check user status
 async function checkUserStatus() {
     try {
+        console.log("Checking user status...")
         const res = await fetch(USER.profile, {
             method: "GET",
             credentials: "include" // cookie sẽ tự được gửi
         });
 
-        if (res.status === 401) {
+        const data = await res.json(); // parse JSON
+        console.log(data);
+
+        if (data.status === 401) {
             // Nếu token hết hạn → gọi refresh
+            console.log("Access token expired, refreshing...")
             const refreshed = await refreshAccessToken();
             return refreshed ? checkUserStatus() : { loggedIn: false };
         }
-        return res.json();
+        return data
     } catch (err) {
         console.error(err);
         return { loggedIn: false };
@@ -123,6 +128,9 @@ async function refreshAccessToken() {
             method: "POST",
             credentials: "include"
         });
+
+        console.log(res.ok)
+        console.log(res)
 
         return res.ok;
     } catch (err) {

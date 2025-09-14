@@ -60,7 +60,7 @@ public class RefreshTokenServlet extends HttpServlet {
             Cookie newAccessCookie = new Cookie("access_token", newAccessToken);
             newAccessCookie.setHttpOnly(true);
             newAccessCookie.setPath("/");
-            newAccessCookie.setMaxAge((int) (15 * 60)); // 15 phút
+            newAccessCookie.setMaxAge((int) (1 * 60)); // 15 phút
             resp.addCookie(newAccessCookie);
 
             JsonObject resJson = new JsonObject();

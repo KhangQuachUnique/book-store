@@ -8,17 +8,17 @@
 <body>
 <h1>${listType}</h1>
 <nav class="user-nav">
-    <a href="/admin/user?action=list">All Users</a>
-    <a href="/admin/user?action=listAdmins">Admins</a>
-    <a href="/admin/user?action=listUsers">Customers</a>
-    <a href="/admin/user?action=listBlocked">Blocked Users</a>
+    <a href="${pageContext.request.contextPath}/admin/user?action=list">All Users</a>
+    <a href="${pageContext.request.contextPath}/admin/user?action=listAdmins">Admins</a>
+    <a href="${pageContext.request.contextPath}/admin/user?action=listUsers">Customers</a>
+    <a href="${pageContext.request.contextPath}/admin/user?action=listBlocked">Blocked Users</a>
 </nav>
 
 <nav class="admin-user-nav">
-<a href="/admin/user?action=newAdmin">Create Admin</a>
-<a href="/admin/user?action=newUser">Create User</a>
+<a href="${pageContext.request.contextPath}/admin/user?action=newAdmin">Create Admin</a>
+<a href="${pageContext.request.contextPath}/admin/user?action=newUser">Create User</a>
 </nav>
-<form action="/admin/user?action=search" method="get">
+<form action="${pageContext.request.contextPath}/admin/user?action=search" method="get">
     <input type="hidden" name="action" value="search">
     <label>Search by Name, Email, or Phone:</label>
     <input type="text" name="query">
@@ -45,14 +45,14 @@
             <td>${user.role}</td>
             <td>${user.isBlocked}</td>
             <td>
-                <a href="/admin/user?action=view&id=${user.id}" type="">View</a>
-                <a href="/admin/user?action=edit&id=${user.id}">Edit</a>
-                <form action="/admin/user" method="post" style="display:inline;">
+                <a href="${pageContext.request.contextPath}/admin/user?action=view&id=${user.id}" type="">View</a>
+                <a href="${pageContext.request.contextPath}/admin/user?action=edit&id=${user.id}">Edit</a>
+                <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="${user.id}">
                     <input type="submit" value="Delete">
                 </form>
-                <form action="/admin/user" method="post" style="display:inline;">
+                <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                     <input type="hidden" name="action" value="${user.isBlocked ? 'unblock' : 'block'}">
                     <input type="hidden" name="id" value="${user.id}">
                     <input type="submit" value="${user.isBlocked ? 'Unblock' : 'Block'}">
