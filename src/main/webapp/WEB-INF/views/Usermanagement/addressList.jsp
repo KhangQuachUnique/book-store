@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>User Management - Addresses for ${user.name}</title>
-    <link rel="stylesheet" href="/assets/styles/addressList.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/addressList.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap&subset=vietnamese" rel="stylesheet">
 
 </head>
@@ -17,8 +17,8 @@
         </div>
         <div class="card-content">
             <div class="nav-actions">
-                <a href="/admin/user?action=newAddress&id=${user.id}" class="btn btn-secondary">Add New Address</a>
-                <a href="/admin/user?action=view&id=${user.id}" class="btn btn-outline">Back to User Details</a>
+                <a href="${pageContext.request.contextPath}/admin/user?action=newAddress&id=${user.id}" class="btn btn-secondary">Add New Address</a>
+                <a href="${pageContext.request.contextPath}/admin/user?action=view&id=${user.id}" class="btn btn-outline">Back to User Details</a>
             </div>
             <c:choose>
                 <c:when test="${empty addresses}">
@@ -44,13 +44,13 @@
                                 <td>${address.createdAt}</td>
                                 <td class="action-buttons">
                                     <c:if test="${!address.defaultAddress}">
-                                        <form action="/admin/user" method="post" style="display:inline;">
+                                        <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                             <input type="hidden" name="action" value="setDefault">
                                             <input type="hidden" name="addressId" value="${address.id}">
                                             <input type="hidden" name="userId" value="${user.id}">
                                             <input type="submit" value="Set Default" class="btn btn-secondary btn-sm">
                                         </form>
-                                        <form action="/admin/user" method="post" style="display:inline;">
+                                        <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                             <input type="hidden" name="action" value="deleteAddress">
                                             <input type="hidden" name="addressId" value="${address.id}">
                                             <input type="hidden" name="userId" value="${user.id}">

@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>User Management - Add New Address</title>
-    <link rel="stylesheet" href="/assets/styles/createAddress.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/createAddress.css">
 </head>
 <body class="bg-background text-foreground">
 <div class="container">
@@ -13,7 +13,7 @@
             <h1 class="card-title">Add New Address for User ID: ${userId}</h1>
         </div>
         <div class="card-content">
-            <form action="/admin/user" method="post" class="form">
+            <form action="${pageContext.request.contextPath}/admin/user" method="post" class="form">
                 <input type="hidden" name="action" value="createAddress">
                 <input type="hidden" name="userId" value="${userId}">
                 <div class="form-group">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="action-buttons">
                     <input type="submit" value="Add Address" class="btn btn-primary">
-                    <a href="/admin/user?action=viewAddresses&id=${userId}" class="btn btn-outline">Back to Addresses</a>
+                    <a href="${pageContext.request.contextPath}/admin/user?action=viewAddresses&id=${userId}" class="btn btn-outline">Back to Addresses</a>
                 </div>
             </form>
         </div>

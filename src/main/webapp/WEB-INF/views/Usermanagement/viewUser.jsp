@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>User Management - View User</title>
-    <link rel="stylesheet" href="/assets/styles/viewUser.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/viewUser.css">
 </head>
 <body class="bg-background text-foreground">
 <div class="container">
@@ -35,8 +35,8 @@
                 <strong>Blocked Until:</strong> ${user.blockedUntil != null ? user.blockedUntil : "N/A"}
             </div>
             <div class="action-buttons">
-                <a href="/admin/user?action=viewAddresses&id=${user.id}" class="btn btn-secondary">View Addresses</a>
-                <a href="/admin/user?action=list" class="btn btn-outline">Back to List</a>
+                <a href="${pageContext.request.contextPath}/admin/user?action=viewAddresses&id=${user.id}" class="btn btn-secondary">View Addresses</a>
+                <a href="${pageContext.request.contextPath}/admin/user?action=list" class="btn btn-outline">Back to List</a>
             </div>
         </div>
     </div>

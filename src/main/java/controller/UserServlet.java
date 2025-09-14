@@ -11,6 +11,7 @@ import util.PasswordUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.validation.ConstraintViolation;
 
+@WebServlet("/admin/user")
 public class UserServlet extends HttpServlet {
     private UserService userService = new UserService();
     private AddressService addressService = new AddressService();
