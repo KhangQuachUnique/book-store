@@ -83,6 +83,10 @@ public class UserService {
         return userDAO.getUserById(id);
     }
 
+    public User getUserByEmail(String email) throws SQLException {
+        return userDAO.getUserByEmail(email);
+    }
+
     public void deleteUser(long id) throws SQLException {
         userDAO.deleteUser(id);
     }
