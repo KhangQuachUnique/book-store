@@ -6,11 +6,13 @@ import model.Book;
 import service.BookService;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet("/admin/book")
 public class BookServlet extends HttpServlet {
     private final BookDao dao = new BookDao();
 
