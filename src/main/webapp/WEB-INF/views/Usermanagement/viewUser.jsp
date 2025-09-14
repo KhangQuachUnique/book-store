@@ -1,18 +1,45 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>View User</title>
+    <title>User Management - View User</title>
+    <link rel="stylesheet" href="/assets/styles/viewUser.css">
 </head>
-<body>
-<h1>User Details</h1>
-<p>ID: ${user.id}</p>
-<p>Name: ${user.name}</p>
-<p>Email: ${user.email}</p>
-<p>Phone: ${user.phone}</p>
-<p>Role: ${user.role}</p>
-<p>Blocked: ${user.isBlocked}</p>
-<p>Blocked Until: ${user.blockedUntil}</p>
-<a href="/admin/user?action=viewAddresses&id=${user.id}">View Addresses</a><br>
-<a href="/admin/user?action=list">Back to List</a>
+<body class="bg-background text-foreground">
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">User Details</h1>
+        </div>
+        <div class="card-content">
+            <div class="info-item">
+                <strong>ID:</strong> ${user.id}
+            </div>
+            <div class="info-item">
+                <strong>Name:</strong> ${user.name}
+            </div>
+            <div class="info-item">
+                <strong>Email:</strong> ${user.email}
+            </div>
+            <div class="info-item">
+                <strong>Phone:</strong> ${user.phone}
+            </div>
+            <div class="info-item">
+                <strong>Role:</strong> ${user.role}
+            </div>
+            <div class="info-item">
+                <strong>Blocked:</strong> ${user.isBlocked ? "Yes" : "No"}
+            </div>
+            <div class="info-item">
+                <strong>Blocked Until:</strong> ${user.blockedUntil != null ? user.blockedUntil : "N/A"}
+            </div>
+            <div class="action-buttons">
+                <a href="/admin/user?action=viewAddresses&id=${user.id}" class="btn btn-secondary">View Addresses</a>
+                <a href="/admin/user?action=list" class="btn btn-outline">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
