@@ -55,7 +55,7 @@ public class BookDao {
             ps.setInt(5, book.getStock());
             ps.setDouble(6, book.getOriginalPrice());
             ps.setInt(7, book.getDiscount_rate());
-            ps.setString(8, book.getthumbnailUrl());
+            ps.setString(8, book.getThumbnailUrl());
             ps.setString(9, book.getDescription());
             ps.setInt(10, book.getPublishYear());
             ps.setInt(11, book.getPages());
@@ -79,7 +79,7 @@ public class BookDao {
         b.setStock(rs.getInt("stock"));
         b.setAuthor(rs.getString("author"));
         b.setPublisher(rs.getString("publisher"));
-        b.setthumbnailUrl(rs.getString("thumbnail_url"));
+        b.setThumbnailUrl(rs.getString("thumbnail_url"));
         b.setDescription(rs.getString("description"));
         b.setPublishYear(rs.getInt("publish_year"));
         b.setPages(rs.getInt("pages"));

@@ -32,7 +32,7 @@ public class WishListDao {
                 book.setStock(rs.getInt("stock"));
                 book.setOriginalPrice(rs.getDouble("original_price"));
                 book.setDiscount_rate(rs.getInt("discount_rate"));
-                book.setthumbnailUrl(rs.getString("thumbnail_url"));
+                book.setThumbnailUrl(rs.getString("thumbnail_url"));
                 book.setDescription(rs.getString("description"));
                 book.setPublishYear(rs.getInt("publish_year"));
                 book.setPages(rs.getInt("pages"));
