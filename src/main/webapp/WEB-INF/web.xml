@@ -69,4 +69,13 @@
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>
 
+    <servlet>
+        <servlet-name>Review</servlet-name>
+        <servlet-class>controller.ReviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Review</servlet-name>
+        <url-pattern>/api/review</url-pattern>
+    </servlet-mapping>
+
 </web-app>
