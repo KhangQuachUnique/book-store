@@ -5,7 +5,7 @@ import model.User;
 import service.AddressService;
 import service.UserService;
 import util.PasswordUtil;
-
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+@WebServlet("/admin/user")
 public class UserServlet extends HttpServlet {
     private UserService userService = new UserService();
     private AddressService addressService = new AddressService();

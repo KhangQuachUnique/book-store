@@ -1,52 +1,111 @@
 package dao;
 
-import util.DBConnection;
-import model.User;
-import java.sql.*;
-import java.util.Optional;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import model.User;
+import util.DBConnection;
 
 public class UserDao {
-
-    public Optional<User> findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapRow(rs));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+    private Connection getConnection() throws SQLException {
+        // Tạo kết nối (tuỳ cách bạn setup datasource/pool)
+        return DBConnection.getConnection();
     }
 
-    private Connection getConnection() throws SQLException {
-    	return DBConnection.getConnection();
-	}
-
-    public boolean save(User user) {
-        String sql = "INSERT INTO users (name, email, password_hash, phone, role, is_blocked, blocked_until, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, now())";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    // Lưu user mới
+    public void save(User user) {
+        String sql = "INSERT INTO users (name, email, password_hash, phone, role, is_blocked, is_verified, verify_token, verify_expire) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPasswordHash());
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getRole());
-            ps.setBoolean(6, user.getIsBlocked() != null ? user.getIsBlocked() : false);
-            ps.setTimestamp(7, user.getBlockedUntil()); // có thể null
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+            ps.setBoolean(6, user.getIsBlocked() != null && user.getIsBlocked());
+            ps.setBoolean(7, user.getIsVerified() != null && user.getIsVerified());
+            ps.setString(8, user.getVerifyToken());
+            ps.setTimestamp(9, user.getVerifyExpire());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+    }
+
+    // Tìm user bằng email
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    // Tìm user bằng verify_token
+    public User findByVerifyToken(String token) {
+        String sql = "SELECT * FROM users WHERE verify_token = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void markVerified(long userId) {
+        String sql = "UPDATE users SET is_verified = TRUE, verify_token = NULL, verify_expire = NULL WHERE id=?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Cập nhật token và thời hạn xác thực mới
+    public void updateVerifyToken(User user) {
+        String sql = "UPDATE users SET verify_token = ?, verify_expire = ? WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, user.getVerifyToken());
+            ps.setTimestamp(2, user.getVerifyExpire());
+            ps.setLong(3, user.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Helper: map từ ResultSet -> User object
+    private User mapRow(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getLong("id"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        user.setPasswordHash(rs.getString("password_hash"));
+        user.setPhone(rs.getString("phone"));
+        user.setRole(rs.getString("role"));
+        user.setIsBlocked(rs.getBoolean("is_blocked"));
+        user.setBlockedUntil(rs.getTimestamp("blocked_until"));
+        user.setIsVerified(rs.getBoolean("is_verified"));
+        user.setVerifyToken(rs.getString("verify_token"));
+        rs.getTimestamp("created_at");
+        rs.getTimestamp("updated_at");
+        user.setVerifyExpire(rs.getTimestamp("verify_expire"));
+        return user;
     }
 
     // Trả về true/false
@@ -77,21 +136,6 @@ public class UserDao {
         return null;
     }
 
-    private User mapRow(ResultSet rs) throws SQLException {
-        return new User(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getString("email"),
-            rs.getString("password_hash"),
-            rs.getString("phone"),
-            rs.getString("role"),
-            rs.getBoolean("is_blocked"),
-            rs.getTimestamp("created_at"),
-            rs.getTimestamp("updated_at"),
-            rs.getTimestamp("blocked_until")
-        );
-    }
-
     public List<User> getAllUsers() throws SQLException {
         return getUsersByQuery("SELECT * FROM users");
     }
@@ -119,7 +163,7 @@ public class UserDao {
             pstmt.setString(3, searchTerm);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    users.add(extractUserFromResultSet(rs));
+                    users.add(mapRow(rs));
                 }
             }
         }
@@ -132,7 +176,7 @@ public class UserDao {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
-                users.add(extractUserFromResultSet(rs));
+                users.add(mapRow(rs));
             }
         }
         return users;
@@ -146,7 +190,7 @@ public class UserDao {
             pstmt.setLong(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    user = extractUserFromResultSet(rs);
+                    user = mapRow(rs);
                 }
             }
         }
@@ -213,20 +257,5 @@ public class UserDao {
             pstmt.setString(5, role);
             pstmt.executeUpdate();
         }
-    }
-
-    private User extractUserFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getLong("id"));
-        user.setName(rs.getString("name"));
-        user.setEmail(rs.getString("email"));
-        user.setPasswordHash(rs.getString("password_hash"));
-        user.setPhone(rs.getString("phone"));
-        user.setRole(rs.getString("role"));
-        user.setIsBlocked(rs.getBoolean("is_blocked"));
-        user.setCreatedAt(rs.getTimestamp("created_at"));
-        user.setUpdatedAt(rs.getTimestamp("updated_at"));
-        user.setBlockedUntil(rs.getTimestamp("blocked_until"));
-        return user;
     }
 }
