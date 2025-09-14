@@ -13,18 +13,18 @@
 </head>
 <body>
 
-<h1>Hồ sơ của ${user.name}</h1>
-<p>Tên: ${user.name}</p>
-<p>Số điện thoại: ${user.phone}</p>
-<p>Email: ${user.email}</p>
-<p>Mật khẩu: ******</p>
-
+<h1>Hồ sơ của ${sessionScope.user.name}</h1>
+<p>Tên: ${sessionScope.user.name}</p>
+<p>Số điện thoại: ${sessionScope.user.phone}</p>
+<p>Email: ${sessionScope.user.email}</p>
 
 <form action="${pageContext.request.contextPath}/user/edit" method="post">
-    <input type="hidden" name="id" value="${user.id}"/>
-    <input type="hidden" name="email" value="${user.email}"/>
-    <input type="hidden" name="action" value="edit"/>
+    <input type="hidden" name="action" value="changePassword"/>
+    <input type="submit" value="Đổi mật khẩu" />
+</form>
 
+<form action="${pageContext.request.contextPath}/user/edit" method="post">
+    <input type="hidden" name="action" value="editInfo"/>
     <input type="submit" value="Chỉnh sửa hồ sơ" />
 </form>
 
