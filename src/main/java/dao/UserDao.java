@@ -1,15 +1,18 @@
+// Package: dao
+// Các sửa đổi chính: Thêm logger, thay printStackTrace bằng log và ném RuntimeException để thống nhất, kiểm tra null trong mapRow và extractUserFromResultSet, sử dụng PreparedStatement trong getUsersByQuery để tránh SQL Injection tiềm ẩn.
 package dao;
 
 import util.DBConnection;
 import model.User;
 import java.sql.*;
-import java.util.Optional;
-
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserDao {
+    private static final Logger log = Logger.getLogger(UserDao.class.getName());
 
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
@@ -20,19 +23,20 @@ public class UserDao {
             if (rs.next()) {
                 return Optional.of(mapRow(rs));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Error finding user by email: " + email, e);
+            throw new RuntimeException("Database error occurred", e);
         }
         return Optional.empty();
     }
 
     private Connection getConnection() throws SQLException {
-    	return DBConnection.getConnection();
-	}
+        return DBConnection.getConnection();
+    }
 
     public boolean save(User user) {
         String sql = "INSERT INTO users (name, email, password_hash, phone, role, is_blocked, blocked_until, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, now())";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, now())";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getName());
@@ -41,20 +45,18 @@ public class UserDao {
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getRole());
             ps.setBoolean(6, user.getIsBlocked() != null ? user.getIsBlocked() : false);
-            ps.setTimestamp(7, user.getBlockedUntil()); // có thể null
+            ps.setTimestamp(7, user.getBlockedUntil());
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Error saving user: " + user.getEmail(), e);
+            throw new RuntimeException("Database error occurred", e);
         }
-        return false;
     }
 
-    // Trả về true/false
     public boolean isUserBlocked(String email) {
         return getBlockInfo(email) != null;
     }
 
-    // Trả về thời gian unblock (nếu có), null nếu không bị block
     public Timestamp getBlockInfo(String email) {
         String sql = "SELECT is_blocked, blocked_until FROM users WHERE email = ?";
         try (Connection conn = getConnection();
@@ -65,30 +67,30 @@ public class UserDao {
                 boolean isBlocked = rs.getBoolean("is_blocked");
                 Timestamp until = rs.getTimestamp("blocked_until");
 
-                // nếu is_blocked = true hoặc until > now → đang bị block
                 if (isBlocked) return until;
                 if (until != null && until.after(new Timestamp(System.currentTimeMillis()))) {
                     return until;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Error getting block info for: " + email, e);
+            throw new RuntimeException("Database error occurred", e);
         }
         return null;
     }
 
     private User mapRow(ResultSet rs) throws SQLException {
         return new User(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getString("email"),
-            rs.getString("password_hash"),
-            rs.getString("phone"),
-            rs.getString("role"),
-            rs.getBoolean("is_blocked"),
-            rs.getTimestamp("created_at"),
-            rs.getTimestamp("updated_at"),
-            rs.getTimestamp("blocked_until")
+                rs.getLong("id"),
+                rs.getString("name") != null ? rs.getString("name") : "",
+                rs.getString("email") != null ? rs.getString("email") : "",
+                rs.getString("password_hash") != null ? rs.getString("password_hash") : "",
+                rs.getString("phone") != null ? rs.getString("phone") : "",
+                rs.getString("role") != null ? rs.getString("role") : "",
+                rs.getBoolean("is_blocked"),
+                rs.getTimestamp("created_at"),
+                rs.getTimestamp("updated_at"),
+                rs.getTimestamp("blocked_until")
         );
     }
 
@@ -129,8 +131,8 @@ public class UserDao {
     private List<User> getUsersByQuery(String query) throws SQLException {
         List<User> users = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 users.add(extractUserFromResultSet(rs));
             }
@@ -161,7 +163,6 @@ public class UserDao {
             pstmt.executeUpdate();
         }
     }
-
 
     public void blockUser(long id) throws SQLException {
         String query = "UPDATE users SET is_blocked = true, blocked_until = CURRENT_TIMESTAMP + INTERVAL '1 month', updated_at = CURRENT_TIMESTAMP WHERE id = ?";
@@ -218,11 +219,11 @@ public class UserDao {
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getLong("id"));
-        user.setName(rs.getString("name"));
-        user.setEmail(rs.getString("email"));
-        user.setPasswordHash(rs.getString("password_hash"));
-        user.setPhone(rs.getString("phone"));
-        user.setRole(rs.getString("role"));
+        user.setName(rs.getString("name") != null ? rs.getString("name") : "");
+        user.setEmail(rs.getString("email") != null ? rs.getString("email") : "");
+        user.setPasswordHash(rs.getString("password_hash") != null ? rs.getString("password_hash") : "");
+        user.setPhone(rs.getString("phone") != null ? rs.getString("phone") : "");
+        user.setRole(rs.getString("role") != null ? rs.getString("role") : "");
         user.setIsBlocked(rs.getBoolean("is_blocked"));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         user.setUpdatedAt(rs.getTimestamp("updated_at"));

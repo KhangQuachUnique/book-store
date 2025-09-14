@@ -1,36 +1,43 @@
+// Package: service
+// Các sửa đổi chính: Thêm kiểm tra dữ liệu đầu vào trong register, tái sử dụng thông tin user để kiểm tra block trong login để tránh truy vấn dư thừa.
 package service;
 
 import dao.UserDao;
-import model.User;
 import model.LoginResult;
-import org.mindrot.jbcrypt.BCrypt;
-
-import java.util.Optional;
-
 import model.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class UserService {
-    private UserDao userDao = new UserDao();
+    private UserDao userDAO = new UserDao();
 
     public boolean register(User user, String rawPassword) {
-        Optional<User> existing = userDao.findByEmail(user.getEmail());
+        Optional<User> existing = userDAO.findByEmail(user.getEmail());
         if (existing.isPresent()) {
             return false;
         }
+
+        if (!util.ValidatorUtil.isValidEmail(user.getEmail())) {
+            return false;
+        }
+        if (!util.ValidatorUtil.isValidPhoneNumber(user.getPhone())) {
+            return false;
+        }
+
         String hashed = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
         user.setPasswordHash(hashed);
         user.setRole("customer");
         user.setIsBlocked(false);
-        return userDao.save(user);
+        return userDAO.save(user);
     }
 
     public LoginResult login(String email, String rawPassword) {
         LoginResult result = new LoginResult();
 
-        Optional<User> userOpt = userDao.findByEmail(email);
+        Optional<User> userOpt = userDAO.findByEmail(email);
         if (!userOpt.isPresent()) {
             result.setStatus(LoginResult.LoginStatus.INVALID);
             return result;
@@ -38,26 +45,26 @@ public class UserService {
 
         User user = userOpt.get();
 
-        // kiểm tra block
-        if (userDao.isUserBlocked(email)) {
+        if (user.getIsBlocked() != null && user.getIsBlocked()) {
             result.setStatus(LoginResult.LoginStatus.BLOCKED);
-            result.setBlockedUntil(user.getBlockedUntil()); // nếu có cột blocked_until
+            result.setBlockedUntil(user.getBlockedUntil());
+            return result;
+        }
+        if (user.getBlockedUntil() != null && user.getBlockedUntil().after(new java.sql.Timestamp(System.currentTimeMillis()))) {
+            result.setStatus(LoginResult.LoginStatus.BLOCKED);
+            result.setBlockedUntil(user.getBlockedUntil());
             return result;
         }
 
-        // kiểm tra mật khẩu
         if (!BCrypt.checkpw(rawPassword, user.getPasswordHash())) {
             result.setStatus(LoginResult.LoginStatus.INVALID);
             return result;
         }
 
-        // login thành công
         result.setUser(user);
         result.setStatus(LoginResult.LoginStatus.SUCCESS);
         return result;
     }
-
-    private UserDao userDAO = new UserDao();
 
     public List<User> getAllUsers() throws SQLException {
         return userDAO.getAllUsers();
