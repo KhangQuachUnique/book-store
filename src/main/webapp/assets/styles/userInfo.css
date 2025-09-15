@@ -7,16 +7,11 @@
 
 /* Body căn giữa toàn bộ */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-    color: #333;
-    padding: 20px;
-
     display: flex;
-    justify-content: center; /* căn ngang */
-    align-items: center;     /* căn dọc */
-    min-height: 100vh;       /* chiều cao full màn hình */
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f5f6fa;
 }
 
 /* Heading */
