@@ -7,35 +7,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const addForm = document.querySelector('form[action*="/api/category"]');
 
     if (nameInput && addForm) {
+        let debounceTimer;
         nameInput.addEventListener('input', function() {
             const val = nameInput.value.trim();
 
             // Chỉ kiểm tra khi có ký tự
             if (val.length > 0) {
-                // SỬ DỤNG BIẾN contextPath ĐÃ ĐỊNH NGHĨA Ở JSP
-                const checkUrl = `${contextPath}/api/category?action=checkName&name=${encodeURIComponent(val)}`;
-                
-                fetch(checkUrl)
-                    .then(res => res.json())
-                    .then(data => {
-                        let msg = document.getElementById('name-exists-msg');
-                        if (!msg) {
-                            msg = document.createElement('div');
-                            msg.id = 'name-exists-msg';
-                            msg.className = 'invalid-feedback'; // Dùng class chuẩn của Bootstrap 5
-                            nameInput.parentNode.appendChild(msg);
-                        }
-                        
-                        // Hiển thị hoặc ẩn thông báo lỗi
-                        if (data.exists) {
-                            msg.textContent = 'Tên này đã tồn tại, vui lòng nhập tên khác!';
-                            nameInput.classList.add('is-invalid');
-                        } else {
-                            msg.textContent = '';
-                            nameInput.classList.remove('is-invalid');
-                        }
-                    })
-                    .catch(error => console.error('Error checking name:', error)); // Thêm catch để debug
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
+                    const checkUrl = `${base}/api/category?action=checkName&name=${encodeURIComponent(val)}`;
+
+                    fetch(checkUrl)
+                        .then(res => res.json())
+                        .then(data => {
+                            let msg = document.getElementById('name-exists-msg');
+                            if (!msg) {
+                                msg = document.createElement('div');
+                                msg.id = 'name-exists-msg';
+                                msg.className = 'invalid-feedback'; // Dùng class chuẩn của Bootstrap 5
+                                nameInput.parentNode.appendChild(msg);
+                            }
+
+                            // Hiển thị hoặc ẩn thông báo lỗi
+                            if (data.exists) {
+                                msg.textContent = 'Tên này đã tồn tại, vui lòng nhập tên khác!';
+                                nameInput.classList.add('is-invalid');
+                            } else {
+                                msg.textContent = '';
+                                nameInput.classList.remove('is-invalid');
+                            }
+                        })
+                        .catch(error => console.error('Error checking name:', error)); // Thêm catch để debug
+                }, 300);
             } else {
                 // Xóa lỗi nếu người dùng xóa hết chữ
                  nameInput.classList.remove('is-invalid');

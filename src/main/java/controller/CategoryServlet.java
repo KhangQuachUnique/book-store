@@ -2,13 +2,16 @@ package controller;
 
 import dao.CategoryDao;
 import model.Category;
+import util.DBConnection;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
+@WebServlet("/api/category")
 public class CategoryServlet extends HttpServlet {
 
     private CategoryDao categoryDao;
@@ -22,113 +25,102 @@ public class CategoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-    String action = req.getParameter("action");
-    if (action == null) action = "list";
+        String action = req.getParameter("action");
+        if (action == null) action = "list";
 
-    // Xử lý kiểm tra trùng tên cho JS
-    if ("checkName".equals(action)) {
-        String name = req.getParameter("name");
-        boolean exists = false;
-        List<Category> categories = categoryDao.findAll();
-        for (Category cat : categories) {
-            if (cat.getName().equalsIgnoreCase(name)) {
-                exists = true;
+        // Xử lý kiểm tra trùng tên cho JS
+        if ("checkName".equals(action)) {
+            String name = req.getParameter("name");
+            boolean exists = categoryDao.isCategoryNameExists(name);
+            resp.setContentType("application/json");
+            resp.getWriter().write("{\"exists\":" + exists + "}");
+            return;
+        }
+
+        // Lấy message từ session nếu có
+        HttpSession session = req.getSession();
+        String message = (String) session.getAttribute("message");
+        if (message != null) {
+            req.setAttribute("message", message);
+            session.removeAttribute("message");
+        }
+
+        switch (action) {
+            case "add": {
+                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/addCategory.jsp");
+                dispatcher.forward(req, resp);
+                break;
+            }
+            case "edit": {
+                Long editId = Long.parseLong(req.getParameter("id"));
+                Category category = categoryDao.findById(editId);
+                req.setAttribute("category", category);
+
+                List<Category> allCategories = categoryDao.findAll();
+                req.setAttribute("allCategories", allCategories);
+
+                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/editCategory.jsp");
+                dispatcher.forward(req, resp);
+                break;
+            }
+            case "list":
+            default: {
+                List<Category> categories = categoryDao.findAll();
+                req.setAttribute("categories", categories);
+
+                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/manageCategory.jsp");
+                dispatcher.forward(req, resp);
                 break;
             }
         }
-        resp.setContentType("application/json");
-        resp.getWriter().write("{\"exists\":" + exists + "}");
-        return;
-    }
-
-    // Lấy message từ session nếu có
-    HttpSession session = req.getSession();
-    String message = (String) session.getAttribute("message");
-    if (message != null) {
-        req.setAttribute("message", message);
-        session.removeAttribute("message");
-    }
-
-    switch (action) {
-        case "add":
-            RequestDispatcher addDispatcher =
-                req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/addCategory.jsp");
-            addDispatcher.forward(req, resp);
-            break;
-
-        case "edit":
-            Long editId = Long.parseLong(req.getParameter("id"));
-            Category category = categoryDao.findById(editId);
-            req.setAttribute("category", category);
-            // Truyền danh sách tất cả category cho datalist
-            List<Category> allCategories = categoryDao.findAll();
-            req.setAttribute("allCategories", allCategories);
-
-            RequestDispatcher editDispatcher =
-                req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/editCategory.jsp");
-            editDispatcher.forward(req, resp);
-            break;
-
-        case "list":
-        default:
-            List<Category> categories = categoryDao.findAll();
-            req.setAttribute("categories", categories);
-
-            RequestDispatcher listDispatcher =
-                req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/manageCategory.jsp");
-            listDispatcher.forward(req, resp);
-            break;
-    }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-    req.setCharacterEncoding("UTF-8");
-    resp.setCharacterEncoding("UTF-8");
-    resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
 
-    String action = req.getParameter("action");
-    if (action == null) action = "";
+        String action = req.getParameter("action");
+        if (action == null) action = "";
 
         HttpSession session = req.getSession();
         String message = "";
+
         try {
             switch (action) {
                 case "create": {
                     String err = createCategory(req);
-                    if (err == null) {
-                        message = "Thêm category thành công.";
-                    } else {
-                        message = "Thêm category thất bại: " + err;
-                    }
+                    message = (err == null)
+                            ? "Thêm category thành công."
+                            : "Thêm category thất bại: " + err;
                     break;
                 }
                 case "update": {
                     String err = updateCategory(req);
-                    if (err == null) {
-                        message = "Cập nhật category thành công.";
-                    } else {
-                        message = "Cập nhật category thất bại: " + err;
-                    }
+                    message = (err == null)
+                            ? "Cập nhật category thành công."
+                            : "Cập nhật category thất bại: " + err;
                     break;
                 }
                 case "delete": {
                     Long deleteId = Long.parseLong(req.getParameter("id"));
                     String err = categoryDao.delete(deleteId);
-                    if (err == null) {
-                        message = "Xóa category thành công.";
-                    } else {
-                        message = "Xóa category thất bại: " + err;
-                    }
+                    message = (err == null)
+                            ? "Xóa category thành công."
+                            : "Xóa category thất bại: " + err;
                     break;
                 }
+                default:
+                    message = "Hành động không hợp lệ.";
             }
         } catch (Exception e) {
             message = "Lỗi: " + e.getMessage();
             e.printStackTrace();
         }
+
         session.setAttribute("message", message);
         resp.sendRedirect(req.getContextPath() + "/api/category?action=list");
     }
@@ -141,7 +133,7 @@ public class CategoryServlet extends HttpServlet {
         }
 
         Category c = new Category();
-        c.setName(name); // Dùng lại biến name đã lấy
+        c.setName(name);
 
         String parentIdStr = req.getParameter("parent_id");
         if (parentIdStr != null && !parentIdStr.isEmpty()) {

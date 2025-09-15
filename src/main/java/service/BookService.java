@@ -1,12 +1,12 @@
-// package service;
+package service;
 
-// import model.Book;
-// import dao.BookDao;
-// import java.util.List;
+import model.Book;
+import dao.BookDao;
+import java.util.List;
 
-// public class  BookService {
-//     public static List<Book> getAllBooks() {
+public class  BookService {
+    public static List<Book> getAllBooks() {
 
-//         return BookDao.getAllBooks();
-//     }
-// }
+        return BookDao.getAllBooks();
+    }
+}

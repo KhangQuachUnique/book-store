@@ -46,9 +46,11 @@
                 <td>
                     <a class="btn btn-success btn-sm text-white"
                        href="${pageContext.request.contextPath}/api/category?action=edit&id=${category.id}">Edit</a>
-                    <a class="btn btn-danger btn-sm"
-                       href="${pageContext.request.contextPath}/api/category?action=delete&id=${category.id}"
-                       onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                    <form action="${pageContext.request.contextPath}/api/category" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                        <input type="hidden" name="action" value="delete"/>
+                        <input type="hidden" name="id" value="${category.id}"/>
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
         </c:forEach>

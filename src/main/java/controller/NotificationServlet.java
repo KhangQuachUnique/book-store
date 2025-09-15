@@ -6,6 +6,7 @@ import model.Notification;
 import model.User; // Giả sử bạn có model User
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@WebServlet("/user/notifications")
 public class NotificationServlet extends HttpServlet {
 
     private NotificationDao notificationDao;

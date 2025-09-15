@@ -1,7 +1,9 @@
 // Hàm để lấy số lượng thông báo chưa đọc từ server
 async function fetchUnreadNotificationCount() {
     try {
-        const response = await fetch('/book-store/api/notifications?action=getCount');
+        const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
+        const url = `${base}/user/notifications?action=getCount`;
+        const response = await fetch(url, { credentials: 'same-origin' });
         
         if (response.status === 401) {
              // Người dùng chưa đăng nhập, không làm gì cả

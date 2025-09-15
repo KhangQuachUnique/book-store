@@ -9,13 +9,22 @@ import java.util.List;
 
 public class CategoryDao {
 
+    // Wrapper mở kết nối riêng (giữ tương thích)
     public List<Category> findAll() {
+        try (Connection conn = DBConnection.getConnection()) {
+            return findAll(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    // Dùng một Connection được truyền vào (ưu tiên trong Servlet)
+    public List<Category> findAll(Connection conn) {
         List<Category> list = new ArrayList<>();
         String sql = "SELECT * FROM categories ORDER BY id DESC";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
@@ -26,10 +35,17 @@ public class CategoryDao {
     }
 
     public Category findById(Long id) {
-        String sql = "SELECT * FROM categories WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection()) {
+            return findById(conn, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    public Category findById(Connection conn, Long id) {
+        String sql = "SELECT * FROM categories WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -43,10 +59,16 @@ public class CategoryDao {
     }
 
     public String create(Category c) {
-        String sql = "INSERT INTO categories (name, parent_id, is_leaf) VALUES (?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection()) {
+            return create(conn, c);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
 
+    public String create(Connection conn, Category c) {
+        String sql = "INSERT INTO categories (name, parent_id, is_leaf) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getName());
             if (c.getParentId() != null) {
                 ps.setLong(2, c.getParentId());
@@ -64,10 +86,16 @@ public class CategoryDao {
     }
 
     public String update(Category c) {
-        String sql = "UPDATE categories SET name=?, parent_id=?, is_leaf=? WHERE id=?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection()) {
+            return update(conn, c);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
 
+    public String update(Connection conn, Category c) {
+        String sql = "UPDATE categories SET name=?, parent_id=?, is_leaf=? WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getName());
             if (c.getParentId() != null) {
                 ps.setLong(2, c.getParentId());
@@ -86,9 +114,16 @@ public class CategoryDao {
     }
 
     public String delete(Long id) {
+        try (Connection conn = DBConnection.getConnection()) {
+            return delete(conn, id);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    public String delete(Connection conn, Long id) {
         String sql = "DELETE FROM categories WHERE id=?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             int affected = ps.executeUpdate();
             if (affected > 0) return null;
@@ -109,15 +144,20 @@ public class CategoryDao {
     }
 
     public boolean isCategoryNameExists(String name) {
-        String sql = "SELECT COUNT(*) FROM categories WHERE name = ?";
-        try (Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+        try (Connection conn = DBConnection.getConnection()) {
+            return isCategoryNameExists(conn, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isCategoryNameExists(Connection conn, String name) {
+        String sql = "SELECT 1 FROM categories WHERE LOWER(name) = LOWER(?) LIMIT 1";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, name);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next();
             }
         } catch (Exception e) {
             e.printStackTrace();
