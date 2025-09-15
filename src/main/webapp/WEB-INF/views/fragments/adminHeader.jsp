@@ -28,8 +28,25 @@
                     <span class="cart-count">0</span>
                 </a>
             </li>
-            <li><a href="${pageContext.request.contextPath}/user/login">Login</a></li>
-            <li><a href="${pageContext.request.contextPath}/user/register">Register</a></li>
+            <c:choose>
+                <c:when test="${not empty sessionScope.user}">
+                    <li class="user-dropdown">
+                        <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free v7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm89.6 32h-16.7c-22.2 10.3-46.9 16-72.9 16s-50.6-5.7-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/></svg>
+                            <span>${sessionScope.user.username}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="${pageContext.request.contextPath}/user/profile">Profile</a></li>
+                            <li><a href="${pageContext.request.contextPath}/user/orders">My Orders</a></li>
+                            <li><a href="${pageContext.request.contextPath}/user/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li><a href="${pageContext.request.contextPath}/user/login">Login</a></li>
+                    <li><a href="${pageContext.request.contextPath}/user/register">Register</a></li>
+                </c:otherwise>
+            </c:choose>
         </ul>
     </nav>
 </header>
