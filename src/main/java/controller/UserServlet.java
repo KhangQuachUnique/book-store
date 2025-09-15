@@ -1,5 +1,6 @@
 package controller;
 
+import constant.PathConstants;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.Validation;
@@ -221,7 +222,8 @@ public class UserServlet extends HttpServlet {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/userList.jsp");
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_LIST);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -230,7 +232,8 @@ public class UserServlet extends HttpServlet {
         if (id == -1) return;
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/viewUser.jsp");
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_DETAIL);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -239,17 +242,20 @@ public class UserServlet extends HttpServlet {
         if (id == -1) return;
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/editUser.jsp");
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_EDIT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
     private void showNewAdminForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/createAdmin.jsp");
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD_ADMIN);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
     private void showNewUserForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/createUser.jsp");
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -260,7 +266,8 @@ public class UserServlet extends HttpServlet {
         List<Address> addresses = addressService.getAddressesByUserId(userId);
         request.setAttribute("user", user);
         request.setAttribute("addresses", addresses);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/addressList.jsp");
+        request.setAttribute("contentPage", "/WEB-INF/views/userManagement/addressList.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -268,7 +275,8 @@ public class UserServlet extends HttpServlet {
         long userId = parseLongParameter(request.getParameter("id"), response);
         if (userId == -1) return;
         request.setAttribute("userId", userId);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/Usermanagement/createAddress.jsp");
+        request.setAttribute("contentPage", "/WEB-INF/views/userManagement/addressList.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 

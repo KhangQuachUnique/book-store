@@ -22,19 +22,16 @@
 </head>
 <body>
 <!-- Sidebar -->
-<%@include file="fragments/sidebar.jspf" %>
+<%@include file="fragments/adminSidebar.jsp" %>
 
 <div class="main-content">
     <!-- Header -->
-    <%@ include file="fragments/header.jspf" %>
+    <%@ include file="fragments/adminHeader.jsp" %>
 
     <!-- Main -->
     <main>
         <c:import url="${contentPage}" />
     </main>
-
-    <!-- Footer -->
-    <%@ include file="fragments/footer.jsp" %>
 </div>
 <script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
 <script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>
