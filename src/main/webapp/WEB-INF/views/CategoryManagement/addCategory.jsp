@@ -9,7 +9,7 @@
 <div class="container py-4">
     <h1 class="mb-4 text-primary">Add New Category</h1>
 
-    <form action="${pageContext.request.contextPath}/api/category" method="post" class="card p-4 shadow-sm">
+    <form action="${pageContext.request.contextPath}/admin/category" method="post" class="card p-4 shadow-sm">
         <input type="hidden" name="action" value="create">
 
         <div class="mb-3">
@@ -28,7 +28,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Save Category</button>
-        <a href="${pageContext.request.contextPath}/api/category?action=list" class="btn btn-secondary mt-2">Cancel</a>
+        <a href="${pageContext.request.contextPath}/admin/category?action=list" class="btn btn-secondary mt-2">Cancel</a>
     </form>
 </div>
 

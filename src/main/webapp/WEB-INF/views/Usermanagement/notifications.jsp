@@ -6,7 +6,13 @@
 <html lang="vi">
 <head>
     <title>Thông Báo Của Bạn</title>
+    <!-- Header/global styles so the header renders properly -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/header.css">
     <style>
+        body {
+            background-color: #800020;
+        }
         /* CSS cho trang thông báo */
         .notifications-container {
             max-width: 800px;
@@ -51,6 +57,7 @@
         .notification-message {
             color: var(--text-display);
             margin: 0;
+            white-space: pre-line; /* preserve newlines from DB (\n, \r\n) */
         }
         .notification-time {
             font-size: 0.85rem;
@@ -60,6 +67,7 @@
     </style>
 </head>
 <body>
+    <%@ include file="../fragments/header.jspf" %>
     <div class="notifications-container">
         <h1><i class="fas fa-bell"></i> Thông Báo</h1>
         <ul class="notification-list">

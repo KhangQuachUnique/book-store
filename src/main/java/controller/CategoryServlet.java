@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
-@WebServlet("/api/category")
+@WebServlet("/admin/category")
 public class CategoryServlet extends HttpServlet {
 
     private CategoryDao categoryDao;
@@ -122,7 +122,7 @@ public class CategoryServlet extends HttpServlet {
         }
 
         session.setAttribute("message", message);
-        resp.sendRedirect(req.getContextPath() + "/api/category?action=list");
+        resp.sendRedirect(req.getContextPath() + "/admin/category?action=list");
     }
 
     private String createCategory(HttpServletRequest req) {

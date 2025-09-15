@@ -3,8 +3,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- Add Category: kiểm tra trùng tên ---
-    const nameInput = document.querySelector('form[action*="/api/category"] input[name="name"]');
-    const addForm = document.querySelector('form[action*="/api/category"]');
+    const nameInput = document.querySelector('form[action*="/admin/category"] input[name="name"]');
+    const addForm = document.querySelector('form[action*="/admin/category"]');
 
     if (nameInput && addForm) {
         let debounceTimer;
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
-                    const checkUrl = `${base}/api/category?action=checkName&name=${encodeURIComponent(val)}`;
+                    const checkUrl = `${base}/admin/category?action=checkName&name=${encodeURIComponent(val)}`;
 
                     fetch(checkUrl)
                         .then(res => res.json())
@@ -83,12 +83,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Nếu muốn dùng combobox, cần chuyển input[name="name"] thành <select> hoặc dùng thư viện autocomplete
     // Nếu chỉ muốn gợi ý, có thể fetch danh sách tên và hiển thị gợi ý khi gõ
     // (code mẫu cho autocomplete đơn giản)
-    const editNameInput = document.querySelector('form[action$="/api/category"] input[name="name"]');
+    const editNameInput = document.querySelector('form[action$="/admin/category"] input[name="name"]');
     if (editNameInput) {
         editNameInput.addEventListener('input', function() {
             const val = editNameInput.value.trim();
             if (val.length > 0) {
-                fetch(`/api/category?action=listNames&keyword=${encodeURIComponent(val)}`)
+                fetch(`/admin/category?action=listNames&keyword=${encodeURIComponent(val)}`)
                     .then(res => res.json())
                     .then(data => {
                         let datalist = document.getElementById('category-names');

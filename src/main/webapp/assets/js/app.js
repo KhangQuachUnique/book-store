@@ -1,8 +1,11 @@
-// Tự động lấy context path từ URL hiện tại
-const contextPath = window.location.pathname.split("/")[1];
-const BASE_URL = contextPath ? `/${contextPath}` : "";
+// Scope variables to avoid global re-declaration across multiple pages
+(function () {
+    // Prefer server-injected context if available
+    const injected = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : null;
+    const contextPath = injected ?? (window.location.pathname.split("/")[1] ? `/${window.location.pathname.split("/")[1]}` : "");
+    const BASE_URL = contextPath;
 
-const USER_URL = `${BASE_URL}/user`
+    const USER_URL = `${BASE_URL}/user`;
 
 // API endpoints
 const USER = {
@@ -80,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Logout
-async function logout() {
+window.logout = async function logout() {
     try {
         const res = await fetch(USER.logout, {
             method: "POST",
@@ -97,7 +100,7 @@ async function logout() {
 }
 
 // Check user status
-async function checkUserStatus() {
+window.checkUserStatus = async function checkUserStatus() {
     try {
         console.log("Checking user status...")
         const res = await fetch(USER.profile, {
@@ -122,7 +125,7 @@ async function checkUserStatus() {
 }
 
 // Refresh token (dùng cookie refresh_token)
-async function refreshAccessToken() {
+window.refreshAccessToken = async function refreshAccessToken() {
     try {
         const res = await fetch(USER.refresh, {
             method: "POST",
@@ -138,3 +141,7 @@ async function refreshAccessToken() {
         return false;
     }
 }
+
+// expose BASE_URL if needed elsewhere
+window.BASE_URL = window.BASE_URL || (function(){ return contextPath; })();
+})();

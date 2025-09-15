@@ -15,10 +15,10 @@
     <h1 class="mb-4 text-primary">Manage Categories</h1>
 
     <!-- Nút thêm mới -->
-    <a class="btn btn-primary mb-3" href="${pageContext.request.contextPath}/api/category?action=add">+ Add Category</a>
+    <a class="btn btn-primary mb-3" href="${pageContext.request.contextPath}/admin/category?action=add">+ Add Category</a>
 
     <!-- Thanh tìm kiếm -->
-    <form class="input-group mb-3" action="${pageContext.request.contextPath}/api/category" method="get">
+    <form class="input-group mb-3" action="${pageContext.request.contextPath}/admin/category" method="get">
     <input type="hidden" name="action" value="search">
     <input type="text" class="form-control" name="keyword" placeholder="Search category..." value="${param.keyword}">
     </form>
@@ -45,8 +45,8 @@
                 <td><c:if test="${category.isLeaf}">✅</c:if><c:if test="${!category.isLeaf}">❌</c:if></td>
                 <td>
                     <a class="btn btn-success btn-sm text-white"
-                       href="${pageContext.request.contextPath}/api/category?action=edit&id=${category.id}">Edit</a>
-                    <form action="${pageContext.request.contextPath}/api/category" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                       href="${pageContext.request.contextPath}/admin/category?action=edit&id=${category.id}">Edit</a>
+                    <form action="${pageContext.request.contextPath}/admin/category" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
                         <input type="hidden" name="action" value="delete"/>
                         <input type="hidden" name="id" value="${category.id}"/>
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>

@@ -85,6 +85,9 @@ public class LoginServlet extends HttpServlet {
                     res.addProperty("message", "Login success");
                     res.addProperty("email", user.getEmail());
                     res.addProperty("role", user.getRole());
+
+                    // Set session attribute for server-side auth (used by NotificationServlet)
+                    req.getSession(true).setAttribute("user", user);
                 }
             }
 

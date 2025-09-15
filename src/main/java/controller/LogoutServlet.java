@@ -33,6 +33,11 @@ public class LogoutServlet extends HttpServlet {
 
         // Nếu bạn lưu refresh token trong DB/Redis thì xóa ở đây (chưa triển khai)
 
+        // Clear server-side session user for consistency
+        if (req.getSession(false) != null) {
+            req.getSession(false).removeAttribute("user");
+        }
+
         resp.getWriter().print(gson.toJson(new Response("Logout successful")));
     }
 
