@@ -22,7 +22,10 @@
 
 </head>
 <body>
-
+<div class="logo">
+    <img src="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg" alt="Logo" >
+    <span>Bookie Cake</span>
+</div>
 <div class="form-container">
     <h2 class="form-title">Register</h2>
 

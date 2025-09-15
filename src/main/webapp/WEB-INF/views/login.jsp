@@ -19,9 +19,12 @@
           href="${pageContext.request.contextPath}/assets/styles/footer.css">
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/styles/form.css">
-
 </head>
 <body>
+<div class="logo">
+    <img src="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg" alt="Logo" >
+    <span>Bookie Cake</span>
+</div>
 <div class="form-container">
     <h2 class="form-title">Login</h2>
     <form id="loginForm" class="login-form">
