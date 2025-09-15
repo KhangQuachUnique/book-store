@@ -40,23 +40,23 @@ public class UpdateUserInfo extends HttpServlet {
         User user = new User();
         user.setId(sessionUser.getId());
 
-        if (name != null) {
+        if (name != null && !name.trim().isEmpty()) {
             user.setName(name);
         }
         else {
             user.setName(sessionUser.getName());
         }
 
-        if (email != null) {
+        if (email != null && !email.trim().isEmpty()) {
             user.setEmail(email);
         }
         else {
             user.setEmail(sessionUser.getEmail());
         }
 
-        if (phone != null) {
+        if (phone != null && !phone.trim().isEmpty()) {
             user.setPhone(phone);
-        }
+    }
         else {
             user.setPhone(sessionUser.getPhone());
         }
@@ -65,8 +65,20 @@ public class UpdateUserInfo extends HttpServlet {
             String newPasswordHash = PasswordUtil.hashPassword(newPassword);
             user.setPasswordHash(newPasswordHash);
         }
+        if (isChange(sessionUser, name,  email, phone)) {
+            userService.updateUser(user);
+        }
 
-        userService.updateUser(user);
         response.sendRedirect("/user/info");
+    }
+
+    private boolean isChange(User sessionUser, String newName, String newEmail, String newPhone) {
+        String name = sessionUser.getName();
+        String email = sessionUser.getEmail();
+        String phone = sessionUser.getPhone();
+        if (!newName.equals(name) || !newEmail.equals(email) || !newPhone.equals(phone)) {
+            return true;
+        }
+        return false;
     }
 }
