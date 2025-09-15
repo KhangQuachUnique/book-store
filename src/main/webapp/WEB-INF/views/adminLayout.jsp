@@ -12,8 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookie Cake</title>
-    <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
+    <title>My Web App</title>
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">
@@ -23,19 +22,16 @@
 </head>
 <body>
 <!-- Sidebar -->
-<%@include file="fragments/sidebar.jspf" %>
+<%@include file="fragments/adminSidebar.jsp" %>
 
 <div class="main-content">
     <!-- Header -->
-    <%@ include file="fragments/header.jspf" %>
+    <%@ include file="fragments/adminHeader.jsp" %>
 
     <!-- Main -->
     <main>
         <c:import url="${contentPage}" />
     </main>
-
-    <!-- Footer -->
-    <%@ include file="fragments/footer.jsp" %>
 </div>
 <script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
 <script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>

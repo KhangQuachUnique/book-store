@@ -9,13 +9,8 @@
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>
 
-    <servlet>
-        <servlet-name>BookReview</servlet-name>
-        <servlet-class>controller.BookReviewServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>BookReview</servlet-name>
-        <url-pattern>/api/book-review</url-pattern>
-    </servlet-mapping>
-
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/notFound.jsp</location>
+    </error-page>
 </web-app>
