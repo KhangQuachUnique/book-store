@@ -1,14 +1,23 @@
+// Package: model
+// Các sửa đổi chính: Thêm ràng buộc validation @NotBlank và @Email cho các trường quan trọng để đảm bảo dữ liệu hợp lệ ngay tại model.
 package model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Timestamp;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+    @NotBlank(message = "Name cannot be empty")
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be empty")
+
     private Long id;              // BIGSERIAL
     private String name;          // name
     private String email;         // email
