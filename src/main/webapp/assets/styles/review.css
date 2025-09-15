@@ -17,6 +17,15 @@
     font-size: 28px;
     font-weight: 800;
     margin-bottom: 20px;
+    color: #2e2e2e;
+}
+
+.review-overall {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 100px;
 }
 
 .total-rating {
@@ -36,11 +45,26 @@
     color: #666;
 }
 
-.reviews-display {
-    margin-top: 30px;
+.levels-count {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
+}
+
+.level-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.level-count span {
+    color: #666666;
+    font-weight: 600;
+}
+
+.reviews-display {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .user-comment {
@@ -52,8 +76,8 @@
 }
 
 .user-comment .avatar {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -71,7 +95,7 @@
 }
 
 .username {
-    color: #800020;
+    color: #2e2e2e;
 }
 
 .comment-date {
@@ -101,33 +125,70 @@
 
 .comment-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.like-btn, .reply-btn {
-    background: var(--secondary-color);
-    color: var(--primary-color);
-    border: 1px solid #e1e1e1;
-    border-radius: 6px;
-    padding: 6px 16px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    display: flex;
     align-items: center;
-    gap: 6px;
-}
-
-.like-btn:hover, .reply-btn:hover {
-    background: var(--primary-color-hover);
-    color: #fff;
+    gap: 5px;
+    margin-top: 10px;
 }
 
 .like-count, .reply-count {
     font-weight: 600;
     margin-left: 4px;
-    color: #800020;
+    color: #ae002a;
+}
+
+@media (max-width: 768px) {
+    .review-overall {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.like-btn:hover svg {
+    fill: #b22234; /* a lighter red for hover */
+    transform: scale(1.1);
+}
+
+
+.like-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.like-btn svg {
+    height: 32px;
+    fill: #858585; /* default màu khi chưa like */
+    transition: fill 0.3s ease, transform 0.2s ease;
+}
+
+.like-btn.liked svg {
+    fill: #ae002a; /* màu chủ đề khi like */
+}
+
+/* Spinner loading */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #ae002a;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 

@@ -18,6 +18,11 @@ public class BookReview {
     private Integer fullStars;
     private Double partialFraction;
     private Integer emptyStars;
+    private Integer fiveStarCount;
+    private Integer fourStarCount;
+    private Integer threeStarCount;
+    private Integer twoStarCount;
+    private Integer oneStarCount;
 
     public void calculateStars() {
         // This method can be used to calculate star representation if needed
