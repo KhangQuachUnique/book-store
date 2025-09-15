@@ -1,64 +1,70 @@
 package util;
 
+import java.util.Date;
+import java.util.Map;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
-import java.util.Date;
-
 public class JwtUtil {
-    private static final String SECRET = "super-secret-key"; // TODO: để env
+    private static final String SECRET = "super-secret-key";
     private static final long ACCESS_TOKEN_EXP = 15 * 60 * 1000; // 15 phút
     private static final long REFRESH_TOKEN_EXP = 7 * 24 * 60 * 60 * 1000; // 7 ngày
     private static final Algorithm algorithm = Algorithm.HMAC256(SECRET);
+    private static final JWTVerifier verifier = JWT.require(algorithm).build();
 
-    // 🔹 Sinh access token
-    public static String generateToken(String email, int minutes) {
-        return JWT.create()
-                .withSubject(email)
-                .withClaim("type", "access")
-                .withExpiresAt(new Date(System.currentTimeMillis() + minutes * 60 * 1000))
-                .sign(algorithm);
+    public static DecodedJWT decode(String token) {
+        return verifier.verify(token); // verify và trả về object
     }
 
-    // 🔹 Sinh access token mặc định 15 phút
-    public static String generateAccessToken(String email) {
-        return generateToken(email, 15);
+    // Hàm generate token chung
+    private static String generateToken(String email, String type, long expMillis, Map<String, String> extraClaims) {
+        var builder = JWT.create().withSubject(email).withClaim("type", type)
+                .withExpiresAt(new Date(System.currentTimeMillis() + expMillis));
+
+        if (extraClaims != null) {
+            extraClaims.forEach(builder::withClaim);
+        }
+
+        return builder.sign(algorithm);
     }
 
-    // 🔹 Sinh refresh token
-    public static String generateRefreshToken(String email) {
-        return JWT.create()
-                .withSubject(email)
-                .withClaim("type", "refresh")
-                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXP))
-                .sign(algorithm);
+    // Access token
+    public static String generateAccessToken(String email, String role) {
+        return generateToken(email, "access", ACCESS_TOKEN_EXP, Map.of("role", role));
     }
 
-    // 🔹 Validate token (check signature + expired)
+    // Refresh token
+    public static String generateRefreshToken(String email, String role) {
+        return generateToken(email, "refresh", REFRESH_TOKEN_EXP, Map.of("role", role));
+    }
+
+    // Validate token
     public static boolean validateToken(String token) {
         try {
-            JWTVerifier verifier = JWT.require(algorithm).build();
-            verifier.verify(token); // sẽ throw nếu sai
+            decode(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    // 🔹 Lấy email từ token
+    // Lấy email
     public static String getEmailFromToken(String token) {
-        DecodedJWT jwt = JWT.require(algorithm).build().verify(token);
-        return jwt.getSubject();
+        return decode(token).getSubject();
     }
 
-    // 🔹 Kiểm tra token có phải refresh token không
+    // Lấy role
+    public static String getRoleFromToken(String token) {
+        return decode(token).getClaim("role").asString();
+    }
+
+    // Check refresh token
     public static boolean isRefreshToken(String token) {
         try {
-            DecodedJWT jwt = JWT.require(algorithm).build().verify(token);
-            String type = jwt.getClaim("type").asString();
-            return "refresh".equals(type);
+            return "refresh".equals(decode(token).getClaim("type").asString());
         } catch (Exception e) {
             return false;
         }

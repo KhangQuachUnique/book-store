@@ -73,8 +73,8 @@
                     <span class="cart-count">0</span>
                 </a>
             </li>
-            <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
-            <li><a href="${pageContext.request.contextPath}/register">Register</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/login">Login</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/register">Register</a></li>
         </ul>
     </nav>
 </header>
