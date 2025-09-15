@@ -19,7 +19,8 @@ public class AuthenticationFilter implements Filter {
     private static final Set<String> WHITELIST = Set.of(
             "/user/login",
             "/user/register",
-            "/assets/"
+            "/assets/",
+            "/"
     );
 
     @Override
