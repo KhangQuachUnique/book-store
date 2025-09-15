@@ -3,22 +3,22 @@
 <html>
 <head>
     <title>User Management - ${listType}</title>
-    <link rel="stylesheet" href="/assets/styles/users.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/users.css">
 </head>
 <body class="bg-background text-foreground">
 <div class="container">
     <h1 class="page-title">${listType}</h1>
 
     <nav class="nav-main">
-        <a href="/admin/user?action=list" class="nav-link">All Users</a>
-        <a href="/admin/user?action=listAdmins" class="nav-link">Admins</a>
-        <a href="/admin/user?action=listUsers" class="nav-link">Customers</a>
-        <a href="/admin/user?action=listBlocked" class="nav-link">Blocked Users</a>
+        <a href="${pageContext.request.contextPath}/admin/user?action=list" class="nav-link">All Users</a>
+        <a href="${pageContext.request.contextPath}/admin/user?action=listAdmins" class="nav-link">Admins</a>
+        <a href="${pageContext.request.contextPath}/admin/user?action=listUsers" class="nav-link">Customers</a>
+        <a href="${pageContext.request.contextPath}/admin/user?action=listBlocked" class="nav-link">Blocked Users</a>
     </nav>
 
     <nav class="nav-admin">
-        <a href="/admin/user?action=newAdmin" class="btn btn-secondary">Create Admin</a>
-        <a href="/admin/user?action=newUser" class="btn btn-secondary">Create User</a>
+        <a href="${pageContext.request.contextPath}/admin/user?action=newAdmin" class="btn btn-secondary">Create Admin</a>
+        <a href="${pageContext.request.contextPath}/admin/user?action=newUser" class="btn btn-secondary">Create User</a>
     </nav>
 
     <div class="card search-card">
@@ -26,7 +26,7 @@
             <h2 class="card-title">Search Users</h2>
         </div>
         <div class="card-content">
-            <form action="/admin/user" method="get" class="search-form">
+            <form action="${pageContext.request.contextPath}/admin/user" method="get" class="search-form">
                 <input type="hidden" name="action" value="search">
                 <input type="text" name="query" class="input" placeholder="Search by Name, Email, or Phone" value="${param.query}">
                 <input type="submit" value="Search" class="btn btn-primary">
@@ -38,11 +38,11 @@
         <div class="card-content">
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
-                    <a href="/admin/user?action=${param.action}&page=${currentPage - 1}&query=${param.query}" class="btn btn-secondary">Previous</a>
+                    <a href="${pageContext.request.contextPath}/admin/user?action=${param.action}&page=${currentPage - 1}&query=${param.query}" class="btn btn-secondary">Previous</a>
                 </c:if>
                 <span>Page ${currentPage} of ${totalPages}</span>
                 <c:if test="${currentPage < totalPages}">
-                    <a href="/admin/user?action=${param.action}&page=${currentPage + 1}&query=${param.query}" class="btn btn-secondary">Next</a>
+                    <a href="${pageContext.request.contextPath}/admin/user?action=${param.action}&page=${currentPage + 1}&query=${param.query}" class="btn btn-secondary">Next</a>
                 </c:if>
             </div>
             <table class="table">
@@ -67,14 +67,14 @@
                         <td>${user.role}</td>
                         <td>${user.isBlocked ? "Yes" : "No"}</td>
                         <td class="action-buttons">
-                            <a href="/admin/user?action=view&id=${user.id}" class="btn btn-outline btn-sm">View</a>
-                            <a href="/admin/user?action=edit&id=${user.id}" class="btn btn-outline btn-sm">Edit</a>
-                            <form action="/admin/user" method="post" style="display:inline;">
+                            <a href="${pageContext.request.contextPath}/admin/user?action=view&id=${user.id}" class="btn btn-outline btn-sm">View</a>
+                            <a href="${pageContext.request.contextPath}/admin/user?action=edit&id=${user.id}" class="btn btn-outline btn-sm">Edit</a>
+                            <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${user.id}">
                                 <input type="submit" value="Delete" class="btn btn-destructive btn-sm btn-lowe" onclick="return confirm('Are you sure you want to delete this user?')">
                             </form>
-                            <form action="/admin/user" method="post" style="display:inline;">
+                            <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="${user.isBlocked ? 'unblock' : 'block'}">
                                 <input type="hidden" name="id" value="${user.id}">
                                 <input type="submit" value="${user.isBlocked ? 'Unblock' : 'Block'}" class="btn btn-secondary btn-sm btn-lowe">
@@ -86,11 +86,11 @@
             </table>
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
-                    <a href="/admin/user?action=${param.action}&page=${currentPage - 1}&query=${param.query}" class="btn btn-secondary">Previous</a>
+                    <a href="${pageContext.request.contextPath}/admin/user?action=${param.action}&page=${currentPage - 1}&query=${param.query}" class="btn btn-secondary">Previous</a>
                 </c:if>
                 <span>Page ${currentPage} of ${totalPages}</span>
                 <c:if test="${currentPage < totalPages}">
-                    <a href="/admin/user?action=${param.action}&page=${currentPage + 1}&query=${param.query}" class="btn btn-secondary">Next</a>
+                    <a href="${pageContext.request.contextPath}/admin/user?action=${param.action}&page=${currentPage + 1}&query=${param.query}" class="btn btn-secondary">Next</a>
                 </c:if>
             </div>
         </div>

@@ -11,6 +11,7 @@ import util.PasswordUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.validation.ConstraintViolation;
 
+@WebServlet("/admin/user")
 public class UserServlet extends HttpServlet {
     private UserService userService = new UserService();
     private AddressService addressService = new AddressService();
@@ -306,28 +308,29 @@ public class UserServlet extends HttpServlet {
         }
 
         userService.updateUser(user);
-        response.sendRedirect(BASE_URL + "?action=list");
+
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1) return;
         userService.deleteUser(id);
-        response.sendRedirect(BASE_URL + "?action=list");
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void blockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1) return;
         userService.blockUser(id);
-        response.sendRedirect(BASE_URL + "?action=list");
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void unblockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1) return;
         userService.unblockUser(id);
-        response.sendRedirect(BASE_URL + "?action=list");
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void createAdmin(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -354,7 +357,7 @@ public class UserServlet extends HttpServlet {
         }
 
         userService.createAdmin(user);
-        response.sendRedirect(BASE_URL + "?action=list");
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void createUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -381,7 +384,7 @@ public class UserServlet extends HttpServlet {
         }
 
         userService.createUser(user);
-        response.sendRedirect(BASE_URL + "?action=list");
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void createAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -394,7 +397,7 @@ public class UserServlet extends HttpServlet {
         address.setAddress(addressText);
         address.setDefaultAddress(isDefaultAddress);
         addressService.createAddress(address);
-        response.sendRedirect(BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
     }
 
     private void setDefaultAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -403,7 +406,7 @@ public class UserServlet extends HttpServlet {
         long userId = parseLongParameter(request.getParameter("userId"), response);
         if (userId == -1) return;
         addressService.setDefaultAddress(addressId, userId);
-        response.sendRedirect(BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
     }
 
     private long parseLongParameter(String param, HttpServletResponse response) throws IOException {

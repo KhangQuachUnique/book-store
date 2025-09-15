@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>User Management - Create Admin</title>
-    <link rel="stylesheet" href="/assets/styles/createUser.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/createUser.css">
 </head>
 <body class="bg-background text-foreground">
 <div class="container">
@@ -13,7 +13,7 @@
             <h1 class="card-title">Create New Admin</h1>
         </div>
         <div class="card-content">
-            <form action="/admin/user" method="post" class="form">
+            <form action="${pageContext.request.contextPath}/admin/user" method="post" class="form">
                 <input type="hidden" name="action" value="createAdmin">
                 <div class="form-group">
                     <label for="name" class="label">Name:</label>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="action-buttons">
                     <input type="submit" value="Create" class="btn btn-primary">
-                    <a href="/admin/user?action=list" class="btn btn-outline">Back to List</a>
+                    <a href="${pageContext.request.contextPath}/admin/user?action=list" class="btn btn-outline">Back to List</a>
                 </div>
             </form>
         </div>

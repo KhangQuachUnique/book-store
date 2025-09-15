@@ -10,31 +10,26 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Timestamp;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Long id;
-
     @NotBlank(message = "Name cannot be empty")
-    private String name;
-
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email cannot be empty")
-    private String email;
 
-    private String passwordHash;
-
-    private String phone;
-
-    private String role;
-
-    private Boolean isBlocked;
-
+    private Long id;              // BIGSERIAL
+    private String name;          // name
+    private String email;         // email
+    private String passwordHash;  // password_hash
+    private String phone;         // phone
+    private String role;          // 'customer' hoặc 'admin'
+    private Boolean isBlocked;    // có bị block không
+    private Timestamp blockedUntil;  // thời điểm hết block
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
-
-    private Timestamp blockedUntil;
+    // Thêm cho xác thực email
+    private Boolean isVerified;      // đã xác thực chưa
+    private String verifyToken;      // mã token
+    private Timestamp verifyExpire;  // thời điểm hết hạn token
 }
