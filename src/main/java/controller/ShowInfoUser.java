@@ -44,8 +44,10 @@ public class ShowInfoUser extends HttpServlet {
             return;
         }
 
+        String page = PathConstants.VIEW_USER_INFO;
+        req.getSession().setAttribute("contentPage", page);
         req.getSession().setAttribute("user", user);
-        req.getRequestDispatcher(PathConstants.VIEW_USER_INFO).forward(req, resp);
+        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
     @Override

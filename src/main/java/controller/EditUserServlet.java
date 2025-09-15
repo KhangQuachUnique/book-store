@@ -14,7 +14,6 @@ public class EditUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 
     @Override
@@ -27,20 +26,20 @@ public class EditUserServlet extends HttpServlet {
             action = "view";
         }
 
-        String url = PathConstants.VIEW_USER_INFO;
+        String page = PathConstants.VIEW_USER_INFO;
         switch (action) {
             case "view":
-                url = PathConstants.VIEW_USER_INFO;
+                page = PathConstants.VIEW_USER_INFO;
                 break;
             case "editInfo":
-                url = PathConstants.EDIT_USER_INFO;
+                page = PathConstants.EDIT_USER_INFO;
                 break;
             case "changePassword":
-                url = PathConstants.EDIT_USER_PASSWORD;
+                page = PathConstants.EDIT_USER_PASSWORD;
                 break;
         }
-
         request.setAttribute("user", user);
-        request.getRequestDispatcher(url).forward(request, response);
+        request.getSession().setAttribute("contentPage", page);
+        request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
     }
 }
