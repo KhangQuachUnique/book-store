@@ -140,6 +140,7 @@
     padding: 8px 12px;
     border-radius: 4px;
     transition: background 0.2s;
+    cursor: pointer;
 }
 
 .navbar a:hover {
