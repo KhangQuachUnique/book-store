@@ -12,6 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Đổi mật khẩu</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/userInfo.css">
     <script>
         function validatePasswords() {
             const newPwd = document.getElementById('newPassword').value;
@@ -39,17 +40,20 @@
     <p style="color:green">${success}</p>
 </c:if>
 
-<form action="${pageContext.request.contextPath}/user/update" method="post">
-    <input type="hidden" name="action" value="changeUserPassword"/>
+<div class="container">
+    <form action="${pageContext.request.contextPath}/user/update" method="post">
+        <input type="hidden" name="action" value="changeUserPassword"/>
 
-    <label for="newPassword">Mật khẩu mới:</label><br>
-    <input type="password" id="newPassword" name="newPassword" required oninput="validatePasswords()"><br><br>
+        <label for="newPassword">Mật khẩu mới:</label><br>
+        <input type="password" id="newPassword" name="newPassword" required oninput="validatePasswords()"><br><br>
 
-    <label for="confirmPassword">Xác nhận mật khẩu mới:</label><br>
-    <input type="password" id="confirmPassword" name="confirmPassword" required oninput="validatePasswords()"><br>
-    <span id="mismatch" style="color:red"></span><br><br>
+        <label for="confirmPassword">Xác nhận mật khẩu mới:</label><br>
+        <input type="password" id="confirmPassword" name="confirmPassword" required oninput="validatePasswords()"><br>
+        <span id="mismatch" style="color:red"></span><br><br>
 
-    <button type="submit" id="submitBtn" disabled>Đổi mật khẩu</button>
-</form>
+        <button type="submit" id="submitBtn" disabled>Đổi mật khẩu</button>
+    </form>
+</div>
+
 </body>
 </html>
