@@ -1,0 +1,137 @@
+/* Reset cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body căn giữa toàn bộ */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    padding: 20px;
+
+    display: flex;
+    justify-content: center; /* căn ngang */
+    align-items: center;     /* căn dọc */
+    min-height: 100vh;       /* chiều cao full màn hình */
+    flex-direction: column;
+}
+
+/* Heading */
+h1, h2 {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form */
+form {
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px; /* giới hạn độ rộng */
+    margin-bottom: 5px;
+}
+
+/* Labels */
+label {
+    font-weight: bold;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+button,
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Button */
+button,
+input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Disabled button */
+button:disabled,
+input[type="submit"]:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+/* Error / Success messages */
+p.error {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+p.success {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+}
+
+span#error, span#success, span#mismatch {
+    font-weight: bold;
+}
+
+/* Username */
+.username {
+    color: #555959; /* màu xám */
+    font-weight: bold;
+}
+
+/* Container chính */
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto; /* căn ngang */
+    padding: 20px;
+    background-color: #fff;          /* nền trắng */
+    border-radius: 10px;             /* bo tròn */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* bóng mờ xung quanh */
+}
+
+/* User info container */
+.user-info {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Dòng thông tin label/value */
+.info-row {
+    display: flex;
+    justify-content: space-between; /* label bên trái, value bên phải */
+    padding: 8px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+/* Label */
+.label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Value */
+.value {
+    color: rgb(108, 108, 108); /* màu xám cho giá trị */
+}
