@@ -39,7 +39,7 @@ public class AuthorizationFilter implements Filter {
         }
 
         // Lấy role từ token
-        String role = JwtUtil.getRoleFromToken(token);
+        String role = JwtUtil.getRole(token);
 
         // Chỉ cho ADMIN vào /admin/*
         if (!"admin".equalsIgnoreCase(role)) {
