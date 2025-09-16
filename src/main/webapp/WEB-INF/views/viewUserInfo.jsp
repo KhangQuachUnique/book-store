@@ -73,7 +73,7 @@
         </div>
         <div class="info-row">
             <span class="label">Email:</span>
-            <span class="value">${sessionScope.user.email}</span>
+            <span class="const">${sessionScope.user.email}</span>
         </div>
     </div>
 
