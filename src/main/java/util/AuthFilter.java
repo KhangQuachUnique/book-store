@@ -55,7 +55,8 @@ public class AuthFilter implements Filter {
             access_token = JwtUtil.generateAccessToken(email, role);
 
             Cookie newAccessCookie = new Cookie("access_token", access_token);
-            newAccessCookie.setPath(req.getContextPath());
+            newAccessCookie.setHttpOnly(true);
+            newAccessCookie.setPath("/");
             newAccessCookie.setMaxAge(15 * 60); // 15 phút
             res.addCookie(newAccessCookie);
             loggedIn = true;
