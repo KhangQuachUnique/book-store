@@ -22,6 +22,6 @@ public class VerifyServlet extends HttpServlet {
             verified = userService.verifyUser(token);
 
         // Redirect đến login kèm thông tin verified
-        resp.sendRedirect(req.getContextPath() + "/user/login?verified=" + verified);
+        resp.sendRedirect(req.getContextPath() + "/login?verified=" + verified);
     }
 }

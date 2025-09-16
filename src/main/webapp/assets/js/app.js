@@ -6,8 +6,8 @@ const USER_URL = `${BASE_URL}/user`
 
 // API endpoints
 const USER = {
-    login: `${USER_URL}/login`,
-    register: `${USER_URL}/register`,
+    login: `${BASE_URL}/login`,
+    register: `${BASE_URL}/register`,
     refresh: `${USER_URL}/refresh`,
     logout: `${USER_URL}/logout`,
     profile: `${USER_URL}/profile`
