@@ -82,10 +82,6 @@ public class LoginServlet extends HttpServlet {
                     res.addProperty("message", "Login success");
                     res.addProperty("email", user.getEmail());
                     res.addProperty("role", user.getRole());
-
-                    // Lưu vào session
-                    HttpSession session = req.getSession(true);
-                    session.setAttribute("user", user.safeUser());
                 }
             }
             out.print(gson.toJson(res));
