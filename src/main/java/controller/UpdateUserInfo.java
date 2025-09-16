@@ -10,75 +10,86 @@ import service.UserService;
 import util.PasswordUtil;
 
 public class UpdateUserInfo extends HttpServlet {
-    UserService userService = new UserService();
+    private final UserService userService = new UserService();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Không xử lý GET
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         try {
-            updateInfoUser(request,response);
+            updateInfoUser(request, response);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void updateInfoUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void updateInfoUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
         User sessionUser = (User) request.getSession().getAttribute("user");
+        String action = request.getParameter("action");
 
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String newPassword = request.getParameter("newPassword");
-
+        String message = "Không có hành động hợp lệ!";
+        String url = "/user/info";
         User user = new User();
         user.setId(sessionUser.getId());
+        user.setEmail(sessionUser.getEmail());
+        user.setRole(sessionUser.getRole());
 
-        if (name != null && !name.trim().isEmpty()) {
-            user.setName(name);
+        if (action.equals("changeUserInfo")) {
+            String name = request.getParameter("name");
+            String phone = request.getParameter("phone");
+            url = "/user/info";
+            if (isChangeInfo(sessionUser, name, phone)) {
+                user.setName(name);
+                user.setPhone(phone);
+                userService.updateUser(user);
+                message = "Cập nhật thông tin thành công!";
+            }
+            else {
+                message = "Thông tin không có sự thay đổi!";
+            }
         }
-        else {
-            user.setName(sessionUser.getName());
-        }
-
-        if (email != null && !email.trim().isEmpty()) {
-            user.setEmail(email);
-        }
-        else {
-            user.setEmail(sessionUser.getEmail());
-        }
-
-        if (phone != null && !phone.trim().isEmpty()) {
-            user.setPhone(phone);
-    }
-        else {
-            user.setPhone(sessionUser.getPhone());
-        }
-
-        if (newPassword != null) {
+        else if (action.equals("changeUserPassword")) {
+            String newPassword = request.getParameter("newPassword");
             String newPasswordHash = PasswordUtil.hashPassword(newPassword);
-            user.setPasswordHash(newPasswordHash);
-        }
-        if (isChange(sessionUser, name,  email, phone)) {
-            userService.updateUser(user);
+            if (isChangePassword(sessionUser, newPasswordHash)) {
+                user.setPasswordHash(newPasswordHash);
+                userService.updateUserPasswordHash(user);
+                message = "Cập nhật mật khẩu thành công!";
+                url = "/user/info";
+            }
+            else {
+                message = "Mật khẩu mới trùng với mật khẩu hiện tại";
+                url = "/user/edit";
+            }
         }
 
-        response.sendRedirect("/user/info");
+        request.getSession().setAttribute("toastMessage", message);
+        response.sendRedirect(request.getContextPath() + url);
     }
 
-    private boolean isChange(User sessionUser, String newName, String newEmail, String newPhone) {
+    private boolean isChangeInfo(User sessionUser, String newName, String newPhone) {
         String name = sessionUser.getName();
-        String email = sessionUser.getEmail();
         String phone = sessionUser.getPhone();
-        if (!newName.equals(name) || !newEmail.equals(email) || !newPhone.equals(phone)) {
-            return true;
+
+        if (newName == null) {
+            return false;
         }
-        return false;
+
+        return !name.equals(newName) || !phone.equals(newPhone);
+    }
+
+    private boolean isChangePassword(User sessionUser, String newPassWordHash) {
+        String oldPassWordHash = sessionUser.getPasswordHash();
+
+        return !oldPassWordHash.equals(newPassWordHash);
     }
 }

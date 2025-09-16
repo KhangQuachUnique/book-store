@@ -103,6 +103,10 @@ public class UserService {
         userDAO.updateUser(user);
     }
 
+    public void updateUserPasswordHash(User user) throws SQLException {
+        userDAO.updateUserPasswordHash(user);
+    }
+
     public void createAdmin(User user) throws SQLException {
         userDAO.createAdmin(user);
     }

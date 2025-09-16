@@ -209,6 +209,16 @@ public class UserDao {
         }
     }
 
+    public void updateUserPasswordHash(User user) throws SQLException {
+        String query = "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, user.getPasswordHash());
+            pstmt.setLong(2, user.getId());
+            pstmt.executeUpdate();
+        }
+    }
+
     public void createAdmin(User user) throws SQLException {
         createUserWithRole(user, "admin");
     }

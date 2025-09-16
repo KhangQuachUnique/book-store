@@ -130,3 +130,11 @@ span#error, span#success, span#mismatch {
 .value {
     color: rgb(108, 108, 108); /* màu xám cho giá trị */
 }
+
+.warning {
+    color: red;
+    display: none; /* ban đầu ẩn */
+    font-size: 0.85em; /* chữ nhỏ hơn */
+    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+    margin-top: 0;
+}

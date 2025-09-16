@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: USER
-  Date: 9/14/2025
-  Time: 3:13 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -21,10 +14,12 @@
         <input type="hidden" name="action" value="changeUserInfo"/>
 
         <label for="name">Họ tên:</label><br/>
-        <input type="text" id="name" name="name" value="${user.name}" required/><br/><br/>
+        <input type="text" id="name" name="name" value="${user.name}" required/><br/>
 
+        <span id="email-warning" class="warning">Email không thể thay đổi</span><br/>
         <label for="email">Email:</label><br/>
-        <input type="email" id="email" name="email" value="${user.email}" readonly/><br/><br/>
+        <input type="email" id="email" name="email" value="${user.email}" readonly/><br/>
+        <br/>
 
         <label for="phone">Số điện thoại:</label><br/>
         <input type="text" id="phone" name="phone" value="${user.phone}" /><br/><br/>
@@ -32,6 +27,15 @@
         <input type="submit" value="Xác nhận cập nhật" />
     </form>
 </div>
+
+<script>
+    const emailInput = document.getElementById("email");
+    const warning = document.getElementById("email-warning");
+
+    emailInput.addEventListener("click", function () {
+        warning.style.display = "inline"; // hiện dòng báo
+    });
+</script>
 
 </body>
 </html>
