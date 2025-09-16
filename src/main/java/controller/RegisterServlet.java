@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import model.User;
 import service.UserService;
 
-@WebServlet("/user/register")
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private UserService userService = new UserService();
     private Gson gson = new Gson();

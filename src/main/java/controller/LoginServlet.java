@@ -4,10 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -17,7 +14,7 @@ import model.User;
 import service.UserService;
 import util.JwtUtil;
 
-@WebServlet("/user/login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private final UserService userService = new UserService();
     private final Gson gson = new Gson();
@@ -85,9 +82,12 @@ public class LoginServlet extends HttpServlet {
                     res.addProperty("message", "Login success");
                     res.addProperty("email", user.getEmail());
                     res.addProperty("role", user.getRole());
+
+                    // Lưu vào session
+                    HttpSession session = req.getSession(true);
+                    session.setAttribute("user", user.safeUser());
                 }
             }
-
             out.print(gson.toJson(res));
 
         } catch (Exception e) {
