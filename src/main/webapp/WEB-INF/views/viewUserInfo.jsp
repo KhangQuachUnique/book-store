@@ -60,7 +60,7 @@
     }
 </script>
 
-<h1>Hồ sơ của <span class="username">${sessionScope.user.name}</span></h1>
+<h1>Hồ sơ của bạn</h1>
 <div class = "container">
     <div class="user-info">
         <div class="info-row">

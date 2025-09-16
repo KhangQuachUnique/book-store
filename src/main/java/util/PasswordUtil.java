@@ -1,28 +1,11 @@
+// Package: util (PasswordUtil)
+// Các sửa đổi chính: Thay SHA-256 bằng BCrypt để thống nhất và an toàn hơn cho việc lưu trữ mật khẩu.
 package util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordUtil {
     public static String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(password.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            return bytesToHex(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (byte b : hash) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
-        }
-        return hexString.toString();
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }

@@ -16,11 +16,11 @@
     </div>
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="${pageContext.request.contextPath}/profile">Profile</a></li>
-            <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-            <li><a href="${pageContext.request.contextPath}/wishlist">Wish List</a></li>
-            <li><a href="${pageContext.request.contextPath}/categories">Categories</a></li>
-            <li><a href="${pageContext.request.contextPath}/orders">Orders</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/user">Users</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/book">Books</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/order">Orders</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/category">Category</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/promotion">Promotions</a></li>
         </ul>
     </nav>
 </aside>
