@@ -1,11 +1,15 @@
 import {fetchUtil} from "../fetchUtil";
 
 
-export const BookReviewService = {
+export const bookReviewService = {
     likeReview: async (reviewId) => {
-        return await fetchUtil(`/b`, 'POST');
+        const response = await fetchUtil(`/user/bookReview`, 'POST', {reviewId: reviewId});
+        console.log(response)
+        return response;
     },
-    dislikeReview: async (reviewId) => {
-        return await fetchUtil(`/comments/${reviewId}/dislike`, 'DELETE');
+    unlikeReview: async (reviewId) => {
+        const response = await fetchUtil(`/user/bookReview`, 'DELETE', {reviewId: reviewId});
+        console.log(response)
+        return response;
     },
 }

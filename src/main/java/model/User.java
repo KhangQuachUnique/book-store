@@ -14,12 +14,11 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @NotBlank(message = "Name cannot be empty")
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email cannot be empty")
-
     private Long id;              // BIGSERIAL
+    @NotBlank(message = "Name cannot be empty")
     private String name;          // name
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email format")
     private String email;         // email
     private String passwordHash;  // password_hash
     private String phone;         // phone

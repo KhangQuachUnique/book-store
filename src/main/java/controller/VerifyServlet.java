@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import service.UserService;
 
-@WebServlet("/user/verify")
+@WebServlet("/verify")
 public class VerifyServlet extends HttpServlet {
     private final UserService userService = new UserService();
 

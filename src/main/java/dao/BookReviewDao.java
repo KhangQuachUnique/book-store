@@ -44,6 +44,32 @@ public class BookReviewDao {
         }
     }
 
+    public static boolean likeReview(int reviewId) {
+        String sql = "UPDATE reviews SET like_count = like_count + 1 WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, reviewId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean unlikeReview(int reviewId) {
+        String sql = "UPDATE reviews SET like_count = GREATEST(like_count - 1, 0) WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, reviewId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private static Review mapRow(ResultSet rs) throws SQLException {
         Review review = new Review();
         review.setId(rs.getInt("id"));

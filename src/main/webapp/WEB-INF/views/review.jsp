@@ -5,7 +5,9 @@
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/review.css">
+    <script src="${pageContext.request.contextPath}/assets/js/pages/BookReviewPage.js"></script>
 </head>
+<body>
 <div class="review-section">
     <div class="review-overall">
         <div>
@@ -118,6 +120,5 @@
         </c:forEach>
     </div>
 </div>
-<script src="${pageContext.request.contextPath}/assets/js/pages/BookReviewPage.js"></script>
-
+</body>
 </html>

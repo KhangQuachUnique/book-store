@@ -1,6 +1,7 @@
 package service;
 
 import dao.BookReviewDao;
+import model.ApiResponse;
 import model.BookReview;
 import model.Review;
 
@@ -39,5 +40,34 @@ public class BookReviewService {
             bookReview.setOneStarCount(oneStarCount);
         }
         return bookReview;
+    }
+
+    public static ApiResponse likeReview(int reviewId) {
+        try {
+            boolean success = BookReviewDao.likeReview(reviewId);
+            if (success) {
+                return new ApiResponse(true, "Review liked successfully.", null);
+            } else {
+                return new ApiResponse(false, "Failed to like the review.", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResponse(false, "An error occurred while liking the review.", null);
+        }
+    }
+
+    public static ApiResponse unlikeReview(int reviewId) {
+
+        try {
+            boolean success = BookReviewDao.unlikeReview(reviewId);
+            if (success) {
+                return new ApiResponse(true, "Review unliked successfully.", null);
+            } else {
+                return new ApiResponse(false, "Failed to unlike the review.", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResponse(false, "An error occurred while unliking the review.", null);
+        }
     }
 }
