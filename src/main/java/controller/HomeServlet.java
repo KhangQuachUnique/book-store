@@ -17,11 +17,6 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//
-        BookReview bookReview = BookReviewService.getReviewsByBookId(318041);
-
-        request.setAttribute("bookReview", bookReview);
-
         request.setAttribute("contentPage", PathConstants.VIEW_HOME);
         request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
     }

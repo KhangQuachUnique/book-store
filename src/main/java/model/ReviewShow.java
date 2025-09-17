@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+public class ReviewShow {
     private Integer id;
     private Integer userId;
     private String username;
@@ -21,6 +21,7 @@ public class Review {
     private String comment;
     private Integer likeCount;
     private Timestamp date;
+    private Boolean likedByCurrentUser;
 
     public void calculateStars() {
         // This method can be used to calculate star representation if needed

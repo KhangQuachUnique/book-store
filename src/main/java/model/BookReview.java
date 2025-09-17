@@ -12,7 +12,7 @@ import java.util.List;
 public class BookReview {
     private Integer id;
     private Integer bookId;
-    private List<Review> reviews;
+    private List<ReviewShow> reviewShows;
     private Double averageRating;
     private Integer totalReviews;
     private Integer fullStars;

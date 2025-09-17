@@ -14,15 +14,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/user/bookReview")
+@WebServlet("/user/book-review")
 public class BookReviewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String bookIdParam = req.getParameter("bookId");
+        String bookIdParam = "330658";
         if (bookIdParam != null) {
             try {
                 int bookId = Integer.parseInt(bookIdParam);
-                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId);
+                Integer currentUserId = (Integer) req.getSession().getAttribute("userId");
+
+                if (currentUserId == null) {
+                    currentUserId = 0; // hoặc -1
+                }
+
+                BookReview bookReview = BookReviewService.getReviewsByBookId(330658, 1009);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();

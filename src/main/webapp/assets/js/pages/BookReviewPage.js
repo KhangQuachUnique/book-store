@@ -1,4 +1,4 @@
-import {bookReviewService} from "../services/BookReviewService";
+import { bookReviewApi } from "../services/BookReviewService.js";
 
 // BookReviewPage.js
 document.addEventListener("DOMContentLoaded", function() {
@@ -17,13 +17,13 @@ document.addEventListener("DOMContentLoaded", function() {
             let count = parseInt(countSpan.textContent) || 0;
 
             if (btn.classList.contains('liked')) {
-                success = await bookReviewService.unlikeReview(reviewId);
+                success = await bookReviewApi.unlikeReview(reviewId);
                 if (success) {
                     btn.classList.remove("liked");
                     countSpan.textContent = `${count - 1} Like`;
                 }
             } else {
-                success = await bookReviewService.likeReview(reviewId);
+                success = await bookReviewApi.likeReview(reviewId);
                 if (success) {
                     btn.classList.add("liked");
                     countSpan.textContent = `${count + 1} Like`;

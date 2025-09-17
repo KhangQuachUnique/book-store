@@ -3,19 +3,19 @@ package service;
 import dao.BookReviewDao;
 import model.ApiResponse;
 import model.BookReview;
-import model.Review;
+import model.ReviewShow;
 
 public class BookReviewService {
-    public static BookReview getReviewsByBookId(int bookId) {
-        BookReview bookReview = BookReviewDao.getReviewsByBookId(bookId);
+    public static BookReview getReviewsByBookId(int bookId, int currentUserId) {
+        BookReview bookReview = BookReviewDao.getReviewsByBookId(bookId, currentUserId);
         Integer fiveStarCount = 0;
         Integer fourStarCount = 0;
         Integer threeStarCount = 0;
         Integer twoStarCount = 0;
         Integer oneStarCount = 0;
-        if (bookReview != null && bookReview.getReviews() != null) {
-            for (Review review : bookReview.getReviews()) {
-                switch (review.getRating().intValue()) {
+        if (bookReview != null && bookReview.getReviewShows() != null) {
+            for (ReviewShow reviewShow : bookReview.getReviewShows()) {
+                switch (reviewShow.getRating().intValue()) {
                     case 5:
                         fiveStarCount++;
                         break;
@@ -44,7 +44,7 @@ public class BookReviewService {
 
     public static ApiResponse likeReview(int reviewId) {
         try {
-            boolean success = BookReviewDao.likeReview(reviewId);
+            boolean success = BookReviewDao.likeReview(reviewId, 1009);
             if (success) {
                 return new ApiResponse(true, "Review liked successfully.", null);
             } else {
@@ -59,7 +59,7 @@ public class BookReviewService {
     public static ApiResponse unlikeReview(int reviewId) {
 
         try {
-            boolean success = BookReviewDao.unlikeReview(reviewId);
+            boolean success = BookReviewDao.unlikeReview(reviewId, 1009);
             if (success) {
                 return new ApiResponse(true, "Review unliked successfully.", null);
             } else {
