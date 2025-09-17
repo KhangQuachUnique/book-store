@@ -48,9 +48,10 @@ public class UpdateUserInfo extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         if (isChangeInfo(sessionUser, name, phone)) {
-            user.setName(name);
-            user.setPhone(phone);
-            userService.updateUser(user);
+            sessionUser.setName(name);
+            sessionUser.setPhone(phone);
+            userService.updateUser(sessionUser);
+            request.getSession().setAttribute("user", sessionUser);
 
             message = "Information updated successfully!";
         }

@@ -160,22 +160,7 @@ span#mismatch {
     transition: all 0.5s ease;
     z-index: 9999;
 }
-
-.toast-error  {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #c82222;
-    color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
-    opacity: 0;
-    transform: translateX(100%);
-    transition: all 0.5s ease;
-    z-index: 9999;
-}
-.toast-erol.show .toast.show {
+.toast.show {
     opacity: 1;
     transform: translateX(0);
 }

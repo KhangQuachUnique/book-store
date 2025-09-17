@@ -1,6 +1,7 @@
 package controller;
 
 import constant.PathConstants;
+import model.Address;
 import model.User;
 import service.UserService;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/user/info")
 public class ShowInfoUser extends HttpServlet {
@@ -20,10 +22,27 @@ public class ShowInfoUser extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user");
 
         if (user == null) {
-            // Nếu chưa login thì trả về 401 hoặc redirect tới trang login
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
             return;
         }
+
+        String defaultAddress = null;
+        List<Address> addressList = (List<Address>) req.getSession().getAttribute("addresses");
+
+        if (addressList != null) {
+            for (Address addr : addressList) {
+                if (addr.isDefaultAddress()) {
+                    defaultAddress = addr.getAddress();
+                    break; // tìm thấy thì thoát luôn
+                }
+            }
+        }
+
+        if (defaultAddress == null) {
+            defaultAddress = "None";
+        }
+
+        req.getSession().setAttribute("defaultAddress", defaultAddress);
 
         String page = PathConstants.VIEW_USER_INFO;
         req.getSession().setAttribute("contentPage", page);

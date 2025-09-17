@@ -24,27 +24,6 @@
     <c:remove var="toastMessage" scope="session"/>
 </c:if>
 
-<style>
-    .toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.5s ease;
-        z-index: 9999;
-    }
-    .toast.show {
-        opacity: 1;
-        transform: translateX(0);
-    }
-</style>
-
 <div id="toast" class="toast"></div>
 
 <script>
@@ -76,12 +55,12 @@
         </div>
         <div class="info-row">
             <span class="label">Address:</span>
-            <span class="value">${sessionScope.addresses}</span>
+            <span class="value">${sessionScope.defaultAddress}</span>
         </div>
     </div>
 
     <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">
-        <input type="hidden" name="action" value="editInfo"/>
+        <input type="hidden" name="action" value="edit"/>
         <input class="submit" type="submit" value="Edit profile"/>
     </form>
 </div>

@@ -31,7 +31,7 @@ public class EditUserServlet extends HttpServlet {
             case "view":
                 page = PathConstants.VIEW_USER_INFO;
                 break;
-            case "editInfo":
+            case "edit":
                 page = PathConstants.EDIT_USER_INFO;
                 break;
         }
