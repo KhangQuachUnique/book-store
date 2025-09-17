@@ -12,7 +12,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web App</title>
+    <title>Bookie Cake</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">
@@ -36,9 +37,7 @@
     <!-- Footer -->
     <%@ include file="fragments/footer.jsp" %>
 </div>
-<!-- JavaScript -->
-<script src="<%= request.getContextPath() %>/assets/js/app.js"></script>
-<!-- Add this line before the closing </body> tag in layout.jsp -->
-<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
+<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>
 </body>
 </html>

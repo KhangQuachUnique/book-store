@@ -1,190 +1,247 @@
-/* General Reset and Base Styles */
+
+
+:root {
+    --background: hsl(0, 0%, 100%);
+    --foreground: hsl(345, 75%, 25%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(345, 75%, 25%);
+    --primary: hsl(0, 60%, 40%);
+    --primary-foreground: hsl(0, 0%, 100%);
+    --secondary: hsl(345, 75%, 25%);
+    --secondary-foreground: hsl(0, 0%, 100%);
+    --muted: hsl(210, 40%, 96.1%);
+    --destructive: hsl(0, 84.2%, 60.2%);
+    --destructive-foreground: hsl(210, 40%, 98%);
+    --border: hsl(214.3, 31.8%, 91.4%);
+    --input: hsl(214.3, 31.8%, 91.4%);
+    --ring: hsl(222.2, 84%, 4.9%);
+    --radius: 0.5rem;
+}
+
+.dark {
+    --background: hsl(222.2, 84%, 4.9%);
+    --foreground: hsl(210, 40%, 98%);
+    --card: hsl(222.2, 84%, 4.9%);
+    --card-foreground: hsl(210, 40%, 98%);
+    --primary: hsl(210, 40%, 98%);
+    --primary-foreground: hsl(222.2, 47.4%, 11.2%);
+    --secondary: hsl(217.2, 32.6%, 17.5%);
+    --secondary-foreground: hsl(210, 40%, 98%);
+    --muted: hsl(217.2, 32.6%, 17.5%);
+    --destructive: hsl(0, 62.8%, 30.6%);
+    --destructive-foreground: hsl(210, 40%, 98%);
+    --border: hsl(217.2, 32.6%, 17.5%);
+    --input: hsl(217.2, 32.6%, 17.5%);
+    --ring: hsl(212.7, 26.8%, 83.9%);
+}
+
+
+/* Base styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    border-color: var(--border);
+}
+.header {
+    display: flex;
+    flex-direction: column;   /* xếp theo cột: title → nav-main → nav-admin */
+    justify-content: center;   /* căn giữa theo chiều dọc */
+    align-items: center;       /* căn giữa theo chiều ngang */
+    height: 100vh;             /* chiếm toàn màn hình */
+    gap: 1rem;
+
 }
 
 body {
-    background-color: white;
-    color: #800020;
-    line-height: 1.6;
-    padding: 20px;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: Arial, sans-serif;
 }
 
-/* Headings */
-h1 {
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+.pagination{
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 2.5rem;
-    color: #800020;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    animation: fadeIn 1s ease-in;
+
 }
 
-/* Links */
-a {
-    color: black;
+.page-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    text-align: center;
+}
+
+.nav-main {
+    margin-bottom: 1.5rem;
+    display: flex;
+}
+
+.nav-main .nav-link {
+    color: var(--primary);
     text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+    margin-right: 1rem;
 }
 
-a:hover {
-    background-color: #800020;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.nav-main .nav-link:hover {
+    text-decoration: underline;
 }
 
-/* Navigation Links */
-nav {
-    text-align: center;
-    margin-bottom: 20px;
+.nav-admin {
+    margin-bottom: 1.5rem;
 }
 
-nav a {
-    margin: 0 10px;
-    font-weight: bold;
+.nav-admin .btn {
+    margin-right: 1rem;
+}
+.nav-main,
+.nav-admin {
+    display: flex;
+    gap: 1rem; /* khoảng cách giữa các link / nút */
+    justify-content: center;
 }
 
-/* Form Styling */
-form {
-    margin: 20px 0;
-    text-align: center;
+.card {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
 }
 
-input[type="text"] {
-    padding: 10px;
-    width: 200px;
-    border: 2px solid #800020;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
+.search-card {
+    margin-bottom: 1.5rem;
 }
 
-input[type="text"]:focus {
-    border-color: #a52a2a;
+.card-header {
+    padding-bottom: 1rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.card-content {
+    padding: 1rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 1rem;
+}
+
+.input {
+    background-color: var(--background);
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: var(--foreground);
+    flex: 1;
+}
+
+.input:focus {
     outline: none;
-    box-shadow: 0 0 10px rgba(165, 42, 42, 0.3);
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px hsla(var(--ring), 0.1);
 }
 
-input[type="submit"] {
-    padding: 10px 20px;
-    background-color: #800020;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-input[type="submit"]:hover {
-    background-color: #a52a2a;
-    transform: scale(1.05);
-}
-
-/* Table Styling */
-table {
+.table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius);
 }
 
-th, td {
-    padding: 12px;
+.table th,
+.table td {
+    padding: 0.75rem;
     text-align: left;
-    border: 1px solid #800020;
-    color: black;
 }
+.table thead .table-header:hover {
+    background-color: var(--primary); /* hover không đổi màu */
+}
+
 .table-header {
-    border: 2px solid black;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: 600;
+}
+
+.table tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.table tr:hover {
+    background-color: var(--muted);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.btn-primary:hover {
+    background-color: hsl(0, 60%, 36%);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+}
+
+.btn-secondary:hover {
+    background-color: hsl(345, 75%, 22.5%);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--foreground);
+}
+
+.btn-outline:hover {
+    background-color: var(--muted);
+}
+
+.btn-destructive {
+    background-color: var(--destructive);
+    color: var(--destructive-foreground);
 
 }
 
-th {
-    background-color: #800020;
-    color: white;
-    text-transform: uppercase;
-    font-weight: bold;
+.btn-destructive:hover {
+    background-color: hsl(0, 84.2%, 54.2%);
+}
+.btn-lowe{
+    position: relative;
+    top: 0.5rem;
 }
 
-tr:nth-child(even) {
-    background-color: #f9f9f9;
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+
 }
 
-tr:hover {
-    background-color: #a52a2a;
-    color: white;
-    transition: all 0.3s ease;
-}
-
-/* Table Action Buttons */
-td form input[type="submit"] {
-    margin: 0 5px;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2rem;
-    }
-
-    nav a {
-        display: block;
-        margin: 10px 0;
-    }
-
-    input[type="text"] {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    table {
-        font-size: 0.9rem;
-    }
-
-    th, td {
-        padding: 8px;
-    }
-
-    td form {
-        display: block;
-        margin: 5px 0;
-    }
-
-    td form input[type="submit"] {
-        width: 100%;
-        margin: 5px 0;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    table {
-        font-size: 0.8rem;
-    }
-
-    th, td {
-        padding: 6px;
-    }
-
-    a, input[type="submit"] {
-        font-size: 0.85rem;
-        padding: 6px 10px;
-    }
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
 }

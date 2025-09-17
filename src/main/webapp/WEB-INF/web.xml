@@ -4,69 +4,13 @@
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <display-name>Archetype Created Web Application</display-name>
-    <servlet>
-        <servlet-name>Book</servlet-name>
-        <servlet-class>controller.BookServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Book</servlet-name>
-        <url-pattern>/api/book</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>User</servlet-name>
-        <servlet-class>controller.UserServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>User</servlet-name>
-        <url-pattern>/api/user</url-pattern>
-    </servlet-mapping>
-    	<servlet>
-		<servlet-name>RegisterServlet</servlet-name>
-		<servlet-class>controller.RegisterServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RegisterServlet</servlet-name>
-		<url-pattern>/register</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>controller.LoginServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>LoginServlet</servlet-name>
-		<url-pattern>/login</url-pattern>
-	</servlet-mapping>
-
-    <servlet>
-        <servlet-name>WishList</servlet-name>
-        <servlet-class>controller.WishListServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>WishList</servlet-name>
-        <url-pattern>/wishlist</url-pattern>
-    </servlet-mapping>
-
-	<servlet>
-		<servlet-name>RefreshTokenServlet</servlet-name>
-		<servlet-class>controller.RefreshTokenServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RefreshTokenServlet</servlet-name>
-		<url-pattern>/refresh</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>LogoutServlet</servlet-name>
-		<servlet-class>controller.LogoutServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>LogoutServlet</servlet-name>
-		<url-pattern>/logout</url-pattern>
-	</servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/notFound.jsp</location>
+    </error-page>
 </web-app>
