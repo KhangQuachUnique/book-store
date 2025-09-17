@@ -6,8 +6,8 @@ const USER_URL = `${BASE_URL}/user`
 
 // API endpoints
 const USER = {
-    login: `${USER_URL}/login`,
-    register: `${USER_URL}/register`,
+    login: `${BASE_URL}/login`,
+    register: `${BASE_URL}/register`,
     refresh: `${USER_URL}/refresh`,
     logout: `${USER_URL}/logout`,
     profile: `${USER_URL}/profile`
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     showMessage(resultEl, data.message || "Success", true);
                     if (isLogin) {
                         // redirect về root sau khi login thành công
-                        setTimeout(() => window.location.href = BASE_URL, 700);
+                        setTimeout(() => window.location.href = BASE_URL + "/home", 700);
                     }
                 } else {
                     showMessage(resultEl, data.error || "Failed", false);
@@ -78,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
 // Logout
 async function logout() {
     try {
@@ -86,15 +85,26 @@ async function logout() {
             method: "POST",
             credentials: "include"
         });
+        if (!res.ok) throw new Error("Logout failed");
+
         const data = await res.json();
 
-        alert(data.message);
+        // Cập nhật UI trước khi redirect
         const userInfo = document.getElementById("userInfo");
         if (userInfo) userInfo.innerText = "Not logged in";
+
+        // Hiển thị thông báo (nếu muốn)
+        console.log(data.message); // hoặc show ở UI thay cho alert
+
+        // Chuyển về home
+        window.location.href = BASE_URL + "/home";
+
     } catch (err) {
-        console.error(err);
+        console.error("Logout error:", err);
+        alert("Something went wrong while logging out.");
     }
 }
+
 
 // Check user status
 async function checkUserStatus() {

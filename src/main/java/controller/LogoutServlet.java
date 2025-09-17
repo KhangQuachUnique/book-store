@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
@@ -31,8 +32,11 @@ public class LogoutServlet extends HttpServlet {
         refresh.setMaxAge(0);
         resp.addCookie(refresh);
 
+        HttpSession session = req.getSession(false); // lấy session nếu tồn tại, không tạo mới
+        if (session != null) {
+            session.invalidate(); // xóa toàn bộ session và attributes
+        }
         // Nếu bạn lưu refresh token trong DB/Redis thì xóa ở đây (chưa triển khai)
-
         resp.getWriter().print(gson.toJson(new Response("Logout successful")));
     }
 
