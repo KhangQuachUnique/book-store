@@ -54,20 +54,20 @@
 /* Book List Section */
 .book-list {
     display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
 }
 
 .book-card {
     display: flex;
-    flex-direction: row;
-    align-items: stretch;
+    flex-direction: column;
+    align-items: center;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
     background-color: white;
-    min-height: 220px;
+    padding: 15px;
 }
 
 .book-card:hover {
@@ -76,32 +76,30 @@
 }
 
 .book-image {
-    flex: 0 0 160px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #fafafa;
-    border-right: 1px solid #eee;
+    margin-bottom: 15px;
 }
 
 .book-thumbnail {
-    height: 180px;
-    width: 120px;
+    height: 200px;
+    width: 140px;
     object-fit: cover;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .book-info {
-    flex: 1;
-    padding: 18px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
+    text-align: center;
+    padding: 0;
 }
 
 .book-title {
-    font-size: 20px;
+    font-size: 16px;
     margin: 0 0 8px 0;
     color: #333;
     font-weight: bold;
@@ -110,13 +108,14 @@
 .book-author, .book-publisher {
     margin: 2px 0;
     color: #666;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .book-price-row {
     margin: 10px 0 6px 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
 }
 
@@ -176,6 +175,34 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1200px) {
+    .book-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .book-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .book-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .book-thumbnail {
+        height: 160px;
+        width: 120px;
+    }
+}
+
+@media (max-width: 400px) {
+    .book-list {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 900px) {
     .book-list {
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

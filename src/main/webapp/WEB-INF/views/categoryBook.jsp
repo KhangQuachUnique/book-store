@@ -44,18 +44,20 @@
                     <div class="book-card">
                         <div class="book-image">
                             <img src="${book.thumbnailUrl}" alt="${book.title}" class="book-thumbnail">
+
                         </div>
                         <div class="book-info">
+                            <div class="book-price-row">
+                                <span class="book-price-badge">$${book.price}</span>
+                                <c:if test="${book.discount_rate > 0}">
+                                    <span class="discount">-${book.discount_rate}%</span>
+                                    <span class="original-price">$${book.originalPrice}</span>
+                                </c:if>
+                            </div>
                             <h3 class="book-title">${book.title}</h3>
                             <p class="book-author">Author: ${book.author}</p>
                             <p class="book-publisher">Publisher: ${book.publisher}</p>
-                            <div class="book-price-row">
-                                <c:if test="${book.discount_rate > 0}">
-                                    <span class="original-price">$${book.originalPrice}</span>
-                                    <span class="discount">${book.discount_rate}% OFF</span>
-                                </c:if>
-                                <span class="book-price-badge">$${book.price}</span>
-                            </div>
+
                             <div class="book-rating">
                                 <span class="stars">
                                     <c:forEach begin="1" end="${book.rating}" var="i">

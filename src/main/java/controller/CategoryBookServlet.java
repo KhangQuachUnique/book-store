@@ -19,7 +19,7 @@ public class CategoryBookServlet extends HttpServlet {
 
         List<Book> books = CategoryBookDao.getAllBook();
         req.setAttribute("books", books);
-        req.setAttribute("contentPage", "/WEB-INF/views/CategoryBook.jsp");
+        req.setAttribute("contentPage", "/WEB-INF/views/categoryBook.jsp");
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 }
