@@ -74,6 +74,10 @@
             <span class="label">Email:</span>
             <span class="value">${sessionScope.user.email}</span>
         </div>
+        <div class="info-row">
+            <span class="label">Address:</span>
+            <span class="value">${sessionScope.addresses}</span>
+        </div>
     </div>
 
     <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">

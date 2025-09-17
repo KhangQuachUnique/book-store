@@ -2,7 +2,9 @@ package util;
 
 import constant.PathConstants;
 import dao.UserDao;
+import model.Address;
 import model.User;
+import service.AddressService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -11,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @WebFilter("/*")
@@ -80,10 +84,22 @@ public class AuthFilter implements Filter {
             // User đã login
             HttpSession session = req.getSession(false); // lấy session hiện có, nếu chưa có thì trả về null
             if (session == null || session.getAttribute("user") == null) {
-                new UserDao().findByEmail(email).ifPresent(user -> {
+
+                Optional<User> user = new UserDao().findByEmail(email);
+
+                user.ifPresent(us -> {
                     HttpSession newSession = req.getSession(true); // tạo mới nếu cần
-                    newSession.setAttribute("user", user.safeUser());
+                    newSession.setAttribute("user", us.safeUser());
+                    AddressService addressService = new AddressService();
+                    try {
+                        List<Address> addresses = addressService.getAddressesByUserId(us.getId());
+                        newSession.setAttribute("addresses", addresses);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
+
+
             }
             if (path.startsWith("/admin") && !"admin".equals(role)) {
                 request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
