@@ -9,4 +9,8 @@ public class  BookService {
 
         return BookDao.getAllBooks();
     }
+
+    public static Book getBookById(int id) {
+        return BookDao.getBookById(id);
+    }
 }

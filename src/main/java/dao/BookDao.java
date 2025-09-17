@@ -37,7 +37,6 @@ public class BookDao {
                     return mapResultSetToBook(rs);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
