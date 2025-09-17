@@ -9,4 +9,8 @@
         <welcome-file>/WEB-INF/views/layout.jsp</welcome-file>
     </welcome-file-list>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/notFound.jsp</location>
+    </error-page>
 </web-app>

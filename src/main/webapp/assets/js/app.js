@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     showMessage(resultEl, data.message || "Success", true);
                     if (isLogin) {
                         // redirect về root sau khi login thành công
-                        setTimeout(() => window.location.href = BASE_URL, 700);
+                        setTimeout(() => window.location.href = BASE_URL + "/home", 700);
                     }
                 } else {
                     showMessage(resultEl, data.error || "Failed", false);
@@ -92,6 +92,7 @@ window.logout = async function logout() {
         const data = await res.json();
 
         alert(data.message);
+        window.location.href = BASE_URL + "/home"
         const userInfo = document.getElementById("userInfo");
         if (userInfo) userInfo.innerText = "Not logged in";
     } catch (err) {

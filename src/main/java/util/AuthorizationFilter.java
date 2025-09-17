@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebFilter("/admin/*")
-public class AuthFilter implements Filter {
+public class AuthorizationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -39,7 +39,7 @@ public class AuthFilter implements Filter {
         }
 
         // Lấy role từ token
-        String role = JwtUtil.getRoleFromToken(token);
+        String role = JwtUtil.getRole(token);
 
         // Chỉ cho ADMIN vào /admin/*
         if (!"admin".equalsIgnoreCase(role)) {
