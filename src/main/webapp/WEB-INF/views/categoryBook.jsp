@@ -47,14 +47,14 @@
 
                         </div>
                         <div class="book-info">
+                            <h3 class="book-title">${book.title}</h3>
                             <div class="book-price-row">
                                 <span class="book-price-badge">$${book.price}</span>
                                 <c:if test="${book.discount_rate > 0}">
                                     <span class="discount">-${book.discount_rate}%</span>
-                                    <span class="original-price">$${book.originalPrice}</span>
+
                                 </c:if>
                             </div>
-                            <h3 class="book-title">${book.title}</h3>
                             <p class="book-author">Author: ${book.author}</p>
                             <p class="book-publisher">Publisher: ${book.publisher}</p>
 
@@ -72,6 +72,53 @@
                         </div>
                     </div>
                 </c:forEach>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <!-- Previous button -->
+        <c:choose>
+            <c:when test="${currentPage > 1}">
+                <a href="?page=${currentPage - 1}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
+            </c:when>
+            <c:otherwise>
+                <span class="disabled">&lt;</span>
+            </c:otherwise>
+        </c:choose>
+
+        <!-- First page -->
+        <c:if test="${showFirstEllipsis}">
+            <a href="?page=1${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
+            <span class="ellipsis">...</span>
+        </c:if>
+
+        <!-- Visible pages -->
+        <c:forEach items="${visiblePages}" var="pageNum">
+            <c:choose>
+                <c:when test="${pageNum == currentPage}">
+                    <span class="active">${pageNum}</span>
+                </c:when>
+                <c:otherwise>
+                    <a href="?page=${pageNum}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+
+        <!-- Last page -->
+        <c:if test="${showLastEllipsis}">
+            <span class="ellipsis">...</span>
+            <a href="?page=${totalPages}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
+        </c:if>
+
+        <!-- Next button -->
+        <c:choose>
+            <c:when test="${currentPage < totalPages}">
+                <a href="?page=${currentPage + 1}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
+            </c:when>
+            <c:otherwise>
+                <span class="disabled">&gt;</span>
             </c:otherwise>
         </c:choose>
     </div>
