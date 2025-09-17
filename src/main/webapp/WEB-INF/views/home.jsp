@@ -28,8 +28,6 @@
         </c:forEach>
     </ul>
 
-    <c:import url="reviewShow.jsp" />
-
     <!-- Nếu chưa có dữ liệu -->
     <c:if test="${empty newsList}">
         <p>
