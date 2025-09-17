@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/order-tracking")
+@WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
     private OrderDAO orderDAO;
 

@@ -5,11 +5,13 @@ import dao.OrderDAO;
 import model.Order;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+@WebServlet("/api/orders")
 public class OrderApiServlet extends HttpServlet {
     private OrderDAO orderDAO;
     private Gson gson;
