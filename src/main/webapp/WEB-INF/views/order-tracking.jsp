@@ -17,15 +17,28 @@
       <!-- Header -->
       <div class="order-header">
         <span class="order-id">Mã đơn: #${order.id}</span>
-        <span class="order-status ${order.status}">
-          <c:choose>
-            <c:when test="${order.status == 'completed'}">Hoàn thành</c:when>
-            <c:when test="${order.status == 'shipped'}">Đang giao</c:when>
-            <c:when test="${order.status == 'pending'}">Chờ xử lý</c:when>
-            <c:when test="${order.status == 'cancelled'}">Đã hủy</c:when>
-            <c:otherwise>Không xác định</c:otherwise>
-          </c:choose>
-        </span>
+
+        <!-- Mapping statusId sang class CSS -->
+        <c:choose>
+          <c:when test="${order.statusId == 1}">
+            <span class="order-status pending">${order.statusName}</span>
+          </c:when>
+          <c:when test="${order.statusId == 2}">
+            <span class="order-status confirmed">${order.statusName}</span>
+          </c:when>
+          <c:when test="${order.statusId == 3}">
+            <span class="order-status shipped">${order.statusName}</span>
+          </c:when>
+          <c:when test="${order.statusId == 4}">
+            <span class="order-status completed">${order.statusName}</span>
+          </c:when>
+          <c:when test="${order.statusId == 5}">
+            <span class="order-status cancelled">${order.statusName}</span>
+          </c:when>
+          <c:otherwise>
+            <span class="order-status">${order.statusName}</span>
+          </c:otherwise>
+        </c:choose>
       </div>
 
       <p><strong>Ngày đặt:</strong> ${order.createdAt}</p>
@@ -45,19 +58,16 @@
                   <strong>Giá:</strong> <fmt:formatNumber value="${item.price}" type="number"/> VND
                 </p>
                 <p class="qty"><strong>Số lượng:</strong> ${item.quantity}</p>
-<%--                <p class="price">--%>
-<%--                  <strong>Thành tiền:</strong> <fmt:formatNumber value="${item.price * item.quantity}" type="number"/> VND--%>
-<%--                </p>--%>
               </div>
             </li>
-            <!-- Cộng dồn tổng tiền đơn hàng -->
+            <!-- Cộng dồn tổng tiền -->
             <c:set var="orderTotal" value="${orderTotal + (item.price * item.quantity)}"/>
           </c:forEach>
         </ul>
         <p class="total"><strong>Thành tiền:</strong> <fmt:formatNumber value="${orderTotal}" type="number"/> VND</p>
       </div>
 
-    </div> <!-- đóng order-card -->
+    </div> <!-- order-card -->
   </c:forEach>
 </div>
 

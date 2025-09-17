@@ -23,11 +23,27 @@ public class OrderTrackingPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        int userId = 1; // tạm thời fix cứng, sau này lấy từ session login
-        List<Order> orders = orderDAO.getOrdersByUserId(userId);
 
-        req.setAttribute("orders", orders);
+        // Lấy userId từ query param
+        String userIdParam = req.getParameter("userId");
+        int userId = 0;
+
+        if (userIdParam != null) {
+            try {
+                userId = Integer.parseInt(userIdParam);
+            } catch (NumberFormatException e) {
+                userId = 0; // nếu sai format thì set mặc định
+            }
+        }
+
+        // Sau này khi có login thì sẽ lấy từ session thay vì query param
+        if (userId > 0) {
+            List<Order> orders = orderDAO.getOrdersByUserId(userId);
+            req.setAttribute("orders", orders);
+        }
+
         req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp")
                 .forward(req, resp);
     }
+
 }

@@ -5,24 +5,26 @@ import java.util.List;
 public class Order {
     private int id;
     private String createdAt;
-    private double totalAmount;
-    private String status;
+    private double totalAmount; // nếu muốn thì bỏ đi, vì JSP đã tự tính lại
     private String paymentMethod;
+
+    private int statusId;
+    private String statusName;
+
     private List<OrderItem> items;
 
-    // ✅ Constructor rỗng
     public Order() {}
 
-    // Constructor đầy đủ (nếu cần)
-    public Order(int id, String createdAt, double totalAmount, String status, String paymentMethod) {
+    public Order(int id, String createdAt, double totalAmount, String paymentMethod, int statusId, String statusName) {
         this.id = id;
         this.createdAt = createdAt;
         this.totalAmount = totalAmount;
-        this.status = status;
         this.paymentMethod = paymentMethod;
+        this.statusId = statusId;
+        this.statusName = statusName;
     }
 
-    // Getter & Setter
+    // Getters & Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -32,11 +34,14 @@ public class Order {
     public double getTotalAmount() { return totalAmount; }
     public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+
+    public int getStatusId() { return statusId; }
+    public void setStatusId(int statusId) { this.statusId = statusId; }
+
+    public String getStatusName() { return statusName; }
+    public void setStatusName(String statusName) { this.statusName = statusName; }
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }

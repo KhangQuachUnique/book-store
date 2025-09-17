@@ -1,15 +1,13 @@
 package model;
 
 public class OrderItem {
-    private String bookTitle;  // ✅ Thêm trường này
+    private String bookTitle;
     private int quantity;
     private double price;
     private String thumbnailUrl;
 
-    // ✅ Constructor rỗng
     public OrderItem() {}
 
-    // Constructor đầy đủ (nếu cần)
     public OrderItem(String bookTitle, int quantity, double price, String thumbnailUrl) {
         this.bookTitle = bookTitle;
         this.quantity = quantity;
@@ -17,7 +15,7 @@ public class OrderItem {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    // Getter & Setter
+    // Getters & Setters
     public String getBookTitle() { return bookTitle; }
     public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
 

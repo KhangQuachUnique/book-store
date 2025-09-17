@@ -50,17 +50,21 @@ body {
 }
 
 /* Màu trạng thái */
-.order-status.completed {
-    background-color: #e6f4ea;
-    color: #2e7d32;
+.order-status.pending {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+.order-status.confirmed {
+    background-color: #ede7f6;
+    color: #4527a0;
 }
 .order-status.shipped {
     background-color: #e3f2fd;
     color: #1565c0;
 }
-.order-status.pending {
-    background-color: #fff3e0;
-    color: #ef6c00;
+.order-status.completed {
+    background-color: #e6f4ea;
+    color: #2e7d32;
 }
 .order-status.cancelled {
     background-color: #fdecea;
@@ -69,7 +73,6 @@ body {
 
 .total {
     font-weight: bold;
-    /*color: #800020;*/
 }
 
 .order-items h4 {
@@ -128,17 +131,10 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    gap: 10px; /* thêm khoảng cách giữa ảnh và text */
 }
 
 .book-info {
     display: flex;
     flex-direction: column;
 }
-
-.order-items li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px; /* thêm khoảng cách giữa ảnh và text */
-}
-
