@@ -34,44 +34,28 @@ public class UpdateUserInfo extends HttpServlet {
     }
 
     private void updateInfoUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
         User sessionUser = (User) request.getSession().getAttribute("user");
-        String action = request.getParameter("action");
 
-        String message = "Không có hành động hợp lệ!";
+        String message = "No valid action!";
         String url = "/user/info";
+
         User user = new User();
         user.setId(sessionUser.getId());
         user.setEmail(sessionUser.getEmail());
         user.setRole(sessionUser.getRole());
 
-        if (action.equals("changeUserInfo")) {
-            String name = request.getParameter("name");
-            String phone = request.getParameter("phone");
-            url = "/user/info";
-            if (isChangeInfo(sessionUser, name, phone)) {
-                user.setName(name);
-                user.setPhone(phone);
-                userService.updateUser(user);
-                message = "Cập nhật thông tin thành công!";
-            }
-            else {
-                message = "Thông tin không có sự thay đổi!";
-            }
+        String name = request.getParameter("name");
+        String phone = request.getParameter("phone");
+        if (isChangeInfo(sessionUser, name, phone)) {
+            user.setName(name);
+            user.setPhone(phone);
+            userService.updateUser(user);
+
+            message = "Information updated successfully!";
         }
-        else if (action.equals("changeUserPassword")) {
-            String newPassword = request.getParameter("newPassword");
-            String newPasswordHash = PasswordUtil.hashPassword(newPassword);
-            if (isChangePassword(sessionUser, newPasswordHash)) {
-                user.setPasswordHash(newPasswordHash);
-                userService.updateUserPasswordHash(user);
-                message = "Cập nhật mật khẩu thành công!";
-                url = "/user/info";
-            }
-            else {
-                message = "Mật khẩu mới trùng với mật khẩu hiện tại";
-                url = "/user/edit";
-            }
+        else {
+            message = "Information has not changed!";
         }
 
         request.getSession().setAttribute("toastMessage", message);
@@ -89,9 +73,4 @@ public class UpdateUserInfo extends HttpServlet {
         return !name.equals(newName) || !phone.equals(newPhone);
     }
 
-    private boolean isChangePassword(User sessionUser, String newPassWordHash) {
-        String oldPassWordHash = sessionUser.getPasswordHash();
-
-        return !oldPassWordHash.equals(newPassWordHash);
-    }
 }

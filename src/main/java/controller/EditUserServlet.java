@@ -22,8 +22,6 @@ public class EditUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        User user = (User) request.getSession().getAttribute("user");
-
         if(action == null) {
             action = "view";
         }
@@ -36,11 +34,8 @@ public class EditUserServlet extends HttpServlet {
             case "editInfo":
                 page = PathConstants.EDIT_USER_INFO;
                 break;
-            case "changePassword":
-                page = PathConstants.EDIT_USER_PASSWORD;
-                break;
         }
-        request.setAttribute("user", user);
+
         request.getSession().setAttribute("contentPage", page);
         request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
     }

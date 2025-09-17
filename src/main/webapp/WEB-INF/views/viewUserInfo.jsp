@@ -10,10 +10,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Thông tin người dùng</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/userInfo.css">
 </head>
-<body>
+<body class="profile-section">
 
 <c:if test="${not empty sessionScope.toastMessage}">
     <script>
@@ -60,31 +59,26 @@
     }
 </script>
 
-<h1>Hồ sơ của bạn</h1>
+<h2 class="title">Your Profile</h2>
 <div class = "container">
     <div class="user-info">
         <div class="info-row">
-            <span class="label">Tên:</span>
+            <span class="label">Name:</span>
             <span class="value">${sessionScope.user.name}</span>
         </div>
         <div class="info-row">
-            <span class="label">Số điện thoại:</span>
+            <span class="label">Phone:</span>
             <span class="value">${sessionScope.user.phone}</span>
         </div>
         <div class="info-row">
             <span class="label">Email:</span>
-            <span class="const">${sessionScope.user.email}</span>
+            <span class="value">${sessionScope.user.email}</span>
         </div>
     </div>
 
-    <form action="${pageContext.request.contextPath}/user/edit" method="post">
-        <input type="hidden" name="action" value="changePassword"/>
-        <input type="submit" value="Đổi mật khẩu" />
-    </form>
-
-    <form action="${pageContext.request.contextPath}/user/edit" method="post">
+    <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">
         <input type="hidden" name="action" value="editInfo"/>
-        <input type="submit" value="Chỉnh sửa hồ sơ" />
+        <input class="submit" type="submit" value="Edit profile"/>
     </form>
 </div>
 

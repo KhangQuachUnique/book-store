@@ -1,12 +1,10 @@
-/* Reset cơ bản */
-* {
+.container * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Body căn giữa toàn bộ */
-body {
+.profile-section {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,45 +12,42 @@ body {
     background: #f5f6fa;
 }
 
-/* Heading */
-h1, h2 {
+.title {
     margin-top: 30px;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 40px;
+    font-weight: 800;
 }
 
-/* Form */
-form {
+.form_bnt, .form_input {
     padding: 5px;
     border-radius: 5px;
     width: 100%;
-    max-width: 500px; /* giới hạn độ rộng */
+    max-width: 500px;
     margin-bottom: 5px;
 }
 
-/* Labels */
-label {
+.input-label {
     font-weight: bold;
 }
 
 /* Inputs */
-input[type="text"],
+.container input[type="text"],
 input[type="email"],
 input[type="password"],
-button,
 input[type="submit"] {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 10px;
 }
 
 /* Button */
-button,
-input[type="submit"] {
-    background-color: #3498db;
+input.submit {
+    background-color: #a52a2a;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -61,13 +56,13 @@ input[type="submit"] {
 
 button:hover,
 input[type="submit"]:hover {
-    background-color: #2980b9;
+    background-color: #800020;
 }
 
 /* Disabled button */
 button:disabled,
 input[type="submit"]:disabled {
-    background-color: #95a5a6;
+    background-color: #ffb9b9;
     cursor: not-allowed;
 }
 
@@ -84,14 +79,13 @@ p.success {
     text-align: center;
 }
 
-span#error, span#success, span#mismatch {
+span#error, span#success {
     font-weight: bold;
 }
 
-/* Username */
-.username {
-    color: #555959; /* màu xám */
-    font-weight: bold;
+span#mismatch {
+    font-size: 0.85em; /* chữ nhỏ hơn */
+    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
 }
 
 /* Container chính */
@@ -128,7 +122,20 @@ span#error, span#success, span#mismatch {
 
 /* Value */
 .value {
-    color: rgb(108, 108, 108); /* màu xám cho giá trị */
+    color: #7D7D7DFF;
+    font-weight: 600
+}
+
+#email {
+    color: #7D7D7DFF;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.input-value {
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .warning {
@@ -137,4 +144,38 @@ span#error, span#success, span#mismatch {
     font-size: 0.85em; /* chữ nhỏ hơn */
     font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
     margin-top: 0;
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+    z-index: 9999;
+}
+
+.toast-error  {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #c82222;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+    z-index: 9999;
+}
+.toast-erol.show .toast.show {
+    opacity: 1;
+    transform: translateX(0);
 }

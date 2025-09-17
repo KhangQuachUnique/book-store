@@ -16,7 +16,6 @@ public class PathConstants {
     public static final String VIEW_SIDEBAR = "/WEB-INF/views/fragment/sidebar.jsp";
     public static final String VIEW_USER_INFO = "/WEB-INF/views/viewUserInfo.jsp";
     public static final String EDIT_USER_INFO = "/WEB-INF/views/editUserInfo.jsp";
-    public static final String EDIT_USER_PASSWORD = "/WEB-INF/views/changeUserPassword.jsp";
 
     // Private View Path
     public static final String VIEW_WISHLIST = "/WEB-INF/views/wishList.jsp";
