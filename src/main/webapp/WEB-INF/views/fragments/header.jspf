@@ -106,8 +106,8 @@
                     </li>
                 </c:when>
                 <c:otherwise>
-                    <li><a href="${pageContext.request.contextPath}/user/login">Login</a></li>
-                    <li><a href="${pageContext.request.contextPath}/user/register">Register</a></li>
+                    <li><a href="${pageContext.request.contextPath}/login">Login</a></li>
+                    <li><a href="${pageContext.request.contextPath}/register">Register</a></li>
                 </c:otherwise>
             </c:choose>
         </ul>
