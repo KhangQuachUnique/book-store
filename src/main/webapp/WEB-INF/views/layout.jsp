@@ -12,7 +12,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web App</title>
+    <title>Bookie Cake</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">

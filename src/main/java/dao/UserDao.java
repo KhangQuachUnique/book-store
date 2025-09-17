@@ -21,9 +21,10 @@ public class UserDao {
         String sql = "SELECT * FROM users WHERE verify_token = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, token);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapRow(rs);
+            try(ResultSet rs = ps.executeQuery();) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,9 +47,10 @@ public class UserDao {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapRow(rs));
+            try(ResultSet rs = ps.executeQuery();) {
+                if (rs.next()) {
+                    return Optional.of(mapRow(rs));
+                }
             }
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Error finding user by email: " + email, e);

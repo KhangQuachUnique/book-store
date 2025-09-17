@@ -1,12 +1,17 @@
 package util;
 
 import constant.PathConstants;
+import dao.UserDao;
+import model.User;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
@@ -50,7 +55,8 @@ public class AuthFilter implements Filter {
             access_token = JwtUtil.generateAccessToken(email, role);
 
             Cookie newAccessCookie = new Cookie("access_token", access_token);
-            newAccessCookie.setPath(req.getContextPath());
+            newAccessCookie.setHttpOnly(true);
+            newAccessCookie.setPath("/");
             newAccessCookie.setMaxAge(15 * 60); // 15 phút
             res.addCookie(newAccessCookie);
             loggedIn = true;
@@ -58,15 +64,29 @@ public class AuthFilter implements Filter {
 
         // Kiểm tra phân quyền
         if (!loggedIn) {
-            if (path.startsWith("/user") || path.startsWith("/admin")) {
+            // Yêu cầu login để truy cập tính năng của user
+            if (path.startsWith("/user")) {
                 request.setAttribute("contentPage", PathConstants.VIEW_PLEASE_LOGIN);
                 request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
                 return;
             }
-        } else {
-            if (path.startsWith("/admin") && !"admin".equals(role)) {
+            // Bảo vệ các url của admin
+            if (path.startsWith("/admin")) {
                 request.setAttribute("contentPage", PathConstants.VIEW_NOT_FOUND);
                 request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
+                return;
+            }
+        } else {
+            // User đã login
+            HttpSession session = req.getSession(false); // lấy session hiện có, nếu chưa có thì trả về null
+            if (session == null || session.getAttribute("user") == null) {
+                new UserDao().findByEmail(email).ifPresent(user -> {
+                    HttpSession newSession = req.getSession(true); // tạo mới nếu cần
+                    newSession.setAttribute("user", user.safeUser());
+                });
+            }
+            if (path.startsWith("/admin") && !"admin".equals(role)) {
+                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
                 return;
             }
         }

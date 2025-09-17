@@ -78,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
 // Logout
 async function logout() {
     try {
@@ -86,16 +85,26 @@ async function logout() {
             method: "POST",
             credentials: "include"
         });
+        if (!res.ok) throw new Error("Logout failed");
+
         const data = await res.json();
 
-        alert(data.message);
-        window.location.href = BASE_URL + "/home"
+        // Cập nhật UI trước khi redirect
         const userInfo = document.getElementById("userInfo");
         if (userInfo) userInfo.innerText = "Not logged in";
+
+        // Hiển thị thông báo (nếu muốn)
+        console.log(data.message); // hoặc show ở UI thay cho alert
+
+        // Chuyển về home
+        window.location.href = BASE_URL + "/home";
+
     } catch (err) {
-        console.error(err);
+        console.error("Logout error:", err);
+        alert("Something went wrong while logging out.");
     }
 }
+
 
 // Check user status
 async function checkUserStatus() {

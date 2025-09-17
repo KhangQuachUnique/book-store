@@ -19,6 +19,7 @@ public class PathConstants {
 
     // Private View Path
     public static final String VIEW_WISHLIST = "/WEB-INF/views/wishList.jsp";
+    public static final String VIEW_REVIEW = "/WEB-INF/views/review.jsp";
 
     //Admin Views
     public static final String VIEW_ADMIN_DASHBOARD = "/WEB-INF/views/userManagement/dashboard.jsp";
