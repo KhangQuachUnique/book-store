@@ -54,18 +54,6 @@ input.submit {
     transition: background-color 0.3s ease;
 }
 
-button:hover,
-input[type="submit"]:hover {
-    background-color: #800020;
-}
-
-/* Disabled button */
-button:disabled,
-input[type="submit"]:disabled {
-    background-color: #ffb9b9;
-    cursor: not-allowed;
-}
-
 /* Error / Success messages */
 p.error {
     color: red;
@@ -163,4 +151,34 @@ span#mismatch {
 .toast.show {
     opacity: 1;
     transform: translateX(0);
+}
+
+/*.user-info .value {*/
+/*    display: inline-block;        !* để width có hiệu lực *!*/
+/*    max-width: 250px;             !* giới hạn chiều rộng, bạn tùy chỉnh theo layout *!*/
+/*    white-space: nowrap;          !* không cho xuống dòng *!*/
+/*    overflow: hidden;             !* ẩn phần thừa *!*/
+/*    text-overflow: ellipsis;      !* hiển thị ... khi tràn *!*/
+/*    vertical-align: middle;*/
+/*}*/
+
+/*.user-info .value:hover {*/
+/*    overflow: visible;*/
+/*    white-space: normal;*/
+/*    background: #f9f9f9;*/
+/*    padding: 2px 4px;*/
+/*    border-radius: 4px;*/
+/*    position: relative;*/
+/*    z-index: 10;*/
+/*}*/
+
+.address-value {
+    display: inline-block;
+    max-width: 350px;        /* giới hạn chiều rộng */
+    white-space: normal;     /* cho phép xuống dòng theo dấu cách */
+    word-wrap: break-word;   /* xuống dòng nếu có từ quá dài */
+    overflow-wrap: break-word;
+
+    text-align: right;       /* căn chữ sang phải */
+    box-sizing: border-box;  /* tính cả padding vào max-width */
 }

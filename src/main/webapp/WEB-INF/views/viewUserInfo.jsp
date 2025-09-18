@@ -42,7 +42,7 @@
 <div class = "container">
     <div class="user-info">
         <div class="info-row">
-            <span class="label">Name:</span>
+            <span class="label">Full name:</span>
             <span class="value">${sessionScope.user.name}</span>
         </div>
         <div class="info-row">
@@ -55,7 +55,7 @@
         </div>
         <div class="info-row">
             <span class="label">Address:</span>
-            <span class="value">${sessionScope.defaultAddress}</span>
+            <span class="value address-value">${sessionScope.defaultAddress}</span>
         </div>
     </div>
 

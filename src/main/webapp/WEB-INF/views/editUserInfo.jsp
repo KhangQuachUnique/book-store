@@ -12,29 +12,21 @@
     <form class="form_input" action="${pageContext.request.contextPath}/user/update" method="post">
         <input type="hidden" name="action" value="changeUserInfo"/>
 
-        <label for="name" class="input-label">Name:</label><br/>
+        <label for="name" class="input-label">Full name:</label><br/>
         <input class="input-value" type="text" id="name" name="name" value="${sessionScope.user.name}" required/><br/>
 
-        <span id="email-warning" class="warning">Email can't be changed</span><br/>
+        <label for="phone" class="input-label">Phone:</label><br/>
+        <input class="input-value" type="text" id="phone" name="phone" value="${sessionScope.user.phone}" /><br/>
+
         <label for="email" class="input-label">Email:</label><br/>
         <input type="email" id="email" name="email" value="${sessionScope.user.email}" readonly/><br/>
-        <br/>
 
-        <label for="phone" class="input-label">Phone:</label><br/>
-        <input class="input-value" type="text" id="phone" name="phone" value="${sessionScope.user.phone}" /><br/><br/>
+        <label for="address" class="input-label">Address:</label><br/>
+        <input class="input-value" type="text" id="address" name="address" value="${sessionScope.defaultAddress}" /><br/>
 
         <input class="submit" type="submit" value="Confirm update" />
     </form>
 </div>
-
-<script>
-    const emailInput = document.getElementById("email");
-    const warning = document.getElementById("email-warning");
-
-    emailInput.addEventListener("click", function () {
-        warning.style.display = "inline";
-    });
-</script>
 
 </body>
 </html>
