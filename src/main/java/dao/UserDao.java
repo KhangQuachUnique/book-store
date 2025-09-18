@@ -103,6 +103,19 @@ public class UserDao {
         }
     }
 
+    // Update password and clear verification token (for password reset)
+    public void updatePasswordAndClearToken(Long userId, String hashedPassword) {
+        String sql = "UPDATE users SET password_hash = ?, verify_token = NULL, verify_expire = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, hashedPassword);
+            ps.setLong(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Error updating password for user: " + userId, e);
+            throw new RuntimeException("Database error occurred", e);
+        }
+    }
+
 
     // Helper: map từ ResultSet -> User object
     private User mapRow(ResultSet rs) throws SQLException {
