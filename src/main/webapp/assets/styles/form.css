@@ -35,7 +35,7 @@ body {
     padding: 50px;
     background-color: var(--text-primary);
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     font-family: Montserrat, sans-serif;
 }
 
@@ -108,21 +108,27 @@ body {
 }
 
 .form-result {
-    min-height: 1.5em;       /* giữ chỗ cho message */
-    max-width: 90%;           /* không vượt quá 90% container */
-    margin: 12px auto 0 auto; /* căn giữa */
-    word-wrap: break-word;    /* xuống dòng nếu quá dài */
+    min-height: 1.5em;
+    /* giữ chỗ cho message */
+    max-width: 90%;
+    /* không vượt quá 90% container */
+    margin: 12px auto 0 auto;
+    /* căn giữa */
+    word-wrap: break-word;
+    /* xuống dòng nếu quá dài */
     text-align: center;
     font-weight: 600;
     font-size: 0.95rem;
 }
 
 .form-result.success {
-    color: #28a745; /* Màu xanh cho thành công */
+    color: #28a745;
+    /* Màu xanh cho thành công */
 }
 
 .form-result.error {
-    color: #dc3545; /* Màu đỏ cho lỗi */
+    color: #dc3545;
+    /* Màu đỏ cho lỗi */
 }
 
 /* Spinner reuse */
@@ -138,12 +144,18 @@ body {
 
 @media (max-width: 600px) {
     .form-container {
-        max-width: 90%;   /* chiếm hầu hết màn hình nhỏ */
+        max-width: 90%;
+        /* chiếm hầu hết màn hình nhỏ */
         padding: 25px 20px;
     }
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

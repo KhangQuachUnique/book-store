@@ -1,17 +1,17 @@
 package service;
 
-import model.Book;
-import dao.BookDao;
 import java.util.List;
 import java.util.Optional;
+import dao.BookDao;
+import model.Book;
 
 public class BookService {
     private final BookDao bookDao;
-    
+
     public BookService() {
         this.bookDao = new BookDao();
     }
-    
+
     public List<Book> getAllBooks() {
         return bookDao.getAllBooks();
     }

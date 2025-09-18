@@ -1,5 +1,4 @@
-
-    /* Color definitions in HSL */
+/* Color definitions in HSL */
 :root {
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(345, 75%, 25%);
@@ -57,7 +56,8 @@ body {
     color: var(--card-foreground);
     border-radius: var(--radius);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-    max-width: 672px; /* Equivalent to max-w-2xl */
+    max-width: 672px;
+    /* Equivalent to max-w-2xl */
     margin: 0 auto;
 }
 

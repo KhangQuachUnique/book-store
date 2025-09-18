@@ -1,5 +1,3 @@
-
-
 :root {
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(345, 75%, 25%);
@@ -40,12 +38,17 @@
 * {
     border-color: var(--border);
 }
+
 .header {
     display: flex;
-    flex-direction: column;   /* xếp theo cột: title → nav-main → nav-admin */
-    justify-content: center;   /* căn giữa theo chiều dọc */
-    align-items: center;       /* căn giữa theo chiều ngang */
-    height: 100vh;             /* chiếm toàn màn hình */
+    flex-direction: column;
+    /* xếp theo cột: title → nav-main → nav-admin */
+    justify-content: center;
+    /* căn giữa theo chiều dọc */
+    align-items: center;
+    /* căn giữa theo chiều ngang */
+    height: 100vh;
+    /* chiếm toàn màn hình */
     gap: 1rem;
 
 }
@@ -61,7 +64,8 @@ body {
     margin: 0 auto;
     padding: 1.5rem;
 }
-.pagination{
+
+.pagination {
     text-align: center;
 
 }
@@ -96,10 +100,12 @@ body {
 .nav-admin .btn {
     margin-right: 1rem;
 }
+
 .nav-main,
 .nav-admin {
     display: flex;
-    gap: 1rem; /* khoảng cách giữa các link / nút */
+    gap: 1rem;
+    /* khoảng cách giữa các link / nút */
     justify-content: center;
 }
 
@@ -161,8 +167,10 @@ body {
     padding: 0.75rem;
     text-align: left;
 }
+
 .table thead .table-header:hover {
-    background-color: var(--primary); /* hover không đổi màu */
+    background-color: var(--primary);
+    /* hover không đổi màu */
 }
 
 .table-header {
@@ -230,7 +238,8 @@ body {
 .btn-destructive:hover {
     background-color: hsl(0, 84.2%, 54.2%);
 }
-.btn-lowe{
+
+.btn-lowe {
     position: relative;
     top: 0.5rem;
 }

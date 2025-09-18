@@ -4,16 +4,17 @@ import dao.WishListDao;
 import model.ApiResponse;
 
 public class WishListService {
-    //Lấy danh sách yêu thích của người dùngđ
+    // Lấy danh sách yêu thích của người dùngđ
     public static ApiResponse getWishListBooks(int userId) {
         if (userId <= 0) {
             return new ApiResponse(false, "ID không hợp lệ", null);
         }
 
-        return new ApiResponse(true, "Lấy danh sách yêu thích thành công", WishListDao.getWishListBooks(userId));
+        return new ApiResponse(true, "Lấy danh sách yêu thích thành công",
+                WishListDao.getWishListBooks(userId));
     }
 
-    //Thêm sách vào danh sách yêu thích
+    // Thêm sách vào danh sách yêu thích
     public static ApiResponse addBookToWishList(int userId, int bookId) {
         if (userId <= 0 || bookId <= 0) {
             return new ApiResponse(false, "ID không hợp lệ", null);
@@ -27,8 +28,8 @@ public class WishListService {
         }
     }
 
-    //Xóa sách khỏi danh sách yêu thích
-    public static  ApiResponse removeBookToWishList(int userId, int bookId) {
+    // Xóa sách khỏi danh sách yêu thích
+    public static ApiResponse removeBookToWishList(int userId, int bookId) {
         if (userId <= 0 || bookId <= 0) {
             return new ApiResponse(false, "ID không hợp lệ", null);
         }

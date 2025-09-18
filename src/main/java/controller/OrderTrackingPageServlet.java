@@ -2,13 +2,11 @@ package controller;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import constant.PathConstants;
 import dao.OrderDao;
 import dao.OrderStatusDAO;
@@ -57,7 +55,6 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("selectedStatus", statusId);
         req.setAttribute("userId", userId); // để JSP build URL filter
 
-        req.getRequestDispatcher(PathConstants.VIEW_ORDER_TRACKING)
-                .forward(req, resp);
+        req.getRequestDispatcher(PathConstants.VIEW_ORDER_TRACKING).forward(req, resp);
     }
 }

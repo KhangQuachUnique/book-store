@@ -1,11 +1,13 @@
 package dao;
 
-import model.Address;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Address;
+import util.DBConnection;
 
 public class AddressDao {
 
@@ -13,7 +15,7 @@ public class AddressDao {
         List<Address> addresses = new ArrayList<>();
         String query = "SELECT * FROM addresses WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, userId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -27,7 +29,7 @@ public class AddressDao {
     public void createAddress(Address address) throws SQLException {
         String query = "INSERT INTO addresses (user_id, address, is_default) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, address.getUserId());
             pstmt.setString(2, address.getAddress());
             pstmt.setBoolean(3, address.getIsDefaultAddress());
@@ -62,15 +64,17 @@ public class AddressDao {
         address.setCreatedAt(rs.getTimestamp("created_at"));
         return address;
     }
+
     public void deleteAddress(long addressId, long userId) throws SQLException {
         String query = "DELETE FROM addresses WHERE id = ? AND user_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, addressId);
             pstmt.setLong(2, userId);
             int rows = pstmt.executeUpdate();
             if (rows == 0) {
-                throw new SQLException("Address ID " + addressId + " not found or does not belong to user " + userId);
+                throw new SQLException("Address ID " + addressId
+                        + " not found or does not belong to user " + userId);
             }
         }
     }

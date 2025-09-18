@@ -20,7 +20,8 @@
     font-weight: 800;
 }
 
-.form_bnt, .form_input {
+.form_bnt,
+.form_input {
     padding: 5px;
     border-radius: 5px;
     width: 100%;
@@ -79,24 +80,31 @@ p.success {
     text-align: center;
 }
 
-span#error, span#success {
+span#error,
+span#success {
     font-weight: bold;
 }
 
 span#mismatch {
-    font-size: 0.85em; /* chữ nhỏ hơn */
-    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+    font-size: 0.85em;
+    /* chữ nhỏ hơn */
+    font-style: italic;
+    /* tuỳ chọn: in nghiêng cho mềm mại hơn */
 }
 
 /* Container chính */
 .container {
     width: 100%;
     max-width: 500px;
-    margin: 0 auto; /* căn ngang */
+    margin: 0 auto;
+    /* căn ngang */
     padding: 20px;
-    background-color: #fff;          /* nền trắng */
-    border-radius: 10px;             /* bo tròn */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* bóng mờ xung quanh */
+    background-color: #fff;
+    /* nền trắng */
+    border-radius: 10px;
+    /* bo tròn */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* bóng mờ xung quanh */
 }
 
 /* User info container */
@@ -108,7 +116,8 @@ span#mismatch {
 /* Dòng thông tin label/value */
 .info-row {
     display: flex;
-    justify-content: space-between; /* label bên trái, value bên phải */
+    justify-content: space-between;
+    /* label bên trái, value bên phải */
     padding: 8px 0;
     margin-bottom: 15px;
     border-bottom: 1px solid #dfdfdf;
@@ -140,9 +149,12 @@ span#mismatch {
 
 .warning {
     color: red;
-    display: none; /* ban đầu ẩn */
-    font-size: 0.85em; /* chữ nhỏ hơn */
-    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+    display: none;
+    /* ban đầu ẩn */
+    font-size: 0.85em;
+    /* chữ nhỏ hơn */
+    font-style: italic;
+    /* tuỳ chọn: in nghiêng cho mềm mại hơn */
     margin-top: 0;
 }
 
@@ -154,12 +166,13 @@ span#mismatch {
     color: white;
     padding: 15px 20px;
     border-radius: 8px;
-    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.5s ease;
     z-index: 9999;
 }
+
 .toast.show {
     opacity: 1;
     transform: translateX(0);

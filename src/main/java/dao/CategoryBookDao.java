@@ -1,14 +1,13 @@
 package dao;
 
-import model.Book;
-import util.DBConnection;
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import model.Book;
+import util.DBConnection;
 
 public class CategoryBookDao {
     private static final int BOOKS_PER_PAGE = 40;
@@ -16,7 +15,7 @@ public class CategoryBookDao {
     public static List<Book> getAllBook(int page) {
         String sql = "SELECT * FROM books LIMIT ? OFFSET ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, BOOKS_PER_PAGE);
             ps.setInt(2, (page - 1) * BOOKS_PER_PAGE);
@@ -37,8 +36,8 @@ public class CategoryBookDao {
     public static int getTotalBooks() {
         String sql = "SELECT COUNT(*) as total FROM books";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 return rs.getInt("total");
@@ -58,7 +57,7 @@ public class CategoryBookDao {
         String sql = "SELECT * FROM books WHERE category_id = ? LIMIT ? OFFSET ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             ps.setInt(2, BOOKS_PER_PAGE);
             ps.setInt(3, (page - 1) * BOOKS_PER_PAGE);
@@ -79,7 +78,7 @@ public class CategoryBookDao {
     public static int getTotalBooksByCategory(int categoryId) {
         String sql = "SELECT COUNT(*) as total FROM books WHERE category_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {

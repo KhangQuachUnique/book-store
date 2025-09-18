@@ -94,7 +94,8 @@
 }
 
 .sidebar-nav a {
-    color: var(--text-primary); /* Burgundy */
+    color: var(--text-primary);
+    /* Burgundy */
     text-decoration: none;
     font-weight: 500;
     font-size: 1.08rem;
@@ -106,7 +107,8 @@
 
 .sidebar-nav a:hover,
 .sidebar-nav a:focus {
-    background: var(--secondary-color-hover); /* Soft highlight */
-    color: var(--text-secondary); /* Lighter burgundy */
+    background: var(--secondary-color-hover);
+    /* Soft highlight */
+    color: var(--text-secondary);
+    /* Lighter burgundy */
 }
-

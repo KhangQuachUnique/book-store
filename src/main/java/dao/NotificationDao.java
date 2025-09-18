@@ -1,14 +1,13 @@
 package dao;
 
-import model.Notification;
-import util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Notification;
+import util.DBConnection;
 
 public class NotificationDao {
 
@@ -16,7 +15,7 @@ public class NotificationDao {
     public int countUnreadByUserId(long userId) {
         String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
 
@@ -27,7 +26,8 @@ public class NotificationDao {
             }
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi đếm thông báo chưa đọc cho user " + userId + ": " + e.getMessage());
+            System.err.println(
+                    "Lỗi khi đếm thông báo chưa đọc cho user " + userId + ": " + e.getMessage());
         }
         return 0;
     }
@@ -37,7 +37,7 @@ public class NotificationDao {
         List<Notification> notifications = new ArrayList<>();
         String sql = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
 
@@ -55,22 +55,25 @@ public class NotificationDao {
             }
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy danh sách thông báo cho user " + userId + ": " + e.getMessage());
+            System.err.println(
+                    "Lỗi khi lấy danh sách thông báo cho user " + userId + ": " + e.getMessage());
         }
         return notifications;
     }
 
     // Đánh dấu tất cả thông báo của user là đã đọc
     public void markAllAsRead(long userId) {
-        String sql = "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
+        String sql =
+                "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, userId);
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi đánh dấu thông báo đã đọc cho user " + userId + ": " + e.getMessage());
+            System.err.println(
+                    "Lỗi khi đánh dấu thông báo đã đọc cho user " + userId + ": " + e.getMessage());
         }
     }
 }

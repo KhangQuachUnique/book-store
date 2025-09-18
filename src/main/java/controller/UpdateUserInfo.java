@@ -1,11 +1,12 @@
 package controller;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
-
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import model.User;
 import service.UserService;
 
@@ -53,8 +54,7 @@ public class UpdateUserInfo extends HttpServlet {
             request.getSession().setAttribute("user", sessionUser);
 
             message = "Information updated successfully!";
-        }
-        else {
+        } else {
             message = "Information has not changed!";
         }
 

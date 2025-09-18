@@ -1,21 +1,25 @@
 package util;
 
-import constant.PathConstants;
-import dao.UserDao;
-
-import javax.servlet.*;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import constant.PathConstants;
+import dao.UserDao;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 
     @Override
-    public void init(FilterConfig filterConfig) { }
+    public void init(FilterConfig filterConfig) {}
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -31,8 +35,10 @@ public class AuthFilter implements Filter {
 
         if (req.getCookies() != null) {
             for (Cookie c : req.getCookies()) {
-                if ("access_token".equals(c.getName())) access_token = c.getValue();
-                if ("refresh_token".equals(c.getName())) refresh_token = c.getValue();
+                if ("access_token".equals(c.getName()))
+                    access_token = c.getValue();
+                if ("refresh_token".equals(c.getName()))
+                    refresh_token = c.getValue();
             }
         }
 
@@ -47,7 +53,8 @@ public class AuthFilter implements Filter {
             role = JwtUtil.getRole(access_token);
         }
         // Nếu access token hết hạn, dùng refresh token cấp mới
-        else if (refresh_token != null && JwtUtil.validateToken(refresh_token) && JwtUtil.isRefreshToken(refresh_token)) {
+        else if (refresh_token != null && JwtUtil.validateToken(refresh_token)
+                && JwtUtil.isRefreshToken(refresh_token)) {
             email = JwtUtil.getEmail(refresh_token);
             role = JwtUtil.getRole(refresh_token);
             access_token = JwtUtil.generateAccessToken(email, role);
@@ -76,7 +83,8 @@ public class AuthFilter implements Filter {
             }
         } else {
             // User đã login
-            HttpSession session = req.getSession(false); // lấy session hiện có, nếu chưa có thì trả về null
+            HttpSession session = req.getSession(false); // lấy session hiện có, nếu chưa có thì trả
+                                                         // về null
             if (session == null || session.getAttribute("user") == null) {
                 new UserDao().findByEmail(email).ifPresent(user -> {
                     HttpSession newSession = req.getSession(true); // tạo mới nếu cần
@@ -84,7 +92,8 @@ public class AuthFilter implements Filter {
                 });
             }
             if (path.startsWith("/admin") && !"admin".equals(role)) {
-                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
+                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request,
+                        response);
                 return;
             }
         }
@@ -93,5 +102,5 @@ public class AuthFilter implements Filter {
     }
 
     @Override
-    public void destroy() { }
+    public void destroy() {}
 }

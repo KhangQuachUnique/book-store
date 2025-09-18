@@ -1,17 +1,14 @@
 package controller;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import constant.PathConstants;
 import model.LoginResult;
 import model.User;
@@ -30,7 +27,8 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json;charset=UTF-8");
@@ -65,8 +63,10 @@ public class LoginServlet extends HttpServlet {
                     User user = result.getUser();
 
                     // Gắn role và email vào access token
-                    String accessToken = JwtUtil.generateAccessToken(user.getEmail(), user.getRole());
-                    String refreshToken = JwtUtil.generateRefreshToken(user.getEmail(), user.getRole());
+                    String accessToken =
+                            JwtUtil.generateAccessToken(user.getEmail(), user.getRole());
+                    String refreshToken =
+                            JwtUtil.generateRefreshToken(user.getEmail(), user.getRole());
 
                     // Cookie cho access token (hết hạn sau 60 phút)
                     Cookie accessCookie = new Cookie("access_token", accessToken);

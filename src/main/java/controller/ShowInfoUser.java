@@ -1,16 +1,15 @@
 package controller;
 
-import constant.PathConstants;
-import model.Address;
-import model.User;
-
+import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+import constant.PathConstants;
+import model.Address;
+import model.User;
 
 @WebServlet("/user/info")
 public class ShowInfoUser extends HttpServlet {

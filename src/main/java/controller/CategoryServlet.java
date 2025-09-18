@@ -3,7 +3,6 @@ package controller;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import constant.PathConstants;
 import dao.CategoryDao;
 import model.Category;
@@ -53,7 +51,8 @@ public class CategoryServlet extends HttpServlet {
 
         switch (action) {
             case "add": {
-                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_ADD);
+                RequestDispatcher dispatcher =
+                        req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_ADD);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -70,7 +69,8 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> allCategories = categoryDao.findAll();
                 req.setAttribute("allCategories", allCategories);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_EDIT);
+                RequestDispatcher dispatcher =
+                        req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_EDIT);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -79,7 +79,8 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> categories = categoryDao.findAll();
                 req.setAttribute("categories", categories);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_MANAGE);
+                RequestDispatcher dispatcher =
+                        req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_MANAGE);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -105,24 +106,20 @@ public class CategoryServlet extends HttpServlet {
             switch (action) {
                 case "create": {
                     String err = createCategory(req);
-                    message = (err == null)
-                            ? "Thêm category thành công."
+                    message = (err == null) ? "Thêm category thành công."
                             : "Thêm category thất bại: " + err;
                     break;
                 }
                 case "update": {
                     String err = updateCategory(req);
-                    message = (err == null)
-                            ? "Cập nhật category thành công."
+                    message = (err == null) ? "Cập nhật category thành công."
                             : "Cập nhật category thất bại: " + err;
                     break;
                 }
                 case "delete": {
                     Long deleteId = Long.parseLong(req.getParameter("id"));
                     boolean success = categoryDao.delete(deleteId);
-                    message = success
-                            ? "Xóa category thành công."
-                            : "Xóa category thất bại.";
+                    message = success ? "Xóa category thành công." : "Xóa category thất bại.";
                     break;
                 }
                 default:

@@ -7,15 +7,12 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
-
 import constant.PathConstants;
 import dao.UserDao;
 import jakarta.mail.MessagingException;
@@ -28,13 +25,15 @@ public class ForgotPasswordServlet extends HttpServlet {
     private UserDao userDao = new UserDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         // Display the forgot password form
         req.getRequestDispatcher(PathConstants.VIEW_FORGOT_PASSWORD).forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         resp.setContentType("application/json");
         Gson gson = new Gson();
 
@@ -71,9 +70,11 @@ public class ForgotPasswordServlet extends HttpServlet {
             System.out.println("DEBUG: Token updated in database"); // Debug log
 
             // Send reset email using existing email utility
-            String resetLink = req.getRequestURL().toString().replace("forgot-password", "reset-password") + "?token="
-                    + token;
-            System.out.println("DEBUG: Sending email to: " + email + " with link: " + resetLink); // Debug log
+            String resetLink =
+                    req.getRequestURL().toString().replace("forgot-password", "reset-password")
+                            + "?token=" + token;
+            System.out.println("DEBUG: Sending email to: " + email + " with link: " + resetLink); // Debug
+                                                                                                  // log
 
             SendMailUtil.sendPasswordResetMail(email, resetLink);
             System.out.println("DEBUG: Email sent successfully"); // Debug log
@@ -89,7 +90,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             System.out.println("DEBUG: General error: " + e.getMessage()); // Debug log
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().print(gson.toJson(new Response("An error occurred. Please try again.")));
+            resp.getWriter()
+                    .print(gson.toJson(new Response("An error occurred. Please try again.")));
         }
     }
 

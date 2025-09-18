@@ -28,7 +28,7 @@ main {
     position: relative;
 }
 
-.user-dropdown > a {
+.user-dropdown>a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -39,11 +39,11 @@ main {
     transition: background 0.2s;
 }
 
-.user-dropdown > a:hover {
+.user-dropdown>a:hover {
     background: var(--primary-color-hover);
 }
 
-.user-dropdown > a svg {
+.user-dropdown>a svg {
     width: 18px;
     height: 18px;
     fill: var(--text-primary);
@@ -61,7 +61,7 @@ main {
     right: 0;
     background: var(--secondary-color);
     min-width: 160px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     z-index: 100;
     overflow: hidden;
@@ -112,5 +112,3 @@ main {
 .dropdown-menu li a:hover {
     background: var(--secondary-color-hover);
 }
-
-

@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import constant.PathConstants;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -148,8 +146,8 @@ public class UserServlet extends HttpServlet {
     // return true;
     // }
 
-    private void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex)
-            throws ServletException, IOException {
+    private void handleException(HttpServletRequest request, HttpServletResponse response,
+            Exception ex) throws ServletException, IOException {
         log.log(Level.SEVERE, "Error occurred: ", ex);
         request.setAttribute("errorMessage", "An error occurred while processing your request.");
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ERROR);
@@ -212,7 +210,8 @@ public class UserServlet extends HttpServlet {
         forwardToList(request, response);
     }
 
-    private void setPaginationAttributes(HttpServletRequest request, int currentPage, int totalPages) {
+    private void setPaginationAttributes(HttpServletRequest request, int currentPage,
+            int totalPages) {
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
     }
@@ -233,7 +232,8 @@ public class UserServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_LIST);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -245,7 +245,8 @@ public class UserServlet extends HttpServlet {
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_DETAIL);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -257,21 +258,24 @@ public class UserServlet extends HttpServlet {
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_EDIT);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
     private void showNewAdminForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD_ADMIN);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
     private void showNewUserForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -285,7 +289,8 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("user", user);
         request.setAttribute("addresses", addresses);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_ADDRESS_LIST);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -296,7 +301,8 @@ public class UserServlet extends HttpServlet {
             return;
         request.setAttribute("userId", userId);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_ADDRESS_LIST);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher =
+                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -345,7 +351,8 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
-    private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void deleteUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1)
             return;
@@ -353,7 +360,8 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
-    private void blockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void blockUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1)
             return;
@@ -438,7 +446,8 @@ public class UserServlet extends HttpServlet {
         address.setAddress(addressText);
         address.setIsDefaultAddress(isDefaultAddress);
         addressService.createAddress(address);
-        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(
+                request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
     }
 
     private void setDefaultAddress(HttpServletRequest request, HttpServletResponse response)
@@ -450,7 +459,8 @@ public class UserServlet extends HttpServlet {
         if (userId == -1)
             return;
         addressService.setDefaultAddress(addressId, userId);
-        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(
+                request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
     }
 
     private long parseLongParameter(String param, HttpServletResponse response) throws IOException {

@@ -1,7 +1,7 @@
 import { bookReviewApi } from "../services/BookReviewService.js";
 
 // BookReviewPage.js
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".like-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
             const svg = btn.querySelector("svg");
@@ -38,4 +38,3 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-

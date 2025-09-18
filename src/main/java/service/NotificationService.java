@@ -1,9 +1,8 @@
 package service;
 
+import java.util.List;
 import dao.NotificationDao;
 import model.Notification;
-
-import java.util.List;
 
 public class NotificationService {
     private NotificationDao notificationDao = new NotificationDao();

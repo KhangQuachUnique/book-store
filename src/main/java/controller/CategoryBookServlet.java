@@ -2,13 +2,11 @@ package controller;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import constant.PathConstants;
 import dao.CategoryBookDao;
 import model.Book;
@@ -18,7 +16,8 @@ public class CategoryBookServlet extends HttpServlet {
     private static final int MAX_PAGE_DISPLAY = 5;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         int page = 1;
         try {
             String pageParam = req.getParameter("page");
@@ -78,13 +77,15 @@ public class CategoryBookServlet extends HttpServlet {
 
         if (currentPage <= 3) {
             // Đầu: 1 2 3 4 5 ... totalPages
-            return new int[] { 1, 2, 3, 4, 5 };
+            return new int[] {1, 2, 3, 4, 5};
         } else if (currentPage >= totalPages - 2) {
             // Cuối: 1 ... totalPages-4 totalPages-3 totalPages-2 totalPages-1 totalPages
-            return new int[] { totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages };
+            return new int[] {totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1,
+                    totalPages};
         } else {
             // Giữa: 1 ... currentPage-1 currentPage currentPage+1 ... totalPages
-            return new int[] { currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2 };
+            return new int[] {currentPage - 2, currentPage - 1, currentPage, currentPage + 1,
+                    currentPage + 2};
         }
     }
 }

@@ -1,17 +1,15 @@
 package model;
 
+import java.sql.Timestamp;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
-import java.sql.Timestamp;
-
 /**
- * User entity representing users table in the database.
- * Contains user information including authentication, profile, and verification data.
+ * User entity representing users table in the database. Contains user information including
+ * authentication, profile, and verification data.
  */
 @Data
 @NoArgsConstructor
@@ -31,24 +29,24 @@ public class User {
     private String phone;
     private String role; // 'customer' or 'admin'
     private String avatarUrl;
-    
+
     // Status fields
     private Boolean isBlocked;
     private Timestamp blockedUntil;
-    
+
     // Verification fields
     private Boolean isVerified;
     private String verifyToken;
     private Timestamp verifyExpire;
-    
+
     // Audit fields
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     /**
-     * Returns a safe version of the user without sensitive information (passwordHash).
-     * Used for API responses and client-side operations.
-     * 
+     * Returns a safe version of the user without sensitive information (passwordHash). Used for API
+     * responses and client-side operations.
+     *
      * @return User object without passwordHash field
      */
     public User safeUser() {

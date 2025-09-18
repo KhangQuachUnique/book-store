@@ -1,33 +1,32 @@
 package controller;
 
+import static util.CookieUtil.getCookieValue;
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import util.JwtUtil;
-import static util.CookieUtil.getCookieValue;
 
 @WebServlet("/user/refresh")
 public class RefreshTokenServlet extends HttpServlet {
 
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         resp.setContentType("application/json;charset=UTF-8");
         Gson gson = new Gson();
 
         String refreshToken = getCookieValue(req, "refresh_token");
         boolean isInclude = req.getAttribute("javax.servlet.include.request_uri") != null;
 
-        if (refreshToken == null || !JwtUtil.validateToken(refreshToken) || !JwtUtil.isRefreshToken(refreshToken)) {
+        if (refreshToken == null || !JwtUtil.validateToken(refreshToken)
+                || !JwtUtil.isRefreshToken(refreshToken)) {
             if (!isInclude) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().print("{\"error\":\"Missing or invalid refresh token\"}");

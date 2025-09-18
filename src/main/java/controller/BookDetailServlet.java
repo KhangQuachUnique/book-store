@@ -4,21 +4,19 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import constant.PathConstants;
 import dao.BookDao;
 import model.Book;
 
 /**
- * Servlet for handling book detail page requests.
- * Displays detailed information about a specific book including all attributes.
- * 
+ * Servlet for handling book detail page requests. Displays detailed information about a specific
+ * book including all attributes.
+ *
  * @author BookStore Team
  * @version 1.0
  */
@@ -29,7 +27,8 @@ public class BookDetailServlet extends HttpServlet {
     private final BookDao bookDao = new BookDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         try {
             // Get book ID from request parameter
             String bookIdParam = req.getParameter("id");
@@ -84,7 +83,8 @@ public class BookDetailServlet extends HttpServlet {
 
             // Calculate savings if there's a discount
             if (hasDiscount && book.getOriginalPrice() != null && book.getPrice() != null) {
-                double savings = book.getOriginalPrice().doubleValue() - book.getPrice().doubleValue();
+                double savings =
+                        book.getOriginalPrice().doubleValue() - book.getPrice().doubleValue();
                 req.setAttribute("savings", savings);
             }
 
@@ -93,7 +93,8 @@ public class BookDetailServlet extends HttpServlet {
             req.setAttribute("pageDescription",
                     "Detailed information about " + book.getTitle() + " by " + book.getAuthor());
 
-            log.info("Successfully loaded book details for book ID: " + bookId + " (" + book.getTitle() + ")");
+            log.info("Successfully loaded book details for book ID: " + bookId + " ("
+                    + book.getTitle() + ")");
 
             // Forward to book detail JSP
             req.getRequestDispatcher(PathConstants.BOOK_DETAIL_PAGE).forward(req, resp);
@@ -106,7 +107,8 @@ public class BookDetailServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         // For future implementation of actions like adding to cart, wishlist, etc.
         // For now, redirect to GET
         doGet(req, resp);

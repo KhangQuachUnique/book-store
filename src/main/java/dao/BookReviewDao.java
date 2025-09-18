@@ -1,40 +1,31 @@
 package dao;
 
-import model.BookReview;
-import model.ReviewShow;
-import util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.BookReview;
+import model.ReviewShow;
+import util.DBConnection;
 
 public class BookReviewDao {
     public static BookReview getReviewsByBookId(int bookId, int currentUserId) {
-        String sql =
-                "SELECT r.id, " +
-                        "r.book_id, " +
-                        "r.user_id, " +
-                        "u.name AS username, " +
-                        "u.avatar_url, " +
-                        "r.rating, " +
-                        "r.comment, " +
-                        "r.created_at, " +
-                        "COUNT(rl_all.id) AS like_count, " +
-                        "CASE WHEN rl_user.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked_by_current_user " +
-                        "FROM reviews r " +
-                        "JOIN users u ON r.user_id = u.id " +
-                        "LEFT JOIN review_likes rl_all ON r.id = rl_all.review_id " +
-                        "LEFT JOIN review_likes rl_user ON r.id = rl_user.review_id AND rl_user.user_id = ? " +
-                        "WHERE r.book_id = ? " +
-                        "GROUP BY r.id, r.book_id, r.user_id, u.name, u.avatar_url, r.rating, r.comment, r.created_at, rl_user.user_id " +
-                        "ORDER BY r.created_at DESC";
+        String sql = "SELECT r.id, " + "r.book_id, " + "r.user_id, " + "u.name AS username, "
+                + "u.avatar_url, " + "r.rating, " + "r.comment, " + "r.created_at, "
+                + "COUNT(rl_all.id) AS like_count, "
+                + "CASE WHEN rl_user.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked_by_current_user "
+                + "FROM reviews r " + "JOIN users u ON r.user_id = u.id "
+                + "LEFT JOIN review_likes rl_all ON r.id = rl_all.review_id "
+                + "LEFT JOIN review_likes rl_user ON r.id = rl_user.review_id AND rl_user.user_id = ? "
+                + "WHERE r.book_id = ? "
+                + "GROUP BY r.id, r.book_id, r.user_id, u.name, u.avatar_url, r.rating, r.comment, r.created_at, rl_user.user_id "
+                + "ORDER BY r.created_at DESC";
 
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, currentUserId);
             ps.setInt(2, bookId);
 
@@ -43,10 +34,8 @@ public class BookReviewDao {
                 while (rs.next()) {
                     reviewShows.add(mapRow(rs));
                 }
-                double averageRating = reviewShows.stream()
-                        .mapToDouble(ReviewShow::getRating)
-                        .average()
-                        .orElse(0.0);
+                double averageRating = reviewShows.stream().mapToDouble(ReviewShow::getRating)
+                        .average().orElse(0.0);
                 BookReview bookReview = new BookReview();
                 bookReview.setBookId((long) bookId);
                 bookReview.setReviewShows(reviewShows);
@@ -64,7 +53,7 @@ public class BookReviewDao {
     public static boolean likeReview(int reviewId, int userId) {
         String sql = "INSERT INTO review_likes (review_id, user_id) VALUES (?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, reviewId);
             ps.setInt(2, userId);
             int rowsAffected = ps.executeUpdate();
@@ -78,7 +67,7 @@ public class BookReviewDao {
     public static boolean unlikeReview(int reviewId, int userId) {
         String sql = "DELETE FROM review_likes WHERE review_id=? AND user_id=?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, reviewId);
             ps.setInt(2, userId);
             int rowsAffected = ps.executeUpdate();

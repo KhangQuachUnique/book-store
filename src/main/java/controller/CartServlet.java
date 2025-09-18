@@ -2,13 +2,11 @@ package controller;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import constant.PathConstants;
 import dao.CartDAO;
 import model.CartItem;
@@ -19,7 +17,8 @@ public class CartServlet extends HttpServlet {
     private CartDAO cartDAO = new CartDAO();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user"); // giả sử login đã có
         Long userId = user.getId();
         try {

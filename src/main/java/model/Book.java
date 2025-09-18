@@ -3,14 +3,13 @@ package model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Book entity representing books table in the database.
- * Contains book information including metadata, pricing, and inventory data.
+ * Book entity representing books table in the database. Contains book information including
+ * metadata, pricing, and inventory data.
  */
 @Data
 @NoArgsConstructor

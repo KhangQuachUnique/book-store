@@ -3,16 +3,13 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import constant.PathConstants;
 import model.User;
 import service.UserService;
@@ -29,7 +26,8 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         resp.setContentType("application/json");
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
@@ -71,7 +69,8 @@ public class RegisterServlet extends HttpServlet {
                 res.addProperty("message", "Register success, please check email to verify!");
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception mailErr) {
-                res.addProperty("error", "User created but email could not be sent: " + mailErr.getMessage());
+                res.addProperty("error",
+                        "User created but email could not be sent: " + mailErr.getMessage());
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
 

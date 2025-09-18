@@ -1,17 +1,16 @@
 package controller;
 
-import com.google.gson.Gson;
-import dao.OrderDao;
-import model.Order;
-
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import com.google.gson.Gson;
+import dao.OrderDao;
+import model.Order;
 
 @WebServlet("/api/orders/*") // Sử dụng URL pattern để phân biệt các loại request
 public class OrderApiServlet extends HttpServlet {
@@ -37,13 +36,15 @@ public class OrderApiServlet extends HttpServlet {
                 // Xử lý API lấy danh sách đơn hàng: /api/orders?userId=1
                 String userIdParam = request.getParameter("userId");
                 if (userIdParam == null || userIdParam.isEmpty()) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing userId parameter");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                            "Missing userId parameter");
                     return;
                 }
                 int userId = Integer.parseInt(userIdParam);
                 List<Order> orders = OrderDao.getOrdersByUserIdAndStatus(userId, "all");
                 out.print(gson.toJson(orders));
-            } else if (pathInfo.matches("/\\d+")) { // Xử lý API lấy chi tiết đơn hàng: /api/orders/123
+            } else if (pathInfo.matches("/\\d+")) { // Xử lý API lấy chi tiết đơn hàng:
+                                                    // /api/orders/123
                 int orderId = Integer.parseInt(pathInfo.substring(1));
                 Order order = OrderDao.getOrderById((long) orderId);
                 if (order != null) {

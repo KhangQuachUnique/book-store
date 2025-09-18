@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     const sidebar = document.querySelector('.sidebar');

@@ -13,7 +13,7 @@
     padding: 2rem;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .cart-container h2 {
@@ -57,7 +57,8 @@
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 6px;
-    background: #c61e22; /* đỏ Cholimex */
+    background: #c61e22;
+    /* đỏ Cholimex */
     color: #fff;
     font-weight: 500;
     font-size: 0.95rem;
