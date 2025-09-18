@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class User {
 
-    private Long id;              // BIGSERIAL, tự động tăng
+    private Integer id;              // BIGSERIAL, tự động tăng
 
     @NotBlank(message = "Name cannot be empty")
     private String name;          // name
