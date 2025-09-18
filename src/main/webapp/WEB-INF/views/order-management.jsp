@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: chien
-  Date: 9/12/2025
-  Time: 10:29 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -224,4 +217,223 @@
     }
 
     // Format actions
-    function formatActions(
+    function formatActions(order) {
+        let actions = `
+        <button type="button" class="btn btn-sm btn-info me-1" onclick="viewOrderDetails(${order.id})" title="Xem chi tiết">
+            <i class="fas fa-eye"></i>
+        </button>
+    `;
+
+        // Only show update button for orders that can be updated
+        if (order.status === 'PENDING' || order.status === 'CONFIRMED') {
+            actions += `
+            <button type="button" class="btn btn-sm btn-warning" onclick="showUpdateStatusModal(${order.id}, '${order.status}')" title="Cập nhật trạng thái">
+                <i class="fas fa-edit"></i>
+            </button>
+        `;
+        }
+
+        return actions;
+    }
+
+    // Filter by status
+    function filterByStatus() {
+        const status = $('#statusFilter').val();
+        loadOrders(status);
+    }
+
+    // Search orders
+    function searchOrders() {
+        const searchTerm = $('#searchInput').val().toLowerCase();
+        if (!searchTerm) {
+            populateTable(ordersData);
+            return;
+        }
+
+        const filteredData = ordersData.filter(order =>
+            order.customerName.toLowerCase().includes(searchTerm) ||
+            order.customerEmail.toLowerCase().includes(searchTerm) ||
+            order.customerPhone.includes(searchTerm)
+        );
+
+        populateTable(filteredData);
+        updateTotalCount(filteredData.length);
+    }
+
+    // Clear filters
+    function clearFilters() {
+        $('#statusFilter').val('');
+        $('#searchInput').val('');
+        loadOrders();
+    }
+
+    // Refresh table
+    function refreshTable() {
+        const status = $('#statusFilter').val();
+        loadOrders(status);
+        showAlert('success', 'Đã làm mới dữ liệu');
+    }
+
+    // Update total count
+    function updateTotalCount(count) {
+        $('#totalOrders').text(`${count} đơn hàng`);
+    }
+
+    // View order details
+    function viewOrderDetails(orderId) {
+        $.ajax({
+            url: `/api/orders/${orderId}`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const order = response.data;
+                    const detailsHtml = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><strong>Thông tin đơn hàng</strong></h6>
+                            <p><strong>ID:</strong> ${order.id}</p>
+                            <p><strong>Trạng thái:</strong> ${formatStatus(order.status)}</p>
+                            <p><strong>Tổng tiền:</strong> ${formatPrice(order.totalAmount)}</p>
+                            <p><strong>Ngày đặt:</strong> ${formatDate(order.createdAt)}</p>
+                            <p><strong>Cập nhật lần cuối:</strong> ${formatDate(order.updatedAt)}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><strong>Thông tin khách hàng</strong></h6>
+                            <p><strong>Tên:</strong> ${order.customerName}</p>
+                            <p><strong>Email:</strong> ${order.customerEmail}</p>
+                            <p><strong>Số điện thoại:</strong> ${order.customerPhone}</p>
+                            <p><strong>Địa chỉ giao hàng:</strong> ${order.shippingAddress}</p>
+                        </div>
+                    </div>
+                    ${order.notes ? `<div class="mt-3"><h6><strong>Ghi chú:</strong></h6><p>${order.notes}</p></div>` : ''}
+                `;
+
+                    $('#orderDetailsContent').html(detailsHtml);
+                    $('#orderDetailsModal').modal('show');
+                } else {
+                    showAlert('error', 'Không thể tải chi tiết đơn hàng');
+                }
+            },
+            error: function() {
+                showAlert('error', 'Lỗi khi tải chi tiết đơn hàng');
+            }
+        });
+    }
+
+    // Show update status modal
+    function showUpdateStatusModal(orderId, currentStatus) {
+        $('#updateOrderId').val(orderId);
+        $('#newStatus').empty();
+        $('#statusNotes').val('');
+
+        // Add available status options based on current status
+        const statusOptions = getAvailableStatusOptions(currentStatus);
+        statusOptions.forEach(option => {
+            $('#newStatus').append(`<option value="${option.value}">${option.text}</option>`);
+        });
+
+        $('#updateStatusModal').modal('show');
+    }
+
+    // Get available status options based on current status
+    function getAvailableStatusOptions(currentStatus) {
+        const allOptions = [
+            { value: 'CONFIRMED', text: 'Xác nhận' },
+            { value: 'DELIVERY', text: 'Giao hàng' },
+            { value: 'CANCELLED', text: 'Hủy đơn' }
+        ];
+
+        switch (currentStatus) {
+            case 'PENDING':
+                return allOptions.filter(opt => opt.value === 'CONFIRMED' || opt.value === 'CANCELLED');
+            case 'CONFIRMED':
+                return allOptions.filter(opt => opt.value === 'DELIVERY' || opt.value === 'CANCELLED');
+            default:
+                return [];
+        }
+    }
+
+    // Update order status
+    function updateOrderStatus() {
+        const orderId = $('#updateOrderId').val();
+        const newStatus = $('#newStatus').val();
+        const notes = $('#statusNotes').val();
+
+        if (!newStatus) {
+            showAlert('error', 'Vui lòng chọn trạng thái mới');
+            return;
+        }
+
+        const requestData = {
+            status: newStatus,
+            notes: notes
+        };
+
+        $.ajax({
+            url: `/api/orders/${orderId}`,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData),
+            success: function(response) {
+                if (response.success) {
+                    $('#updateStatusModal').modal('hide');
+                    showAlert('success', 'Cập nhật trạng thái thành công');
+                    refreshTable();
+                } else {
+                    showAlert('error', 'Cập nhật thất bại: ' + response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'Lỗi khi cập nhật trạng thái');
+            }
+        });
+    }
+
+    // Show alert
+    function showAlert(type, message) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+        // Remove existing alerts
+        $('.alert').remove();
+
+        // Add new alert at the top of container
+        $('.container-fluid').prepend(alertHtml);
+
+        // Auto-hide success alerts after 3 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                $('.alert-success').alert('close');
+            }, 3000);
+        }
+    }
+
+    // Add CSS for better styling
+    const customCSS = `
+<style>
+.badge {
+    font-size: 0.8em;
+}
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+.table td {
+    vertical-align: middle;
+}
+.modal-body .row {
+    margin-bottom: 1rem;
+}
+.alert {
+    margin-bottom: 1rem;
+}
+</style>
+`;
+
+    $('head').append(customCSS);
+</script>
