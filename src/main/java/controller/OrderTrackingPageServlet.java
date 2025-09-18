@@ -1,7 +1,9 @@
 package controller;
 
 import dao.OrderDAO;
+import dao.OrderStatusDAO;
 import model.Order;
+import model.OrderStatus;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,36 +16,47 @@ import java.util.List;
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
     private OrderDAO orderDAO;
+    private OrderStatusDAO orderStatusDAO;
 
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
+        orderStatusDAO = new OrderStatusDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Lấy userId từ query param
+        // Lấy userId từ query param (sau này thay bằng session login)
         String userIdParam = req.getParameter("userId");
         int userId = 0;
-
         if (userIdParam != null) {
             try {
                 userId = Integer.parseInt(userIdParam);
-            } catch (NumberFormatException e) {
-                userId = 0; // nếu sai format thì set mặc định
-            }
+            } catch (NumberFormatException ignored) {}
         }
 
-        // Sau này khi có login thì sẽ lấy từ session thay vì query param
-        if (userId > 0) {
-            List<Order> orders = orderDAO.getOrdersByUserId(userId);
-            req.setAttribute("orders", orders);
+        // Lấy statusId từ query param, mặc định = "all"
+        String statusId = req.getParameter("statusId");
+        if (statusId == null) {
+            statusId = "all";
         }
+
+        List<Order> orders = null;
+        if (userId > 0) {
+            orders = orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
+        }
+
+        List<OrderStatus> statuses = orderStatusDAO.getAllStatuses();
+
+        // Gửi dữ liệu sang JSP
+        req.setAttribute("orders", orders);
+        req.setAttribute("statuses", statuses);
+        req.setAttribute("selectedStatus", statusId);
+        req.setAttribute("userId", userId); // để JSP build URL filter
 
         req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp")
                 .forward(req, resp);
     }
-
 }

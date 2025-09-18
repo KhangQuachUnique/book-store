@@ -138,3 +138,29 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.status-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.status-bar a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.status-bar a:hover {
+    background: #f0f0f0;
+}
+
+.status-bar a.active {
+    color: #fff;
+    background: #800020;
+}

@@ -43,7 +43,7 @@ public class OrderApiServlet extends HttpServlet {
                     return;
                 }
                 int userId = Integer.parseInt(userIdParam);
-                List<Order> orders = orderDAO.getOrdersByUserId(userId);
+                List<Order> orders = orderDAO.getOrdersByUserIdAndStatus(userId, "all");
                 out.print(gson.toJson(orders));
             } else if (pathInfo.matches("/\\d+")) { // Xử lý API lấy chi tiết đơn hàng: /api/orders/123
                 int orderId = Integer.parseInt(pathInfo.substring(1));
