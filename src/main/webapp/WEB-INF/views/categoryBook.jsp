@@ -42,34 +42,38 @@
             <c:otherwise>
                 <c:forEach items="${books}" var="book">
                     <div class="book-card">
-                        <div class="book-image">
-                            <img src="${book.thumbnailUrl}" alt="${book.title}" class="book-thumbnail">
-
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">${book.title}</h3>
-                            <div class="book-price-row">
-                                <span class="book-price-badge">$${book.price}</span>
-                                <c:if test="${book.discountRate > 0}">
-                                    <span class="discount">-${book.discountRate}%</span>
-
-                                </c:if>
+                        <a href="${pageContext.request.contextPath}/book-detail?id=${book.id}" class="book-link">
+                            <div class="book-image">
+                                <img src="${book.thumbnailUrl}" alt="${book.title}" class="book-thumbnail">
                             </div>
-                            <p class="book-author">Author: ${book.author}</p>
-                            <p class="book-publisher">Publisher: ${book.publisher}</p>
+                            <div class="book-info">
+                                <h3 class="book-title">${book.title}</h3>
+                                <div class="book-price-row">
+                                    <span class="book-price-badge">$${book.price}</span>
+                                    <c:if test="${book.discountRate > 0}">
+                                        <span class="discount">-${book.discountRate}%</span>
+                                    </c:if>
+                                </div>
+                                <p class="book-author">Author: ${book.author}</p>
+                                <p class="book-publisher">Publisher: ${book.publisher}</p>
 
-                            <div class="book-rating">
-                                <span class="stars">
-                                    <c:forEach begin="1" end="${book.ratingAverage}" var="i">
-                                        <span class="star">&#9733;</span>
-                                    </c:forEach>
-                                    <c:forEach begin="1" end="${5 - book.ratingAverage}" var="i">
-                                        <span class="star empty">&#9734;</span>
-                                    </c:forEach>
-                                </span>
-                                <span class="rating-value">${book.ratingAverage} / 5</span>
+                                <div class="book-rating">
+                                    <span class="stars">
+                                        <c:forEach begin="1" end="${book.ratingAverage}" var="i">
+                                            <span class="star">&#9733;</span>
+                                        </c:forEach>
+                                        <c:forEach begin="1" end="${5 - book.ratingAverage}" var="i">
+                                            <span class="star empty">&#9734;</span>
+                                        </c:forEach>
+                                    </span>
+                                    <span class="rating-value">${book.ratingAverage} / 5</span>
+                                </div>
+                                
+                                <div class="book-actions">
+                                    <span class="view-details-btn">View Details</span>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </c:forEach>
             </c:otherwise>
