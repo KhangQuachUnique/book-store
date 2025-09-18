@@ -14,6 +14,8 @@ import dao.UserDao;
 import jakarta.mail.MessagingException;
 import model.LoginResult;
 import model.User;
+import model.Address;
+import java.util.List;
 
 public class UserService {
     private UserDao userDao = new UserDao();
