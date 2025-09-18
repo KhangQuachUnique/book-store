@@ -3,7 +3,6 @@ package controller;
 import constant.PathConstants;
 import model.Address;
 import model.User;
-import service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,11 +26,12 @@ public class ShowInfoUser extends HttpServlet {
         }
 
         String defaultAddress = null;
+        @SuppressWarnings("unchecked")
         List<Address> addressList = (List<Address>) req.getSession().getAttribute("addresses");
 
         if (addressList != null) {
             for (Address addr : addressList) {
-                if (addr.isDefaultAddress()) {
+                if (addr.getIsDefaultAddress() != null && addr.getIsDefaultAddress()) {
                     defaultAddress = addr.getAddress();
                     break; // tìm thấy thì thoát luôn
                 }

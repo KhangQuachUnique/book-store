@@ -4,12 +4,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import constant.PathConstants;
-import model.User;
-import service.UserService;
-import util.PasswordUtil;
 
 @WebServlet("/user/edit")
 public class EditUserServlet extends HttpServlet {

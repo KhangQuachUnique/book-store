@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import model.User;
 import service.UserService;
-import util.PasswordUtil;
 
 @WebServlet("/user/update")
 public class UpdateUserInfo extends HttpServlet {

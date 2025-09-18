@@ -110,6 +110,36 @@ public class UserDao {
     }
 
     /**
+     * Gets a user by their email address (compatibility method).
+     * 
+     * @param email The email address to search for
+     * @return User if found, null otherwise
+     */
+    public User getUserByEmail(String email) {
+        Optional<User> user = findByEmail(email);
+        return user.orElse(null);
+    }
+
+    /**
+     * Updates a user's password hash.
+     * 
+     * @param user The user object with updated password hash
+     * @throws SQLException if database error occurs
+     */
+    public void updateUserPasswordHash(User user) throws SQLException {
+        String sql = "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, user.getPasswordHash());
+            ps.setLong(2, user.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Error updating user password hash: " + user.getId(), e);
+            throw e;
+        }
+    }
+
+    /**
      * Updates an existing user's information.
      * 
      * @param user The user object with updated information

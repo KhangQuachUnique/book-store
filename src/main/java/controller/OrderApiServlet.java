@@ -1,7 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.OrderDAO;
+import dao.OrderDao;
 import model.Order;
 
 import javax.servlet.ServletException;
@@ -15,12 +15,10 @@ import java.util.List;
 
 @WebServlet("/api/orders/*") // Sử dụng URL pattern để phân biệt các loại request
 public class OrderApiServlet extends HttpServlet {
-    private OrderDAO orderDAO;
     private Gson gson;
 
     @Override
     public void init() throws ServletException {
-        orderDAO = new OrderDAO();
         gson = new Gson();
     }
 
@@ -43,11 +41,11 @@ public class OrderApiServlet extends HttpServlet {
                     return;
                 }
                 int userId = Integer.parseInt(userIdParam);
-                List<Order> orders = orderDAO.getOrdersByUserIdAndStatus(userId, "all");
+                List<Order> orders = OrderDao.getOrdersByUserIdAndStatus(userId, "all");
                 out.print(gson.toJson(orders));
             } else if (pathInfo.matches("/\\d+")) { // Xử lý API lấy chi tiết đơn hàng: /api/orders/123
                 int orderId = Integer.parseInt(pathInfo.substring(1));
-                Order order = orderDAO.getOrderById(orderId);
+                Order order = OrderDao.getOrderById((long) orderId);
                 if (order != null) {
                     out.print(gson.toJson(order));
                 } else {

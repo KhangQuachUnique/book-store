@@ -1,6 +1,6 @@
 package controller;
 
-import dao.OrderDAO;
+import dao.OrderDao;
 import dao.OrderStatusDAO;
 import model.Order;
 import model.OrderStatus;
@@ -15,12 +15,10 @@ import java.util.List;
 
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
-    private OrderDAO orderDAO;
     private OrderStatusDAO orderStatusDAO;
 
     @Override
     public void init() throws ServletException {
-        orderDAO = new OrderDAO();
         orderStatusDAO = new OrderStatusDAO();
     }
 
@@ -45,7 +43,7 @@ public class OrderTrackingPageServlet extends HttpServlet {
 
         List<Order> orders = null;
         if (userId > 0) {
-            orders = orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
+            orders = OrderDao.getOrdersByUserIdAndStatus(userId, statusId);
         }
 
         List<OrderStatus> statuses = orderStatusDAO.getAllStatuses();

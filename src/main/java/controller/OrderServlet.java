@@ -1,6 +1,6 @@
 package controller;
 
-import dao.OrderDAO;
+import dao.OrderDao;
 import dao.OrderStatusDAO;
 import model.Order;
 import model.OrderStatus;
@@ -14,12 +14,10 @@ import java.util.List;
 @WebServlet("/orders")
 public class OrderServlet extends HttpServlet {
 
-    private OrderDAO orderDAO;
     private OrderStatusDAO statusDAO;
 
     @Override
     public void init() throws ServletException {
-        orderDAO = new OrderDAO();
         statusDAO = new OrderStatusDAO();
     }
 
@@ -46,7 +44,7 @@ public class OrderServlet extends HttpServlet {
         List<OrderStatus> statuses = statusDAO.getAllStatuses();
 
         // Lấy danh sách đơn hàng theo user + status filter
-        List<Order> orders = orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
+        List<Order> orders = OrderDao.getOrdersByUserIdAndStatus(userId, statusId);
 
         request.setAttribute("statuses", statuses);
         request.setAttribute("orders", orders);
