@@ -1,17 +1,19 @@
 package controller;
 
-import dao.OrderDao;
-import dao.OrderStatusDAO;
-import model.Order;
-import model.OrderStatus;
+import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+
+import constant.PathConstants;
+import dao.OrderDao;
+import dao.OrderStatusDAO;
+import model.Order;
+import model.OrderStatus;
 
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
@@ -32,7 +34,8 @@ public class OrderTrackingPageServlet extends HttpServlet {
         if (userIdParam != null) {
             try {
                 userId = Integer.parseInt(userIdParam);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         // Lấy statusId từ query param, mặc định = "all"
@@ -54,7 +57,7 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("selectedStatus", statusId);
         req.setAttribute("userId", userId); // để JSP build URL filter
 
-        req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp")
+        req.getRequestDispatcher(PathConstants.VIEW_ORDER_TRACKING)
                 .forward(req, resp);
     }
 }

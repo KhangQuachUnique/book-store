@@ -25,7 +25,7 @@ public class WishListServlet extends HttpServlet {
 
         if (user == null) {
             // Redirect to login if not authenticated
-            resp.sendRedirect(req.getContextPath() + "/login");
+            resp.sendRedirect(req.getContextPath() + PathConstants.URL_LOGIN);
             return;
         }
 

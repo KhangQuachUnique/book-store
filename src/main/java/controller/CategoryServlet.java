@@ -1,14 +1,20 @@
 package controller;
 
-import dao.CategoryDao;
-import model.Category;
-
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import constant.PathConstants;
+import dao.CategoryDao;
+import model.Category;
 
 @WebServlet("/admin/category")
 public class CategoryServlet extends HttpServlet {
@@ -25,7 +31,8 @@ public class CategoryServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = req.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null)
+            action = "list";
 
         // Xử lý kiểm tra trùng tên cho JS
         if ("checkName".equals(action)) {
@@ -46,7 +53,7 @@ public class CategoryServlet extends HttpServlet {
 
         switch (action) {
             case "add": {
-                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/addCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_ADD);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -63,7 +70,7 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> allCategories = categoryDao.findAll();
                 req.setAttribute("allCategories", allCategories);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/editCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_EDIT);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -72,7 +79,7 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> categories = categoryDao.findAll();
                 req.setAttribute("categories", categories);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/manageCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_MANAGE);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -88,7 +95,8 @@ public class CategoryServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
         String action = req.getParameter("action");
-        if (action == null) action = "";
+        if (action == null)
+            action = "";
 
         HttpSession session = req.getSession();
         String message = "";

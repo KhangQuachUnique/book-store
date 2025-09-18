@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import constant.PathConstants;
 import service.UserService;
 
 @WebServlet("/verify")
@@ -22,6 +23,6 @@ public class VerifyServlet extends HttpServlet {
             verified = userService.verifyUser(token);
 
         // Redirect đến login kèm thông tin verified
-        resp.sendRedirect(req.getContextPath() + "/login?verified=" + verified);
+        resp.sendRedirect(req.getContextPath() + PathConstants.URL_LOGIN + "?verified=" + verified);
     }
 }

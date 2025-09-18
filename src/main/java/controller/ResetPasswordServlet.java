@@ -1,18 +1,22 @@
 package controller;
 
-import com.google.gson.Gson;
-import dao.UserDao;
-import model.User;
-import org.mindrot.jbcrypt.BCrypt;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Instant;
+
+import org.mindrot.jbcrypt.BCrypt;
+
+import com.google.gson.Gson;
+
+import constant.PathConstants;
+import dao.UserDao;
+import model.User;
 
 @WebServlet("/reset-password")
 public class ResetPasswordServlet extends HttpServlet {
@@ -21,23 +25,23 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");
-        
+
         if (token == null || token.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/login?error=invalid_token");
             return;
         }
-        
+
         // Check if token is valid and not expired
         User user = userDao.findByVerifyToken(token);
-        if (user == null || user.getVerifyExpire() == null || 
-            user.getVerifyExpire().before(Timestamp.from(Instant.now()))) {
+        if (user == null || user.getVerifyExpire() == null ||
+                user.getVerifyExpire().before(Timestamp.from(Instant.now()))) {
             resp.sendRedirect(req.getContextPath() + "/login?error=expired_token");
             return;
         }
-        
+
         // Forward to reset password form with token
         req.setAttribute("token", token);
-        req.getRequestDispatcher("/WEB-INF/views/resetPassword.jsp").forward(req, resp);
+        req.getRequestDispatcher(PathConstants.VIEW_RESET_PASSWORD).forward(req, resp);
     }
 
     @Override
@@ -51,8 +55,11 @@ public class ResetPasswordServlet extends HttpServlet {
             String confirmPassword = req.getParameter("confirmPassword");
 
             System.out.println("DEBUG Reset: Received token: '" + token + "'"); // Debug log
-            System.out.println("DEBUG Reset: Password length: " + (newPassword != null ? newPassword.length() : "null")); // Debug log
-            System.out.println("DEBUG Reset: Confirm password length: " + (confirmPassword != null ? confirmPassword.length() : "null")); // Debug log
+            System.out
+                    .println("DEBUG Reset: Password length: " + (newPassword != null ? newPassword.length() : "null")); // Debug
+                                                                                                                        // log
+            System.out.println("DEBUG Reset: Confirm password length: "
+                    + (confirmPassword != null ? confirmPassword.length() : "null")); // Debug log
 
             // Validate input
             if (token == null || token.isEmpty() || newPassword == null || newPassword.isEmpty()) {
@@ -89,7 +96,7 @@ public class ResetPasswordServlet extends HttpServlet {
             System.out.println("DEBUG Reset: Password updated successfully for user: " + user.getName()); // Debug log
 
             resp.getWriter().print(gson.toJson(new Response("Password updated successfully", true)));
-            
+
         } catch (Exception e) {
             System.out.println("DEBUG Reset: Exception occurred: " + e.getMessage()); // Debug log
             e.printStackTrace();
@@ -102,7 +109,7 @@ public class ResetPasswordServlet extends HttpServlet {
     private static class Response {
         String message;
         boolean success;
-        
+
         Response(String message, boolean success) {
             this.message = message;
             this.success = success;

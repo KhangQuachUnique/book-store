@@ -1,16 +1,17 @@
 package controller;
 
-import constant.PathConstants;
-import dao.CategoryBookDao;
-import model.Book;
+import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+
+import constant.PathConstants;
+import dao.CategoryBookDao;
+import model.Book;
 
 @WebServlet("/categories")
 public class CategoryBookServlet extends HttpServlet {
@@ -23,7 +24,8 @@ public class CategoryBookServlet extends HttpServlet {
             String pageParam = req.getParameter("page");
             if (pageParam != null) {
                 page = Integer.parseInt(pageParam);
-                if (page < 1) page = 1;
+                if (page < 1)
+                    page = 1;
             }
         } catch (NumberFormatException e) {
             page = 1;
@@ -61,7 +63,7 @@ public class CategoryBookServlet extends HttpServlet {
         req.setAttribute("showFirstEllipsis", visiblePages[0] > 1);
         req.setAttribute("showLastEllipsis", visiblePages[visiblePages.length - 1] < totalPages);
 
-        req.setAttribute("contentPage", "/WEB-INF/views/categoryBook.jsp");
+        req.setAttribute("contentPage", PathConstants.VIEW_CATEGORY_BOOKS);
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
@@ -76,13 +78,13 @@ public class CategoryBookServlet extends HttpServlet {
 
         if (currentPage <= 3) {
             // Đầu: 1 2 3 4 5 ... totalPages
-            return new int[]{1, 2, 3, 4, 5};
+            return new int[] { 1, 2, 3, 4, 5 };
         } else if (currentPage >= totalPages - 2) {
             // Cuối: 1 ... totalPages-4 totalPages-3 totalPages-2 totalPages-1 totalPages
-            return new int[]{totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages};
+            return new int[] { totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages };
         } else {
             // Giữa: 1 ... currentPage-1 currentPage currentPage+1 ... totalPages
-            return new int[]{currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2};
+            return new int[] { currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2 };
         }
     }
 }

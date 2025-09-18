@@ -1,15 +1,20 @@
 package controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import constant.PathConstants;
 import dao.OrderDao;
 import dao.OrderStatusDAO;
 import model.Order;
 import model.OrderStatus;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/orders")
 public class OrderServlet extends HttpServlet {
@@ -50,6 +55,6 @@ public class OrderServlet extends HttpServlet {
         request.setAttribute("orders", orders);
         request.setAttribute("selectedStatus", statusId);
 
-        request.getRequestDispatcher("/WEB-INF/views/orders.jsp").forward(request, response);
+        request.getRequestDispatcher(PathConstants.VIEW_ORDERS).forward(request, response);
     }
 }

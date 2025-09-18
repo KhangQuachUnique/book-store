@@ -1,11 +1,14 @@
 package controller;
 
-import constant.PathConstants;
-
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
 import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import constant.PathConstants;
 
 @WebServlet("/admin/orders")
 public class OrderManagementServlet extends HttpServlet {
@@ -15,7 +18,7 @@ public class OrderManagementServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Set content page for order management
-        request.setAttribute("contentPage", "/WEB-INF/views/admin/order-management.jsp");
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_ORDER_MANAGEMENT);
         request.setAttribute("pageTitle", "Quản lý đơn hàng");
 
         // Forward to layout
