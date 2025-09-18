@@ -4,6 +4,7 @@ public class PathConstants {
     // URL pattern
     public static final String BOOKS_API = "/api/books";
     public static final String USERS_API = "/api/users";
+    public static final String ORDERS_API = "/api/orders";
 
     // View paths
     public static final String VIEW_LAYOUT = "/WEB-INF/views/layout.jsp";
@@ -23,4 +24,5 @@ public class PathConstants {
     public static final String VIEW_ADMIN_USER_ADD = "/WEB-INF/views/userManagement/createUser.jsp";
     public static final String VIEW_ADMIN_USER_DETAIL = "/WEB-INF/views/userManagement/viewUser.jsp";
     public static final String VIEW_ADMIN_USER_ADD_ADMIN = "/WEB-INF/views/userManagement/creatAdmin.jsp";
+    public static final String VIEW_ORDER_MANAGEMENT = "/WEB-INF/views/admin/order-management.jsp";
 }
