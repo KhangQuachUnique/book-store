@@ -42,41 +42,60 @@ public class ResetPasswordServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String token = req.getParameter("token");
-        String newPassword = req.getParameter("password");
-        String confirmPassword = req.getParameter("confirmPassword");
-
         resp.setContentType("application/json");
         Gson gson = new Gson();
 
-        // Validate input
-        if (token == null || token.isEmpty() || newPassword == null || newPassword.isEmpty()) {
-            resp.getWriter().print(gson.toJson(new Response("Invalid request", false)));
-            return;
+        try {
+            String token = req.getParameter("token");
+            String newPassword = req.getParameter("password");
+            String confirmPassword = req.getParameter("confirmPassword");
+
+            System.out.println("DEBUG Reset: Received token: '" + token + "'"); // Debug log
+            System.out.println("DEBUG Reset: Password length: " + (newPassword != null ? newPassword.length() : "null")); // Debug log
+            System.out.println("DEBUG Reset: Confirm password length: " + (confirmPassword != null ? confirmPassword.length() : "null")); // Debug log
+
+            // Validate input
+            if (token == null || token.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+                System.out.println("DEBUG Reset: Invalid request - missing token or password"); // Debug log
+                resp.getWriter().print(gson.toJson(new Response("Invalid request", false)));
+                return;
+            }
+
+            if (!newPassword.equals(confirmPassword)) {
+                System.out.println("DEBUG Reset: Passwords do not match"); // Debug log
+                resp.getWriter().print(gson.toJson(new Response("Passwords do not match", false)));
+                return;
+            }
+
+            // Validate token and expiry
+            User user = userDao.findByVerifyToken(token);
+            if (user == null) {
+                System.out.println("DEBUG Reset: User not found for token: " + token); // Debug log
+                resp.getWriter().print(gson.toJson(new Response("Invalid or expired token", false)));
+                return;
+            }
+
+            System.out.println("DEBUG Reset: User found: " + user.getName()); // Debug log
+
+            if (user.getVerifyExpire() == null || user.getVerifyExpire().before(Timestamp.from(Instant.now()))) {
+                System.out.println("DEBUG Reset: Token expired. Expiry: " + user.getVerifyExpire()); // Debug log
+                resp.getWriter().print(gson.toJson(new Response("Token expired", false)));
+                return;
+            }
+
+            // Update password and clear token
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            userDao.updatePasswordAndClearToken(user.getId(), hashedPassword);
+            System.out.println("DEBUG Reset: Password updated successfully for user: " + user.getName()); // Debug log
+
+            resp.getWriter().print(gson.toJson(new Response("Password updated successfully", true)));
+            
+        } catch (Exception e) {
+            System.out.println("DEBUG Reset: Exception occurred: " + e.getMessage()); // Debug log
+            e.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(gson.toJson(new Response("An error occurred. Please try again.", false)));
         }
-
-        if (!newPassword.equals(confirmPassword)) {
-            resp.getWriter().print(gson.toJson(new Response("Passwords do not match", false)));
-            return;
-        }
-
-        // Validate token and expiry
-        User user = userDao.findByVerifyToken(token);
-        if (user == null) {
-            resp.getWriter().print(gson.toJson(new Response("Invalid or expired token", false)));
-            return;
-        }
-
-        if (user.getVerifyExpire() == null || user.getVerifyExpire().before(Timestamp.from(Instant.now()))) {
-            resp.getWriter().print(gson.toJson(new Response("Token expired", false)));
-            return;
-        }
-
-        // Update password and clear token (reuse existing method pattern)
-        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-        userDao.updatePasswordAndClearToken(user.getId(), hashedPassword);
-
-        resp.getWriter().print(gson.toJson(new Response("Password updated successfully", true)));
     }
 
     private static class Response {

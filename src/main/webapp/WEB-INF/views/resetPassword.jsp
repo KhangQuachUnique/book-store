@@ -43,6 +43,8 @@
             const token = document.querySelector('input[name="token"]').value;
             const messageDiv = document.getElementById('message');
             
+            console.log('Reset form submission - Token:', token, 'Password length:', password.length); // Debug log
+            
             if (password !== confirmPassword) {
                 messageDiv.textContent = 'Passwords do not match';
                 messageDiv.className = 'message error';
@@ -50,17 +52,22 @@
                 return;
             }
             
-            const formData = new FormData();
-            formData.append('token', token);
-            formData.append('password', password);
-            formData.append('confirmPassword', confirmPassword);
+            // Use URLSearchParams instead of FormData for better servlet compatibility
+            const params = new URLSearchParams();
+            params.append('token', token);
+            params.append('password', password);
+            params.append('confirmPassword', confirmPassword);
             
             fetch('${pageContext.request.contextPath}/reset-password', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params
             })
             .then(response => response.json())
             .then(data => {
+                console.log('Reset response:', data); // Debug log
                 messageDiv.textContent = data.message;
                 messageDiv.className = data.success ? 'message success' : 'message error';
                 messageDiv.style.display = 'block';
@@ -72,6 +79,7 @@
                 }
             })
             .catch(error => {
+                console.error('Reset error:', error); // Debug log
                 messageDiv.textContent = 'An error occurred. Please try again.';
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';

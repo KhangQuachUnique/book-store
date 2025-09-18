@@ -40,28 +40,38 @@
             const spinner = document.getElementById('spinner');
             const resultDiv = document.getElementById('forgotPasswordResult');
             
+            console.log('Submitting email:', email); // Debug log
+            
             spinner.style.display = 'block';
             resultDiv.textContent = '';
+            resultDiv.className = '';
             
-            const formData = new FormData();
-            formData.append('email', email);
+            // Use URLSearchParams instead of FormData for better servlet compatibility
+            const params = new URLSearchParams();
+            params.append('email', email);
             
             fetch('${pageContext.request.contextPath}/forgot-password', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params
             })
             .then(response => response.json())
             .then(data => {
                 spinner.style.display = 'none';
                 resultDiv.textContent = data.message;
-                resultDiv.className = 'form-result success';
                 
-                // Clear the form on success
-                if (data.message.includes('sent')) {
+                // Set appropriate CSS class based on response
+                if (data.message.includes('sent') || data.message.includes('Reset link')) {
+                    resultDiv.className = 'form-result success';
                     document.getElementById('forgotPasswordForm').reset();
+                } else {
+                    resultDiv.className = 'form-result error';
                 }
             })
             .catch(error => {
+                console.error('Error:', error); // Debug log
                 spinner.style.display = 'none';
                 resultDiv.textContent = 'An error occurred. Please try again.';
                 resultDiv.className = 'form-result error';

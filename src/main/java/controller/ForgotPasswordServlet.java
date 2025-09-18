@@ -33,36 +33,60 @@ public class ForgotPasswordServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String email = req.getParameter("email");
-
         resp.setContentType("application/json");
         Gson gson = new Gson();
-
-        Optional<User> userOpt = userDao.findByEmail(email);
-        if (!userOpt.isPresent()) {
-            resp.getWriter().print(gson.toJson(new Response("Email not found")));
-            return;
-        }
-
-        User user = userOpt.get();
         
-        // Generate reset token (reuse verify_token field)
-        String token = UUID.randomUUID().toString();
-        user.setVerifyToken(token);
-        user.setVerifyExpire(Timestamp.from(Instant.now().plus(30, ChronoUnit.MINUTES)));
-        
-        // Update token in database
-        userDao.updateVerifyToken(user);
-
-        // Send reset email using existing email utility
         try {
+            String email = req.getParameter("email");
+            System.out.println("DEBUG: Received email parameter: '" + email + "'"); // Debug log
+            
+            if (email == null || email.trim().isEmpty()) {
+                System.out.println("DEBUG: Email is null or empty"); // Debug log
+                resp.getWriter().print(gson.toJson(new Response("Email is required")));
+                return;
+            }
+
+            email = email.trim();
+            System.out.println("DEBUG: Looking up user with email: '" + email + "'"); // Debug log
+            
+            Optional<User> userOpt = userDao.findByEmail(email);
+            if (!userOpt.isPresent()) {
+                System.out.println("DEBUG: User not found for email: '" + email + "'"); // Debug log
+                resp.getWriter().print(gson.toJson(new Response("Email not found")));
+                return;
+            }
+
+            User user = userOpt.get();
+            System.out.println("DEBUG: User found: " + user.getName()); // Debug log
+            
+            // Generate reset token (reuse verify_token field)
+            String token = UUID.randomUUID().toString();
+            user.setVerifyToken(token);
+            user.setVerifyExpire(Timestamp.from(Instant.now().plus(30, ChronoUnit.MINUTES)));
+            
+            // Update token in database
+            userDao.updateVerifyToken(user);
+            System.out.println("DEBUG: Token updated in database"); // Debug log
+
+            // Send reset email using existing email utility
             String resetLink = req.getRequestURL().toString().replace("forgot-password", "reset-password") + "?token=" + token;
+            System.out.println("DEBUG: Sending email to: " + email + " with link: " + resetLink); // Debug log
+            
             SendMailUtil.sendPasswordResetMail(email, resetLink);
+            System.out.println("DEBUG: Email sent successfully"); // Debug log
+            
             resp.getWriter().print(gson.toJson(new Response("Reset link sent to your email")));
+            
         } catch (MessagingException | UnsupportedEncodingException e) {
+            System.out.println("DEBUG: Email sending failed: " + e.getMessage()); // Debug log
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().print(gson.toJson(new Response("Failed to send reset email")));
+        } catch (Exception e) {
+            System.out.println("DEBUG: General error: " + e.getMessage()); // Debug log
+            e.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(gson.toJson(new Response("An error occurred. Please try again.")));
         }
     }
 
