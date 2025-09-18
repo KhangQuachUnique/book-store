@@ -1,16 +1,11 @@
 package controller;
 
 import constant.PathConstants;
-import model.Book;
-import model.BookReview;
-import service.BookReviewService;
-import service.BookService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {

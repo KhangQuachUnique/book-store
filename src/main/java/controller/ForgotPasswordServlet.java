@@ -90,6 +90,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class Response {
         String message;
         Response(String msg) { this.message = msg; }

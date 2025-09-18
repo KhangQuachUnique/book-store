@@ -28,7 +28,7 @@ public class BookReviewServlet extends HttpServlet {
                     currentUserId = 0; // hoặc -1
                 }
 
-                BookReview bookReview = BookReviewService.getReviewsByBookId(330658, 1009);
+                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();

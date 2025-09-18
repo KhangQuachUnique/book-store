@@ -385,8 +385,8 @@ public class CategoryDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getObject("parent_id") != null ? rs.getLong("parent_id") : null,
-                rs.getTimestamp("created_at"),
-                rs.getBoolean("is_leaf")
+                rs.getBoolean("is_leaf"),
+                rs.getTimestamp("created_at")
         );
     }
 }

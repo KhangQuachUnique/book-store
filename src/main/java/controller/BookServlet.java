@@ -1,7 +1,6 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.BookDao;
 import model.Book;
 import service.BookService;
 
@@ -14,11 +13,11 @@ import java.util.List;
 
 @WebServlet("/admin/book")
 public class BookServlet extends HttpServlet {
-   private final BookDao dao = new BookDao();
+   private final BookService bookService = new BookService();
 
    @Override
    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-       List<Book> books = BookService.getAllBooks();
+       List<Book> books = bookService.getAllBooks();
        req.setAttribute("books", books);
        resp.setContentType("application/json");
        resp.setCharacterEncoding("UTF-8");

@@ -98,6 +98,7 @@ public class ResetPasswordServlet extends HttpServlet {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class Response {
         String message;
         boolean success;

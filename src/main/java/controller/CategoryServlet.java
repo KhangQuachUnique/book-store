@@ -2,7 +2,6 @@ package controller;
 
 import dao.CategoryDao;
 import model.Category;
-import util.DBConnection;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -53,7 +52,12 @@ public class CategoryServlet extends HttpServlet {
             }
             case "edit": {
                 Long editId = Long.parseLong(req.getParameter("id"));
-                Category category = categoryDao.findById(editId);
+                Category category = categoryDao.findById(editId).orElse(null);
+                if (category == null) {
+                    req.getSession().setAttribute("message", "Category not found!");
+                    resp.sendRedirect(req.getContextPath() + "/admin/category");
+                    return;
+                }
                 req.setAttribute("category", category);
 
                 List<Category> allCategories = categoryDao.findAll();
@@ -107,10 +111,10 @@ public class CategoryServlet extends HttpServlet {
                 }
                 case "delete": {
                     Long deleteId = Long.parseLong(req.getParameter("id"));
-                    String err = categoryDao.delete(deleteId);
-                    message = (err == null)
+                    boolean success = categoryDao.delete(deleteId);
+                    message = success
                             ? "Xóa category thành công."
-                            : "Xóa category thất bại: " + err;
+                            : "Xóa category thất bại.";
                     break;
                 }
                 default:
@@ -143,7 +147,8 @@ public class CategoryServlet extends HttpServlet {
         c.setIsLeaf("true".equals(req.getParameter("is_leaf")));
         c.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-        return categoryDao.create(c);
+        boolean success = categoryDao.create(c);
+        return success ? null : "Không thể tạo category.";
     }
 
     private String updateCategory(HttpServletRequest req) {
@@ -160,6 +165,7 @@ public class CategoryServlet extends HttpServlet {
 
         c.setIsLeaf("true".equals(req.getParameter("is_leaf")));
 
-        return categoryDao.update(c);
+        boolean success = categoryDao.update(c);
+        return success ? null : "Không thể cập nhật category.";
     }
 }

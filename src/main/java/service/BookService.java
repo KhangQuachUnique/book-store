@@ -3,14 +3,21 @@ package service;
 import model.Book;
 import dao.BookDao;
 import java.util.List;
+import java.util.Optional;
 
-public class  BookService {
-    public static List<Book> getAllBooks() {
-
-        return BookDao.getAllBooks();
+public class BookService {
+    private final BookDao bookDao;
+    
+    public BookService() {
+        this.bookDao = new BookDao();
+    }
+    
+    public List<Book> getAllBooks() {
+        return bookDao.getAllBooks();
     }
 
-    public static Book getBookById(int id) {
-        return BookDao.getBookById(id);
+    public Book getBookById(long id) {
+        Optional<Book> book = bookDao.getBookById(id);
+        return book.orElse(null);
     }
 }
