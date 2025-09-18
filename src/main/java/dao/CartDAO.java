@@ -30,8 +30,8 @@ public class CartDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 CartItem ci = new CartItem();
-                ci.setId(rs.getInt("id"));
-                ci.setBookId(rs.getInt("book_id"));
+                ci.setId(rs.getLong("id"));
+                ci.setBookId(rs.getLong("book_id"));
                 ci.setQuantity(rs.getInt("quantity"));
                 ci.setTitle(rs.getString("title"));
                 ci.setPrice(rs.getDouble("price"));

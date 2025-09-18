@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookReview {
-    private Integer id;
-    private Integer bookId;
+    private Long id;
+    private Long bookId;
     private List<ReviewShow> reviewShows;
     private Double averageRating;
     private Integer totalReviews;

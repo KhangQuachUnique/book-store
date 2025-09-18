@@ -48,7 +48,7 @@ public class BookReviewDao {
                         .average()
                         .orElse(0.0);
                 BookReview bookReview = new BookReview();
-                bookReview.setBookId(bookId);
+                bookReview.setBookId((long) bookId);
                 bookReview.setReviewShows(reviewShows);
                 bookReview.setAverageRating(averageRating);
                 bookReview.setTotalReviews(reviewShows.size());
@@ -91,8 +91,8 @@ public class BookReviewDao {
 
     private static ReviewShow mapRow(ResultSet rs) throws SQLException {
         ReviewShow reviewShow = new ReviewShow();
-        reviewShow.setId(rs.getInt("id"));
-        reviewShow.setUserId(rs.getInt("user_id"));
+        reviewShow.setId(rs.getLong("id"));
+        reviewShow.setUserId(rs.getLong("user_id"));
         reviewShow.setRating(rs.getDouble("rating"));
         reviewShow.setUsername(rs.getString("username"));
         reviewShow.setComment(rs.getString("comment"));

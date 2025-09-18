@@ -14,33 +14,28 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class User {
 
-    private Long id;              // BIGSERIAL, tự động tăng
+
+    private Long id; // BIGSERIAL PRIMARY KEY
 
     @NotBlank(message = "Name cannot be empty")
-    private String name;          // name
+    private String name;
 
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Invalid email format")
-    private String email;         // email
+    private String email;
 
-    private String passwordHash;  // password_hash, không validate tại model
-
-    private String phone;         // phone
-
-    private String role;          // 'customer' hoặc 'admin'
-
-    private Boolean isBlocked;    // có bị block không
-
-    private Timestamp blockedUntil;  // thời điểm hết block
-
+    private String passwordHash;
+    private String phone;
+    private String role; // 'customer' or 'admin'
+    private Boolean isBlocked;
+    private Timestamp blockedUntil;
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
-
-    // Thêm cho xác thực email
-    private Boolean isVerified;      // đã xác thực chưa
-    private String verifyToken;      // mã token
-    private Timestamp verifyExpire;  // thời điểm hết hạn token
+    private Boolean isVerified;
+    private String verifyToken;
+    private Timestamp verifyExpire;
+    // Add avatarUrl if present in schema
+    private String avatarUrl;
 
     /**
      * Trả về bản User "safe", không có passwordHash
@@ -59,8 +54,8 @@ public class User {
         safe.setIsVerified(this.isVerified);
         safe.setVerifyToken(this.verifyToken);
         safe.setVerifyExpire(this.verifyExpire);
-
-        // Không set passwordHsh
+        safe.setAvatarUrl(this.avatarUrl);
+        // Không set passwordHash
         safe.setPasswordHash(null);
         return safe;
     }

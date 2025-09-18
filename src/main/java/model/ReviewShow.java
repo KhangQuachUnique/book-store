@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewShow {
-    private Integer id;
-    private Integer userId;
+    private Long id;
+    private Long userId;
     private String username;
     private String avatarUrl;
     private Double rating;

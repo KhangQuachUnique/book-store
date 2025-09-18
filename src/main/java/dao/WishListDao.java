@@ -23,20 +23,20 @@ public class WishListDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Book book = new Book();
-                book.setId(rs.getInt("id"));
+                book.setId(rs.getLong("id"));
                 book.setTitle(rs.getString("title"));
                 book.setAuthor(rs.getString("author"));
-                book.setPrice(rs.getDouble("price"));
+                book.setPrice(rs.getBigDecimal("price"));
                 book.setPublisher(rs.getString("publisher"));
-                book.setCategoryId(rs.getInt("category_id"));
+                book.setCategoryId(rs.getLong("category_id"));
                 book.setStock(rs.getInt("stock"));
-                book.setOriginalPrice(rs.getDouble("original_price"));
-                book.setDiscount_rate(rs.getInt("discount_rate"));
-                book.setthumbnailUrl(rs.getString("thumbnail_url"));
+                book.setOriginalPrice(rs.getBigDecimal("original_price"));
+                book.setDiscountRate(rs.getInt("discount_rate"));
+                book.setThumbnailUrl(rs.getString("thumbnail_url"));
                 book.setDescription(rs.getString("description"));
                 book.setPublishYear(rs.getInt("publish_year"));
                 book.setPages(rs.getInt("pages"));
-                book.setRating(rs.getDouble("rating_average"));
+                book.setRatingAverage(rs.getBigDecimal("rating_average"));
                 book.setCreatedAt(rs.getTimestamp("created_at"));
 
                 books.add(book);

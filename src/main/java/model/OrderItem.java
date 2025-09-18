@@ -3,15 +3,15 @@ package model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class OrderItem {
     private Long id;
-    private String name;
-    private Long parentId;
-    private Timestamp createdAt;
-    private Boolean isLeaf;
+    private Long orderId;
+    private Long bookId;
+    private Integer quantity;
+    private BigDecimal price;
 }

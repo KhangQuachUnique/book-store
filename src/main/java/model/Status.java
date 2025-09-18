@@ -3,15 +3,11 @@ package model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Status {
     private Long id;
     private String name;
-    private Long parentId;
-    private Timestamp createdAt;
-    private Boolean isLeaf;
 }

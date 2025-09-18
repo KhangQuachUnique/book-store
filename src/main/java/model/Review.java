@@ -8,10 +8,11 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Review {
     private Long id;
-    private String name;
-    private Long parentId;
+    private Long bookId;
+    private Long userId;
+    private Integer rating; // 1-5
+    private String comment;
     private Timestamp createdAt;
-    private Boolean isLeaf;
 }

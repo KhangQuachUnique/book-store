@@ -30,7 +30,7 @@ public class AddressDao {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, address.getUserId());
             pstmt.setString(2, address.getAddress());
-            pstmt.setBoolean(3, address.isDefaultAddress());
+            pstmt.setBoolean(3, address.getIsDefaultAddress());
             pstmt.executeUpdate();
         }
     }
@@ -58,7 +58,7 @@ public class AddressDao {
         address.setId(rs.getLong("id"));
         address.setUserId(rs.getLong("user_id"));
         address.setAddress(rs.getString("address"));
-        address.setDefaultAddress(rs.getBoolean("is_default"));
+        address.setIsDefaultAddress(rs.getBoolean("is_default"));
         address.setCreatedAt(rs.getTimestamp("created_at"));
         return address;
     }

@@ -403,7 +403,7 @@ public class UserServlet extends HttpServlet {
         Address address = new Address();
         address.setUserId(userId);
         address.setAddress(addressText);
-        address.setDefaultAddress(isDefaultAddress);
+        address.setIsDefaultAddress(isDefaultAddress);
         addressService.createAddress(address);
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
     }

@@ -1,10 +1,6 @@
 package constant;
 
 public class PathConstants {
-    // URL pattern
-    public static final String BOOKS_API = "/api/books";
-    public static final String USERS_API = "/api/users";
-
     // Public View paths
     public static final String VIEW_LAYOUT = "/WEB-INF/views/layout.jsp";
     public static final String VIEW_ADMIN_LAYOUT = "/WEB-INF/views/adminLayout.jsp";

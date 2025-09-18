@@ -49,7 +49,7 @@ public class NotificationDao {
                     notification.setMessage(rs.getString("message"));
                     notification.setType(rs.getString("type"));
                     notification.setCreatedAt(rs.getTimestamp("created_at"));
-                    notification.setRead(rs.getBoolean("is_read"));
+                    notification.setIsRead(rs.getBoolean("is_read"));
                     notifications.add(notification);
                 }
             }

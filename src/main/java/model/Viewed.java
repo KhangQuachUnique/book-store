@@ -8,10 +8,9 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Viewed {
     private Long id;
-    private String name;
-    private Long parentId;
-    private Timestamp createdAt;
-    private Boolean isLeaf;
+    private Long userId;
+    private Long bookId;
+    private Timestamp viewedAt;
 }

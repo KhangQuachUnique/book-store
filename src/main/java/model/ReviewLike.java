@@ -3,15 +3,12 @@ package model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class ReviewLike {
     private Long id;
-    private String name;
-    private Long parentId;
-    private Timestamp createdAt;
-    private Boolean isLeaf;
+    private Long reviewId;
+    private Long userId;
 }

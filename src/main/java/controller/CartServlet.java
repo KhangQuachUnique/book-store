@@ -17,8 +17,8 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user"); // giả sử login đã có
-        int userId = user.getId();
+    User user = (User) req.getSession().getAttribute("user"); // giả sử login đã có
+    int userId = user.getId().intValue();
         try {
             List<CartItem> cart = cartDAO.getCartByUser(userId);
             req.setAttribute("cart", cart);
