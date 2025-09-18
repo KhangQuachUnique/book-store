@@ -12,7 +12,105 @@ body {
 }
 
 .main-content {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     background-color: #f4f4f4;
     min-height: 100vh;
 }
+
+main {
+    flex: 1;
+}
+
+/* Improved User dropdown styling */
+.user-dropdown {
+    position: relative;
+}
+
+.user-dropdown > a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.user-dropdown > a:hover {
+    background: var(--primary-color-hover);
+}
+
+.user-dropdown > a svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--text-primary);
+}
+
+.user-dropdown .dropdown-menu {
+    height: fit-content;
+    width: 150px;
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--secondary-color);
+    min-width: 160px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    z-index: 100;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.user-dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Create an invisible area to help with hover */
+.user-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px;
+}
+
+.dropdown-menu li {
+    list-style: none;
+    width: 100%;
+}
+
+.dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /*padding: 0.8rem 1.2rem;*/
+    color: var(--text-secondary);
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.dropdown-menu li a svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--text-secondary);
+}
+
+.dropdown-menu li a:hover {
+    background: var(--secondary-color-hover);
+}
+
+
