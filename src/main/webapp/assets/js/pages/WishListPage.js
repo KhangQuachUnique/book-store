@@ -1,4 +1,4 @@
-import { wishListApi } from "../services/wishListService.js";
+import { wishListApi } from "../services/WishListService.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.heart-icon').forEach(svg => {

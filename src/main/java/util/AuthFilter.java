@@ -86,8 +86,7 @@ public class AuthFilter implements Filter {
                 });
             }
             if (path.startsWith("/admin") && !"admin".equals(role)) {
-                request.setAttribute("contentPage", PathConstants.VIEW_NOT_FOUND);
-                request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
+                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
                 return;
             }
         }
