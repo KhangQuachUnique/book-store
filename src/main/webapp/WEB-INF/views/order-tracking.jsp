@@ -37,7 +37,31 @@
 
           <div class="order-header">
             <span class="order-id">Mã đơn: #${order.id}</span>
-            <span class="order-status">${order.statusName}</span>
+            <c:set var="statusClass" value=""/>
+            <c:choose>
+              <c:when test="${order.statusName eq 'Đơn Hàng Đã Đặt'}">
+                <c:set var="statusClass" value="pending"/>
+              </c:when>
+              <c:when test="${order.statusName eq 'Chờ Xác Nhận'}">
+                <c:set var="statusClass" value="confirmed"/>
+              </c:when>
+              <c:when test="${order.statusName eq 'Chờ Thanh Toán'}">
+                <c:set var="statusClass" value="waiting-payment"/>
+              </c:when>
+              <c:when test="${order.statusName eq 'Chờ Giao Hàng' || order.statusName eq 'Đang Giao Hàng'}">
+                <c:set var="statusClass" value="shipping"/>
+              </c:when>
+              <c:when test="${order.statusName eq 'Đã Hoàn Thành'}">
+                <c:set var="statusClass" value="completed"/>
+              </c:when>
+              <c:when test="${order.statusName eq 'Đã Hủy'}">
+                <c:set var="statusClass" value="cancelled"/>
+              </c:when>
+            </c:choose>
+
+            <span class="order-status ${statusClass}">
+                ${order.statusName}
+            </span>
           </div>
 
           <p><strong>Ngày đặt:</strong> ${order.createdAt}</p>

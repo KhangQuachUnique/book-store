@@ -71,6 +71,15 @@
     color: #c62828;
 }
 
+.order-status.waiting-payment {
+    background-color: #ffe0b2;
+    color: #e65100;
+}
+.order-status.shipping {
+    background-color: #b2ebf2;
+    color: #006064;
+}
+
 .total {
     font-weight: bold;
 }
