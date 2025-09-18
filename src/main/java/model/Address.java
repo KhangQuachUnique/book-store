@@ -48,4 +48,7 @@ public class Address {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {return this.address;}
 }

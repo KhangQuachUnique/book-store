@@ -22,11 +22,66 @@
         <input type="email" id="email" name="email" value="${sessionScope.user.email}" readonly/><br/>
 
         <label for="address" class="input-label">Address:</label><br/>
-        <input class="input-value" type="text" id="address" name="address" value="${sessionScope.defaultAddress}" /><br/>
+        <div class="address-container">
+            <input class="input-address"
+                   type="text"
+                   id="address"
+                   name="address"
+                   value="${sessionScope.defaultAddress}" readonly />
+
+            <button type="button" class="dropdown-toggle">▼</button>
+        </div>
+
+        <div class="address-list" id="addressList" style="display:none;">
+            <c:forEach var="addr" items="${sessionScope.otherAddresses}">
+                <div class="address-item">
+                    <label>
+                        <input type="radio" name="addrRadio" class="addr-radio" value="${addr}">
+                            ${addr}
+                    </label>
+                </div>
+            </c:forEach>
+            <div class="address-item add-address">➕ Add new address</div>
+        </div>
 
         <input class="submit" type="submit" value="Confirm update" />
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.querySelector(".dropdown-toggle");
+        const list = document.getElementById("addressList");
+        const input = document.getElementById("address");
+        const defaultAddress = "${sessionScope.defaultAddress}";
+
+        // Toggle hiển thị danh sách
+        toggleBtn.addEventListener("click", () => {
+            list.style.display = list.style.display === "block" ? "none" : "block";
+        });
+
+        // Khi chọn radio
+        list.addEventListener("change", (e) => {
+            if (e.target.classList.contains("addr-radio")) {
+                input.value = e.target.value;
+            }
+        });
+
+        // Add new address
+        list.addEventListener("click", (e) => {
+            if (e.target.classList.contains("add-address")) {
+                alert("TODO: mở popup hoặc redirect để thêm địa chỉ mới");
+            }
+        });
+
+        // Click ngoài thì đóng list
+        document.addEventListener("click", (e) => {
+            if (!list.contains(e.target) && !toggleBtn.contains(e.target)) {
+                list.style.display = "none";
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
