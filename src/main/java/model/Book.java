@@ -29,7 +29,7 @@ public class Book implements Serializable {
         this.author = author;
         this.price = price;
         this.publisher = publisher;
-        this.thumbnailUrl = thumbnailUrl;
+        this.thumbnailUrl = imageUrl;
         this.description = description;
         this.publishYear = publishYear;
         this.pages = pages;
