@@ -16,7 +16,7 @@ public class OrderStatusDAO {
         List<OrderStatus> list = new ArrayList<>();
         list.add(new OrderStatus(0, "Tất cả"));
 
-        String sql = "SELECT id, name FROM status ORDER BY id";
+        String sql = "SELECT id, name FROM status WHERE id != 8 ORDER BY id";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
