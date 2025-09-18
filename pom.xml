@@ -1,152 +1,128 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <!-- Project Information -->
-    <groupId>org.example</groupId>
-    <artifactId>book-store-be</artifactId>
-    <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>BookieCake - Book Store Backend</name>
-    <description>A modern book store web application backend built with Java servlets and PostgreSQL</description>
-    <url>https://github.com/KhangQuachUnique/book-store</url>
+	<groupId>org.example</groupId>
+	<artifactId>book-store-be</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>BookieCake - Book Store Backend</name>
+	<description>BookieCake Book Store Web Application using Maven and Tomcat</description>
+	<url>http://maven.apache.org</url>
 
-    <!-- Properties -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        
-        <!-- Dependency Versions -->
-        <junit.version>5.10.0</junit.version>
-        <servlet.version>4.0.1</servlet.version>
-        <jstl.version>1.2</jstl.version>
-        <postgresql.version>42.6.0</postgresql.version>
-        <gson.version>2.10.1</gson.version>
-        <bcrypt.version>0.4</bcrypt.version>
-        <jwt.version>4.4.0</jwt.version>
-        <lombok.version>1.18.32</lombok.version>
-        <jakarta.mail.version>2.0.1</jakarta.mail.version>
-        <jakarta.validation.version>3.0.2</jakarta.validation.version>
-        <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
-        <jakarta.el.version>4.0.0</jakarta.el.version>
-        <glassfish.el.version>4.0.2</glassfish.el.version>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<java.version>21</java.version>
+		<lombok.version>1.18.32</lombok.version>
+		<postgresql.version>42.6.0</postgresql.version>
+		<gson.version>2.10.1</gson.version>
+		<servlet.version>4.0.1</servlet.version>
+		<jstl.version>1.2</jstl.version>
+		<jwt.version>4.4.0</jwt.version>
+		<bcrypt.version>0.4</bcrypt.version>
+		<jakarta.mail.version>2.0.1</jakarta.mail.version>
+		<jakarta.validation.version>3.0.2</jakarta.validation.version>
+		<hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
+		<jakarta.el.version>4.0.0</jakarta.el.version>
+	</properties>
 
-    <dependencies>
-        <!-- ===== Core Web Dependencies ===== -->
-        <!-- Java Servlet API -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.version}</version>
-            <scope>provided</scope>
-        </dependency>
+	<dependencies>
+		<!-- JSP / JSTL -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
 
-        <!-- JSP Standard Tag Library (JSTL) -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
-        </dependency>
+		<!-- Java Servlet API -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
-        <!-- ===== Database Dependencies ===== -->
-        <!-- PostgreSQL JDBC Driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
+		<!-- PostgreSQL JDBC driver -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
 
-        <!-- ===== JSON Processing ===== -->
-        <!-- Google Gson for JSON serialization/deserialization -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
+		<!-- Gson for JSON processing -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
 
-        <!-- ===== Security Dependencies ===== -->
-        <!-- BCrypt for password hashing -->
-        <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>${bcrypt.version}</version>
-        </dependency>
+		<!-- BCrypt for password hashing -->
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>${bcrypt.version}</version>
+		</dependency>
 
-        <!-- JWT for authentication -->
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>${jwt.version}</version>
-        </dependency>
+		<!-- JWT for authentication -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>${jwt.version}</version>
+		</dependency>
 
-        <!-- ===== Email Dependencies ===== -->
-        <!-- Jakarta Mail for email functionality -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>jakarta.mail</artifactId>
-            <version>${jakarta.mail.version}</version>
-        </dependency>
+		<!-- Lombok to reduce boilerplate code -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- Jakarta Mail for email functionality -->
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>jakarta.mail</artifactId>
+		    <version>${jakarta.mail.version}</version>
+		</dependency>
 
-        <!-- ===== Validation Dependencies ===== -->
-        <!-- Jakarta Validation API -->
+		<!-- Jakarta Bean Validation -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>${jakarta.validation.version}</version>
         </dependency>
 
-        <!-- Hibernate Validator Implementation -->
+		<!-- Hibernate Validator Implementation -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
         </dependency>
 
-        <!-- Jakarta EL API for expression language -->
+        <!-- Jakarta EL API -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
             <version>${jakarta.el.version}</version>
         </dependency>
 
-        <!-- Jakarta EL Implementation -->
+        <!-- Jakarta EL Implementation (from GlassFish) -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
-            <version>${glassfish.el.version}</version>
-        </dependency>
-
-        <!-- ===== Development Dependencies ===== -->
-        <!-- Lombok for reducing boilerplate code -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- ===== Test Dependencies ===== -->
-        <!-- JUnit 5 for testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
+            <version>4.0.2</version>
         </dependency>
     </dependencies>
-    <!-- Build Configuration -->
     <build>
         <finalName>BookieCake</finalName>
-        
         <plugins>
             <!-- Maven Compiler Plugin -->
             <plugin>
@@ -154,7 +130,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <release>21</release>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -162,24 +140,37 @@
                             <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 
-            <!-- Maven War Plugin -->
+            <!-- Maven WAR Plugin for Web Application Packaging -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.3.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
 
-            <!-- Maven Surefire Plugin for testing -->
+            <!-- Maven Resources Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Clean Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.3.1</version>
             </plugin>
         </plugins>
     </build>
