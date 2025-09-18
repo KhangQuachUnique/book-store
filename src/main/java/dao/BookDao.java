@@ -10,7 +10,7 @@ import java.util.List;
 public class BookDao {
     public static List<Book> getAllBooks() {
         List<Book> list = new ArrayList<>();
-        String sql = "SELECT * FROM books";
+        String sql = "SELECT * FROM books where id = 450147";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -45,7 +45,7 @@ public class BookDao {
     }
 
     public static boolean addBook(Book book) {
-        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, image_url, description, publish_year, pages, rating, price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, thumbnail_url, description, publish_year, pages, rating, price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
@@ -55,13 +55,13 @@ public class BookDao {
             ps.setInt(5, book.getStock());
             ps.setDouble(6, book.getOriginalPrice());
             ps.setInt(7, book.getDiscount_rate());
-            ps.setString(8, book.getImageUrl());
+            ps.setString(8, book.getthumbnailUrl());
             ps.setString(9, book.getDescription());
             ps.setInt(10, book.getPublishYear());
             ps.setInt(11, book.getPages());
             ps.setDouble(12, book.getRating());
             ps.setDouble(13, book.getPrice());
-            ps.setString(14, book.getCreatedAt());
+            ps.setTimestamp(14, book.getCreatedAt());
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -79,16 +79,16 @@ public class BookDao {
         b.setStock(rs.getInt("stock"));
         b.setAuthor(rs.getString("author"));
         b.setPublisher(rs.getString("publisher"));
-        b.setImageUrl(rs.getString("image_url"));
+        b.setthumbnailUrl(rs.getString("thumbnail_url"));
         b.setDescription(rs.getString("description"));
         b.setPublishYear(rs.getInt("publish_year"));
         b.setPages(rs.getInt("pages"));
-        b.setRating(rs.getDouble("rating"));
+        b.setRating(rs.getDouble("rating_average"));
         b.setPrice(rs.getDouble("price"));
         b.setOriginalPrice(rs.getDouble("original_price"));
         b.setDiscount_rate(rs.getInt("discount_rate"));
         b.setCategoryId(rs.getInt("category_id"));
-        b.setCreatedAt(rs.getString("created_at"));
+        b.setCreatedAt(rs.getTimestamp("created_at"));
         return b;
     }
 }

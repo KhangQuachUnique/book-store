@@ -34,11 +34,9 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 My Web App</p>
-    </footer>
+    <%@ include file="fragments/footer.jsp" %>
 </div>
-<!-- JavaScript -->
-<script src="../../assets/js/app.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
+<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>
 </body>
 </html>
