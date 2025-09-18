@@ -5,10 +5,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<c:import url="/WEB-INF/views/layout.jsp">
-    <c:param name="content">
-        <div class="book-detail-container">
+<html>
+<head>
+    <title>${book.title} - Book Detail</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/categoryBook.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="book-detail-container">
             <!-- Breadcrumb Navigation -->
             <nav class="breadcrumb">
                 <a href="${pageContext.request.contextPath}/">Home</a>
@@ -508,5 +512,6 @@
                 }
             });
         </script>
-    </c:param>
-</c:import>
+</div>
+</body>
+</html>
