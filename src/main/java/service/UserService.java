@@ -124,6 +124,10 @@ public class UserService {
         return userDao.getUserById(id);
     }
 
+    public User getUserByEmail(String email) throws SQLException {
+        return userDao.getUserByEmail(email);
+    }
+
     public void deleteUser(long id) throws SQLException {
         userDao.deleteUser(id);
     }
@@ -138,6 +142,10 @@ public class UserService {
 
     public void updateUser(User user) throws SQLException {
         userDao.updateUser(user);
+    }
+
+    public void updateUserPasswordHash(User user) throws SQLException {
+        userDao.updateUserPasswordHash(user);
     }
 
     public void createAdmin(User user) throws SQLException {
