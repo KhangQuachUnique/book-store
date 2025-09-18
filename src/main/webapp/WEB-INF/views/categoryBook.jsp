@@ -50,8 +50,8 @@
                             <h3 class="book-title">${book.title}</h3>
                             <div class="book-price-row">
                                 <span class="book-price-badge">$${book.price}</span>
-                                <c:if test="${book.discount_rate > 0}">
-                                    <span class="discount">-${book.discount_rate}%</span>
+                                <c:if test="${book.discountRate > 0}">
+                                    <span class="discount">-${book.discountRate}%</span>
 
                                 </c:if>
                             </div>
@@ -60,14 +60,14 @@
 
                             <div class="book-rating">
                                 <span class="stars">
-                                    <c:forEach begin="1" end="${book.rating}" var="i">
+                                    <c:forEach begin="1" end="${book.ratingAverage}" var="i">
                                         <span class="star">&#9733;</span>
                                     </c:forEach>
-                                    <c:forEach begin="1" end="${5 - book.rating}" var="i">
+                                    <c:forEach begin="1" end="${5 - book.ratingAverage}" var="i">
                                         <span class="star empty">&#9734;</span>
                                     </c:forEach>
                                 </span>
-                                <span class="rating-value">${book.rating} / 5</span>
+                                <span class="rating-value">${book.ratingAverage} / 5</span>
                             </div>
                         </div>
                     </div>
