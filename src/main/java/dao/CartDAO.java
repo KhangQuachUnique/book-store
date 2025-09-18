@@ -21,7 +21,7 @@ public class CartDAO {
     }
 
     public List<CartItem> getCartByUser(int userId) throws Exception {
-        String sql = "SELECT c.id, c.book_id, c.quantity, b.title, b.price " +
+        String sql = "SELECT c.id, c.book_id, c.quantity, b.title, b.price, b.thumbnail_url " +
                 "FROM carts c JOIN books b ON c.book_id = b.id WHERE c.user_id = ?";
         List<CartItem> list = new ArrayList<>();
         try (Connection con = DBConnection.getConnection();
@@ -35,6 +35,7 @@ public class CartDAO {
                 ci.setQuantity(rs.getInt("quantity"));
                 ci.setTitle(rs.getString("title"));
                 ci.setPrice(rs.getDouble("price"));
+                ci.setThumbnail(rs.getString("thumbnail_url"));
                 list.add(ci);
             }
         }

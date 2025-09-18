@@ -8,7 +8,7 @@
 }
 
 .cart-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
     background: #fff;
@@ -16,11 +16,18 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+.cart-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
 .cart-container h2 {
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
-    font-weight: 600;
-    color: #333;
+    font-weight: 800;
+    color: var(--text-secondary);
     text-align: center;
 }
 
@@ -38,13 +45,13 @@
 }
 
 .cart-table th {
-    background-color: #f8f8f8;
+    background-color: var(--secondary-color);
     font-weight: 600;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .cart-table td {
-    color: #444;
+    color: var(--text-display);
     font-size: 0.95rem;
 }
 
@@ -57,8 +64,8 @@
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 6px;
-    background: #c61e22; /* đỏ Cholimex */
-    color: #fff;
+    background: var(--primary-color);
+    color: var(--text-primary);
     font-weight: 500;
     font-size: 0.95rem;
     cursor: pointer;
@@ -67,7 +74,7 @@
 
 .cart-actions form button:hover,
 .checkout-btn:hover {
-    background: #a91519;
+    background: var(--primary-color-hover);
 }
 
 .checkout-container {
@@ -79,4 +86,116 @@
     color: #777;
     font-size: 1rem;
     margin: 2rem 0;
+}
+
+/* Summary Section Styles */
+.checkout-summary {
+    background: var(--secondary-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.summary-section, .shipping-section, .payment-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--secondary-color-hover);
+}
+
+.summary-section h3, .shipping-section h3, .payment-section h3 {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    color: var(--text-display);
+}
+
+.summary-row.total {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--secondary-color-hover);
+}
+
+/* Address Selection Styles */
+.address-select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--secondary-color-hover);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    background: white;
+    color: var(--text-display);
+}
+
+.add-address-btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: var(--accent-color);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+.no-address {
+    color: #777;
+    margin-bottom: 0.5rem;
+}
+
+/* Payment Method Styles */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: white;
+    border: 1px solid var(--secondary-color-hover);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.payment-option input[type="radio"] {
+    accent-color: var(--primary-color);
+}
+
+.payment-option span {
+    color: var(--text-display);
+}
+
+/* Updated Checkout Button */
+.checkout-form {
+    margin-top: 1.5rem;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+.book-col{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+    span {
+        text-align: start;
+    };
 }
