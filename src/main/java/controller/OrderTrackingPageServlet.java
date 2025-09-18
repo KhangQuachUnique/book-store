@@ -1,5 +1,6 @@
 package controller;
 
+import constant.PathConstants;
 import dao.OrderDAO;
 import dao.OrderStatusDAO;
 import model.Order;
@@ -37,8 +38,17 @@ public class OrderTrackingPageServlet extends HttpServlet {
             } catch (NumberFormatException ignored) {}
         }
 
-        // Lấy statusId từ query param, mặc định = "all"
+        // Lấy statusId từ query param
         String statusId = req.getParameter("statusId");
+
+        // Nếu là "all" thì redirect sang URL gọn
+        if ("all".equals(statusId)) {
+            String cleanUrl = req.getContextPath() + "/user/order-tracking?userId=" + userId;
+            resp.sendRedirect(cleanUrl);
+            return;
+        }
+
+        // Nếu null thì mặc định = "all"
         if (statusId == null) {
             statusId = "all";
         }
@@ -56,7 +66,8 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("selectedStatus", statusId);
         req.setAttribute("userId", userId); // để JSP build URL filter
 
-        req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp")
+        req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
+        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT)
                 .forward(req, resp);
     }
 }

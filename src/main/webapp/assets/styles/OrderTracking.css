@@ -1,8 +1,8 @@
-body {
-    font-family: "Segoe UI", Arial, sans-serif;
+.order-tracking {
+    font-family: "Montserrat", Arial, sans-serif;
     background-color: #f8f9fa;
-    margin: 20px;
     color: #333;
+    padding: 40px;
 }
 
 .page-title {

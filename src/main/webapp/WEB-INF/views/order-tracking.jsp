@@ -7,7 +7,8 @@
   <title>Theo dõi đơn hàng</title>
   <link rel="stylesheet" href="<c:url value='/assets/styles/OrderTracking.css'/>">
 </head>
-<body>
+<div class="order-tracking">
+
 <h2 class="page-title">📦 Danh sách đơn hàng</h2>
 
 <!-- Thanh bar filter trạng thái -->
@@ -73,6 +74,5 @@
     </c:otherwise>
   </c:choose>
 </div>
-
-</body>
+</div>
 </html>
