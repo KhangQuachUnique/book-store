@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,26 +16,30 @@
             justify-content: center;
             align-items: center;
         }
+
         .container {
             background: white;
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             width: 100%;
         }
+
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 30px;
             font-size: 2.5em;
         }
+
         .links-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-top: 30px;
         }
+
         .link-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -44,19 +49,23 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
         }
+
         .link-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
+
         .link-card h3 {
             margin: 0 0 10px 0;
             font-size: 1.2em;
         }
+
         .link-card p {
             margin: 0;
             opacity: 0.9;
             font-size: 0.9em;
         }
+
         .server-info {
             background: #f8f9fa;
             border-radius: 10px;
@@ -64,10 +73,12 @@
             margin-bottom: 20px;
             border-left: 4px solid #667eea;
         }
+
         .server-info h2 {
             margin: 0 0 10px 0;
             color: #333;
         }
+
         .status {
             display: inline-block;
             padding: 5px 15px;
@@ -79,10 +90,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>📚 BookieCake Development</h1>
-        
+
         <div class="server-info">
             <h2>Server Status</h2>
             <p><span class="status">🟢 RUNNING</span> Tomcat Server on <strong>localhost:8080</strong></p>
@@ -131,9 +143,9 @@
     <script>
         // Set current build time
         document.getElementById('buildTime').textContent = new Date().toLocaleString();
-        
+
         // Auto-refresh every 30 seconds to check server status
-        setInterval(function() {
+        setInterval(function () {
             fetch('http://localhost:8080/BookieCake/health')
                 .then(response => {
                     if (response.ok) {
@@ -148,4 +160,5 @@
         }, 30000);
     </script>
 </body>
+
 </html>
