@@ -164,3 +164,21 @@
 .status-bar a:hover {
     background: #f0f0f0;
 }
+
+/* Trong OrderTracking.css */
+.original-price {
+    text-decoration: line-through; /* Gạch ngang giá gốc */
+    color: #999; /* Màu xám nhạt */
+    margin-right: 5px;
+}
+
+.discount-rate {
+    color: #800020; /* Màu đỏ nổi bật */
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.current-price {
+    color: #800020;
+    font-weight: bold;
+}

@@ -9,11 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
-
-    /**
-     * Lấy danh sách đơn hàng của 1 user theo trạng thái.
-     * Nếu statusId = "all" thì lấy tất cả đơn hàng.
-     */
     public List<Order> getOrdersByUserIdAndStatus(int userId, String statusId) {
         List<Order> orders = new ArrayList<>();
         String sql;
@@ -69,9 +64,11 @@ public class OrderDAO {
     /**
      * Hỗ trợ lấy danh sách OrderItem theo orderId.
      */
+    // Trong OrderDAO.java
     private List<OrderItem> getOrderItemsByOrderId(Connection conn, int orderId) throws SQLException {
         List<OrderItem> items = new ArrayList<>();
-        String sql = "SELECT oi.quantity, oi.price, b.title AS book_title, b.thumbnail_url " +
+        // Sửa câu lệnh SQL để lấy các cột mới
+        String sql = "SELECT oi.quantity, oi.price, b.title AS book_title, b.thumbnail_url, b.original_price, b.discount_rate " +
                 "FROM order_items oi " +
                 "JOIN books b ON oi.book_id = b.id " +
                 "WHERE oi.order_id = ?";
@@ -86,6 +83,11 @@ public class OrderDAO {
                     item.setQuantity(rs.getInt("quantity"));
                     item.setPrice(rs.getInt("price"));
                     item.setThumbnailUrl(rs.getString("thumbnail_url"));
+
+                    // Gán các giá trị mới từ ResultSet
+                    item.setOriginalPrice(rs.getDouble("original_price"));
+                    item.setDiscountRate(rs.getInt("discount_rate"));
+
                     items.add(item);
                 }
             }

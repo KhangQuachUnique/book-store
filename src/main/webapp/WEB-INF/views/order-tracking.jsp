@@ -47,19 +47,29 @@
             <h4>Sản phẩm:</h4>
             <ul>
               <c:set var="orderTotal" value="0"/>
-              <c:forEach var="item" items="${order.items}">
-                <li>
-                  <img src="${item.thumbnailUrl}" alt="${item.bookTitle}" class="book-thumbnail"/>
-                  <div class="book-info">
-                    <p class="book"><strong>${item.bookTitle}</strong></p>
-                    <p class="price">
-                      <fmt:formatNumber value="${item.price}" type="number"/> VND
-                    </p>
-                    <p class="qty">x ${item.quantity}</p>
-                  </div>
-                </li>
-                <c:set var="orderTotal" value="${orderTotal + (item.price * item.quantity)}"/>
-              </c:forEach>
+                <c:forEach var="item" items="${order.items}">
+                  <li>
+                    <img src="${item.thumbnailUrl}" alt="${item.bookTitle}" class="book-thumbnail"/>
+                    <div class="book-info">
+                      <p class="book"><strong>${item.bookTitle}</strong></p>
+                      <p class="price">
+                        <c:if test="${item.discountRate > 0}">
+                          <span class="original-price">
+                            <fmt:formatNumber value="${item.originalPrice}" type="number"/> VNĐ
+                          </span>
+                                      <span class="discount-rate">
+                            -${item.discountRate}%
+                          </span>
+                        </c:if>
+                        <span class="current-price">
+                          <fmt:formatNumber value="${item.price}" type="number"/> VNĐ
+                        </span>
+                      </p>
+                      <p class="qty">x ${item.quantity}</p>
+                    </div>
+                  </li>
+                  <c:set var="orderTotal" value="${orderTotal + (item.price * item.quantity)}"/>
+                </c:forEach>
             </ul>
             <p class="total"><strong>Thành tiền:</strong>
               <fmt:formatNumber value="${orderTotal}" type="number"/> VND
