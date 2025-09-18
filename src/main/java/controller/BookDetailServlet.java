@@ -1,18 +1,19 @@
 package controller;
 
-import constant.PathConstants;
-import dao.BookDao;
-import model.Book;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import constant.PathConstants;
+import dao.BookDao;
+import model.Book;
 
 /**
  * Servlet for handling book detail page requests.
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  */
 @WebServlet("/book-detail")
 public class BookDetailServlet extends HttpServlet {
-    
+
     private static final Logger log = Logger.getLogger(BookDetailServlet.class.getName());
     private final BookDao bookDao = new BookDao();
 
@@ -32,7 +33,7 @@ public class BookDetailServlet extends HttpServlet {
         try {
             // Get book ID from request parameter
             String bookIdParam = req.getParameter("id");
-            
+
             if (bookIdParam == null || bookIdParam.trim().isEmpty()) {
                 log.warning("Book ID parameter is missing or empty");
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Book ID is required");
@@ -51,7 +52,7 @@ public class BookDetailServlet extends HttpServlet {
 
             // Fetch book from database
             Optional<Book> bookOptional = bookDao.getBookById(bookId);
-            
+
             if (bookOptional.isEmpty()) {
                 log.warning("Book not found with ID: " + bookId);
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
@@ -59,17 +60,17 @@ public class BookDetailServlet extends HttpServlet {
             }
 
             Book book = bookOptional.get();
-            
+
             // Set book as request attribute for JSP
             req.setAttribute("book", book);
-            
+
             // Calculate additional display information
             boolean hasDiscount = book.getDiscountRate() != null && book.getDiscountRate() > 0;
             req.setAttribute("hasDiscount", hasDiscount);
-            
+
             boolean inStock = book.getStock() != null && book.getStock() > 0;
             req.setAttribute("inStock", inStock);
-            
+
             // Set stock status message
             String stockStatus;
             if (book.getStock() == null || book.getStock() == 0) {
@@ -80,25 +81,27 @@ public class BookDetailServlet extends HttpServlet {
                 stockStatus = "In Stock (" + book.getStock() + " available)";
             }
             req.setAttribute("stockStatus", stockStatus);
-            
+
             // Calculate savings if there's a discount
             if (hasDiscount && book.getOriginalPrice() != null && book.getPrice() != null) {
                 double savings = book.getOriginalPrice().doubleValue() - book.getPrice().doubleValue();
                 req.setAttribute("savings", savings);
             }
-            
+
             // Set page metadata
             req.setAttribute("pageTitle", book.getTitle() + " - Book Details");
-            req.setAttribute("pageDescription", "Detailed information about " + book.getTitle() + " by " + book.getAuthor());
-            
+            req.setAttribute("pageDescription",
+                    "Detailed information about " + book.getTitle() + " by " + book.getAuthor());
+
             log.info("Successfully loaded book details for book ID: " + bookId + " (" + book.getTitle() + ")");
-            
+
             // Forward to book detail JSP
             req.getRequestDispatcher(PathConstants.BOOK_DETAIL_PAGE).forward(req, resp);
-            
+
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error processing book detail request", e);
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while loading book details");
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "An error occurred while loading book details");
         }
     }
 

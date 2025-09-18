@@ -8,7 +8,7 @@
 <html>
 <head>
     <title>${book.title} - Book Detail</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/categoryBook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/bookDetail.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
