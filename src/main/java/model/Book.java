@@ -7,24 +7,41 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+/**
+ * Book entity representing books table in the database.
+ * Contains book information including metadata, pricing, and inventory data.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
+    
     private Long id;
+    
+    // Basic information
     private String title;
     private String author;
     private String publisher;
-    private Long categoryId;
-    private String thumbnailUrl;
     private String description;
-    private Integer stock;
-    private BigDecimal ratingAverage;
-    private Integer reviewCount;
+    private String thumbnailUrl;
+    
+    // Classification
+    private Long categoryId;
+    
+    // Physical properties
     private Integer publishYear;
     private Integer pages;
+    
+    // Inventory and pricing
+    private Integer stock;
     private BigDecimal price;
     private BigDecimal originalPrice;
     private Integer discountRate;
+    
+    // Rating and reviews
+    private BigDecimal ratingAverage;
+    private Integer reviewCount;
+    
+    // Audit fields
     private Timestamp createdAt;
 }
