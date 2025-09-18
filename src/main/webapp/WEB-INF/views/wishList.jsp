@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/whiteList.css">
@@ -16,8 +17,8 @@
                             <div class="white-list-item-part-2">
                                 <span class="title">${book.title}</span>
                                 <div class="white-list-item-price-section">
-                                    <span class="white-list-item-price">${book.price}</span>
-                                    <del class="white-list-item-price-old">${book.originalPrice}</del>
+                                    <span class="white-list-item-price"><fmt:formatNumber value="${book.price}" type="number"/> VND</span>
+                                    <del class="white-list-item-price-old"><fmt:formatNumber value="${book.originalPrice}" type="number"/> VND</del>
                                 </div>
                                 <span class="white-list-item-rating">${book.rating}</span>
                                 <span class="white-list-item-sold">Đã bán 238</span>

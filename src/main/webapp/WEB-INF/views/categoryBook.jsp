@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title></title>
@@ -49,7 +50,7 @@
                             <div class="book-info">
                                 <h3 class="book-title">${book.title}</h3>
                                 <div class="book-price-row">
-                                    <span class="book-price-badge">$${book.price}</span>
+                                    <span class="book-price-badge"><fmt:formatNumber value="${book.price}" type="number"/> VND</span>
                                     <c:if test="${book.discountRate > 0}">
                                         <span class="discount">-${book.discountRate}%</span>
                                     </c:if>

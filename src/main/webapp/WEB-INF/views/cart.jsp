@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/cart.css">
 
 <div class="cart-container">
@@ -25,8 +26,8 @@
                 <tr>
                     <td>${item.title}</td>
                     <td>${item.quantity}</td>
-                    <td>${item.price}</td>
-                    <td>${item.price * item.quantity}</td>
+                    <td><fmt:formatNumber value="${item.price}" type="number"/> VND</td>
+                    <td><fmt:formatNumber value="${item.price * item.quantity}" type="number"/> VND</td>
                     <td class="cart-actions">
                         <form action="cart" method="post">
                             <input type="hidden" name="action" value="remove"/>

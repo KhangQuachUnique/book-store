@@ -105,13 +105,13 @@
                     <!-- Pricing Information -->
                     <div class="pricing-section">
                         <div class="price-container">
-                            <span class="current-price">$<fmt:formatNumber value="${book.price}" type="number" maxFractionDigits="2" /></span>
+                            <span class="current-price"><fmt:formatNumber value="${book.price}" type="number"/> VND</span>
                             
                             <c:if test="${hasDiscount}">
-                                <span class="original-price">$<fmt:formatNumber value="${book.originalPrice}" type="number" maxFractionDigits="2" /></span>
+                                <span class="original-price"><fmt:formatNumber value="${book.originalPrice}" type="number"/> VND</span>
                                 <span class="discount-badge">${book.discountRate}% OFF</span>
                                 <div class="savings-text">
-                                    You save: $<fmt:formatNumber value="${savings}" type="number" maxFractionDigits="2" />
+                                    You save: <fmt:formatNumber value="${savings}" type="number"/> VND
                                 </div>
                             </c:if>
                         </div>
@@ -218,7 +218,7 @@
     <!-- Footer -->
     <%@ include file="fragments/footer.jsp" %>
 </div>
-<script src="/assets/js/app.js" defer></script>
-<script src="/assets/js/toggleSidebar.js" defer></script>
+<script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
+<script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>
 </body>
 </html>
