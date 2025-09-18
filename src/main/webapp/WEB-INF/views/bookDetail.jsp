@@ -85,10 +85,10 @@
                                 <c:forEach begin="1" end="5" var="i">
                                     <c:choose>
                                         <c:when test="${i <= book.ratingAverage}">
-                                            <span class="star filled">â˜…</span>
+                                            <span class="star filled">★</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="star empty">â˜†</span>
+                                            <span class="star empty">☆</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </c:forEach>
