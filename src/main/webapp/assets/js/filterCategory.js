@@ -1,6 +1,4 @@
 // filterCategory.js
-// Tự động kiểm tra trùng tên khi thêm mới, tự động lọc khi gõ trên manageCategory
-
 document.addEventListener('DOMContentLoaded', function() {
     // --- Add Category: kiểm tra trùng tên ---
     const nameInput = document.querySelector('form[action*="/admin/category"] input[name="name"]');
@@ -59,13 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Manage Category: tự động lọc bảng khi gõ ---
+    // --- Manage Category: tự động lọc bảng khi gõ theo tên ---
     const searchInput = document.querySelector('input[name="keyword"]');
     const tableRows = document.querySelectorAll('table tbody tr');
     if (searchInput && tableRows.length > 0) {
-        // Ẩn nút Search nếu có
-        const btn = searchInput.parentNode.querySelector('button');
-        if (btn) btn.style.display = 'none';
         searchInput.addEventListener('input', function() {
             const val = searchInput.value.trim().toLowerCase();
             tableRows.forEach(row => {
@@ -79,16 +74,42 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // --- Manage Category: tự động lọc bảng khi gõ theo id sách sắp xếp tăng dần ---
+    const idInput = document.querySelector('input[name="id"]');
+    if (idInput && tableRows.length > 0) {
+            const tbody = document.querySelector('table tbody');
+            idInput.addEventListener('input', function() {
+                const val = idInput.value.trim().toLowerCase();
+
+                // Lọc hiển thị
+                tableRows.forEach(row => {
+                    const idCell = row.querySelector('td:nth-child(1)');
+                    const text = idCell ? idCell.textContent.toLowerCase() : '';
+                    row.style.display = (text.includes(val)) ? '' : 'none';
+                });
+
+                // Thu thập các hàng đang hiển thị để sắp xếp theo ID tăng dần
+                const visibleRows = Array.from(tableRows).filter(r => r.style.display !== 'none');
+                visibleRows.sort((a, b) => {
+                    const aId = parseInt(a.querySelector('td:nth-child(1)')?.textContent || '0', 10);
+                    const bId = parseInt(b.querySelector('td:nth-child(1)')?.textContent || '0', 10);
+                    // NaN sẽ trở thành 0 do parseInt, đảm bảo so sánh số
+                    return aId - bId;
+                });
+
+                // Gắn lại theo thứ tự tăng dần
+                visibleRows.forEach(row => tbody.appendChild(row));
+            });
+    }
+
     // --- Edit Category: tự động lọc combobox tên ---
-    // Nếu muốn dùng combobox, cần chuyển input[name="name"] thành <select> hoặc dùng thư viện autocomplete
-    // Nếu chỉ muốn gợi ý, có thể fetch danh sách tên và hiển thị gợi ý khi gõ
-    // (code mẫu cho autocomplete đơn giản)
     const editNameInput = document.querySelector('form[action$="/admin/category"] input[name="name"]');
     if (editNameInput) {
         editNameInput.addEventListener('input', function() {
             const val = editNameInput.value.trim();
             if (val.length > 0) {
-                fetch(`/admin/category?action=listNames&keyword=${encodeURIComponent(val)}`)
+                const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
+                fetch(`${base}/admin/category?action=listNames&keyword=${encodeURIComponent(val)}`)
                     .then(res => res.json())
                     .then(data => {
                         let datalist = document.getElementById('category-names');
