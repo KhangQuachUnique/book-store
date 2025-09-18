@@ -67,7 +67,8 @@ public class NotificationServlet extends HttpServlet {
                 // Sau khi user vào trang này, đánh dấu tất cả là đã đọc
                 notificationDao.markAllAsRead(userId);
 
-                req.getRequestDispatcher("/WEB-INF/views/Usermanagement/notifications.jsp").forward(req, resp);
+                // Forward to the correct JSP path (folder name is case-sensitive)
+                req.getRequestDispatcher("/WEB-INF/views/userManagement/notifications.jsp").forward(req, resp);
                 break;
         }
     }
