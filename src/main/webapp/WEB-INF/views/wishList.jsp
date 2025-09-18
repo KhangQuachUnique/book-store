@@ -36,6 +36,7 @@
         </div>
     </c:forEach>
 </section>
+
 <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/WishListPage.js"></script>
 </body>
 </html>
