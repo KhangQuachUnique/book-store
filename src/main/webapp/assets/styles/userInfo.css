@@ -33,10 +33,7 @@
 }
 
 /* Inputs */
-.container input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="submit"] {
+.container input[type="submit"] {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -118,12 +115,24 @@ span#mismatch {
     color: #7D7D7DFF;
     font-weight: 600;
     font-size: 14px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
 }
 
 .input-value {
     color: rgb(0, 0, 0);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
 }
 
 .warning {
@@ -181,4 +190,51 @@ span#mismatch {
 
     text-align: right;       /* căn chữ sang phải */
     box-sizing: border-box;  /* tính cả padding vào max-width */
+}
+
+.address-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-address {
+    flex: 1;
+    padding: 8px;
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.dropdown-toggle {
+    padding: 6px 10px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.address-list {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px;
+    max-width: 300px;
+    background: #fff;
+    width: 100%;
+}
+
+.address-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.address-item:hover {
+    background: #f0f0f0;
 }

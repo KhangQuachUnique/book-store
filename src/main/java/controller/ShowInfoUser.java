@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/user/info")
@@ -27,13 +28,13 @@ public class ShowInfoUser extends HttpServlet {
         }
 
         String defaultAddress = null;
+
         List<Address> addressList = (List<Address>) req.getSession().getAttribute("addresses");
 
         if (addressList != null) {
             for (Address addr : addressList) {
                 if (addr.isDefaultAddress()) {
                     defaultAddress = addr.getAddress();
-                    break; // tìm thấy thì thoát luôn
                 }
             }
         }

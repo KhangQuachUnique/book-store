@@ -19,7 +19,7 @@
         <input class="input-value" type="text" id="phone" name="phone" value="${sessionScope.user.phone}" /><br/>
 
         <label for="email" class="input-label">Email:</label><br/>
-        <input type="email" id="email" name="email" value="${sessionScope.user.email}" readonly/><br/>
+        <input class="email" type="email" id="email" name="email" value="${sessionScope.user.email}" readonly/><br/>
 
         <label for="address" class="input-label">Address:</label><br/>
         <div class="address-container">
@@ -33,7 +33,7 @@
         </div>
 
         <div class="address-list" id="addressList" style="display:none;">
-            <c:forEach var="addr" items="${sessionScope.otherAddresses}">
+            <c:forEach var="addr" items="${sessionScope.addresses}">
                 <div class="address-item">
                     <label>
                         <input type="radio" name="addrRadio" class="addr-radio" value="${addr}">
