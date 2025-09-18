@@ -96,6 +96,14 @@ body {
     font-size: 0.95rem;
 }
 
+.form-result.success {
+    color: #28a745; /* Màu xanh cho thành công */
+}
+
+.form-result.error {
+    color: #dc3545; /* Màu đỏ cho lỗi */
+}
+
 /* Spinner reuse */
 .spinner {
     border: 4px solid #f3f3f3;
