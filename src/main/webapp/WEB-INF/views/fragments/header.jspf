@@ -1,41 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<style>
-    .notification-bell-container {
-        position: relative;
-        cursor: pointer;
-        margin-left: 20px; /* Thêm khoảng cách */
-    }
-    .notification-bell-container a {
-        color: var(--text-primary); /* Màu trắng từ global.css */
-        font-size: 1.5rem; /* Kích thước icon chuông */
-        text-decoration: none;
-    }
-    #notification-counter {
-        position: absolute;
-        top: -5px;
-        right: -10px;
-        background-color: var(--accent-color); /* Màu nhấn */
-        color: var(--text-primary);
-        border-radius: 50%;
-        width: 22px;
-        height: 22px;
-        font-size: 12px;
-        font-weight: bold;
-        display: none; /* Mặc định ẩn */
-        justify-content: center;
-        align-items: center;
-        border: 2px solid var(--primary-color);
-    }
-    /* Bảo toàn bố cục khi đặt trong <ul> */
-    li.notification-bell-item { list-style: none; }
-    li.notification-bell-item > .notification-bell-container { display: inline-block; }
-    .notification-bell-container i { line-height: 1; }
-    .notification-bell-container svg { display: inline-block; vertical-align: middle; color: var(--text-primary); }
-    /* Nếu không dùng Font Awesome, có thể thay bằng emoji: 🔔 */
-</style>
-
 <!-- Header Fragment -->
 <header class="site-header">
     <div class="header-left">

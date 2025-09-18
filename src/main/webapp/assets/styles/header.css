@@ -1,6 +1,7 @@
 /* src/main/webapp/assets/styles/header.css */
 .site-header {
-    background: var(--primary-color); /* Burgundy */
+    background: var(--primary-color);
+    /* Burgundy */
     color: var(--text-primary);
     padding: 16px 40px;
     height: 70px;
@@ -72,6 +73,7 @@
 .navbar li {
     display: inline-block;
 }
+
 .navbar .search-bar {
     height: 100%;
     display: flex;
@@ -85,7 +87,8 @@
     border: none;
     outline: none;
     border-radius: 10px;
-    padding: 0 15px 0 40px; /* Added left padding for the icon */
+    padding: 0 15px 0 40px;
+    /* Added left padding for the icon */
 }
 
 .navbar .search-bar svg {
@@ -133,6 +136,63 @@
     justify-content: center;
 }
 
+/* Notification Bell Styles */
+.notification-bell-item {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.notification-bell-container {
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+}
+
+.notification-bell-container a {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease;
+}
+
+.notification-bell-container:hover a {
+    transform: scale(1.1);
+}
+
+.notification-bell-container svg {
+    display: block;
+    color: var(--text-primary);
+    fill: currentColor;
+}
+
+#notification-counter {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    font-weight: bold;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--primary-color);
+}
+
 .navbar a {
     color: var(--text-primary);
     text-decoration: none;
@@ -144,6 +204,6 @@
 }
 
 .navbar a:hover {
-    background: var(--primary-color-hover); /* Slightly lighter red for hover */
+    background: var(--primary-color-hover);
+    /* Slightly lighter red for hover */
 }
-
