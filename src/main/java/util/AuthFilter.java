@@ -90,13 +90,13 @@ public class AuthFilter implements Filter {
                 user.ifPresent(us -> {
                     HttpSession newSession = req.getSession(true); // tạo mới nếu cần
                     newSession.setAttribute("user", us.safeUser());
-                    AddressService addressService = new AddressService();
-                    try {
-                        List<Address> addresses = addressService.getAddressesByUserId(us.getId());
-                        newSession.setAttribute("addresses", addresses);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+//                    AddressService addressService = new AddressService();
+//                    try {
+//                        List<Address> addresses = addressService.getAddressesByUserId(us.getId());
+//                        newSession.setAttribute("addresses", addresses);
+//                    } catch (SQLException e) {
+//                        throw new RuntimeException(e);
+//                    }
                 });
 
 

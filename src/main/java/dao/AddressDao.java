@@ -53,7 +53,7 @@ public class AddressDao {
         }
     }
 
-    private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
+    public Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
         Address address = new Address();
         address.setId(rs.getLong("id"));
         address.setUserId(rs.getLong("user_id"));

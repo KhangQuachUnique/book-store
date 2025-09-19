@@ -33,7 +33,7 @@
         </div>
 
         <div class="address-list" id="addressList" style="display:none;">
-            <c:forEach var="addr" items="${sessionScope.addresses}">
+            <c:forEach var="addr" items="${sessionScope.user.addresses}">
                 <div class="address-item">
                     <label>
                         <input type="radio" name="addrRadio" class="addr-radio" value="${addr}">

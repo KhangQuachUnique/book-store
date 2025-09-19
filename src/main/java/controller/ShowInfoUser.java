@@ -29,7 +29,7 @@ public class ShowInfoUser extends HttpServlet {
 
         String defaultAddress = null;
 
-        List<Address> addressList = (List<Address>) req.getSession().getAttribute("addresses");
+        List<Address> addressList = user.getAddresses();
 
         if (addressList != null) {
             for (Address addr : addressList) {
