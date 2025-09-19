@@ -23,13 +23,14 @@ public class BookReviewServlet extends HttpServlet {
         if (bookIdParam != null) {
             try {
                 int bookId = Integer.parseInt(bookIdParam);
-                Integer currentUserId = (Integer) req.getSession().getAttribute("userId");
+                model.User sessionUser = (model.User) req.getSession().getAttribute("user");
+                Long currentUserId = 0L;
 
-                if (currentUserId == null) {
-                    currentUserId = 0; // hoặc -1
+                if (sessionUser != null) {
+                    currentUserId = sessionUser.getId();
                 }
 
-                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, 1009);
+                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId.intValue());
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
