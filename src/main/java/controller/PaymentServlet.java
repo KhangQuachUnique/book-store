@@ -1,20 +1,21 @@
 package controller;
 
-
-import constant.PathConstants;
-import dao.CartDAO;
-import model.CartItem;
-import model.User;
-import service.AddressService;
-import model.Address;
+import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import constant.PathConstants;
+import dao.CartDAO;
+import model.Address;
+import model.CartItem;
+import model.User;
+import service.AddressService;
 
 @WebServlet("/user/payment")
 public class PaymentServlet extends HttpServlet {
@@ -22,7 +23,8 @@ public class PaymentServlet extends HttpServlet {
     private AddressService addressService = new AddressService();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {

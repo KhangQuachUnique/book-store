@@ -21,7 +21,7 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
-        
+
         // Check if user is logged in
         if (user == null) {
             req.setAttribute("contentPage", PathConstants.VIEW_PLEASE_LOGIN);
@@ -32,26 +32,26 @@ public class CartServlet extends HttpServlet {
         try {
             // Set content page first to ensure it's never null
             req.setAttribute("contentPage", PathConstants.VIEW_CART);
-            
+
             // Check for error parameter
             if ("true".equals(req.getParameter("error"))) {
                 req.setAttribute("error", "An error occurred while updating your cart.");
             }
-            
+
             List<CartItem> cart = cartDAO.getCartByUser(user.getId().intValue());
-            
+
             // Initialize cart total
             double cartTotal = 0.0;
-            
+
             // Calculate totals only if cart is not empty
             if (cart != null && !cart.isEmpty()) {
                 cartTotal = cart.stream()
-                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                    .sum();
+                        .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                        .sum();
             }
-            
+
             req.setAttribute("cartTotal", cartTotal);
-            
+
             req.setAttribute("cart", cart);
             req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
         } catch (Exception e) {
@@ -95,19 +95,18 @@ public class CartServlet extends HttpServlet {
                 // Get updated cart data
                 List<CartItem> cart = cartDAO.getCartByUser(userId);
                 double cartTotal = cart.stream()
-                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
-                    .sum();
+                        .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                        .sum();
                 CartItem updatedItem = cart.stream()
-                    .filter(item -> item.getId() == cartId)
-                    .findFirst()
-                    .orElse(null);
+                        .filter(item -> item.getId() == cartId)
+                        .findFirst()
+                        .orElse(null);
 
                 resp.setContentType("application/json");
                 resp.getWriter().write(String.format(
-                    "{\"success\":true,\"itemTotal\":%.0f,\"cartTotal\":%.0f}",
-                    updatedItem != null ? updatedItem.getPrice() * updatedItem.getQuantity() : 0,
-                    cartTotal
-                ));
+                        "{\"success\":true,\"itemTotal\":%.0f,\"cartTotal\":%.0f}",
+                        updatedItem != null ? updatedItem.getPrice() * updatedItem.getQuantity() : 0,
+                        cartTotal));
                 return;
             }
 

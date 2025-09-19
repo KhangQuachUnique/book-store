@@ -1,23 +1,29 @@
 package dao;
 
-import model.Book;
-import model.Category;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import model.Book;
+import model.Category;
+import util.DBConnection;
 
 /**
  * Data Access Object for managing books in the database.
  */
 public class BookDao {
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(BookDao.class.getName());
     private static final int PAGE_SIZE = 20; // Limit to 20 books per page
 
     /**
      * Retrieves all books with pagination.
+     *
      * @param page The page number (1-based).
      * @return List of books for the specified page.
      * @throws SQLException If a database error occurs.
@@ -29,6 +35,7 @@ public class BookDao {
 
     /**
      * Retrieves a book by its ID.
+     *
      * @param id The book ID.
      * @return The Book object or null if not found.
      * @throws SQLException If a database error occurs.
@@ -36,7 +43,7 @@ public class BookDao {
     public static Book getBookById(long id) throws SQLException {
         String sql = "SELECT * FROM books WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -49,16 +56,18 @@ public class BookDao {
 
     /**
      * Adds a new book to the database.
+     *
      * @param book The Book object to add.
      * @return True if successful, false otherwise.
      * @throws SQLException If a database error occurs.
      */
     public static boolean addBook(Book book) throws SQLException {
-        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, " +
+        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, "
+                +
                 "thumbnail_url, description, publish_year, pages, rating_average, price, created_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             setBookParameters(ps, book);
             return ps.executeUpdate() > 0;
         }
@@ -66,6 +75,7 @@ public class BookDao {
 
     /**
      * Updates an existing book.
+     *
      * @param book The Book object with updated data.
      * @return True if successful, false otherwise.
      * @throws SQLException If a database error occurs.
@@ -75,7 +85,7 @@ public class BookDao {
                 "original_price = ?, discount_rate = ?, thumbnail_url = ?, description = ?, publish_year = ?, " +
                 "pages = ?, rating_average = ?, price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             setBookParameters(ps, book);
             ps.setLong(14, book.getId());
             return ps.executeUpdate() > 0;
@@ -84,6 +94,7 @@ public class BookDao {
 
     /**
      * Deletes a book by its ID.
+     *
      * @param id The book ID.
      * @return True if successful, false otherwise.
      * @throws SQLException If a database error occurs.
@@ -91,7 +102,7 @@ public class BookDao {
     public static boolean deleteBook(long id) throws SQLException {
         String sql = "DELETE FROM books WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;
         }
@@ -99,16 +110,17 @@ public class BookDao {
 
     /**
      * Filters books by title, publish year, and categories (include/exclude).
-     * @param title The title to search (partial match).
-     * @param publishYear The publication year.
+     *
+     * @param title             The title to search (partial match).
+     * @param publishYear       The publication year.
      * @param includeCategories Categories to include (AND logic).
      * @param excludeCategories Categories to exclude.
-     * @param page The page number.
+     * @param page              The page number.
      * @return List of matching books.
      * @throws SQLException If a database error occurs.
      */
     public static List<Book> filterBooks(String title, Integer publishYear, List<Long> includeCategories,
-                                         List<Long> excludeCategories, int page) throws SQLException {
+            List<Long> excludeCategories, int page) throws SQLException {
         StringBuilder sql = new StringBuilder("SELECT * FROM books WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -121,11 +133,13 @@ public class BookDao {
             params.add(publishYear);
         }
         if (includeCategories != null && !includeCategories.isEmpty()) {
-            sql.append(" AND category_id IN (").append("?,".repeat(includeCategories.size())).deleteCharAt(sql.length() - 1).append(")");
+            sql.append(" AND category_id IN (").append("?,".repeat(includeCategories.size()))
+                    .deleteCharAt(sql.length() - 1).append(")");
             params.addAll(includeCategories);
         }
         if (excludeCategories != null && !excludeCategories.isEmpty()) {
-            sql.append(" AND category_id NOT IN (").append("?,".repeat(excludeCategories.size())).deleteCharAt(sql.length() - 1).append(")");
+            sql.append(" AND category_id NOT IN (").append("?,".repeat(excludeCategories.size()))
+                    .deleteCharAt(sql.length() - 1).append(")");
             params.addAll(excludeCategories);
         }
         sql.append(" ORDER BY id LIMIT ? OFFSET ?");
@@ -137,15 +151,16 @@ public class BookDao {
 
     /**
      * Counts total books for pagination or filtering.
-     * @param title The title to search.
-     * @param publishYear The publication year.
+     *
+     * @param title             The title to search.
+     * @param publishYear       The publication year.
      * @param includeCategories Categories to include.
      * @param excludeCategories Categories to exclude.
      * @return Total number of matching books.
      * @throws SQLException If a database error occurs.
      */
     public static long countBooks(String title, Integer publishYear, List<Long> includeCategories,
-                                  List<Long> excludeCategories) throws SQLException {
+            List<Long> excludeCategories) throws SQLException {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM books WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -158,16 +173,18 @@ public class BookDao {
             params.add(publishYear);
         }
         if (includeCategories != null && !includeCategories.isEmpty()) {
-            sql.append(" AND category_id IN (").append("?,".repeat(includeCategories.size())).deleteCharAt(sql.length() - 1).append(")");
+            sql.append(" AND category_id IN (").append("?,".repeat(includeCategories.size()))
+                    .deleteCharAt(sql.length() - 1).append(")");
             params.addAll(includeCategories);
         }
         if (excludeCategories != null && !excludeCategories.isEmpty()) {
-            sql.append(" AND category_id NOT IN (").append("?,".repeat(excludeCategories.size())).deleteCharAt(sql.length() - 1).append(")");
+            sql.append(" AND category_id NOT IN (").append("?,".repeat(excludeCategories.size()))
+                    .deleteCharAt(sql.length() - 1).append(")");
             params.addAll(excludeCategories);
         }
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
@@ -182,6 +199,7 @@ public class BookDao {
 
     /**
      * Retrieves all categories for filtering.
+     *
      * @return List of categories.
      * @throws SQLException If a database error occurs.
      */
@@ -189,8 +207,8 @@ public class BookDao {
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categories ORDER BY name";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Category category = new Category();
                 category.setId(rs.getLong("id"));
@@ -205,7 +223,8 @@ public class BookDao {
 
     /**
      * Logs CSV import data to import_logs table.
-     * @param tableName The table name (e.g., "books").
+     *
+     * @param tableName    The table name (e.g., "books").
      * @param importedData JSON representation of imported data.
      * @return True if successful, false otherwise.
      * @throws SQLException If a database error occurs.
@@ -213,7 +232,7 @@ public class BookDao {
     public static boolean logImport(String tableName, String importedData) throws SQLException {
         String sql = "INSERT INTO import_logs (table_name, imported_data, imported_at) VALUES (?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tableName);
             ps.setString(2, importedData);
             return ps.executeUpdate() > 0;
@@ -222,6 +241,7 @@ public class BookDao {
 
     /**
      * Maps a ResultSet row to a Book object.
+     *
      * @param rs The ResultSet.
      * @return The mapped Book object.
      * @throws SQLException If a database error occurs.
@@ -248,7 +268,8 @@ public class BookDao {
 
     /**
      * Sets PreparedStatement parameters for add/update book queries.
-     * @param ps The PreparedStatement.
+     *
+     * @param ps   The PreparedStatement.
      * @param book The Book object.
      * @throws SQLException If a database error occurs.
      */
@@ -270,8 +291,9 @@ public class BookDao {
 
     /**
      * Executes a query to retrieve books with dynamic parameters.
-     * @param sql The SQL query.
-     * @param page The page number.
+     *
+     * @param sql    The SQL query.
+     * @param page   The page number.
      * @param params Query parameters.
      * @return List of books.
      * @throws SQLException If a database error occurs.
@@ -279,7 +301,7 @@ public class BookDao {
     private static List<Book> getBooksByQuery(String sql, int page, Object[] params) throws SQLException {
         List<Book> books = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             if (params != null) {
                 for (int i = 0; i < params.length; i++) {
                     ps.setObject(i + 1, params[i]);
