@@ -79,7 +79,7 @@ public class CategoryDao {
             } else {
                 ps.setNull(2, Types.BIGINT);
             }
-            ps.setBoolean(3, c.getIsLeaf() != null ? c.getIsLeaf() : false);
+            ps.setBoolean(3, c.getIsLeaf());
 
             int affected = ps.executeUpdate();
             if (affected > 0)
@@ -108,7 +108,7 @@ public class CategoryDao {
             } else {
                 ps.setNull(2, Types.BIGINT);
             }
-            ps.setBoolean(3, c.getIsLeaf() != null ? c.getIsLeaf() : false);
+            ps.setBoolean(3, c.getIsLeaf());
             ps.setLong(4, c.getId());
 
             int affected = ps.executeUpdate();
@@ -144,12 +144,13 @@ public class CategoryDao {
     }
 
     private Category mapRow(ResultSet rs) throws SQLException {
-        return new Category(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getObject("parent_id") != null ? rs.getLong("parent_id") : null,
-                rs.getTimestamp("created_at"),
-                rs.getBoolean("is_leaf"));
+        Category category = new Category();
+        category.setId(rs.getLong("id"));
+        category.setName(rs.getString("name"));
+        category.setParentId(rs.getObject("parent_id") != null ? rs.getLong("parent_id") : null);
+        category.setCreatedAt(rs.getTimestamp("created_at"));
+        category.setIsLeaf(rs.getBoolean("is_leaf"));
+        return category;
     }
 
     public boolean isCategoryNameExists(String name) {
