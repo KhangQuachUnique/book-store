@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ReviewLike entity representing review_likes table in the database. Contains user likes for
+ * ReviewLike entity representing review_likes table in the database. Contains
+ * user likes for
  * reviews (many-to-many relationship).
  */
 @Data

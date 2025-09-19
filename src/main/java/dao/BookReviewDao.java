@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.BookReview;
 import model.ReviewShow;
 import util.DBConnection;
@@ -22,7 +23,6 @@ public class BookReviewDao {
                 + "WHERE r.book_id = ? "
                 + "GROUP BY r.id, r.book_id, r.user_id, u.name, u.avatar_url, r.rating, r.comment, r.created_at, rl_user.user_id "
                 + "ORDER BY r.created_at DESC";
-
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {

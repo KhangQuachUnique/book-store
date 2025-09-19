@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.Category;
 import util.DBConnection;
 
 /**
- * Data Access Object for Category entity operations. Provides methods for category CRUD operations,
+ * Data Access Object for Category entity operations. Provides methods for
+ * category CRUD operations,
  * hierarchy management, and validation.
  *
  * @author BookStore Team
@@ -45,14 +47,13 @@ public class CategoryDao {
     /**
      * Creates a new category using existing connection.
      *
-     * @param conn The database connection to use
+     * @param conn     The database connection to use
      * @param category The category object to save
      * @return true if category was saved successfully, false otherwise
      * @throws SQLException if database error occurs
      */
     public boolean create(Connection conn, Category category) throws SQLException {
-        String sql =
-                "INSERT INTO categories (name, parent_id, is_leaf, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+        String sql = "INSERT INTO categories (name, parent_id, is_leaf, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, category.getName());
 
@@ -87,7 +88,7 @@ public class CategoryDao {
      * Finds a category by its ID using existing connection.
      *
      * @param conn The database connection to use
-     * @param id The category ID to search for
+     * @param id   The category ID to search for
      * @return Optional containing Category if found, empty otherwise
      * @throws SQLException if database error occurs
      */
@@ -155,14 +156,13 @@ public class CategoryDao {
     /**
      * Updates an existing category using existing connection.
      *
-     * @param conn The database connection to use
+     * @param conn     The database connection to use
      * @param category The category object with updated information
      * @return true if category was updated successfully, false otherwise
      * @throws SQLException if database error occurs
      */
     public boolean update(Connection conn, Category category) throws SQLException {
-        String sql =
-                "UPDATE categories SET name = ?, parent_id = ?, is_leaf = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String sql = "UPDATE categories SET name = ?, parent_id = ?, is_leaf = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, category.getName());
 
@@ -199,7 +199,7 @@ public class CategoryDao {
      * Deletes a category using existing connection.
      *
      * @param conn The database connection to use
-     * @param id The ID of the category to delete
+     * @param id   The ID of the category to delete
      * @return true if category was deleted successfully, false otherwise
      * @throws SQLException if database error occurs
      */
@@ -280,7 +280,7 @@ public class CategoryDao {
     /**
      * Checks if a category name exists excluding a specific category ID.
      *
-     * @param name The category name to check
+     * @param name      The category name to check
      * @param excludeId The category ID to exclude from the check
      * @return true if name exists (excluding the specified ID), false otherwise
      */
@@ -348,7 +348,7 @@ public class CategoryDao {
     /**
      * Helper method to find categories by SQL criteria.
      *
-     * @param sql The SQL query
+     * @param sql    The SQL query
      * @param params Parameters for the query
      * @return List of matching categories
      */

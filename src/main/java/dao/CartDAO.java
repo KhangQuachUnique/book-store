@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.CartItem;
 import util.DBConnection;
 
 /**
- * Data Access Object for Cart entity operations. Provides methods for shopping cart management
+ * Data Access Object for Cart entity operations. Provides methods for shopping
+ * cart management
  * including adding, removing, and querying cart items.
  *
  * @author BookStore Team
@@ -27,19 +29,19 @@ public class CartDAO {
     // ===== CORE CART OPERATIONS =====
 
     /**
-     * Adds an item to the user's cart. If the item already exists, increases the quantity.
+     * Adds an item to the user's cart. If the item already exists, increases the
+     * quantity.
      *
-     * @param userId The ID of the user
-     * @param bookId The ID of the book to add
+     * @param userId   The ID of the user
+     * @param bookId   The ID of the book to add
      * @param quantity The quantity to add
      * @return true if item was added successfully, false otherwise
      * @throws RuntimeException if database error occurs
      */
     public boolean addToCart(long userId, long bookId, int quantity) {
-        String sql =
-                "INSERT INTO carts(user_id, book_id, quantity, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP) "
-                        + "ON CONFLICT (user_id, book_id) DO UPDATE SET quantity = carts.quantity + EXCLUDED.quantity, "
-                        + "updated_at = CURRENT_TIMESTAMP";
+        String sql = "INSERT INTO carts(user_id, book_id, quantity, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP) "
+                + "ON CONFLICT (user_id, book_id) DO UPDATE SET quantity = carts.quantity + EXCLUDED.quantity, "
+                + "updated_at = CURRENT_TIMESTAMP";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -59,7 +61,7 @@ public class CartDAO {
     /**
      * Updates the quantity of a specific cart item.
      *
-     * @param cartId The ID of the cart item
+     * @param cartId   The ID of the cart item
      * @param quantity The new quantity
      * @return true if quantity was updated successfully, false otherwise
      * @throws RuntimeException if database error occurs
@@ -86,8 +88,8 @@ public class CartDAO {
     /**
      * Updates the quantity of a cart item by user and book.
      *
-     * @param userId The ID of the user
-     * @param bookId The ID of the book
+     * @param userId   The ID of the user
+     * @param bookId   The ID of the book
      * @param quantity The new quantity
      * @return true if quantity was updated successfully, false otherwise
      * @throws RuntimeException if database error occurs
@@ -97,8 +99,7 @@ public class CartDAO {
             return removeFromCart(userId, bookId);
         }
 
-        String sql =
-                "UPDATE carts SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?";
+        String sql = "UPDATE carts SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 

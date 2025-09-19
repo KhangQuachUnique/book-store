@@ -5,14 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 /**
- * JSON utility class for handling JSON serialization and deserialization. Provides convenient
+ * JSON utility class for handling JSON serialization and deserialization.
+ * Provides convenient
  * methods for working with JSON data in servlet requests and responses.
  *
  * @author BookieCake Team
@@ -20,8 +23,8 @@ import com.google.gson.JsonSyntaxException;
  */
 public class JsonUtil {
 
-    private static final Gson GSON =
-            new GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .create();
 
     /**
      * Reads the raw JSON body from an HTTP request.
@@ -47,11 +50,11 @@ public class JsonUtil {
     /**
      * Parses JSON from HTTP request body into a specified class type.
      *
-     * @param <T> the type to deserialize to
+     * @param <T>     the type to deserialize to
      * @param request the HttpServletRequest containing JSON data
-     * @param clazz the Class object representing the target type
+     * @param clazz   the Class object representing the target type
      * @return an instance of the specified class populated with JSON data
-     * @throws IOException if an I/O error occurs while reading the request
+     * @throws IOException         if an I/O error occurs while reading the request
      * @throws JsonSyntaxException if the JSON is malformed
      */
     public static <T> T parseJson(HttpServletRequest request, Class<T> clazz)
@@ -79,7 +82,7 @@ public class JsonUtil {
      * Sends a JSON response to the client.
      *
      * @param response the HttpServletResponse to write to
-     * @param object the object to serialize and send as JSON
+     * @param object   the object to serialize and send as JSON
      * @throws IOException if an I/O error occurs while writing the response
      */
     public static void sendJsonResponse(HttpServletResponse response, Object object)
@@ -96,9 +99,9 @@ public class JsonUtil {
     /**
      * Sends an error response in JSON format.
      *
-     * @param response the HttpServletResponse to write to
+     * @param response   the HttpServletResponse to write to
      * @param statusCode the HTTP status code
-     * @param message the error message
+     * @param message    the error message
      * @throws IOException if an I/O error occurs while writing the response
      */
     public static void sendErrorResponse(HttpServletResponse response, int statusCode,
@@ -107,8 +110,7 @@ public class JsonUtil {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String errorJson =
-                String.format("{\"error\": \"%s\", \"status\": %d}", message, statusCode);
+        String errorJson = String.format("{\"error\": \"%s\", \"status\": %d}", message, statusCode);
 
         try (PrintWriter writer = response.getWriter()) {
             writer.write(errorJson);

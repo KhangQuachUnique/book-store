@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Status entity representing status table in the database. Contains order status definitions (e.g.,
+ * Status entity representing status table in the database. Contains order
+ * status definitions (e.g.,
  * pending, processing, shipped, delivered).
  */
 @Data

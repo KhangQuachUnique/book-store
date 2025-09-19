@@ -70,9 +70,8 @@ public class ForgotPasswordServlet extends HttpServlet {
             System.out.println("DEBUG: Token updated in database"); // Debug log
 
             // Send reset email using existing email utility
-            String resetLink =
-                    req.getRequestURL().toString().replace("forgot-password", "reset-password")
-                            + "?token=" + token;
+            String resetLink = req.getRequestURL().toString().replace("forgot-password", "reset-password")
+                    + "?token=" + token;
             System.out.println("DEBUG: Sending email to: " + email + " with link: " + resetLink); // Debug
                                                                                                   // log
 

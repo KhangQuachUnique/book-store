@@ -1,11 +1,13 @@
 package model;
 
 import java.sql.Timestamp;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Login result wrapper containing authentication status and user information. Used to communicate
+ * Login result wrapper containing authentication status and user information.
+ * Used to communicate
  * login outcomes to the client.
  */
 @Data

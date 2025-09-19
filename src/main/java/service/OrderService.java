@@ -1,11 +1,13 @@
 package service;
 
 import java.util.List;
+
 import dao.OrderDao;
 import model.Order;
 
 /**
- * Service class for Order operations. Handles business logic for order management.
+ * Service class for Order operations. Handles business logic for order
+ * management.
  */
 public class OrderService {
 
@@ -19,8 +21,8 @@ public class OrderService {
 
     /**
      * Updates order status with validation.
-     * 
-     * @param orderId The order ID
+     *
+     * @param orderId     The order ID
      * @param newStatusId The new status ID
      * @return true if update was successful, false otherwise
      */
@@ -49,7 +51,7 @@ public class OrderService {
 
     /**
      * Validates if the status ID is valid.
-     * 
+     *
      * @param statusId The status ID to validate
      * @return true if valid, false otherwise
      */
@@ -60,9 +62,9 @@ public class OrderService {
 
     /**
      * Validates if the status transition is allowed.
-     * 
+     *
      * @param currentStatusId The current status ID
-     * @param newStatusId The new status ID
+     * @param newStatusId     The new status ID
      * @return true if transition is valid, false otherwise
      */
     private static boolean isValidStatusTransition(Long currentStatusId, Long newStatusId) {

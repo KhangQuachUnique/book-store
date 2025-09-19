@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import constant.PathConstants;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -232,8 +234,7 @@ public class UserServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_LIST);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -245,8 +246,7 @@ public class UserServlet extends HttpServlet {
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_DETAIL);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -258,24 +258,21 @@ public class UserServlet extends HttpServlet {
         User user = userService.getUserById(id);
         request.setAttribute("user", user);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_EDIT);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
     private void showNewAdminForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD_ADMIN);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
     private void showNewUserForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -289,8 +286,7 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("user", user);
         request.setAttribute("addresses", addresses);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_ADDRESS_LIST);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
@@ -301,8 +297,7 @@ public class UserServlet extends HttpServlet {
             return;
         request.setAttribute("userId", userId);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_ADDRESS_LIST);
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 

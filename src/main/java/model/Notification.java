@@ -1,12 +1,14 @@
 package model;
 
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Notification entity representing notifications table in the database. Contains user notifications
+ * Notification entity representing notifications table in the database.
+ * Contains user notifications
  * with type and read status tracking.
  */
 @Data

@@ -2,6 +2,7 @@ package util;
 
 import java.util.Date;
 import java.util.Map;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -9,7 +10,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
 /**
- * JWT (JSON Web Token) utility class for authentication and authorization. Handles token
+ * JWT (JSON Web Token) utility class for authentication and authorization.
+ * Handles token
  * generation, validation, and claim extraction for the BookieCake application.
  *
  * @author BookieCake Team
@@ -45,10 +47,10 @@ public class JwtUtil {
     /**
      * Generates a JWT token with specified parameters.
      *
-     * @param email the user's email (subject)
-     * @param tokenType the type of token (access or refresh)
+     * @param email          the user's email (subject)
+     * @param tokenType      the type of token (access or refresh)
      * @param expirationTime the expiration time in milliseconds
-     * @param claims additional claims to include in the token
+     * @param claims         additional claims to include in the token
      * @return the generated JWT token string
      */
     private static String generateToken(String email, String tokenType, long expirationTime,
@@ -69,7 +71,7 @@ public class JwtUtil {
      * Generates an access token for user authentication.
      *
      * @param email the user's email
-     * @param role the user's role (e.g., "user", "admin")
+     * @param role  the user's role (e.g., "user", "admin")
      * @return the generated access token
      */
     public static String generateAccessToken(String email, String role) {
@@ -81,7 +83,7 @@ public class JwtUtil {
      * Generates a refresh token for token renewal.
      *
      * @param email the user's email
-     * @param role the user's role (e.g., "user", "admin")
+     * @param role  the user's role (e.g., "user", "admin")
      * @return the generated refresh token
      */
     public static String generateRefreshToken(String email, String role) {

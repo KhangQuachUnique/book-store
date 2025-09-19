@@ -1,6 +1,7 @@
 package dao;
 
 import static util.DBConnection.getConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,11 +12,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.User;
 import util.DBConnection;
 
 /**
- * Data Access Object for User entity operations. Provides methods for user CRUD operations,
+ * Data Access Object for User entity operations. Provides methods for user CRUD
+ * operations,
  * authentication, verification, and administration.
  *
  * @author BookStore Team
@@ -36,10 +39,9 @@ public class UserDao {
      * @throws RuntimeException if database error occurs
      */
     public boolean save(User user) {
-        String sql =
-                "INSERT INTO users (name, email, password_hash, phone, role, is_blocked, blocked_until, "
-                        + "is_verified, verify_token, verify_expire, created_at) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())";
+        String sql = "INSERT INTO users (name, email, password_hash, phone, role, is_blocked, blocked_until, "
+                + "is_verified, verify_token, verify_expire, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())";
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -128,8 +130,7 @@ public class UserDao {
      * @throws SQLException if database error occurs
      */
     public void updateUserPasswordHash(User user) throws SQLException {
-        String sql =
-                "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String sql = "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getPasswordHash());
             ps.setLong(2, user.getId());
@@ -147,8 +148,7 @@ public class UserDao {
      * @throws SQLException if database error occurs
      */
     public void updateUser(User user) throws SQLException {
-        String query =
-                "UPDATE users SET name = ?, email = ?, phone = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String query = "UPDATE users SET name = ?, email = ?, phone = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, user.getName());
@@ -211,8 +211,7 @@ public class UserDao {
      * @param userId The ID of the user to verify
      */
     public void markVerified(long userId) {
-        String sql =
-                "UPDATE users SET is_verified = TRUE, verify_token = NULL, verify_expire = NULL WHERE id = ?";
+        String sql = "UPDATE users SET is_verified = TRUE, verify_token = NULL, verify_expire = NULL WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, userId);
             ps.executeUpdate();
@@ -243,12 +242,11 @@ public class UserDao {
     /**
      * Updates user password and clears verification token (for password reset).
      *
-     * @param userId The ID of the user
+     * @param userId         The ID of the user
      * @param hashedPassword The new hashed password
      */
     public void updatePasswordAndClearToken(Long userId, String hashedPassword) {
-        String sql =
-                "UPDATE users SET password_hash = ?, verify_token = NULL, verify_expire = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String sql = "UPDATE users SET password_hash = ?, verify_token = NULL, verify_expire = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, hashedPassword);
             ps.setLong(2, userId);
@@ -306,8 +304,7 @@ public class UserDao {
      * @throws SQLException if database error occurs
      */
     public void blockUser(long id) throws SQLException {
-        String query =
-                "UPDATE users SET is_blocked = true, blocked_until = CURRENT_TIMESTAMP + INTERVAL '1 month', updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String query = "UPDATE users SET is_blocked = true, blocked_until = CURRENT_TIMESTAMP + INTERVAL '1 month', updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, id);
@@ -325,8 +322,7 @@ public class UserDao {
      * @throws SQLException if database error occurs
      */
     public void unblockUser(long id) throws SQLException {
-        String query =
-                "UPDATE users SET is_blocked = false, blocked_until = null, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String query = "UPDATE users SET is_blocked = false, blocked_until = null, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, id);
@@ -390,14 +386,13 @@ public class UserDao {
      * Searches users by name, email, or phone with pagination.
      *
      * @param query The search query
-     * @param page The page number (1-based)
+     * @param page  The page number (1-based)
      * @return List of matching users for the requested page
      * @throws SQLException if database error occurs
      */
     public List<User> searchUsers(String query, int page) throws SQLException {
         List<User> users = new ArrayList<>();
-        String sql =
-                "SELECT * FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ? ORDER BY id LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ? ORDER BY id LIMIT ? OFFSET ?";
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String searchTerm = "%" + query + "%";
@@ -421,8 +416,9 @@ public class UserDao {
     /**
      * Counts users based on query type and search criteria.
      *
-     * @param queryType The type of query (search, listAdmins, listUsers, listBlocked, or all)
-     * @param query The search query (only used for search type)
+     * @param queryType The type of query (search, listAdmins, listUsers,
+     *                  listBlocked, or all)
+     * @param query     The search query (only used for search type)
      * @return The count of matching users
      * @throws SQLException if database error occurs
      */
@@ -488,7 +484,7 @@ public class UserDao {
      * Helper method to execute paginated user queries.
      *
      * @param query The SQL query with LIMIT and OFFSET placeholders
-     * @param page The page number (1-based)
+     * @param page  The page number (1-based)
      * @return List of users for the requested page
      * @throws SQLException if database error occurs
      */
@@ -518,8 +514,7 @@ public class UserDao {
      * @throws SQLException if database error occurs
      */
     private void createUserWithRole(User user, String role) throws SQLException {
-        String query =
-                "INSERT INTO users (name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, user.getName());

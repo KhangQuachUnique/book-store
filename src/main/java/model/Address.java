@@ -1,12 +1,14 @@
 package model;
 
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Address entity representing addresses table in the database. Contains user delivery addresses
+ * Address entity representing addresses table in the database. Contains user
+ * delivery addresses
  * with default address support.
  */
 @Data

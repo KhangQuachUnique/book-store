@@ -1,12 +1,14 @@
 package model;
 
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * CartItem entity representing carts table in the database. Contains items in user's shopping cart
+ * CartItem entity representing carts table in the database. Contains items in
+ * user's shopping cart
  * with quantity and pricing information.
  */
 @Data

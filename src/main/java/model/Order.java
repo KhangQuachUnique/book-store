@@ -2,12 +2,14 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Order entity representing orders table in the database. Contains order information including
+ * Order entity representing orders table in the database. Contains order
+ * information including
  * customer, payment, and status data.
  */
 @Data

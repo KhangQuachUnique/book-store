@@ -8,17 +8,19 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.Order;
 import util.DBConnection;
 
 /**
- * Data Access Object for Order entity. Handles database operations for orders table.
+ * Data Access Object for Order entity. Handles database operations for orders
+ * table.
  */
 public class OrderDao {
 
     /**
      * Retrieves all orders from the database.
-     * 
+     *
      * @return List of all orders ordered by creation date (newest first)
      */
     public static List<Order> getAllOrders() {
@@ -42,7 +44,7 @@ public class OrderDao {
 
     /**
      * Retrieves an order by its ID.
-     * 
+     *
      * @param id The order ID
      * @return Order object if found, null otherwise
      */
@@ -67,8 +69,8 @@ public class OrderDao {
 
     /**
      * Updates the status of an order.
-     * 
-     * @param orderId The order ID
+     *
+     * @param orderId  The order ID
      * @param statusId The new status ID
      * @return true if update was successful, false otherwise
      */
@@ -92,7 +94,7 @@ public class OrderDao {
 
     /**
      * Retrieves orders by status ID.
-     * 
+     *
      * @param statusId The status ID to filter by
      * @return List of orders with the specified status
      */
@@ -119,15 +121,14 @@ public class OrderDao {
 
     /**
      * Retrieves orders by user ID and status ID.
-     * 
-     * @param userId The user ID
+     *
+     * @param userId   The user ID
      * @param statusId The status ID
      * @return List of orders for the user with the specified status
      */
     public static List<Order> getOrdersByUserIdAndStatus(Long userId, Long statusId) {
         List<Order> orders = new ArrayList<>();
-        String sql =
-                "SELECT * FROM orders WHERE user_id = ? AND status_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT * FROM orders WHERE user_id = ? AND status_id = ? ORDER BY created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -148,8 +149,9 @@ public class OrderDao {
     }
 
     /**
-     * Retrieves orders by user ID and status (overloaded for Integer userId and String status).
-     * 
+     * Retrieves orders by user ID and status (overloaded for Integer userId and
+     * String status).
+     *
      * @param userId The user ID
      * @param status The status filter ("all" returns all orders for user)
      * @return List of orders for the user with the specified status
@@ -170,7 +172,7 @@ public class OrderDao {
 
     /**
      * Retrieves all orders for a specific user.
-     * 
+     *
      * @param userId The user ID
      * @return List of orders for the user
      */
@@ -197,17 +199,15 @@ public class OrderDao {
 
     /**
      * Creates a new order in the database.
-     * 
+     *
      * @param order The order to create
      * @return The generated order ID, or null if creation failed
      */
     public static Long createOrder(Order order) {
-        String sql =
-                "INSERT INTO orders (user_id, total_amount, payment_method, status_id, promotion_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        String sql = "INSERT INTO orders (user_id, total_amount, payment_method, status_id, promotion_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps =
-                        conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setLong(1, order.getUserId());
             ps.setBigDecimal(2, order.getTotalAmount());
@@ -236,7 +236,7 @@ public class OrderDao {
 
     /**
      * Maps a ResultSet row to an Order object.
-     * 
+     *
      * @param rs The ResultSet to map
      * @return Order object with data from the ResultSet
      * @throws SQLException if database access error occurs

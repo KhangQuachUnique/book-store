@@ -51,8 +51,7 @@ public class CategoryServlet extends HttpServlet {
 
         switch (action) {
             case "add": {
-                RequestDispatcher dispatcher =
-                        req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_ADD);
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_ADD);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -69,8 +68,7 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> allCategories = categoryDao.findAll();
                 req.setAttribute("allCategories", allCategories);
 
-                RequestDispatcher dispatcher =
-                        req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_EDIT);
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_EDIT);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -79,8 +77,7 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> categories = categoryDao.findAll();
                 req.setAttribute("categories", categories);
 
-                RequestDispatcher dispatcher =
-                        req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_MANAGE);
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_CATEGORY_MANAGE);
                 dispatcher.forward(req, resp);
                 break;
             }

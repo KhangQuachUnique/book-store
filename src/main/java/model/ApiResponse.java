@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Generic API response wrapper for REST endpoints. Provides consistent response structure across
+ * Generic API response wrapper for REST endpoints. Provides consistent response
+ * structure across
  * all API calls.
  */
 @Data

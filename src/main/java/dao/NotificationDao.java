@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.Notification;
 import util.DBConnection;
 
@@ -63,8 +64,7 @@ public class NotificationDao {
 
     // Đánh dấu tất cả thông báo của user là đã đọc
     public void markAllAsRead(long userId) {
-        String sql =
-                "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
+        String sql = "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 

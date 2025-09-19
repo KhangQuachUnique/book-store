@@ -1,13 +1,15 @@
 package util;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Cookie utility class for managing HTTP cookies and token handling. Provides convenient methods
+ * Cookie utility class for managing HTTP cookies and token handling. Provides
+ * convenient methods
  * for cookie operations and JWT token management.
  *
  * @author BookieCake Team
@@ -24,15 +26,17 @@ public class CookieUtil {
     private static final int REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
 
     /**
-     * Gets a valid access token, refreshing it if necessary. This method checks for an existing
-     * access token and attempts to refresh it using the refresh token if the access token is
+     * Gets a valid access token, refreshing it if necessary. This method checks for
+     * an existing
+     * access token and attempts to refresh it using the refresh token if the access
+     * token is
      * expired or invalid.
      *
-     * @param request the HTTP servlet request
+     * @param request  the HTTP servlet request
      * @param response the HTTP servlet response
      * @return a valid access token, or null if unable to obtain one
      * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws IOException      if an I/O error occurs
      */
     public static String getValidAccessToken(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -53,7 +57,7 @@ public class CookieUtil {
     /**
      * Retrieves the value of a specific cookie from the request.
      *
-     * @param request the HTTP servlet request
+     * @param request    the HTTP servlet request
      * @param cookieName the name of the cookie to retrieve
      * @return the cookie value, or null if the cookie is not found
      */
@@ -71,9 +75,9 @@ public class CookieUtil {
     /**
      * Creates a secure HTTP-only cookie with appropriate settings.
      *
-     * @param name the cookie name
-     * @param value the cookie value
-     * @param maxAge the maximum age in seconds (0 to delete, -1 for session)
+     * @param name     the cookie name
+     * @param value    the cookie value
+     * @param maxAge   the maximum age in seconds (0 to delete, -1 for session)
      * @param httpOnly whether the cookie should be HTTP-only
      * @return the configured Cookie object
      */
@@ -90,31 +94,29 @@ public class CookieUtil {
     /**
      * Sets an access token cookie in the response.
      *
-     * @param response the HTTP servlet response
+     * @param response    the HTTP servlet response
      * @param accessToken the access token value
      */
     public static void setAccessTokenCookie(HttpServletResponse response, String accessToken) {
-        Cookie cookie =
-                createSecureCookie(ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE, true);
+        Cookie cookie = createSecureCookie(ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE, true);
         response.addCookie(cookie);
     }
 
     /**
      * Sets a refresh token cookie in the response.
      *
-     * @param response the HTTP servlet response
+     * @param response     the HTTP servlet response
      * @param refreshToken the refresh token value
      */
     public static void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie =
-                createSecureCookie(REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE, true);
+        Cookie cookie = createSecureCookie(REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE, true);
         response.addCookie(cookie);
     }
 
     /**
      * Removes (deletes) a cookie by setting its max age to 0.
      *
-     * @param response the HTTP servlet response
+     * @param response   the HTTP servlet response
      * @param cookieName the name of the cookie to remove
      */
     public static void removeCookie(HttpServletResponse response, String cookieName) {

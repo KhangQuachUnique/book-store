@@ -1,12 +1,14 @@
 package model;
 
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ReviewShow is a display model for showing review information with user details. Contains
+ * ReviewShow is a display model for showing review information with user
+ * details. Contains
  * calculated star representation and like information for UI rendering.
  */
 @Data
@@ -30,7 +32,8 @@ public class ReviewShow {
     private Integer emptyStars;
 
     /**
-     * Calculates star representation for UI display. Splits rating into full stars, partial
+     * Calculates star representation for UI display. Splits rating into full stars,
+     * partial
      * fraction, and empty stars.
      */
     public void calculateStars() {

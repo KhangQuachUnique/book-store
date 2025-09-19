@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.Book;
 import util.DBConnection;
 
 /**
- * Data Access Object for Book entity operations. Provides methods for book CRUD operations, search,
+ * Data Access Object for Book entity operations. Provides methods for book CRUD
+ * operations, search,
  * filtering, and inventory management.
  *
  * @author BookStore Team
@@ -34,10 +36,9 @@ public class BookDao {
      * @throws RuntimeException if database error occurs
      */
     public boolean addBook(Book book) {
-        String sql =
-                "INSERT INTO books (title, author, publisher, category_id, stock, original_price, "
-                        + "discount_rate, thumbnail_url, description, publish_year, pages, rating_average, "
-                        + "price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, "
+                + "discount_rate, thumbnail_url, description, publish_year, pages, rating_average, "
+                + "price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -173,7 +174,7 @@ public class BookDao {
      * Gets books by category with pagination.
      *
      * @param categoryId The category ID to filter by
-     * @param page The page number (1-based)
+     * @param page       The page number (1-based)
      * @return List of books in the specified category
      */
     public List<Book> getBooksByCategory(long categoryId, int page) {
@@ -185,13 +186,12 @@ public class BookDao {
      * Searches books by title, author, or description.
      *
      * @param query The search query
-     * @param page The page number (1-based)
+     * @param page  The page number (1-based)
      * @return List of matching books for the requested page
      */
     public List<Book> searchBooks(String query, int page) {
-        String sql =
-                "SELECT * FROM books WHERE title ILIKE ? OR author ILIKE ? OR description ILIKE ? "
-                        + "ORDER BY id LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM books WHERE title ILIKE ? OR author ILIKE ? OR description ILIKE ? "
+                + "ORDER BY id LIMIT ? OFFSET ?";
 
         List<Book> books = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
@@ -246,7 +246,8 @@ public class BookDao {
     /**
      * Gets books with low stock.
      *
-     * @param threshold The stock threshold below which books are considered low stock
+     * @param threshold The stock threshold below which books are considered low
+     *                  stock
      * @return List of books with low stock
      */
     public List<Book> getLowStockBooks(int threshold) {
@@ -274,7 +275,7 @@ public class BookDao {
     /**
      * Updates book stock quantity.
      *
-     * @param bookId The ID of the book
+     * @param bookId   The ID of the book
      * @param newStock The new stock quantity
      * @return true if stock was updated successfully, false otherwise
      */
@@ -295,7 +296,7 @@ public class BookDao {
     /**
      * Decreases book stock by specified quantity.
      *
-     * @param bookId The ID of the book
+     * @param bookId   The ID of the book
      * @param quantity The quantity to decrease
      * @return true if stock was decreased successfully, false otherwise
      */
@@ -319,13 +320,12 @@ public class BookDao {
     /**
      * Increases book stock by specified quantity.
      *
-     * @param bookId The ID of the book
+     * @param bookId   The ID of the book
      * @param quantity The quantity to increase
      * @return true if stock was increased successfully, false otherwise
      */
     public boolean increaseStock(long bookId, int quantity) {
-        String sql =
-                "UPDATE books SET stock = stock + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        String sql = "UPDATE books SET stock = stock + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -381,8 +381,7 @@ public class BookDao {
      * @return Number of matching books
      */
     public long countSearchResults(String query) {
-        String sql =
-                "SELECT COUNT(*) FROM books WHERE title ILIKE ? OR author ILIKE ? OR description ILIKE ?";
+        String sql = "SELECT COUNT(*) FROM books WHERE title ILIKE ? OR author ILIKE ? OR description ILIKE ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -408,8 +407,8 @@ public class BookDao {
     /**
      * Helper method to execute paginated book queries.
      *
-     * @param sql The SQL query with LIMIT and OFFSET
-     * @param page The page number (1-based)
+     * @param sql    The SQL query with LIMIT and OFFSET
+     * @param page   The page number (1-based)
      * @param params Additional parameters for the query
      * @return List of books for the requested page
      */

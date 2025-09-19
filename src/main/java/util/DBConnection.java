@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Database connection utility class for managing PostgreSQL connections. Provides centralized
+ * Database connection utility class for managing PostgreSQL connections.
+ * Provides centralized
  * database connection management for the BookieCake application.
  *
  * @author BookieCake Team
@@ -14,8 +15,7 @@ import java.sql.SQLException;
 public class DBConnection {
 
     // Database configuration constants
-    private static final String DB_URL =
-            "jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:5432/postgres?user=postgres.tqlsarbgxbmhohiyykaf&password=1101";
+    private static final String DB_URL = "jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:5432/postgres?user=postgres.tqlsarbgxbmhohiyykaf&password=1101";
     private static final String DB_USER = "postgres";
     private static final String DB_PASSWORD = "1101";
     private static final String DB_DRIVER = "org.postgresql.Driver";
@@ -40,7 +40,8 @@ public class DBConnection {
     }
 
     /**
-     * Closes a database connection safely. This method handles null connections gracefully.
+     * Closes a database connection safely. This method handles null connections
+     * gracefully.
      *
      * @param connection the connection to close, can be null
      */

@@ -1,12 +1,14 @@
 package model;
 
 import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Review entity representing reviews table in the database. Contains user reviews for books with
+ * Review entity representing reviews table in the database. Contains user
+ * reviews for books with
  * rating and comment.
  */
 @Data

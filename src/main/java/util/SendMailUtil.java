@@ -2,6 +2,7 @@ package util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -12,7 +13,8 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 /**
- * Email utility class for sending various types of emails. Handles email configuration and provides
+ * Email utility class for sending various types of emails. Handles email
+ * configuration and provides
  * methods for common email operations in the BookieCake application.
  *
  * @author BookieCake Team
@@ -54,10 +56,11 @@ public class SendMailUtil {
      * Creates a basic email message with common settings.
      *
      * @param session the mail session
-     * @param to the recipient email address
+     * @param to      the recipient email address
      * @param subject the email subject
      * @return configured MimeMessage object
-     * @throws MessagingException if an error occurs while creating the message
+     * @throws MessagingException           if an error occurs while creating the
+     *                                      message
      * @throws UnsupportedEncodingException if the encoding is not supported
      */
     private static MimeMessage createBaseMessage(Session session, String to, String subject)
@@ -74,11 +77,12 @@ public class SendMailUtil {
     /**
      * Sends an account verification email to the user.
      *
-     * @param recipientEmail the recipient's email address
+     * @param recipientEmail   the recipient's email address
      * @param verificationLink the verification link to include in the email
-     * @throws MessagingException if an error occurs while sending the email
+     * @throws MessagingException           if an error occurs while sending the
+     *                                      email
      * @throws UnsupportedEncodingException if the encoding is not supported
-     * @throws IllegalArgumentException if parameters are null or empty
+     * @throws IllegalArgumentException     if parameters are null or empty
      */
     public static void sendVerificationMail(String recipientEmail, String verificationLink)
             throws MessagingException, UnsupportedEncodingException {
@@ -92,8 +96,7 @@ public class SendMailUtil {
         }
 
         Session session = createMailSession();
-        MimeMessage message =
-                createBaseMessage(session, recipientEmail, "Xác thực tài khoản BookieCake");
+        MimeMessage message = createBaseMessage(session, recipientEmail, "Xác thực tài khoản BookieCake");
 
         String htmlContent = String.format(
                 "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>"
@@ -117,10 +120,11 @@ public class SendMailUtil {
      * Sends a password reset email to the user.
      *
      * @param recipientEmail the recipient's email address
-     * @param resetLink the password reset link to include in the email
-     * @throws MessagingException if an error occurs while sending the email
+     * @param resetLink      the password reset link to include in the email
+     * @throws MessagingException           if an error occurs while sending the
+     *                                      email
      * @throws UnsupportedEncodingException if the encoding is not supported
-     * @throws IllegalArgumentException if parameters are null or empty
+     * @throws IllegalArgumentException     if parameters are null or empty
      */
     public static void sendPasswordResetMail(String recipientEmail, String resetLink)
             throws MessagingException, UnsupportedEncodingException {
@@ -134,8 +138,7 @@ public class SendMailUtil {
         }
 
         Session session = createMailSession();
-        MimeMessage message =
-                createBaseMessage(session, recipientEmail, "Đặt lại mật khẩu BookieCake");
+        MimeMessage message = createBaseMessage(session, recipientEmail, "Đặt lại mật khẩu BookieCake");
 
         String htmlContent = String.format(
                 "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>"
@@ -162,11 +165,12 @@ public class SendMailUtil {
      * Sends a generic notification email.
      *
      * @param recipientEmail the recipient's email address
-     * @param subject the email subject
-     * @param content the email content (HTML format)
-     * @throws MessagingException if an error occurs while sending the email
+     * @param subject        the email subject
+     * @param content        the email content (HTML format)
+     * @throws MessagingException           if an error occurs while sending the
+     *                                      email
      * @throws UnsupportedEncodingException if the encoding is not supported
-     * @throws IllegalArgumentException if parameters are null or empty
+     * @throws IllegalArgumentException     if parameters are null or empty
      */
     public static void sendNotificationMail(String recipientEmail, String subject, String content)
             throws MessagingException, UnsupportedEncodingException {

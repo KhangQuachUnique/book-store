@@ -5,15 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.Book;
 import util.DBConnection;
 
 public class WishListDao {
     public static List<Book> getWishListBooks(int userId) {
         // This is a stub implementation. Replace with actual database access code.
-        // For example, you might query a database to get the wishlist books for the given userId.
-        String sql =
-                " SELECT b.* FROM wishlists w JOIN books b ON w.book_id = b.id WHERE w.user_id = ? ";
+        // For example, you might query a database to get the wishlist books for the
+        // given userId.
+        String sql = " SELECT b.* FROM wishlists w JOIN books b ON w.book_id = b.id WHERE w.user_id = ? ";
 
         List<Book> books = new ArrayList<>();
 

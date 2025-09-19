@@ -3,7 +3,8 @@ package util;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * Password utility class for secure password hashing and verification. Uses BCrypt algorithm for
+ * Password utility class for secure password hashing and verification. Uses
+ * BCrypt algorithm for
  * strong password security in the BookieCake application.
  *
  * @author BookieCake Team
@@ -11,7 +12,8 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class PasswordUtil {
 
-    // BCrypt work factor (rounds of hashing) - higher values are more secure but slower
+    // BCrypt work factor (rounds of hashing) - higher values are more secure but
+    // slower
     private static final int BCRYPT_ROUNDS = 12;
 
     /**
@@ -32,7 +34,7 @@ public class PasswordUtil {
     /**
      * Verifies a plain text password against a hashed password.
      *
-     * @param plainPassword the plain text password to verify
+     * @param plainPassword  the plain text password to verify
      * @param hashedPassword the hashed password to check against
      * @return true if the password matches, false otherwise
      * @throws IllegalArgumentException if either parameter is null or empty
@@ -75,8 +77,7 @@ public class PasswordUtil {
         boolean hasDigit = password.chars().anyMatch(Character::isDigit);
 
         // Check for at least one special character
-        boolean hasSpecialChar =
-                password.chars().anyMatch(ch -> "!@#$%^&*()_+-=[]{}|;:,.<>?".indexOf(ch) >= 0);
+        boolean hasSpecialChar = password.chars().anyMatch(ch -> "!@#$%^&*()_+-=[]{}|;:,.<>?".indexOf(ch) >= 0);
 
         return hasLowercase && hasUppercase && hasDigit && hasSpecialChar;
     }

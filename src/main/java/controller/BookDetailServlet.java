@@ -14,7 +14,8 @@ import dao.BookDao;
 import model.Book;
 
 /**
- * Servlet for handling book detail page requests. Displays detailed information about a specific
+ * Servlet for handling book detail page requests. Displays detailed information
+ * about a specific
  * book including all attributes.
  *
  * @author BookStore Team
@@ -83,8 +84,7 @@ public class BookDetailServlet extends HttpServlet {
 
             // Calculate savings if there's a discount
             if (hasDiscount && book.getOriginalPrice() != null && book.getPrice() != null) {
-                double savings =
-                        book.getOriginalPrice().doubleValue() - book.getPrice().doubleValue();
+                double savings = book.getOriginalPrice().doubleValue() - book.getPrice().doubleValue();
                 req.setAttribute("savings", savings);
             }
 
