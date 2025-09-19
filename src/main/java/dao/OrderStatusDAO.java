@@ -1,11 +1,14 @@
 package dao;
 
-import model.OrderStatus;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.OrderStatus;
+import util.DBConnection;
 
 public class OrderStatusDAO {
 
@@ -19,14 +22,13 @@ public class OrderStatusDAO {
         String sql = "SELECT id, name FROM status WHERE id != 8 ORDER BY id";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 list.add(new OrderStatus(
                         rs.getInt("id"),
-                        rs.getString("name")
-                ));
+                        rs.getString("name")));
             }
 
         } catch (SQLException e) {

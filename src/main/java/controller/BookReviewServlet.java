@@ -1,18 +1,19 @@
 package controller;
 
-import constant.PathConstants;
-import model.ApiResponse;
-import model.BookReview;
-import model.BookReviewRequest;
-import service.BookReviewService;
-import util.JsonUtil;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import constant.PathConstants;
+import model.ApiResponse;
+import model.BookReview;
+import model.BookReviewRequest;
+import service.BookReviewService;
+import util.JsonUtil;
 
 @WebServlet("/user/book-review")
 public class BookReviewServlet extends HttpServlet {
@@ -28,7 +29,7 @@ public class BookReviewServlet extends HttpServlet {
                     currentUserId = 0; // hoặc -1
                 }
 
-                BookReview bookReview = BookReviewService.getReviewsByBookId(330658, 1009);
+                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, 1009);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();

@@ -51,5 +51,7 @@ public class Address implements Serializable {
     }
 
     @Override
-    public String toString() {return this.address;}
+    public String toString() {
+        return this.address;
+    }
 }

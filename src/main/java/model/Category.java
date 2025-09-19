@@ -10,7 +10,8 @@ public class Category {
     private Boolean isLeaf;
 
     // Constructor
-    public Category() {}
+    public Category() {
+    }
 
     public Category(Long id, String name, Long parentId, Timestamp createdAt, Boolean isLeaf) {
         this.id = id;
@@ -21,18 +22,43 @@ public class Category {
     }
 
     // Getter / Setter
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
+    public String getName() {
+        return name;
+    }
 
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Boolean getIsLeaf() { return isLeaf; }
-    public void setIsLeaf(Boolean isLeaf) { this.isLeaf = isLeaf; }
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Boolean getIsLeaf() {
+        return isLeaf;
+    }
+
+    public void setIsLeaf(Boolean isLeaf) {
+        this.isLeaf = isLeaf;
+    }
 }

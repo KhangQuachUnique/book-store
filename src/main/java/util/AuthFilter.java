@@ -1,27 +1,30 @@
 package util;
 
-import constant.PathConstants;
-import dao.UserDao;
-import model.Address;
-import model.User;
-import service.AddressService;
+import java.io.IOException;
+import java.util.Optional;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+
+import constant.PathConstants;
+import dao.UserDao;
+import model.User;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 
     @Override
-    public void init(FilterConfig filterConfig) { }
+    public void init(FilterConfig filterConfig) {
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -37,8 +40,10 @@ public class AuthFilter implements Filter {
 
         if (req.getCookies() != null) {
             for (Cookie c : req.getCookies()) {
-                if ("access_token".equals(c.getName())) access_token = c.getValue();
-                if ("refresh_token".equals(c.getName())) refresh_token = c.getValue();
+                if ("access_token".equals(c.getName()))
+                    access_token = c.getValue();
+                if ("refresh_token".equals(c.getName()))
+                    refresh_token = c.getValue();
             }
         }
 
@@ -53,7 +58,8 @@ public class AuthFilter implements Filter {
             role = JwtUtil.getRole(access_token);
         }
         // Nếu access token hết hạn, dùng refresh token cấp mới
-        else if (refresh_token != null && JwtUtil.validateToken(refresh_token) && JwtUtil.isRefreshToken(refresh_token)) {
+        else if (refresh_token != null && JwtUtil.validateToken(refresh_token)
+                && JwtUtil.isRefreshToken(refresh_token)) {
             email = JwtUtil.getEmail(refresh_token);
             role = JwtUtil.getRole(refresh_token);
             access_token = JwtUtil.generateAccessToken(email, role);
@@ -92,7 +98,6 @@ public class AuthFilter implements Filter {
                     newSession.setAttribute("user", us.safeUser());
                 });
 
-
             }
             if (path.startsWith("/admin") && !"admin".equals(role)) {
                 request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
@@ -104,5 +109,6 @@ public class AuthFilter implements Filter {
     }
 
     @Override
-    public void destroy() { }
+    public void destroy() {
+    }
 }

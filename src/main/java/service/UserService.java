@@ -1,21 +1,20 @@
 package service;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.sql.SQLException;
 
 import org.mindrot.jbcrypt.BCrypt;
+
 import dao.UserDao;
 import jakarta.mail.MessagingException;
 import model.LoginResult;
 import model.User;
-import model.Address;
-import java.util.List;
 
 public class UserService {
     private UserDao userDao = new UserDao();
@@ -26,7 +25,8 @@ public class UserService {
      */
     public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException {
         Optional<User> existing = userDao.findByEmail(user.getEmail());
-        if (existing.isPresent()) return null;
+        if (existing.isPresent())
+            return null;
 
         user.setPasswordHash(BCrypt.hashpw(rawPassword, BCrypt.gensalt()));
         user.setIsVerified(false);
@@ -90,8 +90,10 @@ public class UserService {
      */
     public boolean verifyUser(String token) {
         User user = userDao.findByVerifyToken(token);
-        if (user == null) return false;
-        if (user.getVerifyExpire().before(new java.util.Date())) return false;
+        if (user == null)
+            return false;
+        if (user.getVerifyExpire().before(new java.util.Date()))
+            return false;
 
         user.setIsVerified(true);
         userDao.markVerified(user.getId());

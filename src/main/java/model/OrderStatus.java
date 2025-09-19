@@ -4,7 +4,8 @@ public class OrderStatus {
     private int id;
     private String name;
 
-    public OrderStatus() {}
+    public OrderStatus() {
+    }
 
     public OrderStatus(int id, String name) {
         this.id = id;

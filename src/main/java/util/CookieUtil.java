@@ -1,10 +1,11 @@
 package util;
 
+import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class CookieUtil {
 
@@ -27,7 +28,8 @@ public class CookieUtil {
     public static String getCookieValue(HttpServletRequest req, String name) {
         if (req.getCookies() != null) {
             for (Cookie c : req.getCookies()) {
-                if (name.equals(c.getName())) return c.getValue();
+                if (name.equals(c.getName()))
+                    return c.getValue();
             }
         }
         return null;

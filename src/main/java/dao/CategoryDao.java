@@ -1,11 +1,15 @@
 package dao;
 
-import model.Category;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Category;
+import util.DBConnection;
 
 public class CategoryDao {
 
@@ -24,7 +28,7 @@ public class CategoryDao {
         List<Category> list = new ArrayList<>();
         String sql = "SELECT * FROM categories ORDER BY id DESC";
         try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
@@ -78,8 +82,10 @@ public class CategoryDao {
             ps.setBoolean(3, c.getIsLeaf() != null ? c.getIsLeaf() : false);
 
             int affected = ps.executeUpdate();
-            if (affected > 0) return null;
-            else return "Không thêm được category (không có dòng nào bị ảnh hưởng)";
+            if (affected > 0)
+                return null;
+            else
+                return "Không thêm được category (không có dòng nào bị ảnh hưởng)";
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -106,8 +112,10 @@ public class CategoryDao {
             ps.setLong(4, c.getId());
 
             int affected = ps.executeUpdate();
-            if (affected > 0) return null;
-            else return "Không cập nhật được category (không có dòng nào bị ảnh hưởng)";
+            if (affected > 0)
+                return null;
+            else
+                return "Không cập nhật được category (không có dòng nào bị ảnh hưởng)";
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -126,8 +134,10 @@ public class CategoryDao {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             int affected = ps.executeUpdate();
-            if (affected > 0) return null;
-            else return "Không xóa được category (không có dòng nào bị ảnh hưởng)";
+            if (affected > 0)
+                return null;
+            else
+                return "Không xóa được category (không có dòng nào bị ảnh hưởng)";
         } catch (Exception e) {
             return e.getMessage();
         }
@@ -139,8 +149,7 @@ public class CategoryDao {
                 rs.getString("name"),
                 rs.getObject("parent_id") != null ? rs.getLong("parent_id") : null,
                 rs.getTimestamp("created_at"),
-                rs.getBoolean("is_leaf")
-        );
+                rs.getBoolean("is_leaf"));
     }
 
     public boolean isCategoryNameExists(String name) {
