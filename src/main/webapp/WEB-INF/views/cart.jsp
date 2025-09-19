@@ -98,29 +98,9 @@
                     </c:if>
                 </div>
 
-                <div class="payment-section">
-                    <h3>Payment Method</h3>
-                    <div class="payment-methods">
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="cod" checked>
-                            <span>Cash on Delivery (COD)</span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="bank">
-                            <span>Bank Transfer</span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="card">
-                            <span>Credit/Debit Card</span>
-                        </label>
-                    </div>
+                <div class="cart-actions" style="margin-top: 24px;">
+                    <a href="payment" class="checkout-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Proceed to Payment</a>
                 </div>
-
-                <form action="order" method="post" class="checkout-form">
-                    <input type="hidden" name="selectedAddress" id="selectedAddress">
-                    <input type="hidden" name="selectedPayment" id="selectedPayment">
-                    <button type="submit" class="checkout-btn">Proceed to Checkout</button>
-                </form>
             </div>
         </div>
     </c:if>
