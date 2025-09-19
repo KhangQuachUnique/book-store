@@ -26,17 +26,7 @@
 
 <div id="toast" class="toast"></div>
 
-<script>
-    function showToast(message) {
-        const toast = document.getElementById("toast");
-        toast.textContent = message;
-        toast.classList.add("show");
-
-        setTimeout(() => {
-            toast.classList.remove("show");
-        }, 3000);
-    }
-</script>
+<script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
 
 <h2 class="title">Your Profile</h2>
 <div class = "container">
