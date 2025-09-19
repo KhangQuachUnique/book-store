@@ -1,0 +1,141 @@
+/* Order Management Page Styles */
+
+/* Filters section */
+.filters {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Table styles */
+.table-responsive {
+    margin-bottom: 1.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Status badge styles */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+/* Order detail modal */
+.order-info {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.order-items {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.book-thumb {
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+/* Alert styles */
+.alert-container {
+    z-index: 1050;
+    max-width: 350px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .table {
+        font-size: 0.875rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    /* Stack filters on mobile */
+    .row > [class*='col-'] {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Make table scrollable horizontally */
+    .table-responsive {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    /* Adjust modal padding for mobile */
+    .modal-body {
+        padding: 0.75rem;
+    }
+    
+    .order-info, .order-items {
+        padding: 0.75rem;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .order-info {
+        background-color: #2d3238;
+    }
+
+    .table th {
+        background-color: #2d3238;
+    }
+
+    .modal-content {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+    .close {
+        color: #fff;
+    }
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    .modal {
+        position: static;
+        display: block;
+    }
+
+    .modal-dialog {
+        max-width: 100%;
+        margin: 0;
+    }
+}
