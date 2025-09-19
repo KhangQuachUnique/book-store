@@ -32,8 +32,13 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = req.getParameter("action");
-        Long userIdLong = (Long) req.getSession().getAttribute("userId");
-        int userId = userIdLong != null ? userIdLong.intValue() : 0;
+
+        User user = (User) req.getSession().getAttribute("user");
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            return;
+        }
+        int userId = user.getId().intValue();
 
         try {
             if ("add".equals(action)) {
@@ -43,10 +48,13 @@ public class CartServlet extends HttpServlet {
                 int cartId = Integer.parseInt(req.getParameter("cartId"));
                 cartDAO.removeFromCart(cartId);
             }
-            resp.sendRedirect("cart");
+
+            // redirect 1 lần duy nhất
+            resp.sendRedirect(req.getContextPath() + "/user/cart");
         } catch (Exception e) {
             e.printStackTrace();
             resp.sendError(500);
         }
     }
+
 }
