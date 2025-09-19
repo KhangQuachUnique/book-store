@@ -1,12 +1,16 @@
 package model;
 
-import jakarta.validation.constraints.*; // ✅ Đổi từ javax → jakarta
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+// ✅ Đổi từ javax → jakarta
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * Model class representing a book.
