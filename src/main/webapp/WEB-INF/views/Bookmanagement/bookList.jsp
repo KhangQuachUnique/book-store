@@ -1,130 +1,145 @@
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>--%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Book Management - ${listType}</title>
-    <link rel="stylesheet" href="/assets/styles/users.css">
+    <title>Book Management</title>
     <style>
-        .category-table { display: none; position: absolute; background: white; border: 1px solid #ccc; padding: 10px; z-index: 1000; }
-        .category-table.show { display: block; }
-        .category-item { padding: 5px; cursor: pointer; margin: 2px; }
-        .category-item.include { border: 2px solid green; }
-        .category-item.exclude { border: 2px solid black; }
+        .category-table {
+            display: none;
+            position: fixed;
+            top: 25%;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1000;
+            width: 100vw;
+            height: 50vh;
+            overflow-y: auto;
+        }
+        .category-table.show {
+            display: block;
+        }
+        .category-item {
+            padding: 5px;
+            cursor: pointer;
+            margin: 2px;
+            display: inline-block;
+            border: 1px solid gray;
+        }
+        .category-item.include {
+            border: 2px solid green;
+        }
+        .category-item.exclude {
+            border: 2px solid black;
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 5px 10px;
+            margin: 5px;
+        }
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination input {
+            width: 60px;
+            text-align: center;
+        }
     </style>
 </head>
-<body class="bg-background text-foreground">
-<div class="container">
-    <h1 class="page-title">${listType}</h1>
+<body>
+<h1>Book Management</h1>
 
-    <nav class="nav-main">
-        <a href="/admin/book?action=list" class="nav-link">All Books</a>
-    </nav>
+<!-- Thanh tìm kiếm -->
+<form action="${pageContext.request.contextPath}/admin/book" method="get" class="search-form">
+    <input type="hidden" name="action" value="filter">
+    <input type="text" name="title" placeholder="Search by title" value="${title}">
+    <input type="number" name="publish_year" placeholder="Publish year" value="${publishYear}">
+    <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
+    <input type="submit" value="Find" class="btn btn-primary">
+    <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
+    <input type="hidden" name="excludeCategories" id="excludeCategories" value="${excludeCategories}">
+</form>
 
-    <nav class="nav-admin">
-        <a href="/admin/book?action=add" class="btn btn-secondary">Add Book</a>
-        <form action="/admin/book" method="post" enctype="multipart/form-data" style="display:inline;">
-            <input type="hidden" name="action" value="importCSV">
-            <input type="file" name="csvFile" accept=".csv" class="input">
-            <input type="submit" value="Import CSV" class="btn btn-secondary">
-        </form>
-    </nav>
-
-    <div class="card search-card">
-        <div class="card-header">
-            <h2 class="card-title">Filter Books</h2>
+<!-- Bảng category -->
+<div id="categoryTable" class="category-table">
+    <button type="button" class="btn btn-primary" onclick="submitFilterForm()">Submit</button>
+    <c:forEach var="category" items="${categories}">
+        <div class="category-item"
+             data-id="${category.id}"
+             onclick="toggleCategory(this, ${category.id})">
+                ${category.name}
         </div>
-        <div class="card-content">
-            <form action="/admin/book" method="get" class="search-form">
-                <input type="hidden" name="action" value="filter">
-                <input type="text" name="title" class="input" placeholder="Search by Title" value="${title}">
-                <input type="number" name="publishYear" class="input" placeholder="Publish Year" value="${publishYear}">
-                <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
-                <div id="categoryTable" class="category-table">
-                    <c:forEach var="category" items="${categories}">
-                        <div class="category-item"
-                             data-id="${category.id}"
-                             onclick="toggleCategory(this, ${category.id})">
-                                ${category.name}
-                        </div>
-                    </c:forEach>
-                </div>
-                <input type="hidden" name="includeCategories" id="includeCategories">
-                <input type="hidden" name="excludeCategories" id="excludeCategories">
-                <input type="submit" value="Filter" class="btn btn-primary">
-            </form>
-        </div>
-    </div>
-
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger">${errorMessage}</div>
-    </c:if>
-    <c:if test="${not empty successMessage}">
-        <div class="alert alert-success">${successMessage}</div>
-    </c:if>
-
-    <div class="card">
-        <div class="card-content">
-            <div class="pagination">
-                <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/admin/book?action=${param.action}&page=${currentPage - 1}&title=${title}&publishYear=${publishYear}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}" class="btn btn-secondary">Previous</a>
-                </c:if>
-                <span>Page ${currentPage} of ${totalPages}</span>
-                <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/admin/book?action=${param.action}&page=${currentPage + 1}&title=${title}&publishYear=${publishYear}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}" class="btn btn-secondary">Next</a>
-                </c:if>
-            </div>
-            <table class="table">
-                <thead>
-                <tr class="table-header">
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Publisher</th>
-                    <th>Category ID</th>
-                    <th>Stock</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach var="book" items="${books}">
-                    <tr>
-                        <td>${book.id}</td>
-                        <td>${book.title}</td>
-                        <td>${book.author}</td>
-                        <td>${book.publisher}</td>
-                        <td>${book.categoryId}</td>
-                        <td>${book.stock}</td>
-                        <td>${book.price}</td>
-                        <td class="action-buttons">
-                            <a href="${pageContext.request.contextPath}/admin/book?action=view&id=${book.id}" class="btn btn-outline btn-sm">View</a>
-                            <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-outline btn-sm">Edit</a>
-                            <form action="/admin/book" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="${book.id}">
-                                <input type="submit" value="Delete" class="btn btn-destructive btn-sm btn-lowe"
-                                       onclick="return confirm('Are you sure you want to delete this book?')">
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-            <div class="pagination">
-                <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/admin/book?action=${param.action}&page=${currentPage - 1}&title=${title}&publishYear=${publishYear}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}" class="btn btn-secondary">Previous</a>
-                </c:if>
-                <span>Page ${currentPage} of ${totalPages}</span>
-                <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/admin/book?action=${param.action}&page=${currentPage + 1}&title=${title}&publishYear=${publishYear}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}" class="btn btn-secondary">Next</a>
-                </c:if>
-            </div>
-        </div>
-    </div>
+    </c:forEach>
 </div>
+
+<!-- Nút All Books và Add Book -->
+<a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-primary">All Books</a>
+<a href="${pageContext.request.contextPath}/admin/book?action=add" class="btn btn-primary">Add Book</a>
+
+<!-- Danh sách sách -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Publisher</th>
+        <th>Category</th>
+        <th>Stock</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="book" items="${books}">
+        <tr>
+            <td>${book.id}</td>
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.publisher}</td>
+            <td>${book.categoryId}</td>
+            <td>${book.stock}</td>
+            <td>${book.price}</td>
+            <td>
+                <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}">Edit</a>
+                <a href="${pageContext.request.contextPath}/admin/book?action=delete&id=${book.id}"
+                   onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
+
+<!-- Phân trang -->
+<c:if test="${totalPages > 1}">
+    <div class="pagination">
+        <c:choose>
+            <c:when test="${currentPage > 1}">
+                <a href="${pageContext.request.contextPath}/admin/book?action=list&page=${currentPage - 1}" class="btn btn-primary">Previous</a>
+            </c:when>
+            <c:otherwise>
+                <span class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">Previous</span>
+            </c:otherwise>
+        </c:choose>
+        <input type="number" min="1" max="${totalPages}" value="${currentPage}"
+               onkeypress="if(event.key === 'Enter' && this.value >= 1 && this.value <= ${totalPages}) { window.location.href = '${pageContext.request.contextPath}/admin/book?action=list&page=' + this.value; }">
+        <span>of ${totalPages}</span>
+        <c:choose>
+            <c:when test="${currentPage < totalPages}">
+                <a href="${pageContext.request.contextPath}/admin/book?action=list&page=${currentPage + 1}" class="btn btn-primary">Next</a>
+            </c:when>
+            <c:otherwise>
+                <span class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">Next</span>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</c:if>
 
 <script>
     let includeCategories = ${includeCategories != null ? includeCategories : '[]'};
@@ -139,28 +154,26 @@
         if (element.classList.contains('include')) {
             element.classList.remove('include');
             element.classList.add('exclude');
-            includeCategories = includeCategories.filter(id => id != categoryId);
-            excludeCategories.push(categoryId);
+            includeCategories = includeCategories.filter(id => id !== categoryId);
+            if (!excludeCategories.includes(categoryId)) {
+                excludeCategories.push(categoryId);
+            }
         } else if (element.classList.contains('exclude')) {
             element.classList.remove('exclude');
-            excludeCategories = excludeCategories.filter(id => id != categoryId);
+            excludeCategories = excludeCategories.filter(id => id !== categoryId);
         } else {
             element.classList.add('include');
-            includeCategories.push(categoryId);
+            if (!includeCategories.includes(categoryId)) {
+                includeCategories.push(categoryId);
+            }
         }
-        document.getElementById('includeCategories').value = includeCategories.join(',');
-        document.getElementById('excludeCategories').value = excludeCategories.join(',');
     }
 
-    // Initialize category states
-    document.querySelectorAll('.category-item').forEach(item => {
-        const id = parseInt(item.getAttribute('data-id'));
-        if (includeCategories.includes(id)) {
-            item.classList.add('include');
-        } else if (excludeCategories.includes(id)) {
-            item.classList.add('exclude');
-        }
-    });
+    function submitFilterForm() {
+        document.getElementById('includeCategories').value = includeCategories.length > 0 ? includeCategories.join(',') : '';
+        document.getElementById('excludeCategories').value = excludeCategories.length > 0 ? excludeCategories.join(',') : '';
+        document.querySelector('.search-form').submit();
+    }
 </script>
 </body>
 </html>
