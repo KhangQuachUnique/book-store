@@ -36,28 +36,20 @@ public class PathConstants {
     public static final String VIEW_CATEGORY_BOOKS = "/WEB-INF/views/categoryBook.jsp";
 
     // Category Management Views
-    public static final String VIEW_CATEGORY_ADD =
-            "/WEB-INF/views/CategoryManagement/addCategory.jsp";
-    public static final String VIEW_CATEGORY_EDIT =
-            "/WEB-INF/views/CategoryManagement/editCategory.jsp";
-    public static final String VIEW_CATEGORY_MANAGE =
-            "/WEB-INF/views/CategoryManagement/manageCategory.jsp";
+    public static final String VIEW_CATEGORY_ADD = "/WEB-INF/views/CategoryManagement/addCategory.jsp";
+    public static final String VIEW_CATEGORY_EDIT = "/WEB-INF/views/CategoryManagement/editCategory.jsp";
+    public static final String VIEW_CATEGORY_MANAGE = "/WEB-INF/views/CategoryManagement/manageCategory.jsp";
 
     // Admin Views
     public static final String VIEW_ADMIN_DASHBOARD = "/WEB-INF/views/userManagement/dashboard.jsp";
     public static final String VIEW_ADMIN_USER_LIST = "/WEB-INF/views/userManagement/userList.jsp";
     public static final String VIEW_ADMIN_USER_EDIT = "/WEB-INF/views/userManagement/editUser.jsp";
     public static final String VIEW_ADMIN_USER_ADD = "/WEB-INF/views/userManagement/createUser.jsp";
-    public static final String VIEW_ADMIN_USER_DETAIL =
-            "/WEB-INF/views/userManagement/viewUser.jsp";
-    public static final String VIEW_ADMIN_USER_ADD_ADMIN =
-            "/WEB-INF/views/userManagement/creatAdmin.jsp";
-    public static final String VIEW_ADMIN_NOTIFICATIONS =
-            "/WEB-INF/views/userManagement/notifications.jsp";
-    public static final String VIEW_ADMIN_ORDER_MANAGEMENT =
-            "/WEB-INF/views/admin/order-management.jsp";
-    public static final String VIEW_ADMIN_ADDRESS_LIST =
-            "/WEB-INF/views/userManagement/addressList.jsp";
+    public static final String VIEW_ADMIN_USER_DETAIL = "/WEB-INF/views/userManagement/viewUser.jsp";
+    public static final String VIEW_ADMIN_USER_ADD_ADMIN = "/WEB-INF/views/userManagement/creatAdmin.jsp";
+    public static final String VIEW_ADMIN_NOTIFICATIONS = "/WEB-INF/views/userManagement/notifications.jsp";
+    public static final String VIEW_ADMIN_ORDER_MANAGEMENT = "/WEB-INF/views/admin/order-management.jsp";
+    public static final String VIEW_ADMIN_ADDRESS_LIST = "/WEB-INF/views/userManagement/addressList.jsp";
     public static final String VIEW_EDIT_USER = "/WEB-INF/views/userManagement/editUser.jsp";
 
     // URL Paths (for redirects and mappings)
