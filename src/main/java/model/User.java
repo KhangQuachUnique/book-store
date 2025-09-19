@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +27,8 @@ public class User {
     private String passwordHash;  // password_hash, không validate tại model
 
     private String phone;         // phone
+
+    private List<Address> addresses;
 
     private String role;          // 'customer' hoặc 'admin'
 
@@ -59,6 +62,7 @@ public class User {
         safe.setIsVerified(this.isVerified);
         safe.setVerifyToken(this.verifyToken);
         safe.setVerifyExpire(this.verifyExpire);
+        safe.setAddresses(this.addresses);
 
         // Không set passwordHsh
         safe.setPasswordHash(null);

@@ -1,5 +1,6 @@
 package dao;
 
+import model.Address;
 import model.User;
 import util.DBConnection;
 
@@ -47,9 +48,14 @@ public class UserDao {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            try(ResultSet rs = ps.executeQuery();) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return Optional.of(mapRow(rs));
+                    User user = mapRow(rs);
+
+                    // Lấy danh sách địa chỉ cho user
+                    user.setAddresses(getAddressesByUserId(conn, user.getId()));
+
+                    return Optional.of(user);
                 }
             }
         } catch (SQLException e) {
@@ -58,6 +64,22 @@ public class UserDao {
         }
         return Optional.empty();
     }
+
+    // Chỉnh hàm này nhận Connection để tái sử dụng connect
+    private List<Address> getAddressesByUserId(Connection conn, long userId) throws SQLException {
+        List<Address> addresses = new ArrayList<>();
+        String query = "SELECT * FROM addresses WHERE user_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    addresses.add(new AddressDao().extractAddressFromResultSet(rs));
+                }
+            }
+        }
+        return addresses;
+    }
+
 
     // Lưu user mới
     public boolean save(User user) {
@@ -260,6 +282,21 @@ public class UserDao {
         return user;
     }
 
+    public User getUserByEmail(String email) throws SQLException {
+        User user = null;
+        String query = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user =  mapRow(rs);
+                }
+            }
+        }
+        return user; // nếu không tìm thấy
+    }
+
     public void deleteUser(long id) throws SQLException {
         String query = "DELETE FROM users WHERE id = ?";
         try (Connection conn = getConnection();
@@ -296,6 +333,16 @@ public class UserDao {
             pstmt.setString(3, user.getPhone());
             pstmt.setString(4, user.getRole());
             pstmt.setLong(5, user.getId());
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void updateUserPasswordHash(User user) throws SQLException {
+        String query = "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, user.getPasswordHash());
+            pstmt.setLong(2, user.getId());
             pstmt.executeUpdate();
         }
     }

@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Address {
+public class Address implements Serializable {
     private long id;
     private long userId;
     private String address;
@@ -48,4 +49,7 @@ public class Address {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {return this.address;}
 }
