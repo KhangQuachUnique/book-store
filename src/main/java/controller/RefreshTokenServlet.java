@@ -1,5 +1,7 @@
 package controller;
 
+import static util.CookieUtil.getCookieValue;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -13,11 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import util.JwtUtil;
-import static util.CookieUtil.getCookieValue;
 
 @WebServlet("/user/refresh")
 public class RefreshTokenServlet extends HttpServlet {
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

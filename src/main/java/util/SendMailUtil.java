@@ -63,10 +63,10 @@ public class SendMailUtil {
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
         msg.setSubject("Password Reset Request");
         msg.setContent(
-                "<h3>Password Reset Request</h3>" + 
-                "<p>Click the link below to reset your password:</p>" +
-                "<a href=\"" + resetLink + "\">Reset Password</a>" +
-                "<p>This link will expire in 30 minutes.</p>",
+                "<h3>Password Reset Request</h3>" +
+                        "<p>Click the link below to reset your password:</p>" +
+                        "<a href=\"" + resetLink + "\">Reset Password</a>" +
+                        "<p>This link will expire in 30 minutes.</p>",
                 "text/html; charset=UTF-8");
 
         Transport.send(msg);

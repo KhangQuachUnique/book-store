@@ -1,0 +1,209 @@
+.order-tracking {
+    font-family: "Montserrat", Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 40px;
+}
+
+.page-title {
+    color: #800020;
+    margin-bottom: 20px;
+}
+
+.orders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.order-id {
+    font-weight: bold;
+    color: #800020;
+}
+
+.order-status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Màu trạng thái */
+.order-status.pending {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+.order-status.confirmed {
+    background-color: #ede7f6;
+    color: #4527a0;
+}
+.order-status.shipped {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+.order-status.completed {
+    background-color: #e6f4ea;
+    color: #2e7d32;
+}
+.order-status.cancelled {
+    background-color: #fdecea;
+    color: #c62828;
+}
+
+.order-status.waiting-payment {
+    background-color: #ffe0b2;
+    color: #e65100;
+}
+.order-status.shipping {
+    background-color: #b2ebf2;
+    color: #006064;
+}
+
+.total {
+    font-weight: bold;
+}
+
+.order-items h4 {
+    margin-top: 15px;
+    color: #444;
+}
+
+.order-items ul {
+    padding-left: 20px;
+}
+
+.order-items li {
+    margin: 5px 0;
+}
+
+.book {
+    font-weight: bold;
+}
+.qty {
+    margin-left: 10px;
+    color: #555;
+}
+.price {
+    margin-left: 10px;
+    color: #800020;
+    font-weight: bold;
+}
+
+.order-card ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.order-card li {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.order-card li p {
+    margin: 3px 0;
+}
+
+.book-thumbnail {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.order-items li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px; /* thêm khoảng cách giữa ảnh và text */
+}
+
+.book-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between; /* hoặc space-around */
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.status-bar a {
+    flex-grow: 1; /* Cho phép mỗi tab chiếm cùng một khoảng không gian */
+    text-align: center;
+    padding: 10px 5px;
+    text-decoration: none;
+    color: #555;
+    white-space: nowrap; /* Ngăn text bị xuống dòng */
+}
+
+.status-bar a.active {
+    color: #dc3545; /* Màu đỏ nổi bật cho tab đang chọn */
+    font-weight: bold;
+}
+
+.status-bar a:hover {
+    background: #f0f0f0;
+}
+
+/* Trong OrderTracking.css */
+.original-price {
+    text-decoration: line-through; /* Gạch ngang giá gốc */
+    color: #999; /* Màu xám nhạt */
+    margin-right: 5px;
+}
+
+.discount-rate {
+    color: #800020; /* Màu đỏ nổi bật */
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.current-price {
+    color: #800020;
+    font-weight: bold;
+}
+
+.no-orders {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #b71c1c; /* đỏ đậm */
+    /*background: #fff0f0; !* nền hồng nhạt *!*/
+    border: 2px solid #b71c1c;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 40px;
+    box-shadow: 0 4px 10px rgba(183, 28, 28, 0.15);
+}
+
