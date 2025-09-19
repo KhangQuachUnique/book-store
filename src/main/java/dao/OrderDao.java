@@ -179,8 +179,8 @@ public class OrderDao {
     public static List<Order> getOrdersByUserIdWithStatusName(Long userId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT o.*, s.name as status_name FROM orders o " +
-                     "LEFT JOIN status s ON o.status_id = s.id " +
-                     "WHERE o.user_id = ? ORDER BY o.created_at DESC";
+                "LEFT JOIN status s ON o.status_id = s.id " +
+                "WHERE o.user_id = ? ORDER BY o.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -204,13 +204,14 @@ public class OrderDao {
      *
      * @param userId   The user ID
      * @param statusId The status ID
-     * @return List of orders for the user with the specified status and status names
+     * @return List of orders for the user with the specified status and status
+     *         names
      */
     public static List<Order> getOrdersByUserIdAndStatusWithStatusName(Long userId, Long statusId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT o.*, s.name as status_name FROM orders o " +
-                     "LEFT JOIN status s ON o.status_id = s.id " +
-                     "WHERE o.user_id = ? AND o.status_id = ? ORDER BY o.created_at DESC";
+                "LEFT JOIN status s ON o.status_id = s.id " +
+                "WHERE o.user_id = ? AND o.status_id = ? ORDER BY o.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
