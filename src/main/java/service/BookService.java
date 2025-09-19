@@ -1,19 +1,5 @@
 package service;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
-import dao.BookDao;
-import model.Book;
-import model.Category;
-
-import jakarta.validation.constraints.*;
-import jakarta.validation.Validation;
-import jakarta.validation.constraints.*;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,6 +7,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
+import dao.BookDao;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import model.Book;
+import model.Category;
 
 /**
  * Service layer for managing book operations.
@@ -36,6 +33,7 @@ public class BookService {
 
     /**
      * Retrieves all books with pagination.
+     *
      * @param page The page number.
      * @return List of books.
      * @throws SQLException If a database error occurs.
@@ -46,6 +44,7 @@ public class BookService {
 
     /**
      * Retrieves a book by ID.
+     *
      * @param id The book ID.
      * @return The Book object or null if not found.
      * @throws SQLException If a database error occurs.
@@ -56,9 +55,10 @@ public class BookService {
 
     /**
      * Adds a new book after validation.
+     *
      * @param book The Book object.
      * @return True if successful.
-     * @throws SQLException If a database error occurs.
+     * @throws SQLException             If a database error occurs.
      * @throws IllegalArgumentException If validation fails.
      */
     public static boolean addBook(Book book) throws SQLException {
@@ -68,9 +68,10 @@ public class BookService {
 
     /**
      * Updates an existing book after validation.
+     *
      * @param book The Book object.
      * @return True if successful.
-     * @throws SQLException If a database error occurs.
+     * @throws SQLException             If a database error occurs.
      * @throws IllegalArgumentException If validation fails.
      */
     public static boolean updateBook(Book book) throws SQLException {
@@ -80,6 +81,7 @@ public class BookService {
 
     /**
      * Deletes a book by ID.
+     *
      * @param id The book ID.
      * @return True if successful.
      * @throws SQLException If a database error occurs.
@@ -90,36 +92,39 @@ public class BookService {
 
     /**
      * Filters books by criteria.
-     * @param title The title to search.
-     * @param publishYear The publication year.
+     *
+     * @param title             The title to search.
+     * @param publishYear       The publication year.
      * @param includeCategories Categories to include.
      * @param excludeCategories Categories to exclude.
-     * @param page The page number.
+     * @param page              The page number.
      * @return List of matching books.
      * @throws SQLException If a database error occurs.
      */
     public static List<Book> filterBooks(String title, Integer publishYear, List<Long> includeCategories,
-                                         List<Long> excludeCategories, int page) throws SQLException {
+            List<Long> excludeCategories, int page) throws SQLException {
         return BookDao.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
     }
 
     /**
      * Calculates total pages for pagination.
-     * @param title The title to search.
-     * @param publishYear The publication year.
+     *
+     * @param title             The title to search.
+     * @param publishYear       The publication year.
      * @param includeCategories Categories to include.
      * @param excludeCategories Categories to exclude.
      * @return Total number of pages.
      * @throws SQLException If a database error occurs.
      */
     public static int getTotalPages(String title, Integer publishYear, List<Long> includeCategories,
-                                    List<Long> excludeCategories) throws SQLException {
+            List<Long> excludeCategories) throws SQLException {
         long totalBooks = BookDao.countBooks(title, publishYear, includeCategories, excludeCategories);
         return (int) Math.ceil((double) totalBooks / PAGE_SIZE);
     }
 
     /**
      * Retrieves all categories.
+     *
      * @return List of categories.
      * @throws SQLException If a database error occurs.
      */
@@ -129,13 +134,15 @@ public class BookService {
 
     /**
      * Imports books from a CSV file.
+     *
      * @param csvStream The CSV file input stream.
      * @return Error message if validation fails, null if successful.
-     * @throws SQLException If a database error occurs.
-     * @throws IOException If an I/O error occurs.
+     * @throws SQLException           If a database error occurs.
+     * @throws IOException            If an I/O error occurs.
      * @throws CsvValidationException If CSV parsing fails.
      */
-    public static String importBooksFromCSV(InputStream csvStream) throws SQLException, IOException, CsvValidationException {
+    public static String importBooksFromCSV(InputStream csvStream)
+            throws SQLException, IOException, CsvValidationException {
         List<Book> books = new ArrayList<>();
         StringBuilder errors = new StringBuilder();
         try (CSVReader reader = new CSVReader(new InputStreamReader(csvStream))) {
@@ -171,28 +178,33 @@ public class BookService {
 
     /**
      * Validates CSV headers.
+     *
      * @param headers The CSV headers.
      * @return True if headers are valid.
      */
     private static boolean validateCSVHeaders(String[] headers) {
-        String[] expected = {"title", "author", "publisher", "category_id", "stock", "original_price",
+        String[] expected = { "title", "author", "publisher", "category_id", "stock", "original_price",
                 "discount_rate", "thumbnail_url", "description", "publish_year", "pages",
-                "rating_average", "price"};
-        if (headers.length != expected.length) return false;
+                "rating_average", "price" };
+        if (headers.length != expected.length)
+            return false;
         for (int i = 0; i < headers.length; i++) {
-            if (!headers[i].equalsIgnoreCase(expected[i])) return false;
+            if (!headers[i].equalsIgnoreCase(expected[i]))
+                return false;
         }
         return true;
     }
 
     /**
      * Parses a CSV line into a Book object.
+     *
      * @param line The CSV line.
      * @return The Book object.
      * @throws Exception If parsing fails.
      */
     private static Book parseCSVLine(String[] line) throws Exception {
-        if (line.length != 13) throw new Exception("Invalid number of columns");
+        if (line.length != 13)
+            throw new Exception("Invalid number of columns");
         Book book = new Book();
         book.setTitle(line[0]);
         book.setAuthor(line[1]);
@@ -212,6 +224,7 @@ public class BookService {
 
     /**
      * Validates a Book object using Bean Validation and custom rules.
+     *
      * @param book The Book object.
      * @throws IllegalArgumentException If validation fails.
      */
