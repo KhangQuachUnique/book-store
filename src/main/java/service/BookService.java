@@ -213,7 +213,7 @@ public class BookService {
         book.setStock(Integer.parseInt(line[4]));
         book.setOriginalPrice(Double.parseDouble(line[5]));
         book.setDiscount_rate(Integer.parseInt(line[6]));
-        book.setthumbnailUrl(line[7]);
+        book.setThumbnailUrl(line[7]);
         book.setDescription(line[8]);
         book.setPublishYear(line[9].isEmpty() ? null : Integer.parseInt(line[9]));
         book.setPages(line[10].isEmpty() ? null : Integer.parseInt(line[10]));
