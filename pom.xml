@@ -64,6 +64,13 @@
 			<version>${gson.version}</version>
 		</dependency>
 
+		<!-- OpenCSV for CSV processing -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.7.1</version>
+		</dependency>
+
 		<!-- BCrypt for password hashing -->
 		<dependency>
 			<groupId>org.mindrot</groupId>
