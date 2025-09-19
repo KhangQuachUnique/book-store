@@ -47,7 +47,7 @@ public class UserServlet extends HttpServlet {
             action = "list";
         }
         try {
-            // Tạm thời bỏ phân quyền để kiểm tra
+            // CHANGE: Tạm thời bỏ phân quyền để kiểm tra, sau này khôi phục
             // if (!checkAdminPermission(request, response)) {
             //     return;
             // }
@@ -67,9 +67,6 @@ public class UserServlet extends HttpServlet {
                 case "view":
                     viewUser(request, response);
                     break;
-                case "edit":
-                    showEditForm(request, response);
-                    break;
                 case "newAdmin":
                     showNewAdminForm(request, response);
                     break;
@@ -82,6 +79,7 @@ public class UserServlet extends HttpServlet {
                 case "viewAddresses":
                     viewAddresses(request, response);
                     break;
+                // CHANGE: Thêm case cho newAddress để xử lý riêng, tránh forward sai
                 case "newAddress":
                     showNewAddressForm(request, response);
                     break;
@@ -99,13 +97,17 @@ public class UserServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         try {
-            // Tạm thời bỏ phân quyền để kiểm tra
+            // CHANGE: Tạm thời bỏ phân quyền để kiểm tra
             // if (!checkAdminPermission(request, response)) {
             //     return;
             // }
             switch (action) {
                 case "update":
                     updateUser(request, response);
+                    break;
+                // CHANGE: Thêm case cho updateAddress nếu cần (từ viewUser inline edit)
+                case "updateAddress":
+                    updateAddress(request, response);
                     break;
                 case "delete":
                     deleteUser(request, response);
@@ -140,10 +142,20 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-//    private boolean checkAdminPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        // TODO: Khôi phục kiểm tra phân quyền sau khi kiểm tra
-//        return true;
-//    }
+    // CHANGE: Thêm phương thức checkAdminPermission (khôi phục sau khi test)
+    // private boolean checkAdminPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    //     HttpSession session = request.getSession(false);
+    //     if (session == null || session.getAttribute("user") == null) {
+    //         response.sendRedirect(request.getContextPath() + "/login");
+    //         return false;
+    //     }
+    //     User loggedInUser = (User) session.getAttribute("user");
+    //     if (!"admin".equals(loggedInUser.getRole())) {
+    //         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     private void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex) throws ServletException, IOException {
         log.log(Level.SEVERE, "Error occurred: ", ex);
@@ -231,18 +243,14 @@ public class UserServlet extends HttpServlet {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1) return;
         User user = userService.getUserById(id);
-        request.setAttribute("user", user);
+        if (user == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+            return;
+        }
+        List<Address> addresses = addressService.getAddressesByUserId(id);
+        request.setAttribute("editUser", user); // CHANGE: Sử dụng editUser để tránh xung đột session
+        request.setAttribute("addresses", addresses);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_DETAIL);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
-        dispatcher.forward(request, response);
-    }
-
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        long id = parseLongParameter(request.getParameter("id"), response);
-        if (id == -1) return;
-        User user = userService.getUserById(id);
-        request.setAttribute("user", user);
-        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_EDIT);
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
@@ -264,18 +272,20 @@ public class UserServlet extends HttpServlet {
         if (userId == -1) return;
         User user = userService.getUserById(userId);
         List<Address> addresses = addressService.getAddressesByUserId(userId);
-        request.setAttribute("user", user);
+        request.setAttribute("user", user); // CHANGE: Giữ nguyên user cho viewAddresses, nhưng đảm bảo không xung đột
         request.setAttribute("addresses", addresses);
         request.setAttribute("contentPage", "/WEB-INF/views/userManagement/addressList.jsp");
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
+    // CHANGE: Sửa showNewAddressForm: Set đúng contentPage đến newAddress.jsp, sử dụng selectedUserId để tránh session ghi đè
     private void showNewAddressForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long userId = parseLongParameter(request.getParameter("id"), response);
         if (userId == -1) return;
-        request.setAttribute("userId", userId);
-        request.setAttribute("contentPage", "/WEB-INF/views/userManagement/addressList.jsp");
+        // CHANGE: Sử dụng selectedUserId để tránh xung đột với session userId (nếu có filter set từ session)
+        request.setAttribute("selectedUserId", userId);
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD_ADDRESS); // CHANGE: Set đúng đến newAddress.jsp thay vì addressList.jsp
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
@@ -286,7 +296,7 @@ public class UserServlet extends HttpServlet {
         long userId = parseLongParameter(request.getParameter("userId"), response);
         if (userId == -1) return;
         addressService.deleteAddress(addressId, userId);
-        response.sendRedirect(BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(BASE_URL + "?action=view&id=" + userId); // CHANGE: Redirect đến view thay vì viewAddresses để nhất quán
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -311,13 +321,41 @@ public class UserServlet extends HttpServlet {
                 errorMessage.append(violation.getMessage()).append("; ");
             }
             request.setAttribute("errorMessage", errorMessage.toString());
-            showEditForm(request, response);
+            viewUser(request, response); // CHANGE: Quay lại viewUser thay vì editForm (vì đã tích hợp)
             return;
         }
 
         userService.updateUser(user);
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=view&id=" + id); // CHANGE: Redirect đến view để reload dữ liệu mới
+    }
 
-        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
+    // CHANGE: Thêm updateAddress nếu cần inline edit từ viewUser
+    private void updateAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        long addressId = parseLongParameter(request.getParameter("addressId"), response);
+        if (addressId == -1) return;
+        long userId = parseLongParameter(request.getParameter("userId"), response); // CHANGE: Lấy từ parameter, không từ session
+        if (userId == -1) return;
+        String addressText = request.getParameter("address");
+        boolean isDefaultAddress = "true".equals(request.getParameter("isDefaultAddress"));
+
+        Address address = new Address();
+        address.setId(addressId);
+        address.setUserId(userId); // CHANGE: Đảm bảo set userId từ parameter
+        address.setAddress(addressText);
+        address.setDefaultAddress(isDefaultAddress);
+
+        if (addressText == null || addressText.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Address cannot be empty");
+            viewUser(request, response);
+            return;
+        }
+
+        addressService.updateAddress(address);
+        if (isDefaultAddress) {
+            addressService.setDefaultAddress(addressId, userId);
+        }
+
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=view&id=" + userId);
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -347,11 +385,13 @@ public class UserServlet extends HttpServlet {
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
 
+
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         user.setPhone(phone);
         user.setPasswordHash(PasswordUtil.hashPassword(password));
+
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
@@ -395,17 +435,22 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
+    // CHANGE: Cập nhật createAddress: Thêm log để debug userId, đảm bảo lấy từ parameter không từ session
     private void createAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        long userId = parseLongParameter(request.getParameter("userId"), response);
-        if (userId == -1) return;
+        long userId = parseLongParameter(request.getParameter("userId"), response); // CHANGE: Lấy từ parameter, thêm log
+        if (userId == -1) {
+            log.warning("Invalid userId in createAddress: " + request.getParameter("userId"));
+            return;
+        }
+        log.info("Creating address for selected userId: " + userId); // CHANGE: Log để xác nhận userId đúng (không phải session)
         String addressText = request.getParameter("address");
         boolean isDefaultAddress = "true".equals(request.getParameter("isDefaultAddress"));
         Address address = new Address();
-        address.setUserId(userId);
+        address.setUserId(userId); // CHANGE: Set rõ ràng từ parameter, không từ session
         address.setAddress(addressText);
         address.setDefaultAddress(isDefaultAddress);
         addressService.createAddress(address);
-        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=view&id=" + userId); // CHANGE: Redirect đến view để hiển thị địa chỉ mới
     }
 
     private void setDefaultAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
@@ -414,7 +459,7 @@ public class UserServlet extends HttpServlet {
         long userId = parseLongParameter(request.getParameter("userId"), response);
         if (userId == -1) return;
         addressService.setDefaultAddress(addressId, userId);
-        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=viewAddresses&id=" + userId);
+        response.sendRedirect(request.getContextPath() + BASE_URL + "?action=view&id=" + userId); // CHANGE: Redirect đến view
     }
 
     private long parseLongParameter(String param, HttpServletResponse response) throws IOException {

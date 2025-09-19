@@ -27,11 +27,32 @@ public class AddressDao {
     public void createAddress(Address address) throws SQLException {
         String query = "INSERT INTO addresses (user_id, address, is_default) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setLong(1, address.getUserId());
             pstmt.setString(2, address.getAddress());
             pstmt.setBoolean(3, address.isDefaultAddress());
             pstmt.executeUpdate();
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    address.setId(rs.getLong(1));
+                }
+            }
+        }
+    }
+
+    // CHANGE: Thêm updateAddress để hỗ trợ inline edit từ viewUser
+    public void updateAddress(Address address) throws SQLException {
+        String query = "UPDATE addresses SET address = ?, is_default = ? WHERE id = ? AND user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, address.getAddress());
+            pstmt.setBoolean(2, address.isDefaultAddress());
+            pstmt.setLong(3, address.getId());
+            pstmt.setLong(4, address.getUserId());
+            int rows = pstmt.executeUpdate();
+            if (rows == 0) {
+                throw new SQLException("Address ID " + address.getId() + " not found or does not belong to user " + address.getUserId());
+            }
         }
     }
 
@@ -53,15 +74,6 @@ public class AddressDao {
         }
     }
 
-    private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
-        Address address = new Address();
-        address.setId(rs.getLong("id"));
-        address.setUserId(rs.getLong("user_id"));
-        address.setAddress(rs.getString("address"));
-        address.setDefaultAddress(rs.getBoolean("is_default"));
-        address.setCreatedAt(rs.getTimestamp("created_at"));
-        return address;
-    }
     public void deleteAddress(long addressId, long userId) throws SQLException {
         String query = "DELETE FROM addresses WHERE id = ? AND user_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -73,5 +85,15 @@ public class AddressDao {
                 throw new SQLException("Address ID " + addressId + " not found or does not belong to user " + userId);
             }
         }
+    }
+
+    private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
+        Address address = new Address();
+        address.setId(rs.getLong("id"));
+        address.setUserId(rs.getLong("user_id"));
+        address.setAddress(rs.getString("address"));
+        address.setDefaultAddress(rs.getBoolean("is_default"));
+        address.setCreatedAt(rs.getTimestamp("created_at"));
+        return address;
     }
 }

@@ -14,13 +14,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @NotBlank(message = "Name cannot be empty")
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email cannot be empty")
+    private Long id; // BIGSERIAL
 
-    private Long id;              // BIGSERIAL
-    private String name;          // name
-    private String email;         // email
+    @NotBlank(message = "Name cannot be empty")
+    private String name; // name
+
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Invalid email format")
+    private String email; // email
+
     private String passwordHash;  // password_hash
     private String phone;         // phone
     private String role;          // 'customer' hoặc 'admin'
@@ -28,6 +30,7 @@ public class User {
     private Timestamp blockedUntil;  // thời điểm hết block
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
     // Thêm cho xác thực email
     private Boolean isVerified;      // đã xác thực chưa
     private String verifyToken;      // mã token

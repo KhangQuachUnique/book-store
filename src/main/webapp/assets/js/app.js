@@ -80,47 +80,105 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Logout
+// async function logout() {
+//     try {
+//         const res = await fetch(USER.logout, {
+//             method: "POST",
+//             credentials: "include"
+//         });
+//         const data = await res.json();
+//
+//         alert(data.message);
+//         window.location.href = BASE_URL + "/home"
+//         const userInfo = document.getElementById("userInfo");
+//         if (userInfo) userInfo.innerText = "Not logged in";
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }
 async function logout() {
     try {
         const res = await fetch(USER.logout, {
             method: "POST",
             credentials: "include"
         });
-        const data = await res.json();
 
-        alert(data.message);
-        window.location.href = BASE_URL + "/home"
+        if (!res.ok) {
+            console.error("Logout failed:", res.status);
+            alert("Logout failed: " + res.status);
+            return;
+        }
+
+        // Chỉ parse JSON khi chắc chắn server trả về application/json
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const data = await res.json();
+            alert(data.message);
+        } else {
+            console.warn("Response is not JSON, skipping parse");
+        }
+
+        window.location.href = BASE_URL + "/home";
         const userInfo = document.getElementById("userInfo");
         if (userInfo) userInfo.innerText = "Not logged in";
+
     } catch (err) {
         console.error(err);
     }
 }
 
+
 // Check user status
+// async function checkUserStatus() {
+//     try {
+//         console.log("Checking user status...")
+//         const res = await fetch(USER.profile, {
+//             method: "GET",
+//             credentials: "include" // cookie sẽ tự được gửi
+//         });
+//
+//         const data = await res.json(); // parse JSON
+//         console.log(data);
+//
+//         if (data.status === 401) {
+//             // Nếu token hết hạn → gọi refresh
+//             console.log("Access token expired, refreshing...")
+//             const refreshed = await refreshAccessToken();
+//             return refreshed ? checkUserStatus() : { loggedIn: false };
+//         }
+//         return data
+//     } catch (err) {
+//         console.error(err);
+//         return { loggedIn: false };
+//     }
+// }
 async function checkUserStatus() {
     try {
-        console.log("Checking user status...")
+        console.log("Checking user status...");
         const res = await fetch(USER.profile, {
             method: "GET",
-            credentials: "include" // cookie sẽ tự được gửi
+            credentials: "include"
         });
 
-        const data = await res.json(); // parse JSON
-        console.log(data);
-
-        if (data.status === 401) {
-            // Nếu token hết hạn → gọi refresh
-            console.log("Access token expired, refreshing...")
-            const refreshed = await refreshAccessToken();
-            return refreshed ? checkUserStatus() : { loggedIn: false };
+        if (!res.ok) {
+            console.warn("Profile fetch failed:", res.status);
+            if (res.status === 401) {
+                console.log("Access token expired, refreshing...");
+                const refreshed = await refreshAccessToken();
+                return refreshed ? checkUserStatus() : { loggedIn: false };
+            }
+            return { loggedIn: false };
         }
-        return data
+
+        const data = await res.json();
+        console.log(data);
+        return data;
     } catch (err) {
         console.error(err);
         return { loggedIn: false };
     }
 }
+
 
 // Refresh token (dùng cookie refresh_token)
 async function refreshAccessToken() {
