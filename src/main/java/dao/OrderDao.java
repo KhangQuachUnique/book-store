@@ -158,16 +158,76 @@ public class OrderDao {
      */
     public static List<Order> getOrdersByUserIdAndStatus(Integer userId, String status) {
         if ("all".equals(status)) {
-            return getOrdersByUserId(userId.longValue());
+            return getOrdersByUserIdWithStatusName(userId.longValue());
         }
 
         try {
             Long statusId = Long.parseLong(status);
-            return getOrdersByUserIdAndStatus(userId.longValue(), statusId);
+            return getOrdersByUserIdAndStatusWithStatusName(userId.longValue(), statusId);
         } catch (NumberFormatException e) {
             // If status is not a number, return empty list
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * Retrieves all orders for a specific user with status name.
+     *
+     * @param userId The user ID
+     * @return List of orders for the user with status names
+     */
+    public static List<Order> getOrdersByUserIdWithStatusName(Long userId) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT o.*, s.name as status_name FROM orders o " +
+                     "LEFT JOIN status s ON o.status_id = s.id " +
+                     "WHERE o.user_id = ? ORDER BY o.created_at DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = mapResultSetToOrderWithStatusName(rs);
+                    orders.add(order);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    /**
+     * Retrieves orders by user ID and status ID with status name.
+     *
+     * @param userId   The user ID
+     * @param statusId The status ID
+     * @return List of orders for the user with the specified status and status names
+     */
+    public static List<Order> getOrdersByUserIdAndStatusWithStatusName(Long userId, Long statusId) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT o.*, s.name as status_name FROM orders o " +
+                     "LEFT JOIN status s ON o.status_id = s.id " +
+                     "WHERE o.user_id = ? AND o.status_id = ? ORDER BY o.created_at DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, userId);
+            ps.setLong(2, statusId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = mapResultSetToOrderWithStatusName(rs);
+                    orders.add(order);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
     }
 
     /**
@@ -251,6 +311,27 @@ public class OrderDao {
         order.setPromotionId(rs.getLong("promotion_id"));
         order.setCreatedAt(rs.getTimestamp("created_at"));
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
+        return order;
+    }
+
+    /**
+     * Maps a ResultSet row to an Order object with status name.
+     *
+     * @param rs The ResultSet to map
+     * @return Order object with data from the ResultSet including status name
+     * @throws SQLException if database access error occurs
+     */
+    private static Order mapResultSetToOrderWithStatusName(ResultSet rs) throws SQLException {
+        Order order = new Order();
+        order.setId(rs.getLong("id"));
+        order.setUserId(rs.getLong("user_id"));
+        order.setTotalAmount(rs.getBigDecimal("total_amount"));
+        order.setPaymentMethod(rs.getString("payment_method"));
+        order.setStatusId(rs.getLong("status_id"));
+        order.setPromotionId(rs.getLong("promotion_id"));
+        order.setCreatedAt(rs.getTimestamp("created_at"));
+        order.setUpdatedAt(rs.getTimestamp("updated_at"));
+        order.setStatusName(rs.getString("status_name"));
         return order;
     }
 }

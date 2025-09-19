@@ -28,6 +28,9 @@ public class Order {
     private Long statusId;
     private Long promotionId;
 
+    // Transient fields for display purposes (joined from status table)
+    private String statusName;
+
     // Audit fields
     private Timestamp createdAt;
     private Timestamp updatedAt;
