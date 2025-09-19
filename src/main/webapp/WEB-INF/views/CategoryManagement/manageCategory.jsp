@@ -17,16 +17,26 @@
     <!-- Nút thêm mới -->
     <a class="btn btn-primary mb-3" href="${pageContext.request.contextPath}/admin/category?action=add">+ Add Category</a>
 
-    <!-- Thanh tìm kiếm -->
-    <form class="input-group mb-3" action="${pageContext.request.contextPath}/admin/category" method="get">
-    <input type="hidden" name="action" value="search">
-    <input type="text" class="form-control" name="keyword" placeholder="Search category..." value="${param.keyword}">
-    </form>
+    <!-- Thanh tìm kiếm-->
+    <div class="row g-2 mb-3">
+        <div class="col-12 col-md-3">
+            <form class="input-group" action="${pageContext.request.contextPath}/admin/category" method="get">
+                <input type="hidden" name="action" value="search">
+                <input type="text" class="form-control" name="id" placeholder="Search ID..." value="${param.id}">
+            </form>
+        </div>
+        <div class="col-12 col-md-9">
+            <form class="input-group" action="${pageContext.request.contextPath}/admin/category" method="get">
+                <input type="hidden" name="action" value="search">
+                <input type="text" class="form-control" name="keyword" placeholder="Search category..." value="${param.keyword}">
+            </form>
+        </div>
+    </div>
 
     <!-- Bảng danh sách -->
     <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-        <tr>
+        <thead>
+        <tr style="--bs-table-bg: #800020; --bs-table-color: #fff;">
             <th>ID</th>
             <th>Name</th>
             <th>Parent ID</th>

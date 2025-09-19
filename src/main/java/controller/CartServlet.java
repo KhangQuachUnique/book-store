@@ -20,7 +20,7 @@ public class CartServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user"); // giả sử login đã có
         Long userId = user.getId();
         try {
-            List<CartItem> cart = cartDAO.getCartByUser(Math.toIntExact(userId));
+            List<CartItem> cart = cartDAO.getCartByUser(userId.intValue());
             req.setAttribute("cart", cart);
             req.setAttribute("contentPage", PathConstants.VIEW_CART);
             req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
@@ -32,7 +32,8 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = req.getParameter("action");
-        int userId = (int) req.getSession().getAttribute("userId");
+        Long userIdLong = (Long) req.getSession().getAttribute("userId");
+        int userId = userIdLong != null ? userIdLong.intValue() : 0;
 
         try {
             if ("add".equals(action)) {
