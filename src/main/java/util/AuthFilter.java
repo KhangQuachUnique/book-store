@@ -45,13 +45,13 @@ public class AuthFilter implements Filter {
         // Check access token
         if (access_token != null && JwtUtil.validateToken(access_token)) {
             loggedIn = true;
-            email = JwtUtil.getEmailFromToken(access_token);
-            role = JwtUtil.getRoleFromToken(access_token);
+            email = JwtUtil.getEmail(access_token);
+            role = JwtUtil.getRole(access_token);
         }
         // Nếu access token hết hạn, dùng refresh token cấp mới
         else if (refresh_token != null && JwtUtil.validateToken(refresh_token) && JwtUtil.isRefreshToken(refresh_token)) {
-            email = JwtUtil.getEmailFromToken(refresh_token);
-            role = JwtUtil.getRoleFromToken(refresh_token);
+            email = JwtUtil.getEmail(refresh_token);
+            role = JwtUtil.getRole(refresh_token);
             access_token = JwtUtil.generateAccessToken(email, role);
 
             Cookie newAccessCookie = new Cookie("access_token", access_token);
