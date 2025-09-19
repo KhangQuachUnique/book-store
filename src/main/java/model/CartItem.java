@@ -8,6 +8,7 @@ public class CartItem {
     private int userId;
     private int bookId;
     private int quantity;
+    private String thumbnail;
     private String title;
     private double price;
 }
