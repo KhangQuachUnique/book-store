@@ -68,8 +68,24 @@ public class BookDao {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            setBookParameters(ps, book);
-            return ps.executeUpdate() > 0;
+            ps.setString(1, book.getTitle());
+            ps.setString(2, book.getAuthor());
+            ps.setString(3, book.getPublisher());
+            ps.setInt(4, book.getCategoryId());
+            ps.setInt(5, book.getStock());
+            ps.setDouble(6, book.getOriginalPrice());
+            ps.setInt(7, book.getDiscount_rate());
+            ps.setString(8, book.getThumbnailUrl());
+            ps.setString(9, book.getDescription());
+            ps.setObject(10, book.getPublishYear(), Types.INTEGER);
+            ps.setObject(11, book.getPages(), Types.INTEGER);
+            ps.setDouble(12, book.getRating());
+            ps.setDouble(13, book.getPrice());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -256,7 +272,7 @@ public class BookDao {
         book.setStock(rs.getInt("stock"));
         book.setOriginalPrice(rs.getDouble("original_price"));
         book.setDiscount_rate(rs.getInt("discount_rate"));
-        book.setthumbnailUrl(rs.getString("thumbnail_url"));
+        book.setThumbnailUrl(rs.getString("thumbnail_url"));
         book.setDescription(rs.getString("description"));
         book.setPublishYear(rs.getInt("publish_year"));
         book.setPages(rs.getInt("pages"));
@@ -281,7 +297,7 @@ public class BookDao {
         ps.setInt(5, book.getStock());
         ps.setDouble(6, book.getOriginalPrice());
         ps.setInt(7, book.getDiscount_rate());
-        ps.setString(8, book.getthumbnailUrl());
+        ps.setString(8, book.getThumbnailUrl());
         ps.setString(9, book.getDescription());
         ps.setObject(10, book.getPublishYear(), Types.INTEGER);
         ps.setObject(11, book.getPages(), Types.INTEGER);
