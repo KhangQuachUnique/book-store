@@ -41,8 +41,9 @@
                                     <input type="hidden" name="action" value="update"/>
                                     <input type="hidden" name="cartId" value="${item.id}"/>
                                     <input type="number" name="quantity" value="${item.quantity}" min="1" class="cart-quantity-input"/>
-                                    <button type="submit" class="quantity-update-btn">Update</button>
                                 </form>
+</div>
+<script src="${pageContext.request.contextPath}/assets/js/cart.js"></script>
                             </td>
                             <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.price}" type="number" maxFractionDigits="0"/> ₫</span></td>
                             <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.price * item.quantity}" type="number" maxFractionDigits="0"/> ₫</span></td>

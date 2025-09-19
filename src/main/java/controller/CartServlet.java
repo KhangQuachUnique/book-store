@@ -66,7 +66,13 @@ public class CartServlet extends HttpServlet {
 
         User user = (User) req.getSession().getAttribute("user");
         if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            if ("update".equals(action)) {
+                resp.setContentType("application/json");
+                resp.setStatus(401);
+                resp.getWriter().write("{\"success\":false,\"message\":\"Please log in\"}");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            }
             return;
         }
         int userId = user.getId().intValue();
@@ -82,13 +88,37 @@ public class CartServlet extends HttpServlet {
                 int cartId = Integer.parseInt(req.getParameter("cartId"));
                 int quantity = Integer.parseInt(req.getParameter("quantity"));
                 cartDAO.updateCartQuantity(cartId, quantity);
+
+                // Get updated cart data
+                List<CartItem> cart = cartDAO.getCartByUser(userId);
+                double cartTotal = cart.stream()
+                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                    .sum();
+                CartItem updatedItem = cart.stream()
+                    .filter(item -> item.getId() == cartId)
+                    .findFirst()
+                    .orElse(null);
+
+                resp.setContentType("application/json");
+                resp.getWriter().write(String.format(
+                    "{\"success\":true,\"itemTotal\":%.0f,\"cartTotal\":%.0f}",
+                    updatedItem != null ? updatedItem.getPrice() * updatedItem.getQuantity() : 0,
+                    cartTotal
+                ));
+                return;
             }
 
             // Redirect back to cart page after operation
             resp.sendRedirect(req.getContextPath() + "/user/cart");
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendRedirect(req.getContextPath() + "/user/cart?error=true");
+            if ("update".equals(action)) {
+                resp.setContentType("application/json");
+                resp.setStatus(500);
+                resp.getWriter().write("{\"success\":false,\"message\":\"An error occurred\"}");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/user/cart?error=true");
+            }
         }
     }
 
