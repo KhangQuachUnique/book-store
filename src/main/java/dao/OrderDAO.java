@@ -1,12 +1,15 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Order;
 import model.OrderItem;
 import util.DBConnection;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OrderDAO {
     public List<Order> getOrdersByUserIdAndStatus(int userId, String statusId) {
@@ -27,15 +30,13 @@ public class OrderDAO {
                     "WHERE o.user_id = ? AND o.status_id = ? ORDER BY o.created_at DESC";
         }
 
-
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
             if (statusId != null && !"all".equals(statusId)) {
                 stmt.setInt(2, Integer.parseInt(statusId));
             }
-
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -68,7 +69,8 @@ public class OrderDAO {
     private List<OrderItem> getOrderItemsByOrderId(Connection conn, int orderId) throws SQLException {
         List<OrderItem> items = new ArrayList<>();
         // Sửa câu lệnh SQL để lấy các cột mới
-        String sql = "SELECT oi.quantity, oi.price, b.title AS book_title, b.thumbnail_url, b.original_price, b.discount_rate " +
+        String sql = "SELECT oi.quantity, oi.price, b.title AS book_title, b.thumbnail_url, b.original_price, b.discount_rate "
+                +
                 "FROM order_items oi " +
                 "JOIN books b ON oi.book_id = b.id " +
                 "WHERE oi.order_id = ?";
@@ -106,7 +108,7 @@ public class OrderDAO {
                 "WHERE o.id = ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, orderId);
 

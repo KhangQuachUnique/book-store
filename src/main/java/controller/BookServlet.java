@@ -1,20 +1,21 @@
 package controller;
 
-import com.google.gson.Gson;
-import dao.BookDao;
-import model.Book;
-import service.BookService;
-
-import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import model.Book;
+import service.BookService;
+
 @WebServlet("/admin/book")
 public class BookServlet extends HttpServlet {
-    private final BookDao dao = new BookDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

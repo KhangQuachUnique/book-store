@@ -1,19 +1,22 @@
 package dao;
 
-import model.Book;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Book;
+import util.DBConnection;
 
 public class BookDao {
     public static List<Book> getAllBooks() {
         List<Book> list = new ArrayList<>();
         String sql = "SELECT * FROM books where id = 450147";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Book b = mapResultSetToBook(rs);
@@ -29,7 +32,7 @@ public class BookDao {
     public static Book getBookById(int id) {
         String sql = "SELECT * FROM books WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -37,7 +40,6 @@ public class BookDao {
                     return mapResultSetToBook(rs);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,7 +49,7 @@ public class BookDao {
     public static boolean addBook(Book book) {
         String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, thumbnail_url, description, publish_year, pages, rating, price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getAuthor());
             ps.setString(3, book.getPublisher());
@@ -69,8 +71,6 @@ public class BookDao {
             throw new RuntimeException(e);
         }
     }
-
-
 
     private static Book mapResultSetToBook(ResultSet rs) throws SQLException {
         Book b = new Book();

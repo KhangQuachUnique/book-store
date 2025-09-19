@@ -3,6 +3,27 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.logo img {
+    height: 60px;
+}
+
+.logo span {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
 }
 
 .form-container {
@@ -94,6 +115,14 @@ body {
     text-align: center;
     font-weight: 600;
     font-size: 0.95rem;
+}
+
+.form-result.success {
+    color: #28a745; /* Màu xanh cho thành công */
+}
+
+.form-result.error {
+    color: #dc3545; /* Màu đỏ cho lỗi */
 }
 
 /* Spinner reuse */
