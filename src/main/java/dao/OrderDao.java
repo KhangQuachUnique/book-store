@@ -180,8 +180,8 @@ public class OrderDao {
     public static List<Order> getOrdersByUserIdWithStatusName(Long userId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT o.*, s.name as status_name FROM orders o " +
-                     "LEFT JOIN status s ON o.status_id = s.id " +
-                     "WHERE o.user_id = ? ORDER BY o.created_at DESC";
+                "LEFT JOIN status s ON o.status_id = s.id " +
+                "WHERE o.user_id = ? ORDER BY o.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -197,12 +197,14 @@ public class OrderDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         // Populate order items for each order
         populateOrderItems(orders);
-        
+
         return orders;
-    }    /**
+    }
+
+    /**
      * Retrieves orders by user ID and status ID with status name.
      *
      * @param userId   The user ID
@@ -231,10 +233,10 @@ public class OrderDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         // Populate order items for each order
         populateOrderItems(orders);
-        
+
         return orders;
     }
 
@@ -352,9 +354,9 @@ public class OrderDao {
     public static List<OrderItem> getOrderItemsByOrderId(Long orderId) {
         List<OrderItem> items = new ArrayList<>();
         String sql = "SELECT oi.*, b.title as book_title, b.thumbnail_url " +
-                     "FROM order_items oi " +
-                     "LEFT JOIN books b ON oi.book_id = b.id " +
-                     "WHERE oi.order_id = ?";
+                "FROM order_items oi " +
+                "LEFT JOIN books b ON oi.book_id = b.id " +
+                "WHERE oi.order_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
