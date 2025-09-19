@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Order;
+import model.OrderItem;
 import util.DBConnection;
 
 /**
@@ -179,8 +180,8 @@ public class OrderDao {
     public static List<Order> getOrdersByUserIdWithStatusName(Long userId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT o.*, s.name as status_name FROM orders o " +
-                "LEFT JOIN status s ON o.status_id = s.id " +
-                "WHERE o.user_id = ? ORDER BY o.created_at DESC";
+                     "LEFT JOIN status s ON o.status_id = s.id " +
+                     "WHERE o.user_id = ? ORDER BY o.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -196,10 +197,12 @@ public class OrderDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        // Populate order items for each order
+        populateOrderItems(orders);
+        
         return orders;
-    }
-
-    /**
+    }    /**
      * Retrieves orders by user ID and status ID with status name.
      *
      * @param userId   The user ID
@@ -228,6 +231,10 @@ public class OrderDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        // Populate order items for each order
+        populateOrderItems(orders);
+        
         return orders;
     }
 
@@ -334,5 +341,54 @@ public class OrderDao {
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
         order.setStatusName(rs.getString("status_name"));
         return order;
+    }
+
+    /**
+     * Fetches order items for a specific order.
+     *
+     * @param orderId The order ID
+     * @return List of order items with book details
+     */
+    public static List<OrderItem> getOrderItemsByOrderId(Long orderId) {
+        List<OrderItem> items = new ArrayList<>();
+        String sql = "SELECT oi.*, b.title as book_title, b.thumbnail_url " +
+                     "FROM order_items oi " +
+                     "LEFT JOIN books b ON oi.book_id = b.id " +
+                     "WHERE oi.order_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, orderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OrderItem item = new OrderItem();
+                    item.setId(rs.getLong("id"));
+                    item.setOrderId(rs.getLong("order_id"));
+                    item.setBookId(rs.getLong("book_id"));
+                    item.setQuantity(rs.getInt("quantity"));
+                    item.setPrice(rs.getBigDecimal("price"));
+                    item.setBookTitle(rs.getString("book_title"));
+                    item.setThumbnailUrl(rs.getString("thumbnail_url"));
+                    items.add(item);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return items;
+    }
+
+    /**
+     * Populates order items for a list of orders.
+     *
+     * @param orders List of orders to populate with items
+     */
+    private static void populateOrderItems(List<Order> orders) {
+        for (Order order : orders) {
+            List<OrderItem> items = getOrderItemsByOrderId(order.getId());
+            order.setItems(items);
+        }
     }
 }

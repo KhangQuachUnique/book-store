@@ -21,4 +21,8 @@ public class OrderItem {
     private Long bookId;
     private Integer quantity;
     private BigDecimal price;
+
+    // Transient fields for display purposes (joined from books table)
+    private String bookTitle;
+    private String thumbnailUrl;
 }

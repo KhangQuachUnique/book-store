@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,9 @@ public class Order {
 
     // Transient fields for display purposes (joined from status table)
     private String statusName;
+
+    // Transient fields for display purposes (order items)
+    private List<OrderItem> items;
 
     // Audit fields
     private Timestamp createdAt;
