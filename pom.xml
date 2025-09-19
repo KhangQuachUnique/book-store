@@ -46,7 +46,15 @@
 			<version>42.6.0</version>
 		</dependency>
 
-        <!-- PostgreSQL JDBC driver -->
+        <!-- Bean Validation -->
+
+
+        <!-- OpenCSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.7.1</version> <!-- phiên bản chuẩn -->
+        </dependency>
 
 
 		<!-- Gson cho JSON -->
@@ -113,6 +121,14 @@
             <artifactId>jakarta.el</artifactId>
             <version>4.0.2</version> <!-- Phiên bản stable -->
         </dependency>
+
+        <!-- JSP / JSTL (Jakarta) -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+
     </dependencies>
 
 	<properties>

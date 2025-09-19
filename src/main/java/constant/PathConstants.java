@@ -23,4 +23,5 @@ public class PathConstants {
     public static final String VIEW_ADMIN_USER_ADD = "/WEB-INF/views/userManagement/createUser.jsp";
     public static final String VIEW_ADMIN_USER_DETAIL = "/WEB-INF/views/userManagement/viewUser.jsp";
     public static final String VIEW_ADMIN_USER_ADD_ADMIN = "/WEB-INF/views/userManagement/creatAdmin.jsp";
+    public static final String VIEW_ADMIN_BOOK = "/WEB-INF/views/userManagement/viewBook.jsp";
 }
