@@ -1,6 +1,7 @@
 package controller;
 
 
+import constant.PathConstants;
 import dao.CartDAO;
 import model.CartItem;
 import model.User;
@@ -42,6 +43,7 @@ public class PaymentServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", "An error occurred while loading your payment page.");
         }
-        request.getRequestDispatcher("/WEB-INF/views/payment.jsp").forward(request, response);
+        request.setAttribute("contentPage", "/WEB-INF/views/payment.jsp");
+        request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
     }
 }
