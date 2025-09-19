@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Timestamp;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * User entity representing users table in the database. Contains user information including
+ * User entity representing users table in the database. Contains user
+ * information including
  * authentication, profile, and verification data.
  */
 @Data
@@ -44,7 +46,8 @@ public class User {
     private Timestamp updatedAt;
 
     /**
-     * Returns a safe version of the user without sensitive information (passwordHash). Used for API
+     * Returns a safe version of the user without sensitive information
+     * (passwordHash). Used for API
      * responses and client-side operations.
      *
      * @return User object without passwordHash field

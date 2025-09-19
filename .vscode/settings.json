@@ -1,10 +1,4 @@
 {
-    // === Java Configuration ===
-    "java.configuration.updateBuildConfiguration": "interactive",
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.saveActions.organizeImports": true,
-    "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
-    "java.format.settings.profile": "GoogleStyle",
     // === Maven Configuration ===
     "maven.terminal.useJavaHome": true,
     "maven.executable.path": "mvn",
