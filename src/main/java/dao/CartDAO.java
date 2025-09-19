@@ -8,6 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartDAO {
+    public void updateCartQuantity(int cartId, int quantity) throws Exception {
+        String sql = "UPDATE carts SET quantity = ? WHERE id = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, cartId);
+            ps.executeUpdate();
+        }
+    }
     public void addToCart(int userId, int bookId, int quantity) throws Exception {
         String sql = "INSERT INTO carts(user_id, book_id, quantity) VALUES (?, ?, ?) " +
                 "ON CONFLICT (user_id, book_id) DO UPDATE SET quantity = carts.quantity + EXCLUDED.quantity";

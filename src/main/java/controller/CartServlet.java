@@ -17,15 +17,46 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user"); // giả sử login đã có
-        Long userId = user.getId();
+        User user = (User) req.getSession().getAttribute("user");
+        
+        // Check if user is logged in
+        if (user == null) {
+            req.setAttribute("contentPage", PathConstants.VIEW_PLEASE_LOGIN);
+            req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
+            return;
+        }
+
         try {
-            List<CartItem> cart = cartDAO.getCartByUser(userId.intValue());
-            req.setAttribute("cart", cart);
+            // Set content page first to ensure it's never null
             req.setAttribute("contentPage", PathConstants.VIEW_CART);
+            
+            // Check for error parameter
+            if ("true".equals(req.getParameter("error"))) {
+                req.setAttribute("error", "An error occurred while updating your cart.");
+            }
+            
+            List<CartItem> cart = cartDAO.getCartByUser(user.getId().intValue());
+            
+            // Initialize cart total
+            double cartTotal = 0.0;
+            
+            // Calculate totals only if cart is not empty
+            if (cart != null && !cart.isEmpty()) {
+                cartTotal = cart.stream()
+                    .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                    .sum();
+            }
+            
+            req.setAttribute("cartTotal", cartTotal);
+            
+            req.setAttribute("cart", cart);
             req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
         } catch (Exception e) {
-            throw new ServletException(e);
+            e.printStackTrace();
+            // Even in case of error, set a content page
+            req.setAttribute("contentPage", PathConstants.VIEW_CART);
+            req.setAttribute("error", "An error occurred while loading your cart.");
+            req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
         }
     }
 
@@ -47,13 +78,17 @@ public class CartServlet extends HttpServlet {
             } else if ("remove".equals(action)) {
                 int cartId = Integer.parseInt(req.getParameter("cartId"));
                 cartDAO.removeFromCart(cartId);
+            } else if ("update".equals(action)) {
+                int cartId = Integer.parseInt(req.getParameter("cartId"));
+                int quantity = Integer.parseInt(req.getParameter("quantity"));
+                cartDAO.updateCartQuantity(cartId, quantity);
             }
 
-            // redirect 1 lần duy nhất
+            // Redirect back to cart page after operation
             resp.sendRedirect(req.getContextPath() + "/user/cart");
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendError(500);
+            resp.sendRedirect(req.getContextPath() + "/user/cart?error=true");
         }
     }
 

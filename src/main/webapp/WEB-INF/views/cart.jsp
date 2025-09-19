@@ -6,11 +6,15 @@
 <div class="cart-container">
     <h2>Your Shopping Cart</h2>
 
-<%--    <c:if test="${empty cart}">--%>
-<%--        <p class="empty-cart">Your shopping cart is empty.</p>--%>
-<%--    </c:if>--%>
+    <c:if test="${not empty error}">
+        <div class="error-message">${error}</div>
+    </c:if>
 
-<%--    <c:if test="${not empty cart}">--%>
+    <c:if test="${empty cart}">
+        <p class="empty-cart">Your shopping cart is empty.</p>
+    </c:if>
+
+    <c:if test="${not empty cart}">
         <div class="cart-content">
             <div class="cart-items">
                 <table class="cart-table">
@@ -27,14 +31,21 @@
                     <c:forEach var="item" items="${cart}">
                         <tr>
                             <td>
-                                <div class="book-col">
-                                    <img src="${item.thumbnail}" alt="">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="${item.thumbnail}" alt="${item.title}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
                                     <span>${item.title}</span>
                                 </div>
                             </td>
-                            <td>${item.quantity}</td>
-                            <td><fmt:formatNumber value="${item.price}" type="number"/> </td>
-                            <td><fmt:formatNumber value="${item.price * item.quantity}" type="number"/> </td>
+                            <td>
+                                <form action="cart" method="post" style="display: flex; align-items: center; gap: 4px;">
+                                    <input type="hidden" name="action" value="update"/>
+                                    <input type="hidden" name="cartId" value="${item.id}"/>
+                                    <input type="number" name="quantity" value="${item.quantity}" min="1" class="cart-quantity-input"/>
+                                    <button type="submit" class="quantity-update-btn">Update</button>
+                                </form>
+                            </td>
+                            <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.price}" type="number" maxFractionDigits="0"/> ₫</span></td>
+                            <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.price * item.quantity}" type="number" maxFractionDigits="0"/> ₫</span></td>
                             <td class="cart-actions">
                                 <form action="cart" method="post">
                                     <input type="hidden" name="action" value="remove"/>
@@ -51,17 +62,21 @@
             <div class="checkout-summary">
                 <div class="summary-section">
                     <h3>Order Summary</h3>
+                    <c:set var="shippingCost" value="30000"/>
+                    <c:set var="subtotal" value="${cartTotal}"/>
+                    <c:set var="total" value="${subtotal + shippingCost}"/>
+                    
                     <div class="summary-row">
                         <span>Subtotal</span>
-                        <span>$${cartTotal}</span>
+                        <span style="white-space: nowrap;"><fmt:formatNumber value="${subtotal}" type="number" maxFractionDigits="0"/> ₫</span>
                     </div>
                     <div class="summary-row">
                         <span>Shipping</span>
-                        <span>$5.00</span>
+                        <span style="white-space: nowrap;"><fmt:formatNumber value="${shippingCost}" type="number" maxFractionDigits="0"/> ₫</span>
                     </div>
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span>$${cartTotal + 5.00}</span>
+                        <span style="white-space: nowrap;"><fmt:formatNumber value="${total}" type="number" maxFractionDigits="0"/> ₫</span>
                     </div>
                 </div>
 
@@ -107,5 +122,5 @@
                 </form>
             </div>
         </div>
-<%--    </c:if>--%>
+    </c:if>
 </div>
