@@ -14,13 +14,13 @@
   <!-- Thanh bar filter trạng thái -->
   <div class="status-bar">
     <!-- Tab "Tất cả" cố định (không lấy từ DB) -->
-    <a href="${pageContext.request.contextPath}/user/order-tracking?userId=${userId}"
+    <a href="${pageContext.request.contextPath}/user/order-tracking"
        class="${selectedStatus eq 'all' ? 'active' : ''}">Tất cả</a>
 
     <!-- Các trạng thái thực tế từ DB, bỏ qua id=0 -->
     <c:forEach var="st" items="${statuses}">
       <c:if test="${st.id != 0}">
-        <a href="${pageContext.request.contextPath}/user/order-tracking?userId=${userId}&statusId=${st.id}"
+        <a href="${pageContext.request.contextPath}/user/order-tracking?statusId=${st.id}"
            class="${selectedStatus eq st.id.toString() ? 'active' : ''}">
             ${st.name}
         </a>

@@ -8,12 +8,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import constant.PathConstants;
 import dao.OrderDAO;
 import dao.OrderStatusDAO;
 import model.Order;
 import model.OrderStatus;
+import model.User;
 
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
@@ -30,46 +32,37 @@ public class OrderTrackingPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Lấy userId từ query param (sau này thay bằng session login)
-        String userIdParam = req.getParameter("userId");
-        int userId = 0;
-        if (userIdParam != null) {
-            try {
-                userId = Integer.parseInt(userIdParam);
-            } catch (NumberFormatException ignored) {
-            }
+        HttpSession session = req.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
         }
 
-        // Lấy statusId từ query param
+        Long userId = user.getId(); // userId kiểu Long
+
         String statusId = req.getParameter("statusId");
 
-        // Nếu là "all" thì redirect sang URL gọn
         if ("all".equals(statusId)) {
-            String cleanUrl = req.getContextPath() + "/user/order-tracking?userId=" + userId;
+            String cleanUrl = req.getContextPath() + "/user/order-tracking";
             resp.sendRedirect(cleanUrl);
             return;
         }
 
-        // Nếu null thì mặc định = "all"
         if (statusId == null) {
             statusId = "all";
         }
 
-        List<Order> orders = null;
-        if (userId > 0) {
-            orders = orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
-        }
-
+        // Truyền Long userId + String statusId
+        List<Order> orders = orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
         List<OrderStatus> statuses = orderStatusDAO.getAllStatuses();
 
-        // Gửi dữ liệu sang JSP
         req.setAttribute("orders", orders);
         req.setAttribute("statuses", statuses);
         req.setAttribute("selectedStatus", statusId);
-        req.setAttribute("userId", userId); // để JSP build URL filter
 
         req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
-        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT)
-                .forward(req, resp);
+        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 }
