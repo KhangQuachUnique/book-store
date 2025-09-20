@@ -14,23 +14,27 @@ h1 {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 25px;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .white-list-item {
-    all: unset;
-    cursor: pointer;
     width: 100%;
     padding: 20px;
     border-radius: 10px;
     height: 200px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
     display: flex;
     transition: transform 0.2s;
 }
 
+.white-list-item a {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+}
+
 .white-list-item:hover {
-    transform: translateY(-5px) scale(1.01);
+    transform: translateY(-3px)
 }
 
 .white-list-item img {
@@ -69,6 +73,13 @@ h1 {
     font-size: 24px;
     color: var(--text-secondary);
     font-weight: 700;
+}
+
+.white-list-item-rating {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .white-list-item-price-old {
