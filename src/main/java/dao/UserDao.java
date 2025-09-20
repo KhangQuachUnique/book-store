@@ -1,16 +1,21 @@
 package dao;
 
-import model.User;
-import util.DBConnection;
+import static util.DBConnection.getConnection;
 
-import java.sql.*;
-import java.util.Optional;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static util.DBConnection.getConnection;
+
+import model.Address;
+import model.User;
+import util.DBConnection;
 
 public class UserDao {
     private static final Logger log = Logger.getLogger(UserDao.class.getName());
@@ -21,9 +26,10 @@ public class UserDao {
         String sql = "SELECT * FROM users WHERE verify_token = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, token);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapRow(rs);
+            try (ResultSet rs = ps.executeQuery();) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,17 +50,38 @@ public class UserDao {
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapRow(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    User user = mapRow(rs);
+
+                    // Lấy danh sách địa chỉ cho user
+                    user.setAddresses(getAddressesByUserId(conn, user.getId()));
+
+                    return Optional.of(user);
+                }
             }
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Error finding user by email: " + email, e);
             throw new RuntimeException("Database error occurred", e);
         }
         return Optional.empty();
+    }
+
+    // Chỉnh hàm này nhận Connection để tái sử dụng connect
+    private List<Address> getAddressesByUserId(Connection conn, long userId) throws SQLException {
+        List<Address> addresses = new ArrayList<>();
+        String query = "SELECT * FROM addresses WHERE user_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    addresses.add(new AddressDao().extractAddressFromResultSet(rs));
+                }
+            }
+        }
+        return addresses;
     }
 
     // Lưu user mới
@@ -64,7 +91,7 @@ public class UserDao {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())";
 
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
@@ -86,8 +113,6 @@ public class UserDao {
         }
     }
 
-
-
     // Cập nhật token và thời hạn xác thực mới
     public void updateVerifyToken(User user) {
         String sql = "UPDATE users SET verify_token = ?, verify_expire = ? WHERE id = ?";
@@ -101,6 +126,18 @@ public class UserDao {
         }
     }
 
+    // Update password and clear verification token (for password reset)
+    public void updatePasswordAndClearToken(Long userId, String hashedPassword) {
+        String sql = "UPDATE users SET password_hash = ?, verify_token = NULL, verify_expire = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, hashedPassword);
+            ps.setLong(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Error updating password for user: " + userId, e);
+            throw new RuntimeException("Database error occurred", e);
+        }
+    }
 
     // Helper: map từ ResultSet -> User object
     private User mapRow(ResultSet rs) throws SQLException {
@@ -130,13 +167,14 @@ public class UserDao {
     public Timestamp getBlockInfo(String email) {
         String sql = "SELECT is_blocked, blocked_until FROM users WHERE email = ?";
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            try(ResultSet rs = ps.executeQuery();) {
+            try (ResultSet rs = ps.executeQuery();) {
                 if (rs.next()) {
                     boolean isBlocked = rs.getBoolean("is_blocked");
                     Timestamp until = rs.getTimestamp("blocked_until");
-                    if (isBlocked) return until;
+                    if (isBlocked)
+                        return until;
                     if (until != null && until.after(new Timestamp(System.currentTimeMillis()))) {
                         return until;
                     }
@@ -169,7 +207,7 @@ public class UserDao {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE name ILIKE ? OR email ILIKE ? OR phone ILIKE ? ORDER BY id LIMIT ? OFFSET ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String searchTerm = "%" + query + "%";
             pstmt.setString(1, searchTerm);
             pstmt.setString(2, searchTerm);
@@ -188,7 +226,7 @@ public class UserDao {
     private List<User> getUsersByQuery(String query, int page) throws SQLException {
         List<User> users = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, PAGE_SIZE);
             pstmt.setInt(2, (page - 1) * PAGE_SIZE);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -214,7 +252,7 @@ public class UserDao {
             sql = "SELECT COUNT(*) FROM users";
         }
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             if ("search".equals(queryType)) {
                 String searchTerm = "%" + query + "%";
                 pstmt.setString(1, searchTerm);
@@ -234,7 +272,7 @@ public class UserDao {
         User user = null;
         String query = "SELECT * FROM users WHERE id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -245,10 +283,25 @@ public class UserDao {
         return user;
     }
 
+    public User getUserByEmail(String email) throws SQLException {
+        User user = null;
+        String query = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user = mapRow(rs);
+                }
+            }
+        }
+        return user; // nếu không tìm thấy
+    }
+
     public void deleteUser(long id) throws SQLException {
         String query = "DELETE FROM users WHERE id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
         }
@@ -257,7 +310,7 @@ public class UserDao {
     public void blockUser(long id) throws SQLException {
         String query = "UPDATE users SET is_blocked = true, blocked_until = CURRENT_TIMESTAMP + INTERVAL '1 month', updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
         }
@@ -266,7 +319,7 @@ public class UserDao {
     public void unblockUser(long id) throws SQLException {
         String query = "UPDATE users SET is_blocked = false, blocked_until = null, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
         }
@@ -275,12 +328,22 @@ public class UserDao {
     public void updateUser(User user) throws SQLException {
         String query = "UPDATE users SET name = ?, email = ?, phone = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPhone());
             pstmt.setString(4, user.getRole());
             pstmt.setLong(5, user.getId());
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void updateUserPasswordHash(User user) throws SQLException {
+        String query = "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, user.getPasswordHash());
+            pstmt.setLong(2, user.getId());
             pstmt.executeUpdate();
         }
     }
@@ -296,7 +359,7 @@ public class UserDao {
     private void createUserWithRole(User user, String role) throws SQLException {
         String query = "INSERT INTO users (name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPasswordHash());

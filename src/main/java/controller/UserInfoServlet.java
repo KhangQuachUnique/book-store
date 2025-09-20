@@ -31,8 +31,8 @@ public class UserInfoServlet extends HttpServlet {
         JsonObject res = new JsonObject();
 
         if (token != null && JwtUtil.validateToken(token)) {
-            String email = JwtUtil.getEmailFromToken(token);
-            String role = JwtUtil.getRoleFromToken(token);
+            String email = JwtUtil.getEmail(token);
+            String role = JwtUtil.getRole(token);
 
             res.addProperty("loggedIn", true);
             res.addProperty("email", email);

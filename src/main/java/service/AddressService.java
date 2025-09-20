@@ -1,28 +1,29 @@
 package service;
 
-import dao.AddressDao;
-import model.Address;
-
 import java.sql.SQLException;
 import java.util.List;
 
+import dao.AddressDao;
+import model.Address;
+
 public class AddressService {
-    private AddressDao addressDao = new AddressDao();
+    private AddressDao addressDAO = new AddressDao();
 
     public List<Address> getAddressesByUserId(long userId) throws SQLException {
-        return addressDao.getAddressesByUserId(userId);
+        return addressDAO.getAddressesByUserId(userId);
     }
 
     public void createAddress(Address address) throws SQLException {
-        addressDao.createAddress(address);
+        addressDAO.createAddress(address);
         if (address.isDefaultAddress()) {
-            addressDao.setDefaultAddress(address.getId(), address.getUserId());
+            addressDAO.setDefaultAddress(address.getId(), address.getUserId());
         }
     }
 
+
     // CHANGE: Thêm updateAddress để hỗ trợ inline edit từ viewUser
     public void updateAddress(Address address) throws SQLException {
-        addressDao.updateAddress(address);
+        addressDAO.updateAddress(address);
     }
 
     public void deleteAddress(long addressId, long userId) throws SQLException {
@@ -33,10 +34,10 @@ public class AddressService {
         if (address.isDefaultAddress()) {
             throw new SQLException("Cannot delete default address");
         }
-        addressDao.deleteAddress(addressId, userId);
+        addressDAO.deleteAddress(addressId, userId);
     }
 
     public void setDefaultAddress(long addressId, long userId) throws SQLException {
-        addressDao.setDefaultAddress(addressId, userId);
+        addressDAO.setDefaultAddress(addressId, userId);
     }
 }

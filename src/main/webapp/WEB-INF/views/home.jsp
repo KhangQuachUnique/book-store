@@ -7,7 +7,7 @@
     <script src="<%=request.getContextPath()%>/assets/js/app.js"></script>
 </head>
 <body>
-<section class="home">
+<section class="home" style="padding: 60px">
     <h1>Welcome to My Web App</h1>
 
     <!-- User info -->

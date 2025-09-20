@@ -1,11 +1,14 @@
 package dao;
 
-import model.Address;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Address;
+import util.DBConnection;
 
 public class AddressDao {
 
@@ -27,7 +30,7 @@ public class AddressDao {
     public void createAddress(Address address) throws SQLException {
         String query = "INSERT INTO addresses (user_id, address, is_default) VALUES (?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setLong(1, address.getUserId());
             pstmt.setString(2, address.getAddress());
             pstmt.setBoolean(3, address.isDefaultAddress());
@@ -74,6 +77,15 @@ public class AddressDao {
         }
     }
 
+    public Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
+        Address address = new Address();
+        address.setId(rs.getLong("id"));
+        address.setUserId(rs.getLong("user_id"));
+        address.setAddress(rs.getString("address"));
+        address.setDefaultAddress(rs.getBoolean("is_default"));
+        address.setCreatedAt(rs.getTimestamp("created_at"));
+        return address;
+    }
     public void deleteAddress(long addressId, long userId) throws SQLException {
         String query = "DELETE FROM addresses WHERE id = ? AND user_id = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -87,13 +99,5 @@ public class AddressDao {
         }
     }
 
-    private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
-        Address address = new Address();
-        address.setId(rs.getLong("id"));
-        address.setUserId(rs.getLong("user_id"));
-        address.setAddress(rs.getString("address"));
-        address.setDefaultAddress(rs.getBoolean("is_default"));
-        address.setCreatedAt(rs.getTimestamp("created_at"));
-        return address;
-    }
+
 }

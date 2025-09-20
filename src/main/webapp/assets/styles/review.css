@@ -1,0 +1,195 @@
+.review-section {
+    padding: 50px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.review-section hr {
+    background-color: #e1e1e1;
+    height: 2px;
+    border: none;
+    color: #e1e1e1;
+    margin: 20px 0;
+}
+
+.review-section .review-header {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #2e2e2e;
+}
+
+.review-overall {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 100px;
+}
+
+.total-rating {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    span {
+        font-size: 36px;
+        font-weight: 800;
+        color: #2e2e2e;
+    }
+}
+
+.review-count {
+    font-size: 18px;
+    color: #666;
+}
+
+.levels-count {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.level-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.level-count span {
+    color: #666666;
+    font-weight: 600;
+}
+
+.reviews-display {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-comment {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.user-comment .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.username {
+    color: #2e2e2e;
+}
+
+.comment-date {
+    color: #888;
+    font-size: 14px;
+}
+
+.comment-rating {
+    margin-bottom: 6px;
+}
+
+.comment-text {
+    font-size: 16px;
+    color: #2c2c2c;
+}
+
+.comment-image {
+    margin-top: 10px;
+}
+.comment-image img {
+    max-width: 320px;
+    max-height: 240px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: block;
+}
+
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.like-count, .reply-count {
+    font-weight: 600;
+    margin-left: 4px;
+    color: #ae002a;
+}
+
+@media (max-width: 768px) {
+    .review-overall {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.like-btn:hover svg {
+    fill: #b22234; /* a lighter red for hover */
+    transform: scale(1.1);
+}
+
+
+.like-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.like-btn svg {
+    height: 32px;
+    fill: #858585; /* default màu khi chưa like */
+    transition: fill 0.3s ease, transform 0.2s ease;
+}
+
+.like-btn.liked svg {
+    fill: #ae002a; /* màu chủ đề khi like */
+}
+
+/* Spinner loading */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #ae002a;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+

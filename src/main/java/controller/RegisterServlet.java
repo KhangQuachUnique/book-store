@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import model.User;
 import service.UserService;
 
-@WebServlet("/user/register")
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private UserService userService = new UserService();
     private Gson gson = new Gson();

@@ -12,13 +12,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web App</title>
+    <title>Bookie Cake</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/sidebar.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/footer.css">
+    <script>
+        // Provide context path globally for admin JS (category checks, etc.)
+        window.APP_CONTEXT = '${pageContext.request.contextPath}';
+    </script>
 </head>
 <body>
 <!-- Sidebar -->

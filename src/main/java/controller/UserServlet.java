@@ -1,6 +1,22 @@
 package controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import constant.PathConstants;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.Validation;
@@ -39,7 +55,8 @@ public class UserServlet extends HttpServlet {
         validator = factory.getValidator();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -47,7 +64,7 @@ public class UserServlet extends HttpServlet {
             action = "list";
         }
         try {
-            // CHANGE: Tạm thời bỏ phân quyền để kiểm tra, sau này khôi phục
+            // Tạm thời bỏ phân quyền để kiểm tra
             // if (!checkAdminPermission(request, response)) {
             //     return;
             // }
@@ -66,6 +83,9 @@ public class UserServlet extends HttpServlet {
                     break;
                 case "view":
                     viewUser(request, response);
+                    break;
+                case "edit":
+                    showEditForm(request, response);
                     break;
                 case "newAdmin":
                     showNewAdminForm(request, response);
@@ -92,12 +112,13 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         try {
-            // CHANGE: Tạm thời bỏ phân quyền để kiểm tra
+            // Tạm thời bỏ phân quyền để kiểm tra
             // if (!checkAdminPermission(request, response)) {
             //     return;
             // }
@@ -142,29 +163,21 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // CHANGE: Thêm phương thức checkAdminPermission (khôi phục sau khi test)
-    // private boolean checkAdminPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //     HttpSession session = request.getSession(false);
-    //     if (session == null || session.getAttribute("user") == null) {
-    //         response.sendRedirect(request.getContextPath() + "/login");
-    //         return false;
-    //     }
-    //     User loggedInUser = (User) session.getAttribute("user");
-    //     if (!"admin".equals(loggedInUser.getRole())) {
-    //         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
-    //         return false;
-    //     }
-    //     return true;
-    // }
+//    private boolean checkAdminPermission(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        // TODO: Khôi phục kiểm tra phân quyền sau khi kiểm tra
+//        return true;
+//    }
 
-    private void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex) throws ServletException, IOException {
+    private void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex)
+            throws ServletException, IOException {
         log.log(Level.SEVERE, "Error occurred: ", ex);
         request.setAttribute("errorMessage", "An error occurred while processing your request.");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/error.jsp");
         dispatcher.forward(request, response);
     }
 
-    private void listAllUsers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void listAllUsers(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         int page = getPageParameter(request);
         List<User> users = userService.getAllUsers(page);
         int totalPages = userService.getTotalPages("list", null);
@@ -174,7 +187,8 @@ public class UserServlet extends HttpServlet {
         forwardToList(request, response);
     }
 
-    private void listAdmins(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void listAdmins(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         int page = getPageParameter(request);
         List<User> users = userService.getAdmins(page);
         int totalPages = userService.getTotalPages("listAdmins", null);
@@ -184,7 +198,8 @@ public class UserServlet extends HttpServlet {
         forwardToList(request, response);
     }
 
-    private void listCustomers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void listCustomers(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         int page = getPageParameter(request);
         List<User> users = userService.getCustomers(page);
         int totalPages = userService.getTotalPages("listUsers", null);
@@ -194,7 +209,8 @@ public class UserServlet extends HttpServlet {
         forwardToList(request, response);
     }
 
-    private void listBlocked(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void listBlocked(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         int page = getPageParameter(request);
         List<User> users = userService.getBlockedUsers(page);
         int totalPages = userService.getTotalPages("listBlocked", null);
@@ -204,7 +220,8 @@ public class UserServlet extends HttpServlet {
         forwardToList(request, response);
     }
 
-    private void searchUsers(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void searchUsers(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         int page = getPageParameter(request);
         String query = request.getParameter("query");
         List<User> users = userService.searchUsers(query, page);
@@ -230,7 +247,8 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private void forwardToList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void forwardToList(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
@@ -239,37 +257,48 @@ public class UserServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void viewUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void viewUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
         if (id == -1) return;
         User user = userService.getUserById(id);
-        if (user == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
-            return;
-        }
-        List<Address> addresses = addressService.getAddressesByUserId(id);
-        request.setAttribute("editUser", user); // CHANGE: Sử dụng editUser để tránh xung đột session
-        request.setAttribute("addresses", addresses);
+        request.setAttribute("user", user);
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_DETAIL);
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
-    private void showNewAdminForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        long id = parseLongParameter(request.getParameter("id"), response);
+        if (id == -1)
+            return;
+        User user = userService.getUserById(id);
+        request.setAttribute("user", user);
+        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_EDIT);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+        dispatcher.forward(request, response);
+    }
+
+    private void showNewAdminForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD_ADMIN);
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
-    private void showNewUserForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void showNewUserForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_ADD);
         RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
         dispatcher.forward(request, response);
     }
 
-    private void viewAddresses(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    private void viewAddresses(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
         long userId = parseLongParameter(request.getParameter("id"), response);
-        if (userId == -1) return;
+        if (userId == -1)
+            return;
         User user = userService.getUserById(userId);
         List<Address> addresses = addressService.getAddressesByUserId(userId);
         request.setAttribute("user", user); // CHANGE: Giữ nguyên user cho viewAddresses, nhưng đảm bảo không xung đột
@@ -279,8 +308,8 @@ public class UserServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    // CHANGE: Sửa showNewAddressForm: Set đúng contentPage đến newAddress.jsp, sử dụng selectedUserId để tránh session ghi đè
-    private void showNewAddressForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void showNewAddressForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         long userId = parseLongParameter(request.getParameter("id"), response);
         if (userId == -1) return;
         // CHANGE: Sử dụng selectedUserId để tránh xung đột với session userId (nếu có filter set từ session)
@@ -290,18 +319,23 @@ public class UserServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void deleteAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void deleteAddress(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
         long addressId = parseLongParameter(request.getParameter("addressId"), response);
-        if (addressId == -1) return;
+        if (addressId == -1)
+            return;
         long userId = parseLongParameter(request.getParameter("userId"), response);
-        if (userId == -1) return;
+        if (userId == -1)
+            return;
         addressService.deleteAddress(addressId, userId);
         response.sendRedirect(BASE_URL + "?action=view&id=" + userId); // CHANGE: Redirect đến view thay vì viewAddresses để nhất quán
     }
 
-    private void updateUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+    private void updateUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
         long id = parseLongParameter(request.getParameter("id"), response);
-        if (id == -1) return;
+        if (id == -1)
+            return;
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
@@ -321,7 +355,7 @@ public class UserServlet extends HttpServlet {
                 errorMessage.append(violation.getMessage()).append("; ");
             }
             request.setAttribute("errorMessage", errorMessage.toString());
-            viewUser(request, response); // CHANGE: Quay lại viewUser thay vì editForm (vì đã tích hợp)
+            showEditForm(request, response);
             return;
         }
 
@@ -360,38 +394,41 @@ public class UserServlet extends HttpServlet {
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
-        if (id == -1) return;
+        if (id == -1)
+            return;
         userService.deleteUser(id);
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
     private void blockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
-        if (id == -1) return;
+        if (id == -1)
+            return;
         userService.blockUser(id);
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
-    private void unblockUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void unblockUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
-        if (id == -1) return;
+        if (id == -1)
+            return;
         userService.unblockUser(id);
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=list");
     }
 
-    private void createAdmin(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+    private void createAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
-
 
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         user.setPhone(phone);
         user.setPasswordHash(PasswordUtil.hashPassword(password));
-
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
@@ -453,11 +490,14 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=view&id=" + userId); // CHANGE: Redirect đến view để hiển thị địa chỉ mới
     }
 
-    private void setDefaultAddress(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    private void setDefaultAddress(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
         long addressId = parseLongParameter(request.getParameter("addressId"), response);
-        if (addressId == -1) return;
+        if (addressId == -1)
+            return;
         long userId = parseLongParameter(request.getParameter("userId"), response);
-        if (userId == -1) return;
+        if (userId == -1)
+            return;
         addressService.setDefaultAddress(addressId, userId);
         response.sendRedirect(request.getContextPath() + BASE_URL + "?action=view&id=" + userId); // CHANGE: Redirect đến view
     }

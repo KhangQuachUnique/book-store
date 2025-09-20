@@ -17,7 +17,7 @@ import model.User;
 import service.UserService;
 import util.JwtUtil;
 
-@WebServlet("/user/login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private final UserService userService = new UserService();
     private final Gson gson = new Gson();
@@ -67,11 +67,11 @@ public class LoginServlet extends HttpServlet {
                     String accessToken = JwtUtil.generateAccessToken(user.getEmail(), user.getRole());
                     String refreshToken = JwtUtil.generateRefreshToken(user.getEmail(), user.getRole());
 
-                    // Cookie cho access token (hết hạn sau 15 phút)
+                    // Cookie cho access token (hết hạn sau 60 phút)
                     Cookie accessCookie = new Cookie("access_token", accessToken);
                     accessCookie.setHttpOnly(true);
                     accessCookie.setPath("/"); // gửi cho toàn bộ domain
-                    accessCookie.setMaxAge(15 * 60); // 15 phút
+                    accessCookie.setMaxAge(60 * 60); // 60 phút
                     resp.addCookie(accessCookie);
 
                     // Cookie cho refresh token (hết hạn sau 7 ngày)
@@ -85,11 +85,12 @@ public class LoginServlet extends HttpServlet {
                     res.addProperty("message", "Login success");
                     res.addProperty("email", user.getEmail());
                     res.addProperty("role", user.getRole());
+
+                    // Set session attribute for server-side auth (used by NotificationServlet)
+                    req.getSession(true).setAttribute("user", user);
                 }
             }
-
             out.print(gson.toJson(res));
-
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

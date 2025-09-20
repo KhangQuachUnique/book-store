@@ -40,6 +40,7 @@ public class LogoutServlet extends HttpServlet {
         resp.getWriter().print(gson.toJson(new Response("Logout successful")));
     }
 
+    @SuppressWarnings("unused") // Used by Gson for JSON serialization
     private static class Response {
         String message;
 
