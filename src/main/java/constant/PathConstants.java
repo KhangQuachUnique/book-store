@@ -16,6 +16,8 @@ public class PathConstants {
     public static final String VIEW_SIDEBAR = "/WEB-INF/views/fragment/sidebar.jsp";
     public static final String VIEW_USER_INFO = "/WEB-INF/views/viewUserInfo.jsp";
     public static final String EDIT_USER_INFO = "/WEB-INF/views/editUserInfo.jsp";
+    public static final String BOOK_DETAIL_PAGE = "/WEB-INF/views/bookDetail.jsp";
+    public static final String VIEW_CATEGORY_BOOKS = "/WEB-INF/views/categoryBook.jsp";
 
     // Private View Path
     public static final String VIEW_WISHLIST = "/WEB-INF/views/wishList.jsp";
@@ -34,4 +36,15 @@ public class PathConstants {
     // Book Management Views
     public static final String VIEW_ADMIN_BOOK = "/WEB-INF/views/userManagement/viewBook.jsp";
 
+    // URL Paths (for redirects and mappings)
+    public static final String URL_HOME = "/home";
+    public static final String URL_LOGIN = "/login";
+    public static final String URL_LOGOUT = "/logout";
+    public static final String URL_REGISTER = "/register";
+    public static final String URL_BOOK_DETAIL = "/book-detail";
+    public static final String URL_CATEGORY_BOOKS = "/category-books";
+    public static final String URL_CART = "/user/cart";
+    public static final String URL_WISHLIST = "/user/wishlist";
+    public static final String URL_ORDERS = "/user/orders";
+    public static final String URL_USER_INFO = "/user/info";
 }
