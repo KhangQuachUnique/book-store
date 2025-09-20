@@ -20,6 +20,8 @@
 
     <hr />
 
+    <jsp:include page="/recommend-books" />
+
     <!-- Ví dụ danh sách -->
     <h2>Tin tức mới</h2>
     <ul>

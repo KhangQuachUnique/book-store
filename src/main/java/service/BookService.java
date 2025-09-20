@@ -53,6 +53,10 @@ public class BookService {
         return BookDao.getBookById(id);
     }
 
+    public static List<Book> getBooksByIds(List<Long> ids) throws SQLException {
+        return BookDao.getBooksByIds(ids);
+    }
+
     /**
      * Adds a new book after validation.
      *

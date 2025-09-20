@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import model.Book;
 import model.Category;
@@ -52,6 +54,30 @@ public class BookDao {
             }
         }
         return null;
+    }
+
+    public static List<Book> getBooksByIds(List<Long> ids) throws SQLException {
+        if (ids == null || ids.isEmpty()) return Collections.emptyList();
+
+        String sql = "SELECT * FROM books WHERE id IN (" +
+                ids.stream().map(i -> "?").collect(Collectors.joining(",")) + ")";
+
+        List<Book> books = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            int index = 1;
+            for (Long id : ids) {
+                ps.setLong(index++, id);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    books.add(mapResultSetToBook(rs));
+                }
+            }
+        }
+        return books;
     }
 
     /**
