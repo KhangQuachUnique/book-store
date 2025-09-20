@@ -20,6 +20,12 @@ public class AddressService {
         }
     }
 
+
+    // CHANGE: Thêm updateAddress để hỗ trợ inline edit từ viewUser
+    public void updateAddress(Address address) throws SQLException {
+        addressDAO.updateAddress(address);
+    }
+
     public void deleteAddress(long addressId, long userId) throws SQLException {
         Address address = getAddressesByUserId(userId).stream()
                 .filter(a -> a.getId() == addressId)
