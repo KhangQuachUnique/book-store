@@ -15,7 +15,7 @@ import jakarta.mail.internet.MimeMessage;
 public class SendMailUtil {
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_USER = "phucbinbin2005@gmail.com"; // đổi
-    private static final String SMTP_PASS = "onch ekrn djsj wamu"; // đổi
+    private static final String SMTP_PASS = "erwc xxiw betm cgnp"; // đổi
 
     public static void sendVerificationMail(String to, String verifyLink)
             throws MessagingException, UnsupportedEncodingException {

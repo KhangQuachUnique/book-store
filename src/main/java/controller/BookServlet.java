@@ -126,7 +126,7 @@ public class BookServlet extends HttpServlet {
         book.setStock(Integer.parseInt(req.getParameter("stock")));
         book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
         book.setDiscount_rate(Integer.parseInt(req.getParameter("discount_rate")));
-        book.setthumbnailUrl(req.getParameter("thumbnail_url"));
+        book.setThumbnailUrl(req.getParameter("thumbnail_url"));
         book.setDescription(req.getParameter("description"));
         book.setPublishYear(req.getParameter("publish_year") != null && !req.getParameter("publish_year").isEmpty()
                 ? Integer.parseInt(req.getParameter("publish_year"))
@@ -162,7 +162,7 @@ public class BookServlet extends HttpServlet {
             book.setStock(Integer.parseInt(req.getParameter("stock")));
             book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
             book.setDiscount_rate(Integer.parseInt(req.getParameter("discount_rate")));
-            book.setthumbnailUrl(req.getParameter("thumbnail_url"));
+            book.setThumbnailUrl(req.getParameter("thumbnail_url"));
             book.setDescription(req.getParameter("description"));
             book.setPublishYear(req.getParameter("publish_year") != null && !req.getParameter("publish_year").isEmpty()
                     ? Integer.parseInt(req.getParameter("publish_year"))

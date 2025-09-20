@@ -3,6 +3,8 @@ package controller;
 import constant.PathConstants;
 import dao.CategoryBookDao;
 import model.Book;
+import model.Category;
+import service.BookService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/categories")
@@ -39,10 +42,60 @@ public class CategoryBookServlet extends HttpServlet {
             // Ignore parsing error
         }
 
+        // Lấy các tham số filter từ form
+        String title = req.getParameter("title");
+        String publishYearParam = req.getParameter("publish_year");
+        Integer publishYear = null;
+        try {
+            if (publishYearParam != null && !publishYearParam.isEmpty()) {
+                publishYear = Integer.parseInt(publishYearParam);
+            }
+        } catch (NumberFormatException e) {
+            // Ignore parsing error
+        }
+
+        String includeCategoriesParam = req.getParameter("includeCategories");
+        String excludeCategoriesParam = req.getParameter("excludeCategories");
+
+        List<Long> includeCategories = null;
+        List<Long> excludeCategories = null;
+
+        if (includeCategoriesParam != null && !includeCategoriesParam.isEmpty()) {
+            includeCategories = new java.util.ArrayList<>();
+            for (String id : includeCategoriesParam.split(",")) {
+                try {
+                    includeCategories.add(Long.parseLong(id.trim()));
+                } catch (NumberFormatException e) {
+                    // Ignore invalid IDs
+                }
+            }
+        }
+
+        if (excludeCategoriesParam != null && !excludeCategoriesParam.isEmpty()) {
+            excludeCategories = new java.util.ArrayList<>();
+            for (String id : excludeCategoriesParam.split(",")) {
+                try {
+                    excludeCategories.add(Long.parseLong(id.trim()));
+                } catch (NumberFormatException e) {
+                    // Ignore invalid IDs
+                }
+            }
+        }
+
         List<Book> books;
         int totalPages;
 
-        if (categoryId != null) {
+        // Sử dụng BookService.filterBooks thay vì CategoryBookDao nếu có filter
+        if (title != null || publishYear != null || includeCategories != null || excludeCategories != null) {
+            try {
+                books = BookService.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
+                totalPages = BookService.getTotalPages(title, publishYear, includeCategories, excludeCategories);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                books = new java.util.ArrayList<>();
+                totalPages = 1;
+            }
+        } else if (categoryId != null) {
             books = CategoryBookDao.getBooksByCategoryId(categoryId, page);
             totalPages = CategoryBookDao.getTotalPagesByCategory(categoryId);
         } else {
@@ -50,10 +103,19 @@ public class CategoryBookServlet extends HttpServlet {
             totalPages = CategoryBookDao.getTotalPages();
         }
 
+        // Lấy danh sách tất cả categories để hiển thị trong bảng category
+        List<Category> categories = null;
+        try {
+            categories = BookService.getAllCategories();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         // Tính toán các trang sẽ hiển thị
         int[] visiblePages = calculateVisiblePages(page, totalPages);
 
         req.setAttribute("books", books);
+        req.setAttribute("categories", categories);
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("categoryId", categoryId);
@@ -61,12 +123,23 @@ public class CategoryBookServlet extends HttpServlet {
         req.setAttribute("showFirstEllipsis", visiblePages[0] > 1);
         req.setAttribute("showLastEllipsis", visiblePages[visiblePages.length - 1] < totalPages);
 
+        // Truyền lại các tham số filter để hiển thị trong form
+        req.setAttribute("title", title);
+        req.setAttribute("publishYear", publishYear);
+        req.setAttribute("includeCategories", includeCategoriesParam);
+        req.setAttribute("excludeCategories", excludeCategoriesParam);
+
         req.setAttribute("contentPage", "/WEB-INF/views/categoryBook.jsp");
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
     private int[] calculateVisiblePages(int currentPage, int totalPages) {
         if (totalPages <= MAX_PAGE_DISPLAY) {
+        // Xử lý trường hợp không có trang nào hoặc totalPages không hợp lệ
+        if (totalPages <= 0) {
+            return new int[0]; // Trả về mảng rỗng thay vì null
+        }
+
             int[] pages = new int[totalPages];
             for (int i = 0; i < totalPages; i++) {
                 pages[i] = i + 1;
