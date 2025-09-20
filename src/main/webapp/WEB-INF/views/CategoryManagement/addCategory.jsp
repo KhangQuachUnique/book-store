@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +9,7 @@
 </head>
 <body class="bg-light">
 <div class="container py-4">
-    <h1 class="mb-4 text-primary">Add New Category</h1>
+    <h1 class="mb-4" style="color: #800020;">Add New Category</h1>
 
     <form action="${pageContext.request.contextPath}/admin/category" method="post" class="card p-4 shadow-sm">
         <input type="hidden" name="action" value="create">
@@ -34,6 +36,12 @@
 
 <script>
     const contextPath = '${pageContext.request.contextPath}';
+    // Danh sách tên category hiện có (server inject) để kiểm tra trùng tại client không cần gọi API
+    window.EXISTING_CATEGORY_NAMES = [
+    <c:forEach var="n" items="${categoryNames}" varStatus="st">
+        '<c:out value="${n}" />'<c:if test="${!st.last}">,</c:if>
+    </c:forEach>
+    ];
 </script>
 
 <script src="${pageContext.request.contextPath}/assets/js/filterCategory.js"></script>

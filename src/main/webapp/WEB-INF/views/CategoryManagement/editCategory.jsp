@@ -10,7 +10,7 @@
 </head>
 <body class="bg-light">
 <div class="container py-4">
-    <h1 class="mb-4 text-primary">Edit Category</h1>
+    <h1 class="mb-4" style="color: #800020;">Edit Category</h1>
 
     <form action="${pageContext.request.contextPath}/admin/category" method="post" class="card p-4 shadow-sm">
         <input type="hidden" name="action" value="update">
