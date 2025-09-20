@@ -114,6 +114,7 @@ public class CategoryBookDao {
         b.setDiscount_rate(rs.getInt("discount_rate"));
         b.setCategoryId(rs.getInt("category_id"));
         b.setCreatedAt(rs.getTimestamp("created_at"));
+        b.calculateStars();
         return b;
     }
 }

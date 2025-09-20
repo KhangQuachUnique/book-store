@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title></title>
@@ -70,48 +71,53 @@
         </div>
     </div>
 
-    <!-- Giữ nguyên phần hiển thị sách -->
-    <div class="book-list">
-        <c:choose>
-            <c:when test="${empty requestScope.books}">
-                <div class="no-results">
-                    <h3>No books found</h3>
-                    <p>Try different search criteria or browse all categories</p>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <c:forEach items="${books}" var="book">
-                    <div class="book-card">
-                        <div class="book-image">
-                            <img src="${book.thumbnailUrl}" alt="${book.title}" class="book-thumbnail">
+            <div class="book-list">
+                <c:choose>
+                    <c:when test="${empty requestScope.books}">
+                        <div class="no-results">
+                            <h3>No books found</h3>
+                            <p>Try different search criteria or browse all categories</p>
                         </div>
-                        <div class="book-info">
-                            <h3 class="book-title">${book.title}</h3>
-                            <div class="book-price-row">
-                                <span class="book-price-badge">${book.price}đ</span>
-                                <c:if test="${book.discount_rate > 0}">
-                                    <span class="discount">-${book.discount_rate}%</span>
-                                </c:if>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${requestScope.books}" var="book">
+                            <div class="book-card">
+                                <a href="${pageContext.request.contextPath}/book-detail?id=${book.id}"
+                                    class="book-link">
+                                    <div class="book-image">
+                                        <img src="${book.thumbnailUrl}" alt="${book.title}"
+                                            class="book-thumbnail">
+                                    </div>
+                                    <div class="book-info">
+                                        <h3 class="book-title">${book.title}</h3>
+                                        <div class="book-price-row">
+                                            <span class="book-price-badge">
+                                                <fmt:formatNumber value="${book.price}" type="number" />
+                                                VND
+                                            </span>
+                                            <c:if test="${book.discount_rate > 0}">
+                                                <span class="discount">-${book.discount_rate}%</span>
+                                            </c:if>
+                                        </div>
+                                        <p class="book-author">Author: ${book.author}</p>
+                                        <p class="book-publisher">Publisher: ${book.publisher}</p>
+
+                                        <div class="book-rating">
+                                            <jsp:include page="ratingStar.jsp">
+                                                <jsp:param name="fullStars" value="${book.fullStars}" />
+                                                <jsp:param name="partialFraction" value="${book.partialFraction}" />
+                                                <jsp:param name="emptyStars" value="${book.emptyStars}" />
+                                                <jsp:param name="size" value="16" />
+                                            </jsp:include>
+                                            <span class="rating-value">${book.rating} / 5</span>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                            <p class="book-author">Author: ${book.author}</p>
-                            <p class="book-publisher">Publisher: ${book.publisher}</p>
-                            <div class="book-rating">
-                                <span class="stars">
-                                    <c:forEach begin="1" end="${book.rating}" var="i">
-                                        <span class="star">&#9733;</span>
-                                    </c:forEach>
-                                    <c:forEach begin="1" end="${5 - book.rating}" var="i">
-                                        <span class="star empty">&#9734;</span>
-                                    </c:forEach>
-                                </span>
-                                <span class="rating-value">${book.rating} / 5</span>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </c:otherwise>
-        </c:choose>
-    </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
     <!-- Giữ nguyên phần pagination nhưng sửa links để bảo toàn filter -->
     <div class="pagination">

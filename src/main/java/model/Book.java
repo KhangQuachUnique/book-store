@@ -1,49 +1,70 @@
 package model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+// ✅ Đổi từ javax → jakarta
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * Model class representing a book.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
     private Integer id;
+
+    @NotNull(message = "Title is required")
+    @Size(min = 1, max = 255, message = "Title must be between 1 and 255 characters")
     private String title;
+
     private String author;
     private String publisher;
+
+    @Min(value = 1, message = "Category ID must be positive")
     private int categoryId;
+
     private String thumbnailUrl;
     private String description;
+
+    @Min(value = 0, message = "Stock must be non-negative")
     private int stock;
+
     private Integer publishYear;
+
+    @Min(value = 1, message = "Pages must be positive")
     private Integer pages;
+
+    @Min(value = 0, message = "Rating must be non-negative")
+    @Max(value = 5, message = "Rating must not exceed 5")
     private double rating;
+    private Integer fullStars;
+    private Double partialFraction;
+    private Integer emptyStars;
+
+    @Min(value = 0, message = "Price must be non-negative")
     private double price;
+
+    @Min(value = 0, message = "Original price must be non-negative")
     private double originalPrice;
+
+    @Min(value = 0, message = "Discount rate must be non-negative")
+    @Max(value = 100, message = "Discount rate must not exceed 100")
     private int discount_rate;
+
     private Timestamp createdAt;
 
-    public Book(Integer id, String title, String author, double price, String publisher, int categoryId, int stock,
-            double originalPrice, int discount_rate, String imageUrl, String description, Integer publishYear,
-            Integer pages, double rating, Timestamp createdAt) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.price = price;
-        this.publisher = publisher;
-        this.thumbnailUrl = imageUrl;
-        this.description = description;
-        this.publishYear = publishYear;
-        this.pages = pages;
-        this.rating = rating;
-        this.createdAt = createdAt;
-        this.categoryId = categoryId;
-        this.stock = stock;
-        this.originalPrice = originalPrice;
-        this.discount_rate = discount_rate;
+    public void calculateStars() {
+        this.fullStars = (int) rating;
+        this.partialFraction = rating - fullStars;
+        this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
     }
 }

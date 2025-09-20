@@ -39,7 +39,7 @@ public class WishListDao {
                 book.setPages(rs.getInt("pages"));
                 book.setRating(rs.getDouble("rating_average"));
                 book.setCreatedAt(rs.getTimestamp("created_at"));
-
+                book.calculateStars();
                 books.add(book);
             }
         } catch (Exception e) {
