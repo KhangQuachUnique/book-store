@@ -8,11 +8,15 @@
 
 /* Search and Filter Section */
 .search-section {
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.search-section h2 {
+    margin-bottom: 15px;
 }
 
 .search-form {
@@ -26,29 +30,41 @@
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 8px;
     min-width: 200px;
+    outline: 2px transparent;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+    outline: 2px solid rgba(154, 0, 40, 0.5);
 }
 
 .category-select {
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 8px;
     min-width: 150px;
+    outline: 2px transparent;
+}
+
+.category-select:focus {
+    border-color: var(--primary-color);
+    outline: 2px solid rgba(154, 0, 40, 0.5);
 }
 
 .search-button {
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .search-button:hover {
-    background-color: #45a049;
+    background-color: var(--primary-color-hover);
 }
 
 /* Book List Section */
@@ -131,7 +147,6 @@
     align-items: center;
     justify-content: center;
     background: #fafafa;
-    margin-bottom: 15px;
 }
 
 .book-thumbnail {
@@ -144,8 +159,7 @@
 
 .book-info {
     width: 100%;
-    text-align: center;
-    padding: 0;
+    padding: 10px;
 }
 
 .book-title {
@@ -263,13 +277,13 @@
 
 .pagination a:hover {
     background-color: #f5f5f5;
-    border-color: #999;
+    border-color: var(--accent-color);
 }
 
 .pagination .active {
-    background-color: #4CAF50;
+    background-color: var(--accent-color);
     color: white;
-    border-color: #4CAF50;
+    border-color: var(--accent-color);
 }
 
 .pagination .disabled {

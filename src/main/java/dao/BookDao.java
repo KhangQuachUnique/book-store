@@ -279,6 +279,7 @@ public class BookDao {
         book.setRating(rs.getDouble("rating_average"));
         book.setPrice(rs.getDouble("price"));
         book.setCreatedAt(rs.getTimestamp("created_at"));
+        book.calculateStars();
         return book;
     }
 
