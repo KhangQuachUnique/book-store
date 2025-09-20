@@ -47,4 +47,5 @@ public class PathConstants {
     public static final String URL_WISHLIST = "/user/wishlist";
     public static final String URL_ORDERS = "/user/orders";
     public static final String URL_USER_INFO = "/user/info";
+    public static final String VIEW_ADMIN_USER_ADD_ADDRESS = "/WEB-INF/views/userManagement/newAddress.jsp";
 }
