@@ -16,15 +16,16 @@ import dao.OrderStatusDAO;
 import model.Order;
 import model.OrderStatus;
 import model.User;
+import service.OrderService;
 
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
-    private OrderDAO orderDAO;
+    private OrderService orderService;
     private OrderStatusDAO orderStatusDAO;
 
     @Override
     public void init() throws ServletException {
-        orderDAO = new OrderDAO();
+        orderService = new OrderService();
         orderStatusDAO = new OrderStatusDAO();
     }
 
@@ -40,13 +41,11 @@ public class OrderTrackingPageServlet extends HttpServlet {
             return;
         }
 
-        Long userId = user.getId(); // userId kiểu Long
-
+        Long userId = user.getId();
         String statusId = req.getParameter("statusId");
 
         if ("all".equals(statusId)) {
-            String cleanUrl = req.getContextPath() + "/user/order-tracking";
-            resp.sendRedirect(cleanUrl);
+            resp.sendRedirect(req.getContextPath() + "/user/order-tracking");
             return;
         }
 
@@ -54,8 +53,8 @@ public class OrderTrackingPageServlet extends HttpServlet {
             statusId = "all";
         }
 
-        // Truyền Long userId + String statusId
-        List<Order> orders = orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
+        // 👉 Gọi Service thay vì gọi DAO trực tiếp
+        List<Order> orders = orderService.getOrdersByUserAndStatus(userId, statusId);
         List<OrderStatus> statuses = orderStatusDAO.getAllStatuses();
 
         req.setAttribute("orders", orders);
@@ -66,3 +65,4 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 }
+
