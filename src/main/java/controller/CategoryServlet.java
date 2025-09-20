@@ -1,5 +1,6 @@
 package controller;
 
+import constant.PathConstants;
 import dao.CategoryDao;
 import model.Category;
 import util.DBConnection;
@@ -10,6 +11,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/admin/category")
 public class CategoryServlet extends HttpServlet {
@@ -47,7 +49,13 @@ public class CategoryServlet extends HttpServlet {
 
         switch (action) {
             case "add": {
-                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/addCategory.jsp");
+                // Prefetch all category names for client-side duplicate checking
+                List<String> categoryNames = categoryDao.findAll().stream()
+                        .map(Category::getName)
+                        .collect(Collectors.toList());
+                req.setAttribute("categoryNames", categoryNames);
+                req.setAttribute("contentPage", "/WEB-INF/views/CategoryManagement/addCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -59,7 +67,8 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> allCategories = categoryDao.findAll();
                 req.setAttribute("allCategories", allCategories);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/editCategory.jsp");
+                req.setAttribute("contentPage", "/WEB-INF/views/CategoryManagement/editCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -68,7 +77,8 @@ public class CategoryServlet extends HttpServlet {
                 List<Category> categories = categoryDao.findAll();
                 req.setAttribute("categories", categories);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/CategoryManagement/manageCategory.jsp");
+                req.setAttribute("contentPage", "/WEB-INF/views/CategoryManagement/manageCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
                 dispatcher.forward(req, resp);
                 break;
             }
