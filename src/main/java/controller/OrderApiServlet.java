@@ -1,66 +1,53 @@
 //package controller;
 //
-//import java.io.IOException;
-//import java.io.PrintWriter;
-//import java.util.List;
+//import com.google.gson.Gson;
+//import model.Order;
+//import model.User;
+//import service.OrderService;
 //
 //import javax.servlet.ServletException;
 //import javax.servlet.annotation.WebServlet;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.http.*;
+//import java.io.IOException;
+//import java.util.List;
 //
-//import com.google.gson.Gson;
-//
-//import dao.OrderDAO;
-//import model.Order;
-//
-//@WebServlet("/api/orders/*") // Sử dụng URL pattern để phân biệt các loại request
+//@WebServlet("/api/user/orders")
 //public class OrderApiServlet extends HttpServlet {
-//    private OrderDAO orderDAO;
+//    private OrderService orderService;
 //    private Gson gson;
 //
 //    @Override
 //    public void init() throws ServletException {
-//        orderDAO = new OrderDAO();
+//        orderService = new OrderService();
 //        gson = new Gson();
 //    }
 //
 //    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 //            throws ServletException, IOException {
 //
-//        response.setContentType("application/json;charset=UTF-8");
-//        PrintWriter out = response.getWriter();
+//        resp.setContentType("application/json;charset=UTF-8");
+//        HttpSession session = req.getSession(false);
+//        User user = (session != null) ? (User) session.getAttribute("user") : null;
 //
-//        // Lấy đường dẫn phụ (pathInfo) để xác định loại yêu cầu
-//        String pathInfo = request.getPathInfo();
-//
-//        try {
-//            if (pathInfo == null || pathInfo.equals("/")) {
-//                // Xử lý API lấy danh sách đơn hàng: /api/orders?userId=1
-//                String userIdParam = request.getParameter("userId");
-//                if (userIdParam == null || userIdParam.isEmpty()) {
-//                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing userId parameter");
-//                    return;
-//                }
-//                int userId = Integer.parseInt(userIdParam);
-//                List<Order> orders = orderDAO.getOrdersByUserIdAndStatus(userId, "all");
-//                out.print(gson.toJson(orders));
-//            } else if (pathInfo.matches("/\\d+")) { // Xử lý API lấy chi tiết đơn hàng: /api/orders/123
-//                int orderId = Integer.parseInt(pathInfo.substring(1));
-//                Order order = orderDAO.getOrderById(orderId);
-//                if (order != null) {
-//                    out.print(gson.toJson(order));
-//                } else {
-//                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Order not found");
-//                }
-//            } else {
-//                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid API endpoint");
-//            }
-//        } catch (NumberFormatException e) {
-//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid ID format");
+//        if (user == null) {
+//            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            resp.getWriter().print(gson.toJson(new ApiError("User not logged in")));
+//            return;
 //        }
-//        out.flush();
+//
+//        Long userId = user.getId();
+//        String statusId = req.getParameter("statusId"); // may be "all" or null or numeric string
+//
+//        List<Order> orders = orderService.getOrdersByUserAndStatus(userId, statusId);
+//
+//        resp.getWriter().print(gson.toJson(orders));
+//    }
+//
+//    // Simple error DTO
+//    static class ApiError {
+//        private final String error;
+//        ApiError(String error) { this.error = error; }
+//        public String getError() { return error; }
 //    }
 //}
