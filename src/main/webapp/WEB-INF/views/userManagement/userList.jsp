@@ -67,8 +67,8 @@
                         <td>${user.role}</td>
                         <td>${user.isBlocked ? "Yes" : "No"}</td>
                         <td class="action-buttons">
+                            <!-- CHANGE: Thay "Edit" thành "View" vì chỉnh sửa đã tích hợp trong viewUser -->
                             <a href="${pageContext.request.contextPath}/admin/user?action=view&id=${user.id}" class="btn btn-outline btn-sm">View</a>
-                            <a href="${pageContext.request.contextPath}/admin/user?action=edit&id=${user.id}" class="btn btn-outline btn-sm">Edit</a>
                             <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${user.id}">
