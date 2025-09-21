@@ -1,34 +1,55 @@
-<%-- Created by IntelliJ IDEA. User: kadfw Date: 9/14/2025 Time: 11:36 PM To change this template use File | Settings |
-    File Templates. --%>
+<%--
+  Created by IntelliJ IDEA.
+  User: kadfw
+  Date: 9/14/2025
+  Time: 11:36 PM
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
-    <head>
-        <title></title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/categoryBook.css">
-    </head>
-
-    <body>
-        <div class="container">
-            <div class="search-section">
-                <h2>Browse Books by Category</h2>
-                <form class="search-form" action="${pageContext.request.contextPath}/categories"
-                    method="GET">
-                    <input type="text" name="search" placeholder="Search by title or author..."
-                        class="search-input">
-                    <select name="categoryId" class="category-select">
-                        <option value="">All Categories</option>
-                        <option value="1">Fiction</option>
-                        <option value="2">Non-Fiction</option>
-                        <option value="3">Science</option>
-                        <option value="4">Technology</option>
-                        <option value="5">Business</option>
-                        <!-- More categories can be dynamically loaded from database -->
-                    </select>
-                    <button type="submit" class="search-button">Search</button>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/categoryBook.css">
+</head>
+<body>
+<div class="container">
+    <div class="search-section">
+        <div class="search-card">
+            <div class="card-header">
+                <h2 class="card-title">Browse Books by Category</h2>
+            </div>
+            <div class="card-content">
+                <!-- Thanh tìm kiếm - cấu trúc hiện đại -->
+                <form action="${pageContext.request.contextPath}/categories" method="get" class="search-form">
+                    <div class="form-group">
+                        <input type="text" name="title" placeholder="Search by title" value="${title}" class="input">
+                    </div>
+                    <div class="form-group button-group">
+                        <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
+                        <input type="submit" value="Find" class="btn btn-primary" onclick="setSearchAction('title')">
+                    </div>
+                    <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
+                    <input type="hidden" name="action" id="searchAction" value="">
                 </form>
             </div>
+        </div>
+
+        <!-- Bảng category - chỉ hiển thị khi cần -->
+        <div id="categoryTable" class="category-table">
+            <div style="margin-bottom: 10px;">
+                <strong>Select Categories:</strong>
+                <button type="button" class="btn btn-primary" onclick="submitFilterForm()">Apply Filter</button>
+                <button type="button" class="btn btn-secondary" onclick="toggleCategoryTable()">Close</button>
+            </div>
+            <c:forEach var="category" items="${categories}">
+                <div class="category-item" data-id="${category.id}" onclick="toggleCategory(this, ${category.id})">
+                    ${category.name}
+                </div>
+            </c:forEach>
+        </div>
+    </div>
 
             <div class="book-list">
                 <c:choose>
@@ -78,58 +99,54 @@
                 </c:choose>
             </div>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <!-- Previous button -->
-                <c:choose>
-                    <c:when test="${currentPage > 1}">
-                        <a
-                            href="?page=${currentPage - 1}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="disabled">&lt;</span>
-                    </c:otherwise>
-                </c:choose>
+    <!-- Giữ nguyên phần pagination nhưng sửa links để bảo toàn filter -->
+    <div class="pagination">
+        <c:choose>
+            <c:when test="${currentPage > 1}">
+                <a href="?page=${currentPage - 1}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
+            </c:when>
+            <c:otherwise>
+                <span class="disabled">&lt;</span>
+            </c:otherwise>
+        </c:choose>
 
-                <!-- First page -->
-                <c:if test="${showFirstEllipsis}">
-                    <a
-                        href="?page=1${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
-                    <span class="ellipsis">...</span>
-                </c:if>
+        <c:if test="${showFirstEllipsis}">
+            <a href="?page=1&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
+            <span class="ellipsis">...</span>
+        </c:if>
 
-                <!-- Visible pages -->
-                <c:forEach items="${visiblePages}" var="pageNum">
-                    <c:choose>
-                        <c:when test="${pageNum == currentPage}">
-                            <span class="active">${pageNum}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a
-                                href="?page=${pageNum}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
+        <c:forEach items="${visiblePages}" var="pageNum">
+            <c:choose>
+                <c:when test="${pageNum == currentPage}">
+                    <span class="active">${pageNum}</span>
+                </c:when>
+                <c:otherwise>
+                    <a href="?page=${pageNum}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
 
-                <!-- Last page -->
-                <c:if test="${showLastEllipsis}">
-                    <span class="ellipsis">...</span>
-                    <a
-                        href="?page=${totalPages}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
-                </c:if>
+        <c:if test="${showLastEllipsis}">
+            <span class="ellipsis">...</span>
+            <a href="?page=${totalPages}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
+        </c:if>
 
-                <!-- Next button -->
-                <c:choose>
-                    <c:when test="${currentPage < totalPages}">
-                        <a
-                            href="?page=${currentPage + 1}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="disabled">&gt;</span>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-    </body>
+        <c:choose>
+            <c:when test="${currentPage < totalPages}">
+                <a href="?page=${currentPage + 1}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
+            </c:when>
+            <c:otherwise>
+                <span class="disabled">&gt;</span>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
 
+<!-- Load JavaScript file and initialize variables -->
+<script>
+    // Pass JSP variables to JavaScript
+    var includeCategories_jsp = '${includeCategories}';
+</script>
+<script src="${pageContext.request.contextPath}/assets/js/categoryBook.js"></script>
+</body>
 </html>
