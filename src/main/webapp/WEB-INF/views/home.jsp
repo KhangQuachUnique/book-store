@@ -20,8 +20,6 @@
 
     <hr />
 
-    <jsp:include page="/recommend-books" />
-
     <!-- Ví dụ danh sách -->
     <h2>Tin tức mới</h2>
     <ul>
@@ -36,6 +34,9 @@
             <i>Chưa có tin tức nào.</i>
         </p>
     </c:if>
+
+    <jsp:include page="/recommend-books" />
+
 </section>
 
 <script>
