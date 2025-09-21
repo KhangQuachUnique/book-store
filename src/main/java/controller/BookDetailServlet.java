@@ -103,7 +103,8 @@ public class BookDetailServlet extends HttpServlet {
                     + book.getTitle() + ")");
 
             // Forward to book detail JSP
-            req.getRequestDispatcher(PathConstants.BOOK_DETAIL_PAGE).forward(req, resp);
+            req.setAttribute("contentPage", PathConstants.BOOK_DETAIL_PAGE);
+            req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
 
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error processing book detail request", e);

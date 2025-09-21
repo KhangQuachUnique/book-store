@@ -108,6 +108,9 @@ public class CartServlet extends HttpServlet {
                         updatedItem != null ? updatedItem.getPrice() * updatedItem.getQuantity() : 0,
                         cartTotal));
             }
+            if (!"update".equals(action)) {
+                resp.sendRedirect(req.getContextPath() + "/user/cart");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

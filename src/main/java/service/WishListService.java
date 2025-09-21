@@ -19,9 +19,11 @@ public class WishListService {
             return new ApiResponse(false, "ID không hợp lệ", null);
         }
 
-        boolean success = WishListDao.addBookToWishList(userId, bookId);
-        if (success) {
+        String result = WishListDao.addBookToWishList(userId, bookId);
+        if ("success".equals(result)) {
             return new ApiResponse(true, "Thêm sách vào danh sách yêu thích thành công", null);
+        } else if ("exists".equals(result)) {
+            return new ApiResponse(false, "Sách đã có trong danh sách yêu thích", null);
         } else {
             return new ApiResponse(false, "Thêm sách vào danh sách yêu thích thất bại", null);
         }
