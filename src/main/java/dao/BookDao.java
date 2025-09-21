@@ -45,7 +45,7 @@ public class BookDao {
     public static Book getBookById(long id) throws SQLException {
         String sql = "SELECT * FROM books WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -88,12 +88,11 @@ public class BookDao {
      * @throws SQLException If a database error occurs.
      */
     public static boolean addBook(Book book) throws SQLException {
-        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, "
-                +
+        String sql = "INSERT INTO books (title, author, publisher, category_id, stock, original_price, discount_rate, " +
                 "thumbnail_url, description, publish_year, pages, rating_average, price, created_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getAuthor());
             ps.setString(3, book.getPublisher());
@@ -125,9 +124,9 @@ public class BookDao {
     public static boolean updateBook(Book book) throws SQLException {
         String sql = "UPDATE books SET title = ?, author = ?, publisher = ?, category_id = ?, stock = ?, " +
                 "original_price = ?, discount_rate = ?, thumbnail_url = ?, description = ?, publish_year = ?, " +
-                "pages = ?, rating_average = ?, price = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+                "pages = ?, rating_average = ?, price = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             setBookParameters(ps, book);
             ps.setLong(14, book.getId());
             return ps.executeUpdate() > 0;
@@ -144,7 +143,7 @@ public class BookDao {
     public static boolean deleteBook(long id) throws SQLException {
         String sql = "DELETE FROM books WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;
         }
@@ -162,7 +161,7 @@ public class BookDao {
      * @throws SQLException If a database error occurs.
      */
     public static List<Book> filterBooks(String title, Integer publishYear, List<Long> includeCategories,
-            List<Long> excludeCategories, int page) throws SQLException {
+                                         List<Long> excludeCategories, int page) throws SQLException {
         StringBuilder sql = new StringBuilder("SELECT * FROM books WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -202,7 +201,7 @@ public class BookDao {
      * @throws SQLException If a database error occurs.
      */
     public static long countBooks(String title, Integer publishYear, List<Long> includeCategories,
-            List<Long> excludeCategories) throws SQLException {
+                                  List<Long> excludeCategories) throws SQLException {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM books WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
@@ -226,7 +225,7 @@ public class BookDao {
         }
 
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
@@ -249,8 +248,8 @@ public class BookDao {
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categories ORDER BY name";
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Category category = new Category();
                 category.setId(rs.getLong("id"));
@@ -274,7 +273,7 @@ public class BookDao {
     public static boolean logImport(String tableName, String importedData) throws SQLException {
         String sql = "INSERT INTO import_logs (table_name, imported_data, imported_at) VALUES (?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, tableName);
             ps.setString(2, importedData);
             return ps.executeUpdate() > 0;
@@ -305,6 +304,7 @@ public class BookDao {
         book.setRating(rs.getDouble("rating_average"));
         book.setPrice(rs.getDouble("price"));
         book.setCreatedAt(rs.getTimestamp("created_at"));
+        book.calculateStars();
         return book;
     }
 
@@ -343,7 +343,7 @@ public class BookDao {
     private static List<Book> getBooksByQuery(String sql, int page, Object[] params) throws SQLException {
         List<Book> books = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             if (params != null) {
                 for (int i = 0; i < params.length; i++) {
                     ps.setObject(i + 1, params[i]);

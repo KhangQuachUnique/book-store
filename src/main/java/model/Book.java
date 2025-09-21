@@ -1,5 +1,6 @@
 package model;
 
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -45,6 +46,9 @@ public class Book implements Serializable {
     @Min(value = 0, message = "Rating must be non-negative")
     @Max(value = 5, message = "Rating must not exceed 5")
     private double rating;
+    private Integer fullStars;
+    private Double partialFraction;
+    private Integer emptyStars;
 
     @Min(value = 0, message = "Price must be non-negative")
     private double price;
@@ -57,4 +61,10 @@ public class Book implements Serializable {
     private int discount_rate;
 
     private Timestamp createdAt;
+
+    public void calculateStars() {
+        this.fullStars = (int) rating;
+        this.partialFraction = rating - fullStars;
+        this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
+    }
 }

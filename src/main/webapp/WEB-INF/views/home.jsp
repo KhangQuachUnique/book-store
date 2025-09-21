@@ -4,7 +4,6 @@
 <html>
 <head>
     <title>Home</title>
-    <script src="<%=request.getContextPath()%>/assets/js/app.js"></script>
 </head>
 <body>
 <section class="home" style="padding: 60px">
@@ -38,29 +37,6 @@
     <jsp:include page="/recommend-books" />
 
 </section>
-
-<script>
-    function goToAdminBook() {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("Bạn cần đăng nhập trước");
-            return;
-        }
-        // Chuyển trang
-        window.location.href = "<%=request.getContextPath()%>/admin/book";
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-        const status = await checkUserStatus();
-        const userInfo = document.getElementById("userInfo");
-
-        if (status.loggedIn) {
-            userInfo.innerText = "Logged in as: " + status.email;
-        } else {
-            userInfo.innerText = "Not logged in";
-        }
-    });
-</script>
 
 </body>
 </html>

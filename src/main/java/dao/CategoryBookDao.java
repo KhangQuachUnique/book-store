@@ -50,7 +50,8 @@ public class CategoryBookDao {
 
     public static int getTotalPages() {
         int totalBooks = getTotalBooks();
-        return (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
+        int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
+        return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
     }
 
     public static List<Book> getBooksByCategoryId(int categoryId, int page) {
@@ -94,7 +95,8 @@ public class CategoryBookDao {
 
     public static int getTotalPagesByCategory(int categoryId) {
         int totalBooks = getTotalBooksByCategory(categoryId);
-        return (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
+        int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
+        return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
     }
 
     private static Book mapResultSetToBook(ResultSet rs) throws SQLException {
@@ -114,6 +116,7 @@ public class CategoryBookDao {
         b.setDiscount_rate(rs.getInt("discount_rate"));
         b.setCategoryId(rs.getInt("category_id"));
         b.setCreatedAt(rs.getTimestamp("created_at"));
+        b.calculateStars();
         return b;
     }
 }

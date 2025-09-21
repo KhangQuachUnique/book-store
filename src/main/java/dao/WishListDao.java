@@ -39,7 +39,7 @@ public class WishListDao {
                 book.setPages(rs.getInt("pages"));
                 book.setRating(rs.getDouble("rating_average"));
                 book.setCreatedAt(rs.getTimestamp("created_at"));
-
+                book.calculateStars();
                 books.add(book);
             }
         } catch (Exception e) {
@@ -48,17 +48,28 @@ public class WishListDao {
         return books;
     }
 
-    public static boolean addBookToWishList(int userId, int bookId) {
-        String sql = " INSERT INTO wishlists (user_id, book_id) VALUES (?, ?) ";
+    /**
+     * Returns the list of books in the user's wishlist.
+     * @param userId the user's ID
+     * @param bookId the book's ID to add
+     * @return "success" if the book was added, "exists" if it was already in the wishlist, "error" if there was an error
+     */
+    public static String addBookToWishList(int userId, int bookId) {
+        String sql = "INSERT INTO wishlists (user_id, book_id) VALUES (?, ?) ON CONFLICT (user_id, book_id) DO NOTHING";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, bookId);
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                return "success";
+            } else {
+                // Book already in wishlist
+                return "exists";
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return "error";
         }
     }
 

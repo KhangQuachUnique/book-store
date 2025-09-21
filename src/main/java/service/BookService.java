@@ -123,7 +123,8 @@ public class BookService {
     public static int getTotalPages(String title, Integer publishYear, List<Long> includeCategories,
             List<Long> excludeCategories) throws SQLException {
         long totalBooks = BookDao.countBooks(title, publishYear, includeCategories, excludeCategories);
-        return (int) Math.ceil((double) totalBooks / PAGE_SIZE);
+        int totalPages = (int) Math.ceil((double) totalBooks / PAGE_SIZE);
+        return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
     }
 
     /**

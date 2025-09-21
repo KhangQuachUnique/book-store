@@ -1,3 +1,5 @@
+// Package: model
+// Các sửa đổi chính: Thêm ràng buộc validation @NotBlank và @Email cho các trường quan trọng để đảm bảo dữ liệu hợp lệ ngay tại model.
 package model;
 
 import java.sql.Timestamp;
