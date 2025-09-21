@@ -3,12 +3,12 @@ package model;
 import java.util.List;
 
 public class Order {
-    private int id;
+    private Long id;
     private String createdAt;
-    private double totalAmount; // nếu muốn thì bỏ đi, vì JSP đã tự tính lại
+    private double totalAmount; // có thể bỏ, vì JSP tự tính
     private String paymentMethod;
 
-    private int statusId;
+    private Long statusId;
     private String statusName;
 
     private List<OrderItem> items;
@@ -16,7 +16,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, String createdAt, double totalAmount, String paymentMethod, int statusId, String statusName) {
+    public Order(Long id, String createdAt, double totalAmount, String paymentMethod, Long statusId, String statusName) {
         this.id = id;
         this.createdAt = createdAt;
         this.totalAmount = totalAmount;
@@ -26,11 +26,11 @@ public class Order {
     }
 
     // Getters & Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -58,11 +58,11 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public int getStatusId() {
+    public Long getStatusId() {
         return statusId;
     }
 
-    public void setStatusId(int statusId) {
+    public void setStatusId(Long statusId) {
         this.statusId = statusId;
     }
 
