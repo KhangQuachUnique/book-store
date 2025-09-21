@@ -11,6 +11,18 @@ function showResult(message, success = true) {
 document.addEventListener("DOMContentLoaded", () => {
     const spinner = document.getElementById("spinner");
 
+    checkUserStatus().then(res => {
+        console.log("User status:", res);
+        const userInfo = document.getElementById("userInfo");
+        if (userInfo) {
+            if (res.ok) {
+                userInfo.innerText = `Logged in as: ${res.email || 'User'}`;
+            } else {
+                userInfo.innerText = "Not logged in";
+            }
+        }
+    });
+
     function showMessage(el, msg, success = true) {
         el.innerText = msg;
         el.style.color = success ? "green" : "red";

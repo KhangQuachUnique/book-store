@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (svg.classList.contains('selected')) {
                 // Add to wishlist (do not remove DOM)
                 const response = await wishListApi.addToWishList({ itemId: bookId });
-                if (response.success) {
+                const body = await response.json();
+
+                if (body.success) {
                     showResult("Added to wishlist", true);
                 } else {
                     showResult("Failed to add to wishlist", false);
@@ -22,7 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Remove from wishlist (do not remove DOM)
                 const response = await wishListApi.removeFromWishList({ itemId: bookId });
-                if (response.success) {
+                const body = await response.json();
+
+                if (body.success) {
                     showResult(response.message || "Removed from wishlist", true);
                 } else {
                     showResult(response.error || "Failed to remove from wishlist", false);

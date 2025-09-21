@@ -8,7 +8,7 @@ function showToast(message, type = 'success', duration = 3000) {
 
     // Calculate position for stacking
     const existingToasts = document.querySelectorAll('.toast');
-    const topOffset = 20 + (existingToasts.length * 80);
+    const topOffset = 100 + (existingToasts.length * 80);
 
     toast.style.top = `${topOffset}px`;
 
@@ -54,7 +54,7 @@ function showToast(message, type = 'success', duration = 3000) {
 function repositionToasts() {
     const toasts = document.querySelectorAll('.toast');
     toasts.forEach((toast, index) => {
-        const topOffset = 20 + (index * 80);
+        const topOffset = 100 + (index * 80);
         toast.style.top = `${topOffset}px`;
     });
 }
