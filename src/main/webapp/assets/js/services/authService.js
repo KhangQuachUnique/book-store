@@ -11,13 +11,13 @@ export const authApi = {
                 email: payload.email,
                 password: payload.password
             }),
-    register: async (name, email, password, phone) =>
+    register: async (payload) =>
         fetchUtil(BASE_URL + '/register', 'POST',
             {
-                name: name,
-                email: email,
-                password: password,
-                phone: phone
+                name: payload.name,
+                email: payload.email,
+                password: payload.password,
+                phone: payload.phone
             }),
     refresh: async () => fetchUtil(BASE_URL + '/user/refresh', 'POST'),
     logout: async () => fetchUtil(BASE_URL + '/user/logout', 'POST'),
