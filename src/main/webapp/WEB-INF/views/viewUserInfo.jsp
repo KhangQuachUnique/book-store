@@ -12,48 +12,34 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/userInfo.css">
 </head>
-<body class="profile-section">
+<body>
+    <section class="profile-section">
+        <h2 class="title">Your Profile</h2>
+        <div class = "container">
+            <div class="user-info">
+                <div class="info-row">
+                    <span class="label">Full name:</span>
+                    <span class="value">${sessionScope.user.name}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Phone:</span>
+                    <span class="value">${sessionScope.user.phone}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Email:</span>
+                    <span class="value">${sessionScope.user.email}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Address:</span>
+                    <span class="value address-value">${sessionScope.defaultAddress}</span>
+                </div>
+            </div>
 
-<c:if test="${not empty sessionScope.toastMessage}">
-    <script>
-        // Hiện toast khi load trang
-        window.onload = function() {
-            showToast("${sessionScope.toastMessage}");
-        }
-    </script>
-    <c:remove var="toastMessage" scope="session"/>
-</c:if>
-
-<div id="toast" class="toast"></div>
-
-<script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
-
-<h2 class="title">Your Profile</h2>
-<div class = "container">
-    <div class="user-info">
-        <div class="info-row">
-            <span class="label">Full name:</span>
-            <span class="value">${sessionScope.user.name}</span>
+            <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">
+                <input type="hidden" name="action" value="edit"/>
+                <input class="submit" type="submit" value="Edit profile"/>
+            </form>
         </div>
-        <div class="info-row">
-            <span class="label">Phone:</span>
-            <span class="value">${sessionScope.user.phone}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Email:</span>
-            <span class="value">${sessionScope.user.email}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Address:</span>
-            <span class="value address-value">${sessionScope.defaultAddress}</span>
-        </div>
-    </div>
-
-    <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">
-        <input type="hidden" name="action" value="edit"/>
-        <input class="submit" type="submit" value="Edit profile"/>
-    </form>
-</div>
-
+    </section>
 </body>
 </html>

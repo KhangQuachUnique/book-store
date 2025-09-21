@@ -10,12 +10,12 @@ export const wishListApi = {
     },
     addToWishList: async (body) => {
         const response = await fetchUtil(BASE_URL + '/user/wishlist', 'POST', { bookId: body.itemId });
-        console.log("Add to wishlist response:", response);
+        // console.log("Add to wishlist response:", response);
         return response;
     },
     removeFromWishList: async (body) => {
         const response = await fetchUtil(BASE_URL + '/user/wishlist', 'DELETE', { bookId: body.itemId });
-        console.log("Remove from wishlist response:", response);
+        // console.log("Remove from wishlist response:", response);
         return response;
     }
 }

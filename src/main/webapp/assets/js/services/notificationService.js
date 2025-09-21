@@ -19,7 +19,7 @@ async function fetchUnreadNotificationCount() {
         updateNotificationBell(data.unreadCount);
 
     } catch (error) {
-        console.error('Failed to fetch notification count:', error);
+        // console.error('Failed to fetch notification count:', error);
     }
 }
 
