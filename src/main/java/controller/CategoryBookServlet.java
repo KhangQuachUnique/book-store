@@ -44,22 +44,10 @@ public class CategoryBookServlet extends HttpServlet {
 
         // Lấy các tham số filter từ form
         String title = req.getParameter("title");
-        String publishYearParam = req.getParameter("publish_year");
-        Integer publishYear = null;
-        try {
-            if (publishYearParam != null && !publishYearParam.isEmpty()) {
-                publishYear = Integer.parseInt(publishYearParam);
-            }
-        } catch (NumberFormatException e) {
-            // Ignore parsing error
-        }
-
         String includeCategoriesParam = req.getParameter("includeCategories");
-        String excludeCategoriesParam = req.getParameter("excludeCategories");
+        String action = req.getParameter("action"); // "title" hoặc "categories"
 
         List<Long> includeCategories = null;
-        List<Long> excludeCategories = null;
-
         if (includeCategoriesParam != null && !includeCategoriesParam.isEmpty()) {
             includeCategories = new java.util.ArrayList<>();
             for (String id : includeCategoriesParam.split(",")) {
@@ -71,25 +59,31 @@ public class CategoryBookServlet extends HttpServlet {
             }
         }
 
-        if (excludeCategoriesParam != null && !excludeCategoriesParam.isEmpty()) {
-            excludeCategories = new java.util.ArrayList<>();
-            for (String id : excludeCategoriesParam.split(",")) {
-                try {
-                    excludeCategories.add(Long.parseLong(id.trim()));
-                } catch (NumberFormatException e) {
-                    // Ignore invalid IDs
-                }
-            }
+        // Logic exclusive dựa trên action type
+        boolean hasTitle = title != null && !title.trim().isEmpty();
+        boolean hasCategories = includeCategories != null && !includeCategories.isEmpty();
+        
+        if ("title".equals(action)) {
+            // User muốn search theo title -> clear categories
+            includeCategories = null;
+            includeCategoriesParam = null;
+        } else if ("categories".equals(action)) {
+            // User muốn filter theo categories -> clear title
+            title = null;
+        } else if (hasTitle && hasCategories) {
+            // Fallback: nếu có cả 2 nhưng không có action, ưu tiên title search
+            includeCategories = null;
+            includeCategoriesParam = null;
         }
 
         List<Book> books;
         int totalPages;
 
         // Sử dụng BookService.filterBooks thay vì CategoryBookDao nếu có filter
-        if (title != null || publishYear != null || includeCategories != null || excludeCategories != null) {
+        if ((title != null && !title.trim().isEmpty()) || (includeCategories != null && !includeCategories.isEmpty())) {
             try {
-                books = BookService.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
-                totalPages = BookService.getTotalPages(title, publishYear, includeCategories, excludeCategories);
+                books = BookService.filterBooks(title, null, includeCategories, null, page);
+                totalPages = BookService.getTotalPages(title, null, includeCategories, null);
             } catch (SQLException e) {
                 e.printStackTrace();
                 books = new java.util.ArrayList<>();
@@ -120,26 +114,24 @@ public class CategoryBookServlet extends HttpServlet {
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("categoryId", categoryId);
         req.setAttribute("visiblePages", visiblePages);
-        req.setAttribute("showFirstEllipsis", visiblePages[0] > 1);
-        req.setAttribute("showLastEllipsis", visiblePages[visiblePages.length - 1] < totalPages);
+        req.setAttribute("showFirstEllipsis", visiblePages.length > 0 && visiblePages[0] > 1);
+        req.setAttribute("showLastEllipsis", visiblePages.length > 0 && visiblePages[visiblePages.length - 1] < totalPages);
 
         // Truyền lại các tham số filter để hiển thị trong form
         req.setAttribute("title", title);
-        req.setAttribute("publishYear", publishYear);
         req.setAttribute("includeCategories", includeCategoriesParam);
-        req.setAttribute("excludeCategories", excludeCategoriesParam);
 
         req.setAttribute("contentPage", "/WEB-INF/views/categoryBook.jsp");
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
     private int[] calculateVisiblePages(int currentPage, int totalPages) {
-        if (totalPages <= MAX_PAGE_DISPLAY) {
         // Xử lý trường hợp không có trang nào hoặc totalPages không hợp lệ
         if (totalPages <= 0) {
-            return new int[0]; // Trả về mảng rỗng thay vì null
+            return new int[]{1}; // Trả về array với page 1 thay vì empty array
         }
-
+        
+        if (totalPages <= MAX_PAGE_DISPLAY) {
             int[] pages = new int[totalPages];
             for (int i = 0; i < totalPages; i++) {
                 pages[i] = i + 1;
