@@ -33,6 +33,7 @@
         </div>
 
         <div class="address-list" id="addressList" style="display:none;">
+            <div class="address-item add-address">➕ Add new address</div>
             <c:forEach var="addr" items="${sessionScope.user.addresses}">
                 <div class="address-item">
                     <label>
@@ -41,7 +42,6 @@
                     </label>
                 </div>
             </c:forEach>
-            <div class="address-item add-address">➕ Add new address</div>
         </div>
 
         <input class="submit" type="submit" value="Confirm update" />
@@ -60,17 +60,22 @@
             list.style.display = list.style.display === "block" ? "none" : "block";
         });
 
-        // Khi chọn radio
+        // Khi chọn radio -> gán vào input + đóng list
         list.addEventListener("change", (e) => {
             if (e.target.classList.contains("addr-radio")) {
                 input.value = e.target.value;
+                list.style.display = "none"; // tự đóng luôn
             }
         });
 
-        // Add new address
+        // Add new address -> cho nhập trực tiếp ở ô trên
         list.addEventListener("click", (e) => {
             if (e.target.classList.contains("add-address")) {
-                alert("TODO: mở popup hoặc redirect để thêm địa chỉ mới");
+                input.removeAttribute("readonly");
+                input.setAttribute("required", "true");
+                input.value = "";
+                input.focus();
+                list.style.display = "none"; // tự đóng luôn
             }
         });
 

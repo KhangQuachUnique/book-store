@@ -222,9 +222,12 @@ span#mismatch {
     border: 1px solid #ccc;
     border-radius: 6px;
     padding: 5px;
-    max-width: 300px;
+    max-width: 500px;
     background: #fff;
     width: 100%;
+
+    max-height: 150px;   /* chiều cao cố định */
+    overflow-y: auto;    /* bật thanh cuộn dọc khi vượt quá */
 }
 
 .address-item {
