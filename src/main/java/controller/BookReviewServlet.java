@@ -1,18 +1,20 @@
 package controller;
 
-import constant.PathConstants;
-import model.ApiResponse;
-import model.BookReview;
-import model.BookReviewRequest;
-import service.BookReviewService;
-import util.JsonUtil;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import constant.PathConstants;
+import model.ApiResponse;
+import model.BookReview;
+import model.BookReviewRequest;
+import model.User;
+import service.BookReviewService;
+import util.JsonUtil;
 
 @WebServlet("/user/book-review")
 public class BookReviewServlet extends HttpServlet {
@@ -22,13 +24,14 @@ public class BookReviewServlet extends HttpServlet {
         if (bookIdParam != null) {
             try {
                 int bookId = Integer.parseInt(bookIdParam);
-                Integer currentUserId = (Integer) req.getSession().getAttribute("userId");
+                User sessionUser = (User) req.getSession().getAttribute("user");
+                Long currentUserId = 0L;
 
-                if (currentUserId == null) {
-                    currentUserId = 0; // hoặc -1
+                if (sessionUser != null) {
+                    currentUserId = sessionUser.getId();
                 }
 
-                BookReview bookReview = BookReviewService.getReviewsByBookId(330658, 1009);
+                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId.intValue());
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -41,7 +44,13 @@ public class BookReviewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId());
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -50,7 +59,13 @@ public class BookReviewServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId());
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));

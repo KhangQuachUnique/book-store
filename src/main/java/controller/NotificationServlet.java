@@ -1,10 +1,12 @@
 package controller;
 
+import constant.PathConstants;
 import com.google.gson.Gson;
 import dao.NotificationDao;
 import model.Notification;
-import model.User; // Giả sử bạn có model User
+import model.User;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -68,7 +70,9 @@ public class NotificationServlet extends HttpServlet {
                 notificationDao.markAllAsRead(userId);
 
                 // Forward to the correct JSP path (folder name is case-sensitive)
-                req.getRequestDispatcher("/WEB-INF/views/userManagement/notifications.jsp").forward(req, resp);
+                req.setAttribute("contentPage", "/WEB-INF/views/userManagement/notifications.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_LAYOUT);
+                dispatcher.forward(req, resp);
                 break;
         }
     }

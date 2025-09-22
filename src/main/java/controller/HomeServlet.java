@@ -1,16 +1,14 @@
 package controller;
 
-import constant.PathConstants;
-import model.Book;
-import model.BookReview;
-import service.BookReviewService;
-import service.BookService;
-
-import javax.servlet.*;
-import javax.servlet.annotation.*;
-import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import constant.PathConstants;
 
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
@@ -21,4 +19,3 @@ public class HomeServlet extends HttpServlet {
         request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
     }
 }
-

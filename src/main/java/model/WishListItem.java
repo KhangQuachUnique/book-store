@@ -1,7 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class WishListItem implements Serializable {
     private int userId;
@@ -20,6 +19,7 @@ public class WishListItem implements Serializable {
     public int getUserId() {
         return userId;
     }
+
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -27,6 +27,7 @@ public class WishListItem implements Serializable {
     public Book getBook() {
         return book;
     }
+
     public void setBook(Book book) {
         this.book = book;
     }
@@ -34,6 +35,7 @@ public class WishListItem implements Serializable {
     public String getAddedAt() {
         return addedAt;
     }
+
     public void setAddedAt(String addedAt) {
         this.addedAt = addedAt;
     }

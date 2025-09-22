@@ -1,11 +1,14 @@
 package dao;
 
-import model.Address;
-import util.DBConnection;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Address;
+import util.DBConnection;
 
 public class AddressDao {
 
@@ -32,6 +35,27 @@ public class AddressDao {
             pstmt.setString(2, address.getAddress());
             pstmt.setBoolean(3, address.isDefaultAddress());
             pstmt.executeUpdate();
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    address.setId(rs.getLong(1));
+                }
+            }
+        }
+    }
+
+    // CHANGE: Thêm updateAddress để hỗ trợ inline edit từ viewUser
+    public void updateAddress(Address address) throws SQLException {
+        String query = "UPDATE addresses SET address = ?, is_default = ? WHERE id = ? AND user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, address.getAddress());
+            pstmt.setBoolean(2, address.isDefaultAddress());
+            pstmt.setLong(3, address.getId());
+            pstmt.setLong(4, address.getUserId());
+            int rows = pstmt.executeUpdate();
+            if (rows == 0) {
+                throw new SQLException("Address ID " + address.getId() + " not found or does not belong to user " + address.getUserId());
+            }
         }
     }
 
@@ -53,7 +77,7 @@ public class AddressDao {
         }
     }
 
-    private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
+    public Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
         Address address = new Address();
         address.setId(rs.getLong("id"));
         address.setUserId(rs.getLong("user_id"));
@@ -74,4 +98,6 @@ public class AddressDao {
             }
         }
     }
+
+
 }

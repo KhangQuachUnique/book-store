@@ -1,11 +1,15 @@
 package model;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+=======
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d
 import java.util.List;
 
 public class Order {
     private Long id;
+<<<<<<< HEAD
     private Long userId;
     private BigDecimal totalAmount;
     private String status;
@@ -30,6 +34,30 @@ public class Order {
     public static final String PAYMENT_CARD = "CARD";
 
     // Getters and Setters
+=======
+    private String createdAt;
+    private double totalAmount; // có thể bỏ, vì JSP tự tính
+    private String paymentMethod;
+
+    private Long statusId;
+    private String statusName;
+
+    private List<OrderItem> items;
+
+    public Order() {
+    }
+
+    public Order(Long id, String createdAt, double totalAmount, String paymentMethod, Long statusId, String statusName) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.statusId = statusId;
+        this.statusName = statusName;
+    }
+
+    // Getters & Setters
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d
     public Long getId() {
         return id;
     }
@@ -38,6 +66,7 @@ public class Order {
         this.id = id;
     }
 
+<<<<<<< HEAD
     public Long getUserId() {
         return userId;
     }
@@ -62,6 +91,24 @@ public class Order {
         this.status = status;
     }
 
+=======
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -70,6 +117,7 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
+<<<<<<< HEAD
     public Long getPromotionId() {
         return promotionId;
     }
@@ -100,6 +148,22 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+=======
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d
     }
 
     public List<OrderItem> getItems() {
@@ -109,6 +173,7 @@ public class Order {
     public void setItems(List<OrderItem> items) {
         this.items = items;
     }
+<<<<<<< HEAD
 
     // Validation method for status transitions
     public boolean isValidStatusTransition(String newStatus) {
@@ -129,3 +194,6 @@ public class Order {
         }
     }
 }
+=======
+}
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d

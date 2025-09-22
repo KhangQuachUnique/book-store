@@ -1,10 +1,10 @@
 package service;
 
-import dao.AddressDao;
-import model.Address;
-
 import java.sql.SQLException;
 import java.util.List;
+
+import dao.AddressDao;
+import model.Address;
 
 public class AddressService {
     private AddressDao addressDAO = new AddressDao();
@@ -19,6 +19,13 @@ public class AddressService {
             addressDAO.setDefaultAddress(address.getId(), address.getUserId());
         }
     }
+
+
+    // CHANGE: Thêm updateAddress để hỗ trợ inline edit từ viewUser
+    public void updateAddress(Address address) throws SQLException {
+        addressDAO.updateAddress(address);
+    }
+
     public void deleteAddress(long addressId, long userId) throws SQLException {
         Address address = getAddressesByUserId(userId).stream()
                 .filter(a -> a.getId() == addressId)

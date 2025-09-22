@@ -42,9 +42,9 @@ public class BookReviewService {
         return bookReview;
     }
 
-    public static ApiResponse likeReview(int reviewId) {
+    public static ApiResponse likeReview(int reviewId, int userId) {
         try {
-            boolean success = BookReviewDao.likeReview(reviewId, 1009);
+            boolean success = BookReviewDao.likeReview(reviewId, userId);
             if (success) {
                 return new ApiResponse(true, "Review liked successfully.", null);
             } else {
@@ -56,10 +56,10 @@ public class BookReviewService {
         }
     }
 
-    public static ApiResponse unlikeReview(int reviewId) {
+    public static ApiResponse unlikeReview(int reviewId, int userId) {
 
         try {
-            boolean success = BookReviewDao.unlikeReview(reviewId, 1009);
+            boolean success = BookReviewDao.unlikeReview(reviewId, userId);
             if (success) {
                 return new ApiResponse(true, "Review unliked successfully.", null);
             } else {

@@ -1,5 +1,6 @@
 package model;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 
 public class OrderItem {
@@ -33,6 +34,36 @@ public class OrderItem {
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
+=======
+public class OrderItem {
+    private String bookTitle;
+    private int quantity;
+    private double price;
+    private String thumbnailUrl;
+    private double originalPrice;
+    private int discountRate;
+
+    public OrderItem() {
+    }
+
+    public OrderItem(String bookTitle, int quantity, double price, String thumbnailUrl, double originalPrice,
+            int discountRate) {
+        this.bookTitle = bookTitle;
+        this.quantity = quantity;
+        this.price = price;
+        this.thumbnailUrl = thumbnailUrl;
+        this.originalPrice = originalPrice;
+        this.discountRate = discountRate;
+    }
+
+    // Getters & Setters
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d
     }
 
     public int getQuantity() {
@@ -43,6 +74,7 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+<<<<<<< HEAD
     public BigDecimal getPrice() {
         return price;
     }
@@ -59,3 +91,37 @@ public class OrderItem {
         this.book = book;
     }
 }
+=======
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public int getDiscountRate() {
+        return discountRate;
+    }
+
+    public void setDiscountRate(int discountRate) {
+        this.discountRate = discountRate;
+    }
+}
+>>>>>>> ce462613b685cbdad207495480b6c9df022f730d
