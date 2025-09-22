@@ -43,7 +43,11 @@
                 height: 50px;
                 margin-right: 15px;
                 border: none;
-                /* Works for both SVG and IMG tags */
+                /* Gmail-specific image handling */
+                max-width: 60px !important;
+                height: auto !important;
+                display: block !important;
+                float: none !important;
             }
 
             .logo-text {
@@ -52,26 +56,34 @@
                 color: white;
             }
 
-            /* Hide SVG fallback by default */
+            /* Enhanced fallback system for Gmail */
             .logo-fallback {
                 display: none;
-            }
-
-            /* Show fallback if SVG is not supported */
-            .no-svg .logo-svg {
-                display: none;
-            }
-
-            .no-svg .logo-fallback {
-                display: inline-block;
                 width: 60px;
                 height: 50px;
-                background: white;
-                border-radius: 10px;
+                background: #ffffff;
+                color: #800020;
+                border-radius: 8px;
                 margin-right: 15px;
                 text-align: center;
                 line-height: 50px;
-                font-size: 30px;
+                font-size: 24px;
+                font-weight: bold;
+                border: 2px solid #ffffff;
+            }
+
+            /* Gmail-specific styles */
+            @media screen and (max-width: 600px) {
+                .logo-svg {
+                    width: 50px !important;
+                    height: 40px !important;
+                }
+                .logo-fallback {
+                    width: 50px !important;
+                    height: 40px !important;
+                    line-height: 40px !important;
+                    font-size: 20px !important;
+                }
             }
 
             .subtitle {
@@ -158,17 +170,19 @@
         <div class="email-container">
             <div class="header">
                 <div class="logo">
-                    <!-- Using embedded BookieCake logo with CID for maximum email client compatibility -->
-                    <img class="logo-svg" width="60" height="50" src="cid:bookiecake-logo" alt="BookieCake Logo"
-                        style="display: block;">
-                    <!-- Fallback for email clients that don't support images -->
+                    <!-- Primary logo with Gmail-friendly hosting -->
+                    <img class="logo-svg" width="60" height="50" 
+                            src="https://raw.githubusercontent.com/rrnydhvv/resource/refs/heads/main/BookieCakeLogo.svg"
+                         alt="BookieCake Logo"
+                         style="display: inline-block !important; vertical-align: middle; margin-right: 15px; border: 2px solid #ffffff; border-radius: 8px; max-width: 60px; height: auto;">
+                    <!-- Enhanced fallback for when images are blocked -->
                     <!--[if !mso]><!-->
-                    <div class="logo-fallback" style="display: none;">📚</div>
+                    <div class="logo-fallback" style="display: none; width: 60px; height: 50px; background: #ffffff; color: #800020; border-radius: 8px; margin-right: 15px; text-align: center; line-height: 50px; font-size: 24px; font-weight: bold; border: 2px solid #ffffff; vertical-align: middle; display: inline-block;">BC</div>
                     <!--<![endif]-->
                     <!--[if mso]>
-                    <div style="width: 60px; height: 50px; background: white; border-radius: 10px; margin-right: 15px; text-align: center; line-height: 50px; font-size: 30px; display: inline-block;">📚</div>
+                    <div style="width: 60px; height: 50px; background: #ffffff; color: #800020; border-radius: 8px; margin-right: 15px; text-align: center; line-height: 50px; font-size: 24px; font-weight: bold; border: 2px solid #ffffff; display: inline-block; vertical-align: middle;">BC</div>
                     <![endif]-->
-                    <div class="logo-text">BookieCake</div>
+                    <span class="logo-text" style="vertical-align: middle; display: inline-block;">BookieCake</span>
                 </div>
                 <div class="subtitle">Xác thực tài khoản</div>
             </div>
