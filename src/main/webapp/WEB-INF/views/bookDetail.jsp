@@ -174,6 +174,8 @@
         </div>
     </div>
 
+    <%@ include file="/WEB-INF/views/review.jsp" %>
+
     <!-- Related Actions -->
     <div class="related-actions">
         <div class="action-buttons">

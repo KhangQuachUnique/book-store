@@ -1,13 +1,14 @@
 .review-section {
     padding: 50px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
+    /*box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);*/
+    background-color: #FFFFFF;
+    border: 1px solid #d1d1d1;
     border-radius: 10px;
 }
 
 .review-section hr {
-    background-color: #e1e1e1;
-    height: 2px;
+    background-color: #d1d1d1;
+    height: 1px;
     border: none;
     color: #e1e1e1;
     margin: 20px 0;
