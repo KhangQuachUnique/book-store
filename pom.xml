@@ -107,6 +107,12 @@
             <version>${jakarta.validation.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.0.0-jre</version>
+        </dependency>
+
 		<!-- Hibernate Validator Implementation -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
