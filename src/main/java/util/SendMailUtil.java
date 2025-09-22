@@ -1,29 +1,21 @@
 package util;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
-import jakarta.activation.FileDataSource;
 import jakarta.mail.Authenticator;
-import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
-import jakarta.mail.Multipart;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
 
 /**
  * BookieCake Email Service Utility
- * Refactored to use external HTML templates for cleaner code
+ * Refactored to use external HTML templates with hosted logo images for cleaner code
  */
 public class SendMailUtil {
     private static final String SMTP_HOST = "smtp.gmail.com";
@@ -61,66 +53,17 @@ public class SendMailUtil {
     }
 
     /**
-     * Create multipart message with embedded BookieCake logo
+     * Create simple HTML email message
      */
-    private static MimeMessage createEmailWithEmbeddedLogo(Session session, String to, String from, String fromName,
+    private static MimeMessage createHtmlEmail(Session session, String to, String from, String fromName,
             String subject, String htmlContent) throws MessagingException, UnsupportedEncodingException {
 
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(from, fromName));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
         message.setSubject(subject);
+        message.setContent(htmlContent, "text/html; charset=UTF-8");
 
-        // Create multipart message
-        Multipart multipart = new MimeMultipart("related");
-
-        // HTML content part
-        BodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(htmlContent, "text/html; charset=UTF-8");
-        multipart.addBodyPart(htmlPart);
-
-        // Embedded logo part
-        try {
-            BodyPart logoPart = new MimeBodyPart();
-
-            // Try to find logo in webapp directory first
-            String logoPath = null;
-            String webappPath = System.getProperty("user.dir") + "/src/main/webapp/assets/images/BookieCakeLogo.svg";
-            String resourcePath = System.getProperty("user.dir") + "/src/main/resources/BookieCakeLogo.svg";
-
-            File webappLogo = new File(webappPath);
-            File resourceLogo = new File(resourcePath);
-
-            if (webappLogo.exists()) {
-                logoPath = webappPath;
-            } else if (resourceLogo.exists()) {
-                logoPath = resourcePath;
-            }
-
-            if (logoPath != null) {
-                DataSource logoSource = new FileDataSource(logoPath);
-                logoPart.setDataHandler(new DataHandler(logoSource));
-                logoPart.setHeader("Content-ID", "<bookiecake-logo>");
-                logoPart.setDisposition(MimeBodyPart.INLINE);
-                logoPart.setFileName("BookieCakeLogo.svg");
-                multipart.addBodyPart(logoPart);
-
-                if (DEBUG_MODE) {
-                    System.out.println("DEBUG: Embedded logo from: " + logoPath);
-                }
-            } else {
-                if (DEBUG_MODE) {
-                    System.out.println("DEBUG: Logo file not found, email will use fallback");
-                }
-            }
-        } catch (Exception e) {
-            if (DEBUG_MODE) {
-                System.out.println("DEBUG: Failed to embed logo: " + e.getMessage());
-            }
-            // Continue without logo - fallback will be used
-        }
-
-        message.setContent(multipart);
         return message;
     }
 
@@ -160,7 +103,7 @@ public class SendMailUtil {
 
         try {
             String htmlContent = EmailTemplateUtil.getVerificationEmailTemplate(verifyLink);
-            MimeMessage msg = createEmailWithEmbeddedLogo(session, to, SMTP_USER, "BookieCake - Book Store",
+            MimeMessage msg = createHtmlEmail(session, to, SMTP_USER, "BookieCake - Book Store",
                     "🔐 Xác thực tài khoản BookieCake", htmlContent);
 
             if (DEBUG_MODE) {
@@ -193,7 +136,7 @@ public class SendMailUtil {
 
         try {
             String htmlContent = EmailTemplateUtil.getPasswordResetEmailTemplate(resetLink);
-            MimeMessage msg = createEmailWithEmbeddedLogo(session, to, SMTP_USER, "BookieCake - Book Store",
+            MimeMessage msg = createHtmlEmail(session, to, SMTP_USER, "BookieCake - Book Store",
                     "🔑 Đặt lại mật khẩu BookieCake", htmlContent);
 
             if (DEBUG_MODE) {
@@ -226,7 +169,7 @@ public class SendMailUtil {
 
         try {
             String htmlContent = EmailTemplateUtil.getWelcomeEmailTemplate(userName);
-            MimeMessage msg = createEmailWithEmbeddedLogo(session, to, SMTP_USER, "BookieCake - Book Store",
+            MimeMessage msg = createHtmlEmail(session, to, SMTP_USER, "BookieCake - Book Store",
                     "🎉 Chào mừng đến với BookieCake!", htmlContent);
 
             if (DEBUG_MODE) {
@@ -260,7 +203,7 @@ public class SendMailUtil {
         try {
             String htmlContent = EmailTemplateUtil.getOrderConfirmationEmailTemplate(userName, orderNumber,
                     totalAmount);
-            MimeMessage msg = createEmailWithEmbeddedLogo(session, to, SMTP_USER, "BookieCake - Book Store",
+            MimeMessage msg = createHtmlEmail(session, to, SMTP_USER, "BookieCake - Book Store",
                     "✅ Xác nhận đơn hàng #" + orderNumber + " - BookieCake", htmlContent);
 
             if (DEBUG_MODE) {
