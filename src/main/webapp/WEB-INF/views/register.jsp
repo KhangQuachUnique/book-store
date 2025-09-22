@@ -6,7 +6,7 @@
     <title>Register</title>
 
     <!-- JS -->
-    <script src="<%=request.getContextPath()%>/assets/js/app.js" defer></script>
+    <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script>
 
     <!-- CSS global & form -->
     <link rel="stylesheet"

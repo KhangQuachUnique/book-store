@@ -114,7 +114,6 @@
 .quick-actions .btn {
     width: 100%;
     padding: 14px 20px;
-    border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
@@ -126,8 +125,15 @@
     gap: 8px;
 }
 
+.quick-actions .btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 .btn-primary {
     background-color: var(--primary-color);
+    border: none;
     color: white;
 }
 
@@ -140,7 +146,7 @@
 .btn-secondary {
     background-color: #fff;
     color: #666;
-    border: 2px solid #ddd;
+    border: 2px solid #666;
 }
 
 .btn-secondary:hover {
@@ -567,12 +573,12 @@
     }
 }
 
-/* Focus States for Accessibility */
-.btn:focus,
-.breadcrumb a:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
+/*!* Focus States for Accessibility *!*/
+/*.btn:focus,*/
+/*.breadcrumb a:focus {*/
+/*    outline: 2px solid var(--primary-color);*/
+/*    outline-offset: 2px;*/
+/*}*/
 
 /* Print Styles */
 @media print {

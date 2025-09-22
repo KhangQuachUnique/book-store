@@ -17,7 +17,7 @@ public class OrderStatusDAO {
      */
     public List<OrderStatus> getAllStatuses() {
         List<OrderStatus> list = new ArrayList<>();
-        list.add(new OrderStatus(0, "Tất cả"));
+        list.add(new OrderStatus(0L, "Tất cả"));
 
         String sql = "SELECT id, name FROM status WHERE id != 8 ORDER BY id";
 
@@ -27,7 +27,7 @@ public class OrderStatusDAO {
 
             while (rs.next()) {
                 list.add(new OrderStatus(
-                        rs.getInt("id"),
+                        rs.getLong("id"),
                         rs.getString("name")));
             }
 
