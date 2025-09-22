@@ -73,21 +73,67 @@
                 return Math.floor(windowWidth / getCardWidth());
             }
 
-            btnRight.addEventListener("click", () => {
+            // ===== Clone phần tử để tạo hiệu ứng vô hạn =====
+            const cards = [...track.children];
+            const cardWidth = getCardWidth();
+
+            // clone sang cuối
+            cards.forEach(card => {
+                track.appendChild(card.cloneNode(true));
+            });
+
+            // clone sang đầu
+            cards.slice().reverse().forEach(card => {
+                track.insertBefore(card.cloneNode(true), track.firstChild);
+            });
+
+            // đặt scroll ban đầu ở giữa (vùng sách gốc)
+            const startPos = cards.length * cardWidth;
+            windowEl.scrollLeft = startPos;
+
+            function move(dir) {
                 windowEl.scrollBy({
-                    left: getCardWidth() * getVisibleCount(),
+                    left: dir * cardWidth * getVisibleCount(),
                     behavior: "smooth"
                 });
+
+                // Sau khi cuộn, nếu vượt quá giới hạn -> reset lại
+                setTimeout(() => {
+                    if (windowEl.scrollLeft <= 0) {
+                        windowEl.scrollLeft = startPos;
+                    } else if (windowEl.scrollLeft >= track.scrollWidth - windowEl.offsetWidth) {
+                        windowEl.scrollLeft = startPos;
+                    }
+                }, 400);
+            }
+
+            // ===== Auto-play sau 3s =====
+            let autoPlayInterval = setInterval(() => move(1), 5000);
+
+            function resetAutoPlay() {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(() => move(1), 5000);
+            }
+
+            btnRight.addEventListener("click", () => {
+                move(1);
+                resetAutoPlay();
             });
 
             btnLeft.addEventListener("click", () => {
-                windowEl.scrollBy({
-                    left: -getCardWidth() * getVisibleCount(),
-                    behavior: "smooth"
-                });
+                move(-1);
+                resetAutoPlay();
+            });
+
+            // === Xử lý resize (nếu thay đổi kích thước cửa sổ) ===
+            window.addEventListener("resize", () => {
+                windowEl.scrollLeft = startPos;
+                resetAutoPlay();
             });
         });
     </script>
+
+
 
 </body>
 </html>
