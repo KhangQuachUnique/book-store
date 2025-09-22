@@ -16,7 +16,7 @@ import model.User;
 
 @WebServlet("/user/cart")
 public class CartServlet extends HttpServlet {
-    private CartDAO cartDAO = new CartDAO();
+    private final CartDAO cartDAO = new CartDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -107,11 +107,11 @@ public class CartServlet extends HttpServlet {
                         "{\"success\":true,\"itemTotal\":%.0f,\"cartTotal\":%.0f}",
                         updatedItem != null ? updatedItem.getPrice() * updatedItem.getQuantity() : 0,
                         cartTotal));
-                return;
+            }
+            if (!"update".equals(action)) {
+                resp.sendRedirect(req.getContextPath() + "/user/cart");
             }
 
-            // Redirect back to cart page after operation
-            resp.sendRedirect(req.getContextPath() + "/user/cart");
         } catch (Exception e) {
             e.printStackTrace();
             if ("update".equals(action)) {
