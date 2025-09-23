@@ -23,6 +23,7 @@ public class PathConstants {
     public static final String VIEW_WISHLIST = "/WEB-INF/views/wishList.jsp";
     public static final String VIEW_REVIEW = "/WEB-INF/views/review.jsp";
     public static final String VIEW_CART = "/WEB-INF/views/cart.jsp";
+    public static final String VIEW_HISTORY = "/WEB-INF/views/viewHistory.jsp";
 
     // Admin Views
     public static final String VIEW_ADMIN_DASHBOARD = "/WEB-INF/views/userManagement/dashboard.jsp";
