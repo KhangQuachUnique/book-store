@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.View;
 
 import constant.PathConstants;
 import dao.BookDao;
@@ -77,6 +78,12 @@ public class BookDetailServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
                 return;
             }
+            
+            model.User user = (model.User) req.getSession().getAttribute("user");
+                if (user != null) {
+                dao.ViewHistoryDao ViewHistoryDao = new dao.ViewHistoryDao();
+                ViewHistoryDao.addHistory(user.getId(), bookId);
+            } 
 
             // Set book and book-reviews as request attribute for JSP
             req.setAttribute("book", book);
