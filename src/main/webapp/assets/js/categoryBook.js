@@ -1,5 +1,6 @@
 // Category Book JavaScript functionality
 let includeCategories = [];
+let excludeCategories = [];
 
 // Initialize from existing values if available
 function initializeCategories() {
@@ -8,11 +9,23 @@ function initializeCategories() {
         includeCategories = includeCategories_jsp.split(',').map(id => parseInt(id));
     }
     
+    if (typeof excludeCategories_jsp !== 'undefined' && excludeCategories_jsp !== '') {
+        excludeCategories = excludeCategories_jsp.split(',').map(id => parseInt(id));
+    }
+    
     // Áp dụng trạng thái cho các category đã được chọn
     includeCategories.forEach(categoryId => {
         const element = document.querySelector(`[data-id="${categoryId}"]`);
         if (element) {
             element.classList.add('include');
+        }
+    });
+    
+    // Áp dụng trạng thái cho các category bị loại trừ
+    excludeCategories.forEach(categoryId => {
+        const element = document.querySelector(`[data-id="${categoryId}"]`);
+        if (element) {
+            element.classList.add('exclude');
         }
     });
 }
@@ -24,12 +37,26 @@ function toggleCategoryTable() {
 
 function toggleCategory(element, categoryId) {
     if (element.classList.contains('include')) {
-        // Nếu đang được chọn (viền xanh), thì bỏ chọn (về mặc định)
+        // Từ Include -> Exclude (viền đỏ)
         element.classList.remove('include');
+        element.classList.add('exclude');
+        
+        // Remove from include array, add to exclude array
         includeCategories = includeCategories.filter(id => id !== categoryId);
+        if (!excludeCategories.includes(categoryId)) {
+            excludeCategories.push(categoryId);
+        }
+    } else if (element.classList.contains('exclude')) {
+        // Từ Exclude -> Unselected (mặc định, không viền)
+        element.classList.remove('exclude');
+        
+        // Remove from exclude array
+        excludeCategories = excludeCategories.filter(id => id !== categoryId);
     } else {
-        // Nếu chưa được chọn, thì chọn (viền xanh)
+        // Từ Unselected -> Include (viền xanh)
         element.classList.add('include');
+        
+        // Add to include array
         if (!includeCategories.includes(categoryId)) {
             includeCategories.push(categoryId);
         }
@@ -37,8 +64,9 @@ function toggleCategory(element, categoryId) {
 }
 
 function submitFilterForm() {
-    // Update hidden input với các categories được chọn
+    // Update hidden inputs với các categories được chọn và loại trừ
     document.getElementById('includeCategories').value = includeCategories.join(',');
+    document.getElementById('excludeCategories').value = excludeCategories.join(',');
     
     // Set action type là "categories" (ưu tiên category filter)
     document.getElementById('searchAction').value = 'categories';
