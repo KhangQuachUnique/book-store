@@ -14,12 +14,15 @@ public class PathConstants {
     public static final String VIEW_HEADER = "/WEB-INF/views/fragment/header.jsp";
     public static final String VIEW_FOOTER = "/WEB-INF/views/fragment/footer.jsp";
     public static final String VIEW_SIDEBAR = "/WEB-INF/views/fragment/sidebar.jsp";
+    public static final String VIEW_USER_INFO = "/WEB-INF/views/viewUserInfo.jsp";
+    public static final String EDIT_USER_INFO = "/WEB-INF/views/editUserInfo.jsp";
 
     // Private View Path
     public static final String VIEW_WISHLIST = "/WEB-INF/views/wishList.jsp";
     public static final String VIEW_REVIEW = "/WEB-INF/views/review.jsp";
+    public static final String VIEW_CART = "/WEB-INF/views/cart.jsp";
 
-    //Admin Views
+    // Admin Views
     public static final String VIEW_ADMIN_DASHBOARD = "/WEB-INF/views/userManagement/dashboard.jsp";
     public static final String VIEW_ADMIN_USER_LIST = "/WEB-INF/views/userManagement/userList.jsp";
     public static final String VIEW_ADMIN_USER_EDIT = "/WEB-INF/views/userManagement/editUser.jsp";
@@ -27,5 +30,8 @@ public class PathConstants {
     public static final String VIEW_ADMIN_USER_DETAIL = "/WEB-INF/views/userManagement/viewUser.jsp";
     public static final String VIEW_ADMIN_USER_ADD_ADMIN = "/WEB-INF/views/userManagement/creatAdmin.jsp";
     public static final String VIEW_EDIT_USER = "/WEB-INF/views/userManagement/editUser.jsp";
+
+    // Book Management Views
+    public static final String VIEW_ADMIN_BOOK = "/WEB-INF/views/userManagement/viewBook.jsp";
 
 }

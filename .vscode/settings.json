@@ -1,0 +1,134 @@
+{
+    // === Maven Configuration ===
+    "maven.terminal.useJavaHome": true,
+    "maven.executable.path": "mvn",
+    "maven.terminal.favorites": [
+        {
+            "command": "clean compile",
+            "debug": false
+        },
+        {
+            "command": "clean package",
+            "debug": false
+        },
+        {
+            "command": "clean install",
+            "debug": false
+        }
+    ],
+    // === Lombok Support ===
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable -javaagent:\"c:/Users/phucb/.vscode/extensions/redhat.java-*/lombok/lombok-*.jar\"",
+    // === Editor Settings ===
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+    },
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.trimAutoWhitespace": true,
+    "editor.rulers": [
+        120
+    ],
+    // === File Settings ===
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    // === File Associations ===
+    "files.associations": {
+        "*.jsp": "html",
+        "*.jspf": "html",
+        "*.tag": "html",
+        "*.tld": "xml",
+        "web.xml": "xml",
+        "pom.xml": "xml",
+        "*.properties": "properties",
+        "*.sql": "sql"
+    },
+    // === HTML/JSP Settings ===
+    "html.format.indentInnerHtml": true,
+    "html.format.preserveNewLines": true,
+    "html.format.maxPreserveNewLines": 2,
+    "html.format.indentHandlebars": true,
+    "html.format.endWithNewline": true,
+    "html.format.extraLiners": "head, body, /html",
+    "html.format.wrapLineLength": 120,
+    // === CSS Settings ===
+    "css.validate": true,
+    "css.lint.duplicateProperties": "warning",
+    "css.lint.emptyRules": "warning",
+    "css.lint.importStatement": "warning",
+    // === JavaScript Settings ===
+    "javascript.format.enable": true,
+    "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+    "javascript.format.placeOpenBraceOnNewLineForControlBlocks": false,
+    // === IntelliSense & Auto-completion ===
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+    },
+    "editor.suggestSelection": "first",
+    "editor.acceptSuggestionOnCommitCharacter": true,
+    "editor.acceptSuggestionOnEnter": "on",
+    "editor.tabCompletion": "on",
+    // === Terminal Settings ===
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    // === Git Settings ===
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "git.postCommitCommand": "none",
+    // === Extension-specific Settings ===
+    "redhat.telemetry.enabled": false,
+    "java.semanticHighlighting.enabled": true,
+    "java.imports.gradle.wrapper.checksums": [
+        {
+            "sha256": "gradle-wrapper.jar",
+            "allowed": true
+        }
+    ],
+    // === Debugging ===
+    "java.debug.settings.enableRunDebugCodeLens": true,
+    "java.debug.settings.showHex": false,
+    "java.debug.settings.showStaticVariables": true,
+    "java.debug.settings.showQualifiedNames": false,
+    // === Performance ===
+    "java.maxConcurrentBuilds": 1,
+    "java.import.maven.enabled": true,
+    "java.import.gradle.enabled": false,
+    "java.configuration.updateBuildConfiguration": "interactive",
+    // === Workspace-specific ===
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "workbench.startupEditor": "readme",
+    "workbench.editor.enablePreview": false,
+    // === Problem Matchers ===
+    "problems.decorations.enabled": true,
+    "problems.showCurrentInStatus": true,
+    // === Search ===
+    "search.exclude": {
+        "**/target": true,
+        "**/node_modules": true,
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    "files.watcherExclude": {
+        "**/target/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true
+    },
+    // === Live Server (if using extension) ===
+    "liveServer.settings.port": 5500,
+    "liveServer.settings.CustomBrowser": "chrome",
+    "liveServer.settings.donotShowInfoMsg": true
+}

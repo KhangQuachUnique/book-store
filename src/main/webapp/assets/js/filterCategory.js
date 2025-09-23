@@ -116,6 +116,34 @@ document.addEventListener('DOMContentLoaded', function() {
         if (idInput) idInput.addEventListener('input', applyCategoryFilters);
     }
 
+    // --- Manage Category: tự động lọc bảng khi gõ theo id sách sắp xếp tăng dần ---
+    const idInput = document.querySelector('input[name="id"]');
+    if (idInput && tableRows.length > 0) {
+            const tbody = document.querySelector('table tbody');
+            idInput.addEventListener('input', function() {
+                const val = idInput.value.trim().toLowerCase();
+
+                // Lọc hiển thị
+                tableRows.forEach(row => {
+                    const idCell = row.querySelector('td:nth-child(1)');
+                    const text = idCell ? idCell.textContent.toLowerCase() : '';
+                    row.style.display = (text.includes(val)) ? '' : 'none';
+                });
+
+                // Thu thập các hàng đang hiển thị để sắp xếp theo ID tăng dần
+                const visibleRows = Array.from(tableRows).filter(r => r.style.display !== 'none');
+                visibleRows.sort((a, b) => {
+                    const aId = parseInt(a.querySelector('td:nth-child(1)')?.textContent || '0', 10);
+                    const bId = parseInt(b.querySelector('td:nth-child(1)')?.textContent || '0', 10);
+                    // NaN sẽ trở thành 0 do parseInt, đảm bảo so sánh số
+                    return aId - bId;
+                });
+
+                // Gắn lại theo thứ tự tăng dần
+                visibleRows.forEach(row => tbody.appendChild(row));
+            });
+    }
+
     // --- Edit Category: tự động lọc combobox tên ---
     const editNameInput = document.querySelector('form[action$="/admin/category"] input[name="name"]');
     if (editNameInput) {

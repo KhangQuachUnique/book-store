@@ -1,18 +1,19 @@
 package controller;
 
-import constant.PathConstants;
-import model.ApiResponse;
-import model.BookReview;
-import model.BookReviewRequest;
-import service.BookReviewService;
-import util.JsonUtil;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import constant.PathConstants;
+import model.ApiResponse;
+import model.BookReview;
+import model.BookReviewRequest;
+import service.BookReviewService;
+import util.JsonUtil;
 
 @WebServlet("/user/book-review")
 public class BookReviewServlet extends HttpServlet {
@@ -22,13 +23,14 @@ public class BookReviewServlet extends HttpServlet {
         if (bookIdParam != null) {
             try {
                 int bookId = Integer.parseInt(bookIdParam);
-                Integer currentUserId = (Integer) req.getSession().getAttribute("userId");
+                model.User sessionUser = (model.User) req.getSession().getAttribute("user");
+                Long currentUserId = 0L;
 
-                if (currentUserId == null) {
-                    currentUserId = 0; // hoặc -1
+                if (sessionUser != null) {
+                    currentUserId = sessionUser.getId();
                 }
 
-                BookReview bookReview = BookReviewService.getReviewsByBookId(330658, 1009);
+                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId.intValue());
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
