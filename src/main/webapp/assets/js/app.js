@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
 // Logout
 window.logout = async function logout() {
     try {
