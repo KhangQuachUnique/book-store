@@ -28,7 +28,7 @@
                     <jsp:param name="fullStars" value="${5}" />
                     <jsp:param name="partialFraction" value="0" />
                     <jsp:param name="emptyStars" value="${0}" />
-                    <jsp:param name="size" value="18" />
+                    <jsp:param name="size" value="16" />
                 </jsp:include>
                 <span>${requestScope.bookReview.fiveStarCount}</span>
             </div>
@@ -37,7 +37,7 @@
                     <jsp:param name="fullStars" value="${4}" />
                     <jsp:param name="partialFraction" value="0" />
                     <jsp:param name="emptyStars" value="${1}" />
-                    <jsp:param name="size" value="18" />
+                    <jsp:param name="size" value="16" />
                 </jsp:include>
                 <span>${requestScope.bookReview.fourStarCount}</span>
             </div>
@@ -46,7 +46,7 @@
                     <jsp:param name="fullStars" value="${3}" />
                     <jsp:param name="partialFraction" value="0" />
                     <jsp:param name="emptyStars" value="${2}" />
-                    <jsp:param name="size" value="18" />
+                    <jsp:param name="size" value="16" />
                 </jsp:include>
                 <span>${requestScope.bookReview.threeStarCount}</span>
             </div>
@@ -55,7 +55,7 @@
                     <jsp:param name="fullStars" value="${2}" />
                     <jsp:param name="partialFraction" value="0" />
                     <jsp:param name="emptyStars" value="${3}" />
-                    <jsp:param name="size" value="18" />
+                    <jsp:param name="size" value="16" />
                 </jsp:include>
                 <span>${requestScope.bookReview.twoStarCount}</span>
             </div>
@@ -64,7 +64,7 @@
                     <jsp:param name="fullStars" value="${1}" />
                     <jsp:param name="partialFraction" value="0" />
                     <jsp:param name="emptyStars" value="${4}" />
-                    <jsp:param name="size" value="18" />
+                    <jsp:param name="size" value="16" />
                 </jsp:include>
                 <span>${requestScope.bookReview.oneStarCount}</span>
             </div>

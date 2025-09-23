@@ -12,7 +12,7 @@ import model.ReviewShow;
 import util.DBConnection;
 
 public class BookReviewDao {
-    public static BookReview getReviewsByBookId(int bookId, int currentUserId) {
+    public static BookReview getReviewsByBookId(long bookId, long currentUserId) {
         String sql = "SELECT r.id, " +
                 "r.book_id, " +
                 "r.user_id, " +
@@ -34,8 +34,8 @@ public class BookReviewDao {
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, currentUserId);
-            ps.setInt(2, bookId);
+            ps.setLong(1, currentUserId);
+            ps.setLong(2, bookId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 List<ReviewShow> reviewShows = new ArrayList<>();
