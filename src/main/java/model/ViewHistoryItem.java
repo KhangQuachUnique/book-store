@@ -4,18 +4,14 @@ import java.sql.Timestamp;
 
 public class ViewHistoryItem {
     private Long id;
-    private Long bookId;
-    private String title;
-    private String thumbnail;
+    private Book book;        // chứa toàn bộ thông tin Book
     private Timestamp viewedAt;
 
     public ViewHistoryItem() {}
 
-    public ViewHistoryItem(Long id, Long bookId, String title, String thumbnail, Timestamp viewedAt) {
+    public ViewHistoryItem(Long id, Book book, Timestamp viewedAt) {
         this.id = id;
-        this.bookId = bookId;
-        this.title = title;
-        this.thumbnail = thumbnail;
+        this.book = book;
         this.viewedAt = viewedAt;
     }
 
@@ -27,28 +23,12 @@ public class ViewHistoryItem {
         this.id = id;
     }
 
-    public Long getBookId() {
-        return bookId;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBookId(Long bookId) {
-        this.bookId = bookId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     public Timestamp getViewedAt() {
