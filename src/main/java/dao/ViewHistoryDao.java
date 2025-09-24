@@ -16,15 +16,19 @@ public class ViewHistoryDao {
     public List<ViewHistoryItem> getHistoryByUserId(Long userId) {
         List<ViewHistoryItem> list = new ArrayList<>();
         String sql = """
-            SELECT v.id, v.viewed_at,
-                   b.id AS book_id, b.title, b.author, b.publisher,
-                   b.category_id, b.thumbnail_url, b.description, b.stock,
-                   b.publish_year, b.pages, b.rating_average,
-                   b.price, b.original_price, b.discount_rate, b.created_at
+            SELECT * FROM (
+                SELECT DISTINCT ON (b.id)
+                v.id, v.viewed_at,
+                b.id AS book_id, b.title, b.author, b.publisher,
+                b.category_id, b.thumbnail_url, b.description, b.stock,
+                b.publish_year, b.pages, b.rating_average,
+                b.price, b.original_price, b.discount_rate, b.created_at
             FROM viewed v
             JOIN books b ON v.book_id = b.id
             WHERE v.user_id = ?
-            ORDER BY v.viewed_at DESC
+            ORDER BY b.id, v.viewed_at DESC
+            ) t
+            ORDER BY t.viewed_at DESC;
         """;
 
         try (Connection con = DBConnection.getConnection();
@@ -46,10 +50,10 @@ public class ViewHistoryDao {
                 book.setStock(rs.getInt("stock"));
                 book.setPublishYear(rs.getInt("publish_year"));
                 book.setPages(rs.getInt("pages"));
-                book.setRating(rs.getDouble("rating_average"));   // ✅ map vào field rating
+                book.setRating(rs.getDouble("rating_average"));   
                 book.setPrice(rs.getDouble("price"));
                 book.setOriginalPrice(rs.getDouble("original_price"));
-                book.setDiscount_rate(rs.getInt("discount_rate")); // ✅ map vào field discount_rate
+                book.setDiscount_rate(rs.getInt("discount_rate")); 
                 book.setCreatedAt(rs.getTimestamp("created_at"));
                 book.calculateStars();
                 // Map ViewHistoryItem
