@@ -77,16 +77,12 @@
             <div class="book-rating-section">
                 <div class="rating-display">
                     <div class="stars">
-                        <c:forEach begin="1" end="5" var="i">
-                            <c:choose>
-                                <c:when test="${i <= book.rating}">
-                                    <span class="star filled">★</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="star empty">☆</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
+                        <jsp:include page="ratingStar.jsp">
+                            <jsp:param name="fullStars" value="${book.fullStars}" />
+                            <jsp:param name="partialFraction" value="${book.partialFraction}" />
+                            <jsp:param name="emptyStars" value="${book.emptyStars}" />
+                            <jsp:param name="size" value="18" />
+                        </jsp:include>
                     </div>
                     <span class="rating-text">
                         <fmt:formatNumber value="${book.rating}" type="number" maxFractionDigits="1"/> out of 5
@@ -173,6 +169,10 @@
             </c:if>
         </div>
     </div>
+
+    <jsp:include page="review.jsp">
+        <jsp:param name="bookReview" value="${requestScope.bookReview}"/>
+    </jsp:include>
 
     <!-- Related Actions -->
     <div class="related-actions">

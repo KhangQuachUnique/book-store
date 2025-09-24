@@ -257,6 +257,7 @@
 }
 
 .book-card {
+    min-width: 210px;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -406,7 +407,7 @@
 .book-price-badge {
     background: #4CAF50;
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     padding: 4px 12px;
     border-radius: 6px;

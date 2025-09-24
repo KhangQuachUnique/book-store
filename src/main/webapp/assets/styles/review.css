@@ -1,16 +1,17 @@
 .review-section {
     padding: 50px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
+    /*box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);*/
+    background-color: #FFFFFF;
+    border: 1px solid #d1d1d1;
     border-radius: 10px;
 }
 
 .review-section hr {
-    background-color: #e1e1e1;
-    height: 2px;
+    background-color: #d1d1d1;
+    height: 1px;
     border: none;
     color: #e1e1e1;
-    margin: 20px 0;
+    margin-top: 20px;
 }
 
 .review-section .review-header {
@@ -70,9 +71,9 @@
 .user-comment {
     display: flex;
     gap: 16px;
+    margin-top: 15px;
     align-items: flex-start;
-    padding: 16px 0;
-    border-bottom: 1px solid #e1e1e1;
+    border-bottom: 1px solid #d1d1d1;
 }
 
 .user-comment .avatar {
@@ -126,8 +127,8 @@
 .comment-actions {
     display: flex;
     align-items: center;
-    gap: 5px;
-    margin-top: 10px;
+    gap: 2px;
+    margin-top: 5px;
 }
 
 .like-count, .reply-count {
@@ -167,7 +168,7 @@
 }
 
 .like-btn svg {
-    height: 32px;
+    height: 29px;
     fill: #858585; /* default màu khi chưa like */
     transition: fill 0.3s ease, transform 0.2s ease;
 }

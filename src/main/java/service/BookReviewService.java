@@ -6,7 +6,7 @@ import model.BookReview;
 import model.ReviewShow;
 
 public class BookReviewService {
-    public static BookReview getReviewsByBookId(int bookId, int currentUserId) {
+    public static BookReview getReviewsByBookId(long bookId, long currentUserId) {
         BookReview bookReview = BookReviewDao.getReviewsByBookId(bookId, currentUserId);
         Integer fiveStarCount = 0;
         Integer fourStarCount = 0;
