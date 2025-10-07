@@ -35,6 +35,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>  <!-- Auto tạo bảng nếu thiếu -->
             <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.archive.autodetection" value="class, hbm"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>  <!-- Comment SQL trong log -->
             <property name="hibernate.jdbc.lob.non_contextual_creation" value="true"/>  <!-- Fix LOB nếu lỗi -->
