@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import constant.PathConstants;
-import dao.UserDao;
+//import dao.UserDao;
 import model.User;
 
 @WebFilter("/*")
@@ -72,38 +72,38 @@ public class AuthFilter implements Filter {
             loggedIn = true;
         }
 
-        // Kiểm tra phân quyền
-        if (!loggedIn) {
-            // Yêu cầu login để truy cập tính năng của user
-            if (path.startsWith("/user")) {
-                request.setAttribute("contentPage", PathConstants.VIEW_PLEASE_LOGIN);
-                request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
-                return;
-            }
-            // Bảo vệ các url của admin
-            if (path.startsWith("/admin")) {
-                request.setAttribute("contentPage", PathConstants.VIEW_NOT_FOUND);
-                request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
-                return;
-            }
-        } else {
-            // User đã login
-            HttpSession session = req.getSession(false); // lấy session hiện có, nếu chưa có thì trả về null
-            if (session == null || session.getAttribute("user") == null) {
-
-                Optional<User> user = new UserDao().findByEmail(email);
-
-                user.ifPresent(us -> {
-                    HttpSession newSession = req.getSession(true); // tạo mới nếu cần
-                    newSession.setAttribute("user", us.safeUser());
-                });
-
-            }
-            if (path.startsWith("/admin") && !"admin".equals(role)) {
-                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
-                return;
-            }
-        }
+//        // Kiểm tra phân quyền
+//        if (!loggedIn) {
+//            // Yêu cầu login để truy cập tính năng của user
+//            if (path.startsWith("/user")) {
+//                request.setAttribute("contentPage", PathConstants.VIEW_PLEASE_LOGIN);
+//                request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
+//                return;
+//            }
+//            // Bảo vệ các url của admin
+//            if (path.startsWith("/admin")) {
+//                request.setAttribute("contentPage", PathConstants.VIEW_NOT_FOUND);
+//                request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
+//                return;
+//            }
+//        } else {
+//            // User đã login
+//            HttpSession session = req.getSession(false); // lấy session hiện có, nếu chưa có thì trả về null
+//            if (session == null || session.getAttribute("user") == null) {
+//
+//                Optional<User> user = new UserDao().findByEmail(email);
+//
+//                user.ifPresent(us -> {
+//                    HttpSession newSession = req.getSession(true); // tạo mới nếu cần
+//                    newSession.setAttribute("user", us.safeUser());
+//                });
+//
+//            }
+//            if (path.startsWith("/admin") && !"admin".equals(role)) {
+//                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
+//                return;
+//            }
+//        }
 
         chain.doFilter(request, response);
     }

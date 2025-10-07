@@ -1,74 +1,31 @@
 package model;
 
-import java.sql.Timestamp;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "notifications")
 public class Notification {
-    private long id;
-    private long userId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column
     private String message;
-    private String type; // "EMAIL" hoặc "IN_APP"
-    private Timestamp createdAt;
-    private boolean isRead; // Thêm trường is_read
 
-    // Constructors
-    public Notification() {
-    }
+    @Column(name = "isRead")
+    private Boolean isRead;
 
-    public Notification(long id, long userId, String message, String type, Timestamp createdAt, boolean isRead) {
-        this.id = id;
-        this.userId = userId;
-        this.message = message;
-        this.type = type;
-        this.createdAt = createdAt;
-        this.isRead = isRead;
-    }
-
-    // Getters and Setters
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
 }

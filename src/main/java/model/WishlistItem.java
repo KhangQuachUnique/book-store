@@ -1,25 +1,25 @@
 package model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order_items")
-public class OrderItem {
+@Table(name = "wishlist_items")
+public class WishlistItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "quantity")
-    @Min(value = 1, message = "Quantity must be at least 1")
-    private int quantity;
+    @Column(name = "addedAt")
+    private Timestamp addedAt;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,6 +27,6 @@ public class OrderItem {
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderId", nullable = false)
-    private Order order;
+    @JoinColumn(name = "wishlistId", nullable = false)
+    private Wishlist wishlist;
 }
