@@ -12,18 +12,22 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
 /**
  * Model class representing a book.
  */
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
-    private Integer id;
+    @Id
+    private Long id;
 
     @NotNull(message = "Title is required")
     @Size(min = 1, max = 255, message = "Title must be between 1 and 255 characters")
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     private String author;
@@ -46,8 +50,12 @@ public class Book implements Serializable {
     @Min(value = 0, message = "Rating must be non-negative")
     @Max(value = 5, message = "Rating must not exceed 5")
     private double rating;
+
+    @Transient
     private Integer fullStars;
+    @Transient
     private Double partialFraction;
+    @Transient
     private Integer emptyStars;
 
     @Min(value = 0, message = "Price must be non-negative")

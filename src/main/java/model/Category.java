@@ -1,13 +1,27 @@
 package model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * Model class representing a category.
  */
+@Entity
+@Table(name = "categories")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String name;
     private Long parentId;
     private boolean isLeaf;

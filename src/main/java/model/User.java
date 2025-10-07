@@ -5,8 +5,8 @@ package model;
 import java.sql.Timestamp;
 import java.util.List;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,37 +14,53 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Long id; // BIGSERIAL, tự động tăng
-
+    @Column(length = 50)
     @NotBlank(message = "Name cannot be empty")
-    private String name; // name
+    private String name;
 
+    @Column(unique = true)
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Invalid email format")
-    private String email; // email
+    private String email;
 
-    private String passwordHash; // password_hash, không validate tại model
+    @NotBlank(message = "Password cannot be empty")
+    private String passwordHash;
 
-    private String phone; // phone
+    @Pattern(regexp = "^\\+?[0-9]{7,15}$", message = "Invalid phone number")
+    private String phone;
 
     private List<Address> addresses;
 
-    private String role; // 'customer' hoặc 'admin'
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private Role role;
 
-    private Boolean isBlocked; // có bị block không
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 
-    private Timestamp blockedUntil; // thời điểm hết block
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private WishList wishList;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addressList;
+
+    private Boolean isBlocked;
+    private Timestamp blockedUntil;
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
-
-    // Thêm cho xác thực email
-    private Boolean isVerified; // đã xác thực chưa
-    private String verifyToken; // mã token
-    private Timestamp verifyExpire; // thời điểm hết hạn token
+    private Boolean isVerified;
+    private String verifyToken;
+    private Timestamp verifyExpire;
 
     /**
      * Trả về bản User "safe", không có passwordHash
