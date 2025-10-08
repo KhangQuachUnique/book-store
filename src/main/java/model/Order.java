@@ -38,8 +38,8 @@ public class Order {
     @JoinColumn(name = "\"promotionId\"")
     private Promotion promotion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"statusId\"", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "\"status\"")
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

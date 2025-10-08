@@ -1,12 +1,12 @@
-//package model;
-//
-//import lombok.AllArgsConstructor;
-//import lombok.Data;
-//import lombok.NoArgsConstructor;
-//
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//public class BookReviewRequest {
-//    private Integer reviewId;
-//}
+package model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class BookReviewRequest {
+    private Integer reviewId;
+}

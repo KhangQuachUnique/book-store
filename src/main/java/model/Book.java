@@ -1,6 +1,11 @@
 package model;
 
-import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.List;
+
+// ✅ Đổi từ javax → jakarta
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -8,17 +13,16 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
-import java.sql.Timestamp;
-import java.util.List;
-
+/**
+ * Model class representing a book.
+ */
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "\"books\"")
-public class Book {
-
+public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"id\"")
@@ -93,10 +97,10 @@ public class Book {
     private List<CartItem> cartItems;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<WishlistItem> wishlistItems;
+    private List<WishListItem> wishlistItems;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<LikeReview> likeReviews;
+    private List<ViewedProductItem> viewedProductItems;
 
     public void calculateStars() {
         this.fullStars = (int) rating;

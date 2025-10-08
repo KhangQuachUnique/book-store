@@ -1,22 +1,22 @@
+// Package: model
+// Các sửa đổi chính: Thêm ràng buộc validation @NotBlank và @Email cho các trường quan trọng để đảm bảo dữ liệu hợp lệ ngay tại model.
 package model;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"users\"")
+@Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"id\"")
@@ -37,8 +37,9 @@ public class User {
     @Column(name = "\"phoneNumber\"")
     private String phoneNumber;
 
-    @Column(name = "\"role\"", nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private Role role;
 
     @Column(name = "\"avatarUrl\"")
     private String avatarUrl;
@@ -78,7 +79,10 @@ public class User {
     private Cart cart;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Wishlist wishlist;
+    private WishList wishList;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private ViewedProduct viewedProduct;
 
     /**
      * Trả về bản User "safe", không có passwordHash
@@ -90,7 +94,6 @@ public class User {
         safe.setEmail(this.email);
         safe.setPhoneNumber(this.phoneNumber);
         safe.setRole(this.role);
-        safe.setAvatarUrl(this.avatarUrl);
         safe.setIsBlocked(this.isBlocked);
         safe.setBlockedUntil(this.blockedUntil);
         safe.setCreatedAt(this.createdAt);
@@ -100,7 +103,7 @@ public class User {
         safe.setVerifyExpire(this.verifyExpire);
         safe.setAddresses(this.addresses);
 
-        // Không set passwordHash
+        // Không set passwordHsh
         safe.setPasswordHash(null);
         return safe;
     }
