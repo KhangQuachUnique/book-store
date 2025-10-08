@@ -12,29 +12,30 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "reviews")
+@Table(name = "\"reviews\"")
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "rating")
+    @Column(name = "\"rating\"")
     private double rating;
 
-    @Column(name = "comment")
+    @Column(name = "\"comment\"")
     private String comment;
 
-    @Column(name = "createdAt")
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookId", nullable = false)
+    @JoinColumn(name = "\"bookId\"", nullable = false)
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

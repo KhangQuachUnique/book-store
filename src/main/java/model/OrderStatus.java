@@ -11,14 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "order_statuses")
+@Table(name = "\"orderStatuses\"")
 public class OrderStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "statusName", nullable = false)
+    @Column(name = "\"statusName\"", nullable = false)
     private String statusName;
 
     // Relationships

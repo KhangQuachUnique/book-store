@@ -11,22 +11,23 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "wishlist_items")
+@Table(name = "\"wishlistItems\"")
 public class WishlistItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "addedAt")
+    @Column(name = "\"addedAt\"")
     private Timestamp addedAt;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookId", nullable = false)
+    @JoinColumn(name = "\"bookId\"", nullable = false)
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wishlistId", nullable = false)
+    @JoinColumn(name = "\"wishlistId\"", nullable = false)
     private Wishlist wishlist;
 }

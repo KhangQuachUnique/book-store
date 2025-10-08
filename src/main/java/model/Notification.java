@@ -9,23 +9,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "notifications")
+@Table(name = "\"notifications\"")
 public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "\"title\"", nullable = false)
     private String title;
 
-    @Column
+    @Column(name = "\"message\"")
     private String message;
 
-    @Column(name = "isRead")
+    @Column(name = "\"isRead\"")
     private Boolean isRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "\"userId\"")
     private User user;
 }

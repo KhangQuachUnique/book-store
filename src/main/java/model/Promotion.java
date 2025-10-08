@@ -12,20 +12,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "promotions")
+@Table(name = "\"promotions\"")
 public class Promotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "code", unique = true, nullable = false)
+    @Column(name = "\"code\"", unique = true, nullable = false)
     private String code;
 
-    @Column(name = "discount")
+    @Column(name = "\"discount\"")
     private double discount;
 
-    @Column(name = "expireAt")
+    @Column(name = "\"expireAt\"")
     private Timestamp expireAt;
 
     // Relationships

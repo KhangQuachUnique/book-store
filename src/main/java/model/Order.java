@@ -12,33 +12,34 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
+@Table(name = "\"orders\"")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "payment_method")
+    @Column(name = "\"paymentMethod\"")
     private String paymentMethod;
 
-    @Column(name = "createdAt")
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    @Column(name = "totalAmount")
+    @Column(name = "\"totalAmount\"")
     private double totalAmount;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotionId")
+    @JoinColumn(name = "\"promotionId\"")
     private Promotion promotion;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "statusId", nullable = false)
+    @JoinColumn(name = "\"statusId\"", nullable = false)
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

@@ -14,53 +14,54 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "\"users\"")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
     @NotBlank(message = "Name cannot be empty")
-    @Column(name = "name", nullable = false)
+    @Column(name = "\"name\"", nullable = false)
     private String name;
 
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Invalid email format")
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "\"email\"", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "passwordHash", nullable = false)
+    @Column(name = "\"passwordHash\"", nullable = false)
     private String passwordHash;
 
-    @Column(name = "phoneNumber")
+    @Column(name = "\"phoneNumber\"")
     private String phoneNumber;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "\"role\"", nullable = false)
     private String role;
 
-    @Column(name = "avatarUrl")
+    @Column(name = "\"avatarUrl\"")
     private String avatarUrl;
 
-    @Column(name = "isBlocked")
+    @Column(name = "\"isBlocked\"")
     private Boolean isBlocked;
 
-    @Column(name = "blockedUntil")
+    @Column(name = "\"blockedUntil\"")
     private Timestamp blockedUntil;
 
-    @Column(name = "createdAt")
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "\"updatedAt\"")
     private Timestamp updatedAt;
 
-    @Column(name = "isVerified")
+    @Column(name = "\"isVerified\"")
     private Boolean isVerified;
 
-    @Column(name = "verifyToken")
+    @Column(name = "\"verifyToken\"")
     private String verifyToken;
 
-    @Column(name = "verifyExpire")
+    @Column(name = "\"verifyExpire\"")
     private Timestamp verifyExpire;
 
     // Relationships

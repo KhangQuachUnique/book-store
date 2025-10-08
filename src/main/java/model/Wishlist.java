@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "wishlists")
+@Table(name = "\"wishlists\"")
 public class Wishlist {
 
     @Id
@@ -20,7 +20,7 @@ public class Wishlist {
 
     // Relationships
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

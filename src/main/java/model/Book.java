@@ -16,67 +16,71 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "books")
+@Table(name = "\"books\"")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Integer id;
 
     @NotNull(message = "Title is required")
     @Size(min = 1, max = 255, message = "Title must be between 1 and 255 characters")
-    @Column(name = "title", nullable = false)
+    @Column(name = "\"title\"", nullable = false)
     private String title;
 
-    @Column(name = "author")
+    @Column(name = "\"author\"")
     private String author;
 
-    @Column(name = "publisher")
+    @Column(name = "\"publisher\"")
     private String publisher;
 
-    @Column(name = "thumbnailUrl")
+    @Column(name = "\"thumbnailUrl\"")
     private String thumbnailUrl;
 
-    @Column(name = "description")
+    @Column(name = "\"description\"")
     private String description;
 
-    @Column(name = "publishYear")
+    @Column(name = "\"publishYear\"")
     private Integer publishYear;
 
-    @Column(name = "pages")
+    @Column(name = "\"pages\"")
     private Integer pages;
 
-    @Column(name = "originalPrice")
+    @Column(name = "\"originalPrice\"")
     private double originalPrice;
 
-    @Column(name = "discountRate")
+    @Column(name = "\"discountRate\"")
     @Min(value = 0, message = "Discount rate must be non-negative")
     @Max(value = 100, message = "Discount rate must not exceed 100")
     private int discountRate;
 
-    @Column(name = "stock")
+    @Column(name = "\"stock\"")
     @Min(value = 0, message = "Stock must be non-negative")
     private int stock;
 
-    @Column(name = "rating")
+    @Column(name = "\"rating\"")
     @Min(value = 0, message = "Rating must be non-negative")
     @Max(value = 5, message = "Rating must not exceed 5")
     private double rating;
 
+    @Transient
     private Integer fullStars;
+    @Transient
     private Double partialFraction;
+    @Transient
     private Integer emptyStars;
 
-    @Column(name = "price")
+    @Column(name = "\"price\"")
     @Min(value = 0, message = "Price must be non-negative")
     private double price;
 
-    @Column(name = "createdAt")
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId", nullable = false)
+    @JoinColumn(name = "\"categoryId\"", nullable = false)
     private Category category;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

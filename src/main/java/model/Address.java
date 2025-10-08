@@ -8,28 +8,29 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "addresses")
+@Table(name = "\"addresses\"")
 public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private long id;
 
-    @Column(name = "userId", insertable = false, updatable = false)
+    @Column(name = "\"userId\"", insertable = false, updatable = false)
     private long userId;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "\"address\"", nullable = false)
     private String address;
 
-    @Column(name = "isDefault")
+    @Column(name = "\"isDefault\"")
     private boolean isDefaultAddress;
 
-    @Column(name = "createdAt")
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
     @Override
