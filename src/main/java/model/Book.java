@@ -102,9 +102,6 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ViewedProductItem> viewedProductItems;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<LikeReview> likeReviews;
-
     public void calculateStars() {
         this.fullStars = (int) rating;
         this.partialFraction = rating - fullStars;

@@ -29,5 +29,5 @@ public class WishListItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"wishListId\"", nullable = false)
-    private WishList wishlist;
+    private WishList wishList;
 }

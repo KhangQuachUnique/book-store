@@ -2,7 +2,6 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +18,8 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookId", nullable = false)
     private Book book;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderId", nullable = false)
+    private Order order;
 }
