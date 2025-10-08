@@ -16,7 +16,7 @@ public class OrderItem {
 
     private Integer quantity;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookId", nullable = false)
     private Book book;
 }

@@ -1,7 +1,7 @@
 package controller;
 
 import dao.ViewHistoryDao;
-import model.ViewHistoryItem;
+import model.ViewedProductItem;
 import model.User;
 import constant.PathConstants;
 
@@ -34,7 +34,7 @@ public class ViewHistoryServlet extends HttpServlet {
         }
 
         // Lấy lịch sử xem của user
-        List<ViewHistoryItem> history = historyDao.getHistoryByUserId(user.getId());
+        List<ViewedProductItem> history = historyDao.getHistoryByUserId(user.getId());
         System.out.println("DEBUG: History size for user " + user.getId() + " = " + history.size());
         req.setAttribute("history", history);
 

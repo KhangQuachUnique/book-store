@@ -1,33 +1,43 @@
 package model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import java.util.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "reviews")
+@Table(name = "\"reviews\"")
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
-    @NotNull
-    private User user;
+    @Column(name = "\"rating\"")
+    private double rating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookId", nullable = false)
-    @NotNull
-    private Book book;
-
-
-    @Column(columnDefinition = "text")
+    @Column(name = "\"comment\"")
     private String comment;
 
-    private String createdAt;
+    @Column(name = "\"createdAt\"")
+    private Timestamp createdAt;
+
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"bookId\"", nullable = false)
+    private Book book;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"userId\"", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LikeReview> likes;
 }

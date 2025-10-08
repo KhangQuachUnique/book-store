@@ -11,16 +11,12 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"wishListItems\"")
-public class WishListItem {
+@Table(name = "\"viewedProductItems\"")
+public class ViewedProductItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "\"id\"")
     private Long id;
-
-    @Column(name = "\"addedAt\"")
-    private Timestamp addedAt;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,6 +24,6 @@ public class WishListItem {
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"wishListId\"", nullable = false)
-    private WishList wishlist;
+    @JoinColumn(name = "\"viewedProductId\"", nullable = false)
+    private ViewedProduct viewedProduct;
 }

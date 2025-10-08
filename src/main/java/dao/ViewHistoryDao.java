@@ -1,7 +1,7 @@
 package dao;
 
 import model.Book;
-import model.ViewHistoryItem;
+import model.ViewedProductItem;
 import util.DBConnection;
 
 import java.sql.*;
@@ -13,8 +13,8 @@ public class ViewHistoryDao {
     /**
      * Lấy lịch sử xem sách theo userId
      */
-    public List<ViewHistoryItem> getHistoryByUserId(Long userId) {
-        List<ViewHistoryItem> list = new ArrayList<>();
+    public List<ViewedProductItem> getHistoryByUserId(Long userId) {
+        List<ViewedProductItem> list = new ArrayList<>();
         String sql = """
             SELECT v.id, v.viewed_at,
                    b.id AS book_id, b.title, b.author, b.publisher,
@@ -53,7 +53,7 @@ public class ViewHistoryDao {
                 book.setCreatedAt(rs.getTimestamp("created_at"));
                 book.calculateStars();
                 // Map ViewHistoryItem
-                ViewHistoryItem item = new ViewHistoryItem(
+                ViewedProductItem item = new ViewedProductItem(
                         rs.getLong("id"),
                         book,
                         rs.getTimestamp("viewed_at")

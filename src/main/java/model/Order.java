@@ -1,32 +1,47 @@
 package model;
 
-import java.util.List;
 import jakarta.persistence.*;
-import lombok.*;
-import java.util.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
+@Table(name = "\"orders\"")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
+    @Column(name = "\"paymentMethod\"")
+    private String paymentMethod;
 
-    private String createdAt;
-    private double totalAmount; // có thể bỏ, vì JSP tự tính
+    @Column(name = "\"createdAt\"")
+    private Timestamp createdAt;
+
+    @Column(name = "\"totalAmount\"")
+    private double totalAmount;
+
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"userId\"", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"promotionId\"")
+    private Promotion promotion;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    private PaymentMethod paymentMethod;
+    @Column(name = "\"status\"")
+    private OrderStatus status;
 
-    private Long statusId;
-    private String statusName;
-
-    @OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> items;
-
 }

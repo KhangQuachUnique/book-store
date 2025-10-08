@@ -11,11 +11,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"wishLists\"")
-public class WishList {
-
+@Table(name = "\"viewedProducts\"")
+public class ViewedProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
 
     // Relationships
@@ -23,6 +23,6 @@ public class WishList {
     @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<WishListItem> items;
+    @OneToMany(mappedBy = "viewedProduct", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ViewedProductItem> items;
 }
