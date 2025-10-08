@@ -1,18 +1,29 @@
-<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
-    <persistence-unit name="myPU">
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="bookstore" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <properties>
-            <!-- JDBC connection -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/mydb"/>
-            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
-            <property name="jakarta.persistence.jdbc.password" value="123456"/>
-            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+        <!-- Cho phép Hibernate tự scan toàn bộ entity trong classpath -->
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
-            <!-- Hibernate options -->
+        <properties>
+            <!-- JDBC -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require&amp;prepareThreshold=0"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres.dgnmjowvneyijoioqtuk"/>
+            <property name="jakarta.persistence.jdbc.password" value="kadfwfsfsvs"/>
+
+            <!-- Hibernate -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- create, update, validate -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+            <property name="hibernate.jdbc.lob.non_contextual_creation" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>
