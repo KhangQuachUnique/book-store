@@ -51,6 +51,9 @@ public class Book implements Serializable {
     @Column(name = "\"pages\"")
     private Integer pages;
 
+    @Column(name = "\"averageRating\"")
+    private Double averageRating;
+
     @Column(name = "\"originalPrice\"")
     private double originalPrice;
 
@@ -90,7 +93,6 @@ public class Book implements Serializable {
     // Transient fields
     @Transient
     private Double price;
-
 
     public Double getPrice() {
         return price = originalPrice * (100 - discountRate) / 100;
