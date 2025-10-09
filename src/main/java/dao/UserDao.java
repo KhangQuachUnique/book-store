@@ -330,8 +330,14 @@ public class UserDao {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
+            // Find the user
             User user = em.find(User.class, id);
             if (user != null) {
+                // Delete dependent reviews
+                em.createQuery("DELETE FROM Review r WHERE r.user.id = :userId")
+                        .setParameter("userId", id)
+                        .executeUpdate();
+                // Delete the user
                 em.remove(user);
                 em.getTransaction().commit();
             } else {
@@ -342,6 +348,7 @@ public class UserDao {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
+            log.log(Level.SEVERE, "Error deleting user with id: " + id, e);
             throw new SQLException("Error deleting user", e);
         } finally {
             em.close();
