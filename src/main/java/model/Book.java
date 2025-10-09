@@ -63,22 +63,6 @@ public class Book implements Serializable {
     @Min(value = 0, message = "Stock must be non-negative")
     private int stock;
 
-    @Column(name = "\"rating\"")
-    @Min(value = 0, message = "Rating must be non-negative")
-    @Max(value = 5, message = "Rating must not exceed 5")
-    private double rating;
-
-    @Transient
-    private Integer fullStars;
-    @Transient
-    private Double partialFraction;
-    @Transient
-    private Integer emptyStars;
-
-    @Column(name = "\"price\"")
-    @Min(value = 0, message = "Price must be non-negative")
-    private double price;
-
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
@@ -102,9 +86,13 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ViewedProductItem> viewedProductItems;
 
-    public void calculateStars() {
-        this.fullStars = (int) rating;
-        this.partialFraction = rating - fullStars;
-        this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
+
+    // Transient fields
+    @Transient
+    private Double price;
+
+
+    public Double getPrice() {
+        return price = originalPrice * (100 - discountRate) / 100;
     }
 }

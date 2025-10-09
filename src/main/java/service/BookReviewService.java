@@ -1,73 +1,66 @@
 package service;
 
-import dao.BookReviewDao;
+import dao.ReviewDao;
 import model.ApiResponse;
 import model.BookReview;
-import model.ReviewShow;
+import model.Review;
+
+import java.util.List;
 
 public class BookReviewService {
-    public static BookReview getReviewsByBookId(long bookId, long currentUserId) {
-        BookReview bookReview = BookReviewDao.getReviewsByBookId(bookId, currentUserId);
-        Integer fiveStarCount = 0;
-        Integer fourStarCount = 0;
-        Integer threeStarCount = 0;
-        Integer twoStarCount = 0;
-        Integer oneStarCount = 0;
-        if (bookReview != null && bookReview.getReviewShows() != null) {
-            for (ReviewShow reviewShow : bookReview.getReviewShows()) {
-                switch (reviewShow.getRating().intValue()) {
-                    case 5:
-                        fiveStarCount++;
-                        break;
-                    case 4:
-                        fourStarCount++;
-                        break;
-                    case 3:
-                        threeStarCount++;
-                        break;
-                    case 2:
-                        twoStarCount++;
-                        break;
-                    case 1:
-                        oneStarCount++;
-                        break;
-                }
-            }
-            bookReview.setFiveStarCount(fiveStarCount);
-            bookReview.setFourStarCount(fourStarCount);
-            bookReview.setThreeStarCount(threeStarCount);
-            bookReview.setTwoStarCount(twoStarCount);
-            bookReview.setOneStarCount(oneStarCount);
-        }
+
+    private final ReviewDao reviewDao;
+
+    public BookReviewService() {
+        this.reviewDao = new ReviewDao();
+    }
+
+    public BookReview getReviewsByBookId(Long bookId, Long currentUserId) {
+        List<Review> reviews = reviewDao.getReviewsByBookId(bookId, currentUserId);
+
+        double totalRating = reviews.stream()
+                .mapToDouble(Review::getRating)
+                .sum();
+
+        double averageRating = reviews.isEmpty() ? 0.0 : totalRating / reviews.size();
+
+        BookReview bookReview = new BookReview();
+        bookReview.setReviews(reviews);
+        bookReview.setAverageRating(averageRating);
+        bookReview.setTotalReviews(reviews.size());
+
+        bookReview.calculateStars();
+        bookReview.calculateStarCounts();
+
         return bookReview;
     }
 
-    public static ApiResponse likeReview(int reviewId, int userId) {
-        try {
-            boolean success = BookReviewDao.likeReview(reviewId, userId);
-            if (success) {
-                return new ApiResponse(true, "Review liked successfully.", null);
-            } else {
-                return new ApiResponse(false, "Failed to like the review.", null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ApiResponse(false, "An error occurred while liking the review.", null);
-        }
-    }
-
-    public static ApiResponse unlikeReview(int reviewId, int userId) {
-
-        try {
-            boolean success = BookReviewDao.unlikeReview(reviewId, userId);
-            if (success) {
-                return new ApiResponse(true, "Review unliked successfully.", null);
-            } else {
-                return new ApiResponse(false, "Failed to unlike the review.", null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ApiResponse(false, "An error occurred while unliking the review.", null);
-        }
-    }
+//    public static ApiResponse likeReview(int reviewId, int userId) {
+//        try {
+//            boolean success = BookReviewDao.likeReview(reviewId, userId);
+//            if (success) {
+//                return new ApiResponse(true, "Review liked successfully.", null);
+//            } else {
+//                return new ApiResponse(false, "Failed to like the review.", null);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ApiResponse(false, "An error occurred while liking the review.", null);
+//        }
+//    }
+//
+//    public static ApiResponse unlikeReview(int reviewId, int userId) {
+//
+//        try {
+//            boolean success = BookReviewDao.unlikeReview(reviewId, userId);
+//            if (success) {
+//                return new ApiResponse(true, "Review unliked successfully.", null);
+//            } else {
+//                return new ApiResponse(false, "Failed to unlike the review.", null);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ApiResponse(false, "An error occurred while unliking the review.", null);
+//        }
+//    }
 }

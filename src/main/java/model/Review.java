@@ -29,6 +29,15 @@ public class Review {
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
+
+    //Transient fields
+    @Transient
+    private Long likeCount;
+
+    @Transient
+    private Boolean likedByCurrentUser;
+
+
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"bookId\"", nullable = false)

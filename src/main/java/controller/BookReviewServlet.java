@@ -18,12 +18,15 @@ import util.JsonUtil;
 
 @WebServlet("/user/book-review")
 public class BookReviewServlet extends HttpServlet {
+
+    private final BookReviewService bookReviewService = new BookReviewService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String bookIdParam = "330658";
         if (bookIdParam != null) {
             try {
-                int bookId = Integer.parseInt(bookIdParam);
+                Long bookId = Long.parseLong(bookIdParam);
                 User sessionUser = (User) req.getSession().getAttribute("user");
                 Long currentUserId = 0L;
 
@@ -31,7 +34,7 @@ public class BookReviewServlet extends HttpServlet {
                     currentUserId = sessionUser.getId();
                 }
 
-                BookReview bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId.intValue());
+                BookReview bookReview = bookReviewService.getReviewsByBookId(bookId, currentUserId);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -41,33 +44,33 @@ public class BookReviewServlet extends HttpServlet {
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-        User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
-
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }
-        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-        User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
-
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }
-        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
-    }
+//    @Override
+//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
+//        User sessionUser = (User) req.getSession().getAttribute("user");
+//        Long currentUserId = 0L;
+//
+//        if (sessionUser != null) {
+//            currentUserId = sessionUser.getId();
+//        }
+//        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
+//        resp.setContentType("application/json");
+//        resp.setCharacterEncoding("UTF-8");
+//        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
+//    }
+//
+//    @Override
+//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
+//        User sessionUser = (User) req.getSession().getAttribute("user");
+//        Long currentUserId = 0L;
+//
+//        if (sessionUser != null) {
+//            currentUserId = sessionUser.getId();
+//        }
+//        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
+//        resp.setContentType("application/json");
+//        resp.setCharacterEncoding("UTF-8");
+//        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
+//    }
 }
