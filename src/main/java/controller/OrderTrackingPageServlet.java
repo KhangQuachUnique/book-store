@@ -51,12 +51,6 @@ public class OrderTrackingPageServlet extends HttpServlet {
         }
 
         List<Order> orders = orderService.getOrdersByUserAndStatus(userId, status);
-        System.out.println(">>> Found orders: " + (orders == null ? "null" : orders.size()));
-        if (orders != null) {
-            for (Order o : orders) {
-                System.out.println("Order ID: " + o.getId() + " | Status: " + o.getStatus());
-            }
-        }
 
         OrderStatusService orderStatusService = new OrderStatusService();
         List<String> statuses = orderStatusService.getAllStatuses();
@@ -64,6 +58,7 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("orders", orders);
         req.setAttribute("statuses", statuses);
         req.setAttribute("selectedStatus", status);
+        req.setAttribute("orderStatusService", orderStatusService);
 
 //        req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
 //        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
