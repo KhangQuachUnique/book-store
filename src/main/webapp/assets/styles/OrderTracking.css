@@ -9,7 +9,7 @@
 
 .page-title {
     color: #800020;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     font-weight: 700;
 }
 
@@ -21,7 +21,7 @@
     padding: 12px 0;
     border-bottom: 1px solid #e0e0e0;
     background: #fff;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-bottom: 25px;
     overflow-x: auto;
     scrollbar-width: none; /* Ẩn thanh cuộn Firefox */
@@ -39,7 +39,7 @@
     color: #555;
     font-weight: 500;
     border-radius: 6px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     white-space: nowrap;
 }
 
@@ -66,14 +66,14 @@
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .order-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
 /* Header đơn hàng */
@@ -87,6 +87,7 @@
 .order-id {
     font-weight: 600;
     color: #800020;
+    font-size: 1.05em;
 }
 
 .order-status {
@@ -97,23 +98,27 @@
     text-transform: capitalize;
 }
 
-/* Màu trạng thái (tương ứng Enum mới) */
+/* Màu trạng thái */
 .order-status.pending {
     background-color: #fff3e0;
     color: #ef6c00;
 }
+
 .order-status.processing {
     background-color: #ede7f6;
     color: #4527a0;
 }
+
 .order-status.shipping {
     background-color: #e3f2fd;
     color: #1565c0;
 }
+
 .order-status.delivered {
     background-color: #e6f4ea;
     color: #2e7d32;
 }
+
 .order-status.cancelled {
     background-color: #fdecea;
     color: #c62828;
@@ -122,7 +127,7 @@
 /* Thông tin đơn hàng */
 .order-card p {
     margin: 5px 0;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 /* Danh sách sản phẩm */
@@ -148,24 +153,26 @@
     margin-bottom: 10px;
     gap: 10px;
     border: 1px solid #eee;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #fafafa;
-    padding: 8px;
-    transition: background 0.2s;
+    padding: 10px;
+    transition: background 0.2s ease;
 }
 
 .order-items li:hover {
     background: #f5f5f5;
 }
 
+/* Hình ảnh sách */
 .book-thumbnail {
     width: 80px;
     height: 100px;
     object-fit: cover;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
+/* Thông tin sách */
 .book-info {
     display: flex;
     flex-direction: column;
@@ -174,42 +181,47 @@
 
 .book-info .book {
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    font-size: 1em;
 }
 
 .qty {
     color: #555;
-}
-
-.price {
-    color: #800020;
-    font-weight: 600;
+    font-size: 0.95em;
 }
 
 /* Hiển thị giá */
+.price {
+    margin: 3px 0;
+}
+
 .original-price {
     text-decoration: line-through;
     color: #999;
-    margin-right: 5px;
+    margin-right: 6px;
+    font-size: 0.95em;
 }
 
 .discount-rate {
-    color: #800020;
+    color: #b71c1c;
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: 6px;
+    font-size: 0.95em;
 }
 
 .current-price {
     color: #800020;
     font-weight: 700;
+    font-size: 1.05em;
 }
 
 /* Tổng tiền */
 .total {
     font-weight: bold;
     color: #111;
-    margin-top: 8px;
+    margin-top: 10px;
     text-align: right;
+    font-size: 1.05em;
 }
 
 /* Khi không có đơn hàng */
@@ -233,16 +245,32 @@
     .order-tracking {
         padding: 20px;
     }
+
     .status-bar {
         flex-wrap: nowrap;
         justify-content: flex-start;
     }
+
     .status-bar a {
         flex: unset;
         margin: 0 5px;
     }
+
     .book-thumbnail {
         width: 60px;
         height: 80px;
+    }
+
+    .order-status {
+        font-size: 0.85em;
+        padding: 4px 10px;
+    }
+
+    .book-info .book {
+        font-size: 0.95em;
+    }
+
+    .current-price {
+        font-size: 1em;
     }
 }

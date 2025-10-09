@@ -6,11 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import constant.PathConstants;
 import model.Order;
-import model.User;
 import service.OrderService;
-import util.OrderStatusUtil;
+import service.OrderStatusService;
 
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
@@ -60,7 +58,8 @@ public class OrderTrackingPageServlet extends HttpServlet {
             }
         }
 
-        List<String> statuses = OrderStatusUtil.getAllStatuses();
+        OrderStatusService orderStatusService = new OrderStatusService();
+        List<String> statuses = orderStatusService.getAllStatuses();
 
         req.setAttribute("orders", orders);
         req.setAttribute("statuses", statuses);
