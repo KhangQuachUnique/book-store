@@ -7,28 +7,37 @@
   <title>Theo dõi đơn hàng</title>
   <link rel="stylesheet" href="<c:url value='/assets/styles/OrderTracking.css'/>">
 </head>
+
+<body>
 <div class="order-tracking">
 
   <h2 class="page-title">📦 Danh sách đơn hàng</h2>
 
   <!-- Thanh bar filter trạng thái -->
   <div class="status-bar">
-    <!-- Tab "Tất cả" cố định (không lấy từ DB) -->
+    <!-- Tab "Tất cả" -->
     <a href="${pageContext.request.contextPath}/user/order-tracking"
-       class="${selectedStatus eq 'all' ? 'active' : ''}">Tất cả</a>
+       class="${selectedStatus eq 'ALL' ? 'active' : ''}">Tất cả</a>
 
-    <!-- Các trạng thái thực tế từ DB, bỏ qua id=0 -->
+    <!-- Lặp qua Enum -->
     <c:forEach var="st" items="${statuses}">
-      <c:if test="${st.id != 0}">
-        <a href="${pageContext.request.contextPath}/user/order-tracking?statusId=${st.id}"
-           class="${selectedStatus eq st.id.toString() ? 'active' : ''}">
-            ${st.name}
+      <c:if test="${st ne 'ALL'}">
+        <a href="${pageContext.request.contextPath}/user/order-tracking?status=${st}"
+           class="${selectedStatus eq st ? 'active' : ''}">
+          <!-- Hiển thị tên trạng thái thân thiện -->
+          <c:choose>
+            <c:when test="${st eq 'PENDING'}">Đang chờ</c:when>
+            <c:when test="${st eq 'PROCESSING'}">Đang xử lý</c:when>
+            <c:when test="${st eq 'SHIPPED'}">Đang giao</c:when>
+            <c:when test="${st eq 'DELIVERED'}">Đã giao</c:when>
+            <c:when test="${st eq 'CANCELED'}">Đã hủy</c:when>
+          </c:choose>
         </a>
       </c:if>
     </c:forEach>
   </div>
 
-
+  <!-- Danh sách đơn hàng -->
   <div class="orders-container">
     <c:choose>
       <c:when test="${not empty orders}">
@@ -37,34 +46,38 @@
 
             <div class="order-header">
               <span class="order-id">Mã đơn: #${order.id}</span>
-              <c:set var="statusClass" value=""/>
+
+              <!-- Đổi màu trạng thái -->
               <c:choose>
-                <c:when test="${order.statusName eq 'Đơn Hàng Đã Đặt'}">
+                <c:when test="${order.status eq 'PENDING'}">
                   <c:set var="statusClass" value="pending"/>
                 </c:when>
-                <c:when test="${order.statusName eq 'Chờ Xác Nhận'}">
-                  <c:set var="statusClass" value="confirmed"/>
+                <c:when test="${order.status eq 'PROCESSING'}">
+                  <c:set var="statusClass" value="processing"/>
                 </c:when>
-                <c:when test="${order.statusName eq 'Chờ Thanh Toán'}">
-                  <c:set var="statusClass" value="waiting-payment"/>
-                </c:when>
-                <c:when test="${order.statusName eq 'Chờ Giao Hàng' || order.statusName eq 'Đang Giao Hàng'}">
+                <c:when test="${order.status eq 'SHIPPED'}">
                   <c:set var="statusClass" value="shipping"/>
                 </c:when>
-                <c:when test="${order.statusName eq 'Đã Hoàn Thành'}">
-                  <c:set var="statusClass" value="completed"/>
+                <c:when test="${order.status eq 'DELIVERED'}">
+                  <c:set var="statusClass" value="delivered"/>
                 </c:when>
-                <c:when test="${order.statusName eq 'Đã Hủy'}">
+                <c:when test="${order.status eq 'CANCELED'}">
                   <c:set var="statusClass" value="cancelled"/>
                 </c:when>
               </c:choose>
 
               <span class="order-status ${statusClass}">
-                  ${order.statusName}
+                <c:choose>
+                  <c:when test="${order.status eq 'PENDING'}">Đang chờ</c:when>
+                  <c:when test="${order.status eq 'PROCESSING'}">Đang xử lý</c:when>
+                  <c:when test="${order.status eq 'SHIPPED'}">Đang giao</c:when>
+                  <c:when test="${order.status eq 'DELIVERED'}">Đã giao</c:when>
+                  <c:when test="${order.status eq 'CANCELED'}">Đã hủy</c:when>
+                </c:choose>
               </span>
             </div>
 
-            <p><strong>Ngày đặt:</strong> ${order.createdAt}</p>
+            <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm" /></p>
             <p><strong>Thanh toán:</strong> ${order.paymentMethod}</p>
 
             <div class="order-items">
@@ -73,30 +86,20 @@
                 <c:set var="orderTotal" value="0"/>
                 <c:forEach var="item" items="${order.items}">
                   <li>
-                    <img src="${item.thumbnailUrl}" alt="${item.bookTitle}" class="book-thumbnail"/>
+                    <img src="${item.book.thumbnailUrl}" alt="${item.book.title}" class="book-thumbnail"/>
                     <div class="book-info">
-                      <p class="book"><strong>${item.bookTitle}</strong></p>
+                      <p class="book"><strong>${item.book.title}</strong></p>
                       <p class="price">
-                        <c:if test="${item.discountRate > 0}">
-                          <span class="original-price">
-                            <fmt:formatNumber value="${item.originalPrice}" type="number"/> VNĐ
-                          </span>
-                          <span class="discount-rate">
-                            -${item.discountRate}%
-                          </span>
-                        </c:if>
-                        <span class="current-price">
-                          <fmt:formatNumber value="${item.price}" type="number"/> VNĐ
-                        </span>
+                        <fmt:formatNumber value="${item.book.price}" type="number"/> VNĐ
                       </p>
                       <p class="qty">x ${item.quantity}</p>
                     </div>
                   </li>
-                  <c:set var="orderTotal" value="${orderTotal + (item.price * item.quantity)}"/>
+                  <c:set var="orderTotal" value="${orderTotal + (item.book.price * item.quantity)}"/>
                 </c:forEach>
               </ul>
               <p class="total"><strong>Thành tiền:</strong>
-                <fmt:formatNumber value="${orderTotal}" type="number"/> VND
+                <fmt:formatNumber value="${orderTotal}" type="number"/> VNĐ
               </p>
             </div>
 
@@ -104,10 +107,10 @@
         </c:forEach>
       </c:when>
       <c:otherwise>
-        <p class="no-orders">Bạn chưa có đơn hàng nào !</p>
+        <p class="no-orders">Bạn chưa có đơn hàng nào!</p>
       </c:otherwise>
     </c:choose>
   </div>
 </div>
+</body>
 </html>
-
