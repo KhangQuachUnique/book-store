@@ -7,11 +7,11 @@ import model.Review;
 
 import java.util.List;
 
-public class BookReviewService {
+public class ReviewService {
 
     private final ReviewDao reviewDao;
 
-    public BookReviewService() {
+    public ReviewService() {
         this.reviewDao = new ReviewDao();
     }
 
@@ -35,19 +35,19 @@ public class BookReviewService {
         return bookReview;
     }
 
-//    public static ApiResponse likeReview(int reviewId, int userId) {
-//        try {
-//            boolean success = BookReviewDao.likeReview(reviewId, userId);
-//            if (success) {
-//                return new ApiResponse(true, "Review liked successfully.", null);
-//            } else {
-//                return new ApiResponse(false, "Failed to like the review.", null);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ApiResponse(false, "An error occurred while liking the review.", null);
-//        }
-//    }
+    public ApiResponse likeReview(Long reviewId, Long userId) {
+        try {
+            boolean success = reviewDao.likeReview(reviewId, userId);
+            if (success) {
+                return new ApiResponse(true, "Review liked successfully.", null);
+            } else {
+                return new ApiResponse(false, "Failed to like the review.", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResponse(false, "An error occurred while liking the review.", null);
+        }
+    }
 //
 //    public static ApiResponse unlikeReview(int reviewId, int userId) {
 //

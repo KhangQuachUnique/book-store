@@ -13,13 +13,13 @@ import model.ApiResponse;
 import model.BookReview;
 import model.ReviewRequest;
 import model.User;
-import service.BookReviewService;
+import service.ReviewService;
 import util.JsonUtil;
 
 @WebServlet("/review")
 public class ReviewServlet extends HttpServlet {
 
-    private final BookReviewService bookReviewService = new BookReviewService();
+    private final ReviewService reviewService = new ReviewService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,7 +34,7 @@ public class ReviewServlet extends HttpServlet {
                     currentUserId = sessionUser.getId();
                 }
 
-                BookReview bookReview = bookReviewService.getReviewsByBookId(330658L, 101L);
+                BookReview bookReview = reviewService.getReviewsByBookId(330658L, 101L);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -44,20 +44,20 @@ public class ReviewServlet extends HttpServlet {
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        ReviewRequest reviewRequest = JsonUtil.parseJson(req, ReviewRequest.class);
-//        User sessionUser = (User) req.getSession().getAttribute("user");
-//        Long currentUserId = 0L;
-//
-//        if (sessionUser != null) {
-//            currentUserId = sessionUser.getId();
-//        }
-//        ApiResponse response = BookReviewService.likeReview(reviewRequest.getReviewId(), currentUserId.intValue());
-//        resp.setContentType("application/json");
-//        resp.setCharacterEncoding("UTF-8");
-//        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
-//    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ReviewRequest reviewRequest = JsonUtil.parseJson(req, ReviewRequest.class);
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = reviewService.likeReview(reviewRequest.getReviewId(), 101L);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
+    }
 //
 //    @Override
 //    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

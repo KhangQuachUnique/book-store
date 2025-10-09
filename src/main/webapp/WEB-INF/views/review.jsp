@@ -127,6 +127,6 @@
     </div>
 </div>
 
-<script type="module" src="${pageContext.request.contextPath}/assets/js/pages/BookReviewPage.js"></script>
+<script type="module" src="${pageContext.request.contextPath}/assets/js/pages/ReviewPage.js"></script>
 </body>
 </html>
