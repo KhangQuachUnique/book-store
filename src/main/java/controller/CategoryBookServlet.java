@@ -45,6 +45,7 @@ public class CategoryBookServlet extends HttpServlet {
         // Lấy các tham số filter từ form
         String title = req.getParameter("title");
         String includeCategoriesParam = req.getParameter("includeCategories");
+        String excludeCategoriesParam = req.getParameter("excludeCategories");
         String action = req.getParameter("action"); // "title" hoặc "categories"
 
         List<Long> includeCategories = null;
@@ -59,31 +60,50 @@ public class CategoryBookServlet extends HttpServlet {
             }
         }
 
+        List<Long> excludeCategories = null;
+        if (excludeCategoriesParam != null && !excludeCategoriesParam.isEmpty()) {
+            excludeCategories = new java.util.ArrayList<>();
+            for (String id : excludeCategoriesParam.split(",")) {
+                try {
+                    excludeCategories.add(Long.parseLong(id.trim()));
+                } catch (NumberFormatException e) {
+                    // Ignore invalid IDs
+                }
+            }
+        }
+
         // Logic exclusive dựa trên action type
         boolean hasTitle = title != null && !title.trim().isEmpty();
-        boolean hasCategories = includeCategories != null && !includeCategories.isEmpty();
+        boolean hasCategories = (includeCategories != null && !includeCategories.isEmpty()) || 
+                               (excludeCategories != null && !excludeCategories.isEmpty());
         
         if ("title".equals(action)) {
             // User muốn search theo title -> clear categories
             includeCategories = null;
+            excludeCategories = null;
             includeCategoriesParam = null;
+            excludeCategoriesParam = null;
         } else if ("categories".equals(action)) {
             // User muốn filter theo categories -> clear title
             title = null;
         } else if (hasTitle && hasCategories) {
             // Fallback: nếu có cả 2 nhưng không có action, ưu tiên title search
             includeCategories = null;
+            excludeCategories = null;
             includeCategoriesParam = null;
+            excludeCategoriesParam = null;
         }
 
         List<Book> books;
         int totalPages;
 
         // Sử dụng BookService.filterBooks thay vì CategoryBookDao nếu có filter
-        if ((title != null && !title.trim().isEmpty()) || (includeCategories != null && !includeCategories.isEmpty())) {
+        if ((title != null && !title.trim().isEmpty()) || 
+            (includeCategories != null && !includeCategories.isEmpty()) ||
+            (excludeCategories != null && !excludeCategories.isEmpty())) {
             try {
-                books = BookService.filterBooks(title, null, includeCategories, null, page);
-                totalPages = BookService.getTotalPages(title, null, includeCategories, null);
+                books = BookService.filterBooks(title, null, includeCategories, excludeCategories, page);
+                totalPages = BookService.getTotalPages(title, null, includeCategories, excludeCategories);
             } catch (SQLException e) {
                 e.printStackTrace();
                 books = new java.util.ArrayList<>();
@@ -120,6 +140,7 @@ public class CategoryBookServlet extends HttpServlet {
         // Truyền lại các tham số filter để hiển thị trong form
         req.setAttribute("title", title);
         req.setAttribute("includeCategories", includeCategoriesParam);
+        req.setAttribute("excludeCategories", excludeCategoriesParam);
 
         req.setAttribute("contentPage", "/WEB-INF/views/categoryBook.jsp");
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);

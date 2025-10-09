@@ -1,54 +1,37 @@
 package model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Data
+@Entity
+@Table(name = "\"addresses\"")
 public class Address implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private long id;
+
+    @Column(name = "\"userId\"", insertable = false, updatable = false)
     private long userId;
+
+    @Column(name = "\"address\"", nullable = false)
     private String address;
+
+    @Column(name = "\"isDefault\"")
     private boolean isDefaultAddress;
+
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public boolean isDefaultAddress() {
-        return isDefaultAddress;
-    }
-
-    public void setDefaultAddress(boolean isDefaultAddress) {
-        this.isDefaultAddress = isDefaultAddress;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"userId\"", nullable = false)
+    private User user;
 
     @Override
     public String toString() {

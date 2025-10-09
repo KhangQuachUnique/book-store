@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import constant.PathConstants;
 import model.ApiResponse;
+import model.User;
 import model.WishListRequest;
 import util.JsonUtil;
 
@@ -19,7 +20,13 @@ public class WishListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page = PathConstants.VIEW_WISHLIST;
         req.setAttribute("contentPage", page);
-        ApiResponse response = service.WishListService.getWishListBooks(5);
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = service.WishListService.getWishListBooks(currentUserId.intValue());
         if (!response.isSuccess()) {
             req.setAttribute("message", "Your wish list is empty.");
         }
@@ -29,10 +36,15 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // int userId = Integer.parseInt(req.getParameter("userId"));
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
         WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         int bookId = body.getBookId();
-        ApiResponse response = service.WishListService.addBookToWishList(5, bookId);
+        ApiResponse response = service.WishListService.addBookToWishList(currentUserId.intValue(), bookId);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -40,10 +52,14 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // int userId = Integer.parseInt(req.getParameter("userId"));
-        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         int bookId = body.getBookId();
-        ApiResponse response = service.WishListService.removeBookToWishList(5, bookId);
+        ApiResponse response = service.WishListService.removeBookToWishList(currentUserId.intValue(), bookId);
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
     }

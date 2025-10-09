@@ -1,26 +1,42 @@
 package model;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * Model class representing a category.
- */
-public class Category implements Serializable {
+import java.sql.Timestamp;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "\"categories\"")
+public class Category {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private long id;
+
+    @Column(name = "\"name\"", nullable = false)
     private String name;
-    private Long parentId;
+
+    @Column(name = "\"isLeaf\"")
     private boolean isLeaf;
+
+    @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public Long getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
-    public boolean getIsLeaf() { return isLeaf; }
-    public void setIsLeaf(boolean isLeaf) { this.isLeaf = isLeaf; }
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"parentId\"")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Category> children;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Book> books;
 }

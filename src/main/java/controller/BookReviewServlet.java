@@ -12,6 +12,7 @@ import constant.PathConstants;
 import model.ApiResponse;
 import model.BookReview;
 import model.BookReviewRequest;
+import model.User;
 import service.BookReviewService;
 import util.JsonUtil;
 
@@ -23,7 +24,7 @@ public class BookReviewServlet extends HttpServlet {
         if (bookIdParam != null) {
             try {
                 int bookId = Integer.parseInt(bookIdParam);
-                model.User sessionUser = (model.User) req.getSession().getAttribute("user");
+                User sessionUser = (User) req.getSession().getAttribute("user");
                 Long currentUserId = 0L;
 
                 if (sessionUser != null) {
@@ -43,7 +44,13 @@ public class BookReviewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId());
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -52,7 +59,13 @@ public class BookReviewServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId());
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));

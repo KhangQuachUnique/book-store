@@ -31,6 +31,7 @@
                         <input type="submit" value="Find" class="btn btn-primary" onclick="setSearchAction('title')">
                     </div>
                     <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
+                    <input type="hidden" name="excludeCategories" id="excludeCategories" value="${excludeCategories}">
                     <input type="hidden" name="action" id="searchAction" value="">
                 </form>
             </div>
@@ -146,6 +147,7 @@
 <script>
     // Pass JSP variables to JavaScript
     var includeCategories_jsp = '${includeCategories}';
+    var excludeCategories_jsp = '${excludeCategories}';
 </script>
 <script src="${pageContext.request.contextPath}/assets/js/categoryBook.js"></script>
 </body>

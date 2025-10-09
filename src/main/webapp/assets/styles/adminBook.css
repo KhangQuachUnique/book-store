@@ -188,7 +188,7 @@ body {
 }
 
 .table tr:hover {
-    background-color: var(--muted);
+    /*background-color: var(--muted);*/
 }
 
 .action-buttons {
