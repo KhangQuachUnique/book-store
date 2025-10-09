@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chào mừng đến với BookieCake</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', sans-serif;
+                background-color: #f8f0f3;
+                margin: 0;
+                padding: 20px;
+                line-height: 1.6;
+            }
+
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(128, 0, 32, 0.1);
+                border: 1px solid #f8f0f3;
+            }
+
+            .header {
+                background: linear-gradient(135deg, #800020 0%, #a52a2a 100%);
+                color: white;
+                padding: 40px 20px;
+                text-align: center;
+            }
+
+            .logo {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 15px;
+                font-size: 36px;
+                margin-bottom: 10px;
+            }
+
+            .logo-svg {
+                width: 60px;
+                height: 50px;
+                border: none;
+                /* Gmail-specific image handling */
+                max-width: 60px !important;
+                height: auto !important;
+                display: inline-block !important;
+                vertical-align: middle !important;
+            }
+
+            .logo-text {
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            /* Enhanced fallback system for Gmail */
+            .logo-fallback {
+                display: none;
+                width: 60px;
+                height: 50px;
+                background: #ffffff;
+                color: #800020;
+                border-radius: 8px;
+                margin-right: 15px;
+                text-align: center;
+                line-height: 50px;
+                font-size: 24px;
+                font-weight: bold;
+                border: 2px solid #ffffff;
+            }
+
+            .content {
+                padding: 40px 30px;
+                text-align: center;
+            }
+
+            .welcome-title {
+                color: #800020;
+                font-size: 28px;
+                margin-bottom: 20px;
+                font-weight: 600;
+            }
+
+            .message {
+                color: #333;
+                font-size: 16px;
+                line-height: 1.6;
+                margin-bottom: 30px;
+            }
+
+            .cta-button {
+                display: inline-block;
+                background: linear-gradient(135deg, #800020 0%, #a52a2a 100%);
+                color: white;
+                padding: 15px 30px;
+                text-decoration: none;
+                border-radius: 25px;
+                font-weight: bold;
+                margin: 20px 0;
+                transition: all 0.3s ease;
+            }
+
+            a.cta-button {
+                color: white !important;
+            }
+
+            .cta-button:hover {
+                background: linear-gradient(135deg, #b33939 0%, #c44444 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(128, 0, 32, 0.3);
+            }
+
+            .footer {
+                background: #f8f0f3;
+                padding: 20px;
+                text-align: center;
+                color: #800020;
+                font-size: 14px;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="logo">
+                    <!-- BookieCake logo -->
+                    <img class="logo-svg" width="60" height="50" 
+                         src="https://files.catbox.moe/bv5o9t.png"
+                         alt="BookieCake Logo"
+                         style="display: inline-block !important; vertical-align: middle; margin-right: 15px; border: 2px solid #ffffff; border-radius: 8px; max-width: 60px; height: auto;">
+                    <span class="logo-text" style="vertical-align: middle; display: inline-block;">BookieCake</span>
+                </div>
+                <div>Chào mừng bạn!</div>
+            </div>
+            <div class="content">
+                <h1 class="welcome-title">Xin chào {{USER_NAME}}! 🎉</h1>
+                <p class="message">
+                    Cảm ơn bạn đã tham gia cộng đồng BookieCake!
+                    Chúng tôi rất vui được chào đón bạn đến với thế giới sách tuyệt vời.
+                </p>
+                <p class="message">
+                    Hãy bắt đầu khám phá hàng ngàn cuốn sách hay đang chờ đón bạn!
+                </p>
+                <a href="#" class="cta-button">🔍 Khám Phá Ngay</a>
+            </div>
+            <div class="footer">
+                <p>© 2025 BookieCake. Cảm ơn bạn đã lựa chọn chúng tôi!</p>
+            </div>
+        </div>
+    </body>
+
+</html>

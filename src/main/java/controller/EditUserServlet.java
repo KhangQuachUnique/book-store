@@ -37,7 +37,7 @@ public class EditUserServlet extends HttpServlet {
                 break;
         }
 
-        request.getSession().setAttribute("contentPage", page);
+        request.setAttribute("contentPage", page);
         request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
     }
 }

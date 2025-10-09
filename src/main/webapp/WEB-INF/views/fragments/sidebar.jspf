@@ -16,11 +16,25 @@
     </div>
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="${pageContext.request.contextPath}/user/profile">Profile</a></li>
             <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-            <li><a href="${pageContext.request.contextPath}/user/wishlist">Wish List</a></li>
             <li><a href="${pageContext.request.contextPath}/categories">Categories</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/history">Viewed History</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/wishlist">Wish List</a></li>
             <li><a href="${pageContext.request.contextPath}/orders">Orders</a></li>
         </ul>
     </nav>
 </aside>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPath = window.location.pathname;
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+    sidebarLinks.forEach(link => {
+        const li = link.parentElement;
+        li.classList.remove('active');
+        const linkPath = new URL(link.href, window.location.origin).pathname;
+        if (currentPath === linkPath || currentPath.startsWith(linkPath + '/')) {
+            li.classList.add('active');
+        }
+    });
+});
+</script>

@@ -110,3 +110,13 @@
     color: var(--text-secondary); /* Lighter burgundy */
 }
 
+.sidebar-nav li.active a {
+    background: rgba(224, 208, 214, 0.8);
+    color: var(--text-secondary);
+}
+
+.sidebar-nav li.active a:hover {
+    background: var(--secondary-color-hover); /* Soft highlight */
+    color: var(--text-secondary); /* Lighter burgundy */
+}
+

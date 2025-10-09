@@ -10,10 +10,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.View;
 
 import constant.PathConstants;
 import dao.BookDao;
 import model.Book;
+import model.BookReview;
+import model.User;
+import service.BookReviewService;
 
 /**
  * Servlet for handling book detail page requests. Displays detailed information
@@ -53,8 +57,16 @@ public class BookDetailServlet extends HttpServlet {
 
             // Fetch book from database using static method
             Book book;
+            BookReview bookReview;
+            User sessionUser = (User) req.getSession().getAttribute("user");
+            Long currentUserId = 0L;
+
+            if (sessionUser != null) {
+                currentUserId = sessionUser.getId();
+            }
             try {
                 book = BookDao.getBookById(bookId);
+                bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId);
             } catch (SQLException e) {
                 log.log(Level.SEVERE, "Database error while fetching book with ID: " + bookId, e);
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
@@ -66,9 +78,16 @@ public class BookDetailServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
                 return;
             }
+            
+            model.User user = (model.User) req.getSession().getAttribute("user");
+                if (user != null) {
+                dao.ViewHistoryDao ViewHistoryDao = new dao.ViewHistoryDao();
+                ViewHistoryDao.addHistory(user.getId(), bookId);
+            } 
 
-            // Set book as request attribute for JSP
+            // Set book and book-reviews as request attribute for JSP
             req.setAttribute("book", book);
+            req.setAttribute("bookReview", bookReview);
 
             // Calculate additional display information
             boolean hasDiscount = book.getDiscount_rate() > 0;
@@ -103,7 +122,8 @@ public class BookDetailServlet extends HttpServlet {
                     + book.getTitle() + ")");
 
             // Forward to book detail JSP
-            req.getRequestDispatcher(PathConstants.BOOK_DETAIL_PAGE).forward(req, resp);
+            req.setAttribute("contentPage", PathConstants.BOOK_DETAIL_PAGE);
+            req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
 
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error processing book detail request", e);
