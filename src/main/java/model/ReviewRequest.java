@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookReviewRequest {
+public class ReviewRequest {
     private Integer reviewId;
 }

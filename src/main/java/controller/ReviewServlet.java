@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import constant.PathConstants;
 import model.ApiResponse;
 import model.BookReview;
-import model.BookReviewRequest;
+import model.ReviewRequest;
 import model.User;
 import service.BookReviewService;
 import util.JsonUtil;
 
-@WebServlet("/user/book-review")
-public class BookReviewServlet extends HttpServlet {
+@WebServlet("/review")
+public class ReviewServlet extends HttpServlet {
 
     private final BookReviewService bookReviewService = new BookReviewService();
 
@@ -34,7 +34,7 @@ public class BookReviewServlet extends HttpServlet {
                     currentUserId = sessionUser.getId();
                 }
 
-                BookReview bookReview = bookReviewService.getReviewsByBookId(bookId, currentUserId);
+                BookReview bookReview = bookReviewService.getReviewsByBookId(330658L, 101L);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -46,14 +46,14 @@ public class BookReviewServlet extends HttpServlet {
 
 //    @Override
 //    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
+//        ReviewRequest reviewRequest = JsonUtil.parseJson(req, ReviewRequest.class);
 //        User sessionUser = (User) req.getSession().getAttribute("user");
 //        Long currentUserId = 0L;
 //
 //        if (sessionUser != null) {
 //            currentUserId = sessionUser.getId();
 //        }
-//        ApiResponse response = BookReviewService.likeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
+//        ApiResponse response = BookReviewService.likeReview(reviewRequest.getReviewId(), currentUserId.intValue());
 //        resp.setContentType("application/json");
 //        resp.setCharacterEncoding("UTF-8");
 //        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
