@@ -58,19 +58,19 @@ public class ReviewServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
     }
-//
-//    @Override
-//    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        BookReviewRequest bookReviewRequest = JsonUtil.parseJson(req, BookReviewRequest.class);
-//        User sessionUser = (User) req.getSession().getAttribute("user");
-//        Long currentUserId = 0L;
-//
-//        if (sessionUser != null) {
-//            currentUserId = sessionUser.getId();
-//        }
-//        ApiResponse response = BookReviewService.unlikeReview(bookReviewRequest.getReviewId(), currentUserId.intValue());
-//        resp.setContentType("application/json");
-//        resp.setCharacterEncoding("UTF-8");
-//        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
-//    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ReviewRequest bookReviewRequest = JsonUtil.parseJson(req, ReviewRequest.class);
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long currentUserId = 0L;
+
+        if (sessionUser != null) {
+            currentUserId = sessionUser.getId();
+        }
+        ApiResponse response = reviewService.dislikeReview(bookReviewRequest.getReviewId(), 101L);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(new com.google.gson.Gson().toJson(response));
+    }
 }

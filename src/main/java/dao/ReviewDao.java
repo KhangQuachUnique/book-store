@@ -87,4 +87,54 @@ public class ReviewDao {
             em.close();
         }
     }
+
+    public boolean dislikeReview(Long reviewId, Long userId) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+
+            // Tìm review
+            Review review = em.find(Review.class, reviewId);
+            if (review == null) {
+                tx.rollback();
+                System.out.println("Review không tồn tại");
+                return false;
+            }
+
+            // Tìm bản ghi LikeReview tương ứng
+            TypedQuery<LikeReview> query = em.createQuery(
+                    "SELECT lr FROM LikeReview lr WHERE lr.review.id = :reviewId AND lr.user.id = :userId",
+                    LikeReview.class
+            );
+            query.setParameter("reviewId", reviewId);
+            query.setParameter("userId", userId);
+
+            List<LikeReview> results = query.getResultList();
+
+            if (results.isEmpty()) {
+                // chưa like, không có gì để dislike
+                tx.rollback();
+                System.out.println("User chưa like review này, không thể dislike.");
+                return false;
+            }
+
+            // có like -> xóa
+            LikeReview likeReview = results.get(0);
+            em.remove(likeReview);
+
+            tx.commit();
+            System.out.println("Đã dislike (bỏ like) review thành công!");
+            return true;
+
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            return false;
+
+        } finally {
+            em.close();
+        }
+    }
 }

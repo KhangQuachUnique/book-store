@@ -48,19 +48,18 @@ public class ReviewService {
             return new ApiResponse(false, "An error occurred while liking the review.", null);
         }
     }
-//
-//    public static ApiResponse unlikeReview(int reviewId, int userId) {
-//
-//        try {
-//            boolean success = BookReviewDao.unlikeReview(reviewId, userId);
-//            if (success) {
-//                return new ApiResponse(true, "Review unliked successfully.", null);
-//            } else {
-//                return new ApiResponse(false, "Failed to unlike the review.", null);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ApiResponse(false, "An error occurred while unliking the review.", null);
-//        }
-//    }
+
+    public ApiResponse dislikeReview(Long reviewId, Long userId) {
+        try {
+            boolean success = reviewDao.dislikeReview(reviewId, userId);
+            if (success) {
+                return new ApiResponse(true, "Review unliked successfully.", null);
+            } else {
+                return new ApiResponse(false, "Failed to unlike the review.", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResponse(false, "An error occurred while unliking the review.", null);
+        }
+    }
 }
