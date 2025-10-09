@@ -1,8 +1,15 @@
 // Package: model
 // Các sửa đổi chính: Thêm ràng buộc validation @NotBlank và @Email cho các trường quan trọng để đảm bảo dữ liệu hợp lệ ngay tại model.
+// Thêm @Column cho phoneNumber mapping đến cột "phoneNumber" trong DB với quotes.
+// Thêm @PrePersist và @PreUpdate để tự động set createdAt/updatedAt.
+// Thêm enum Role.
+// Sử dụng quotes cho tất cả tên cột trong @Column để phù hợp với schema DB.
+// Điều chỉnh các trường Boolean để null-safe.
+// Thêm import cho lifecycle callbacks và time.
 package model;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -15,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "\"users\"")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +45,7 @@ public class User {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(name = "\"role\"", length = 20, nullable = false)
     private Role role;
 
     @Column(name = "\"avatarUrl\"")
@@ -84,6 +91,28 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private ViewedProduct viewedProduct;
 
+    @PrePersist
+    private void prePersist() {
+        Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+        if (createdAt == null) {
+            createdAt = now;
+        }
+        if (updatedAt == null) {
+            updatedAt = now;
+        }
+        if (isBlocked == null) {
+            isBlocked = false;
+        }
+        if (isVerified == null) {
+            isVerified = false;
+        }
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = new Timestamp(Instant.now().toEpochMilli());
+    }
+
     /**
      * Trả về bản User "safe", không có passwordHash
      */
@@ -94,6 +123,7 @@ public class User {
         safe.setEmail(this.email);
         safe.setPhoneNumber(this.phoneNumber);
         safe.setRole(this.role);
+        safe.setAvatarUrl(this.avatarUrl);
         safe.setIsBlocked(this.isBlocked);
         safe.setBlockedUntil(this.blockedUntil);
         safe.setCreatedAt(this.createdAt);
@@ -103,10 +133,8 @@ public class User {
         safe.setVerifyExpire(this.verifyExpire);
         safe.setAddresses(this.addresses);
 
-        // Không set passwordHsh
+        // Không set passwordHash
         safe.setPasswordHash(null);
         return safe;
     }
 }
-
-
