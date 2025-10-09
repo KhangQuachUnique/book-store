@@ -1,14 +1,11 @@
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>--%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>View Book</title>
-    <link rel="stylesheet" href="/assets/styles/users.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/adminBook.css">
 </head>
-<body class="bg-background text-foreground">
+<body>
 <div class="container">
     <h1 class="page-title">Book Details</h1>
 
@@ -33,8 +30,10 @@
             <p><strong>Pages:</strong> ${book.pages}</p>
             <p><strong>Rating Average:</strong> ${book.rating}</p>
             <p><strong>Created At:</strong> ${book.createdAt}</p>
-            <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-primary">Edit</a>
-            <a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-secondary">Back to List</a>
+            <div class="action-buttons">
+                <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-primary">Edit</a>
+                <a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-secondary">Back to List</a>
+            </div>
         </div>
     </div>
 </div>

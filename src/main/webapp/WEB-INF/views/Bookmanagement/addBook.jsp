@@ -1,14 +1,11 @@
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>--%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Add New Book</title>
-    <link rel="stylesheet" href="/assets/styles/users.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/adminBook.css">
 </head>
-<body class="bg-background text-foreground">
+<body>
 <div class="container">
     <h1 class="page-title">Add New Book</h1>
 
@@ -76,7 +73,10 @@
                     <label for="price">Price</label>
                     <input type="number" id="price" name="price" class="input" step="0.01" min="0" required>
                 </div>
-                <input type="submit" value="Add Book" class="btn btn-primary">
+                <div class="form-group">
+                    <input type="submit" value="Add Book" class="btn btn-primary">
+                    <a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-secondary">Return</a>
+                </div>
             </form>
         </div>
     </div>

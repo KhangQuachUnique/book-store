@@ -1,12 +1,24 @@
 package model;
 
-import jakarta.validation.constraints.*; // ✅ Đổi từ javax → jakarta
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+
+// ✅ Đổi từ javax → jakarta
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Model class representing a book.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book implements Serializable {
     private Integer id;
 
@@ -34,6 +46,9 @@ public class Book implements Serializable {
     @Min(value = 0, message = "Rating must be non-negative")
     @Max(value = 5, message = "Rating must not exceed 5")
     private double rating;
+    private Integer fullStars;
+    private Double partialFraction;
+    private Integer emptyStars;
 
     @Min(value = 0, message = "Price must be non-negative")
     private double price;
@@ -47,58 +62,9 @@ public class Book implements Serializable {
 
     private Timestamp createdAt;
 
-    public Book() {
+    public void calculateStars() {
+        this.fullStars = (int) rating;
+        this.partialFraction = rating - fullStars;
+        this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
     }
-
-    public Book(Integer id, String title, String author, double price, String publisher, int categoryId, int stock,
-                double originalPrice, int discount_rate, String thumbnailUrl, String description, Integer publishYear,
-                Integer pages, double rating, Timestamp createdAt) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.price = price;
-        this.publisher = publisher;
-        this.categoryId = categoryId;
-        this.stock = stock;
-        this.originalPrice = originalPrice;
-        this.discount_rate = discount_rate;
-        this.thumbnailUrl = thumbnailUrl;
-        this.description = description;
-        this.publishYear = publishYear;
-        this.pages = pages;
-        this.rating = rating;
-        this.createdAt = createdAt;
-    }
-
-    // Getters và Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
-    public String getPublisher() { return publisher; }
-    public void setPublisher(String publisher) { this.publisher = publisher; }
-    public int getCategoryId() { return categoryId; }
-    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
-    public String getthumbnailUrl() { return thumbnailUrl; }
-    public void setthumbnailUrl(String thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public int getStock() { return stock; }
-    public void setStock(int stock) { this.stock = stock; }
-    public Integer getPublishYear() { return publishYear; }
-    public void setPublishYear(Integer publishYear) { this.publishYear = publishYear; }
-    public Integer getPages() { return pages; }
-    public void setPages(Integer pages) { this.pages = pages; }
-    public double getRating() { return rating; }
-    public void setRating(double rating) { this.rating = rating; }
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-    public double getOriginalPrice() { return originalPrice; }
-    public void setOriginalPrice(double originalPrice) { this.originalPrice = originalPrice; }
-    public int getDiscount_rate() { return discount_rate; }
-    public void setDiscount_rate(int discount_rate) { this.discount_rate = discount_rate; }
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }

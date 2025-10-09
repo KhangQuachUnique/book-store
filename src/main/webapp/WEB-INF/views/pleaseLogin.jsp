@@ -14,7 +14,7 @@
 <body>
 <div class="please-login-container">
     <h1>Please log in to access this feature.</h1>
-    <a href="${pageContext.request.contextPath}/user/login" class="login-button">Go to Login Page</a>
+    <a href="${pageContext.request.contextPath}/login" class="login-button">Go to Login Page</a>
 </div>
 </body>
 </html>

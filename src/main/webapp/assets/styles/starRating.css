@@ -1,0 +1,19 @@
+.rating-stars {
+    display: flex;
+    align-items: center;
+}
+
+.rating-stars svg {
+    height: var(--star-size, 24px);
+    margin-right: 4px;
+}
+
+.rating-stars .full-star {
+    color: gold;
+}
+
+.rating-stars .empty-star {
+    color: lightgray;
+}
+
+/* partial-star fill được quyết định bởi gradient trong SVG */

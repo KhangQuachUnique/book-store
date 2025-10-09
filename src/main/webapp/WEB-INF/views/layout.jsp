@@ -12,13 +12,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web App</title>
+    <title>Bookie Cake</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/sidebar.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/toast.css">
+    <script>
+        // Provide context path globally for admin JS (category checks, etc.)
+        window.APP_CONTEXT = '${pageContext.request.contextPath}';
+    </script>
 </head>
 <body>
 <!-- Sidebar -->
@@ -30,13 +36,22 @@
 
     <!-- Main -->
     <main>
-        <c:import url="${contentPage}" />
+        <c:import url="${requestScope.contentPage}" />
     </main>
 
     <!-- Footer -->
     <%@ include file="fragments/footer.jsp" %>
 </div>
-<script src="${pageContext.request.contextPath}/assets/js/app.js" defer></script>
 <script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>
+<script src="${pageContext.request.contextPath}/assets/js/toast.js" defer></script>
+<script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script>
+<script>
+    if (!window.ws || window.ws.readyState === WebSocket.CLOSED) {
+        window.ws = new WebSocket("ws://localhost:8080/bookiecake/ws/updates");
+        window.ws.onopen = () => console.log("Connected");
+        window.ws.onmessage = (e) => console.log("Received:", e.data);
+        window.ws.onclose = () => console.log("Disconnected");
+    }
+</script>
 </body>
 </html>

@@ -1,20 +1,21 @@
 package controller;
 
-import model.Book;
-import model.Category;
-import service.BookService;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import model.Book;
+import model.Category;
+import service.BookService;
 
 @WebServlet("/admin/book/*")
 public class BookServlet extends HttpServlet {
@@ -125,12 +126,14 @@ public class BookServlet extends HttpServlet {
         book.setStock(Integer.parseInt(req.getParameter("stock")));
         book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
         book.setDiscount_rate(Integer.parseInt(req.getParameter("discount_rate")));
-        book.setthumbnailUrl(req.getParameter("thumbnail_url"));
+        book.setThumbnailUrl(req.getParameter("thumbnail_url"));
         book.setDescription(req.getParameter("description"));
         book.setPublishYear(req.getParameter("publish_year") != null && !req.getParameter("publish_year").isEmpty()
-                ? Integer.parseInt(req.getParameter("publish_year")) : null);
+                ? Integer.parseInt(req.getParameter("publish_year"))
+                : null);
         book.setPages(req.getParameter("pages") != null && !req.getParameter("pages").isEmpty()
-                ? Integer.parseInt(req.getParameter("pages")) : null);
+                ? Integer.parseInt(req.getParameter("pages"))
+                : null);
         book.setRating(Double.parseDouble(req.getParameter("rating_average")));
         book.setPrice(Double.parseDouble(req.getParameter("price")));
 
@@ -159,12 +162,14 @@ public class BookServlet extends HttpServlet {
             book.setStock(Integer.parseInt(req.getParameter("stock")));
             book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
             book.setDiscount_rate(Integer.parseInt(req.getParameter("discount_rate")));
-            book.setthumbnailUrl(req.getParameter("thumbnail_url"));
+            book.setThumbnailUrl(req.getParameter("thumbnail_url"));
             book.setDescription(req.getParameter("description"));
             book.setPublishYear(req.getParameter("publish_year") != null && !req.getParameter("publish_year").isEmpty()
-                    ? Integer.parseInt(req.getParameter("publish_year")) : null);
+                    ? Integer.parseInt(req.getParameter("publish_year"))
+                    : null);
             book.setPages(req.getParameter("pages") != null && !req.getParameter("pages").isEmpty()
-                    ? Integer.parseInt(req.getParameter("pages")) : null);
+                    ? Integer.parseInt(req.getParameter("pages"))
+                    : null);
             book.setRating(Double.parseDouble(req.getParameter("rating_average")));
             book.setPrice(Double.parseDouble(req.getParameter("price")));
 
@@ -199,7 +204,8 @@ public class BookServlet extends HttpServlet {
             List<Category> categories = BookService.getAllCategories();
             req.setAttribute("books", books);
             req.setAttribute("categories", categories);
-            req.setAttribute("totalPages", BookService.getTotalPages(title, publishYear, includeCategories, excludeCategories));
+            req.setAttribute("totalPages",
+                    BookService.getTotalPages(title, publishYear, includeCategories, excludeCategories));
             req.setAttribute("currentPage", page);
             req.setAttribute("title", title);
             req.setAttribute("publishYear", publishYear);

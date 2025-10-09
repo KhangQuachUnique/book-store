@@ -11,7 +11,7 @@ public class DBConnection {
 
     static {
         try {
-            Class.forName("org.postgresql.Driver"); // Load driver
+            Class.forName("org.postgresql.Driver"); // load driver
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -19,5 +19,5 @@ public class DBConnection {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);
-    }   
+    }
 }

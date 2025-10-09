@@ -1,0 +1,240 @@
+.container * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #f5f6fa;
+}
+
+.title {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 800;
+}
+
+.form_bnt, .form_input {
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 5px;
+}
+
+.input-label {
+    font-weight: bold;
+}
+
+/* Inputs */
+.container input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+/* Button */
+input.submit {
+    background-color: #a52a2a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Error / Success messages */
+p.error {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+p.success {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+}
+
+span#error, span#success {
+    font-weight: bold;
+}
+
+span#mismatch {
+    font-size: 0.85em; /* chữ nhỏ hơn */
+    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+}
+
+/* Container chính */
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto; /* căn ngang */
+    padding: 20px;
+    background-color: #fff;          /* nền trắng */
+    border-radius: 10px;             /* bo tròn */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* bóng mờ xung quanh */
+}
+
+/* User info container */
+.user-info {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Dòng thông tin label/value */
+.info-row {
+    display: flex;
+    justify-content: space-between; /* label bên trái, value bên phải */
+    padding: 8px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+/* Label */
+.label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Value */
+.value {
+    color: #7D7D7DFF;
+    font-weight: 600
+}
+
+#email {
+    color: #bbbaba;
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.input-value {
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.warning {
+    color: red;
+    display: none; /* ban đầu ẩn */
+    font-size: 0.85em; /* chữ nhỏ hơn */
+    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+    margin-top: 0;
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+    z-index: 9999;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/*.user-info .value {*/
+/*    display: inline-block;        !* để width có hiệu lực *!*/
+/*    max-width: 250px;             !* giới hạn chiều rộng, bạn tùy chỉnh theo layout *!*/
+/*    white-space: nowrap;          !* không cho xuống dòng *!*/
+/*    overflow: hidden;             !* ẩn phần thừa *!*/
+/*    text-overflow: ellipsis;      !* hiển thị ... khi tràn *!*/
+/*    vertical-align: middle;*/
+/*}*/
+
+/*.user-info .value:hover {*/
+/*    overflow: visible;*/
+/*    white-space: normal;*/
+/*    background: #f9f9f9;*/
+/*    padding: 2px 4px;*/
+/*    border-radius: 4px;*/
+/*    position: relative;*/
+/*    z-index: 10;*/
+/*}*/
+
+.address-value {
+    display: inline-block;
+    max-width: 350px;        /* giới hạn chiều rộng */
+    white-space: normal;     /* cho phép xuống dòng theo dấu cách */
+    word-wrap: break-word;   /* xuống dòng nếu có từ quá dài */
+    overflow-wrap: break-word;
+
+    text-align: right;       /* căn chữ sang phải */
+    box-sizing: border-box;  /* tính cả padding vào max-width */
+}
+
+.address-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-address {
+    flex: 1;
+    padding: 8px;
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.dropdown-toggle {
+    padding: 6px 10px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.address-list {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px;
+    max-width: 300px;
+    background: #fff;
+    width: 100%;
+}
+
+.address-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.address-item:hover {
+    background: #f0f0f0;
+}

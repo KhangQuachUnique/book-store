@@ -6,7 +6,7 @@
     <title>Register</title>
 
     <!-- JS -->
-    <script src="<%=request.getContextPath()%>/assets/js/app.js" defer></script>
+    <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script>
 
     <!-- CSS global & form -->
     <link rel="stylesheet"
@@ -22,7 +22,10 @@
 
 </head>
 <body>
-
+<div class="logo">
+    <img src="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg" alt="Logo" >
+    <span>Bookie Cake</span>
+</div>
 <div class="form-container">
     <h2 class="form-title">Register</h2>
 
@@ -68,7 +71,7 @@
 
     <p class="register-link">
         Already have an account? <a
-            href="<%=request.getContextPath()%>/user/login">Login</a>
+            href="<%=request.getContextPath()%>/login">Login</a>
     </p>
 
     <div id="spinner" class="spinner" style="display: none;"></div>
