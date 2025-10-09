@@ -218,14 +218,14 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private void forwardToList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-        request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_LIST);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
-        dispatcher.forward(request, response);
-    }
+        private void forwardToList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setDateHeader("Expires", 0);
+            request.setAttribute("contentPage", PathConstants.VIEW_ADMIN_USER_LIST);
+            RequestDispatcher dispatcher = request.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(request, response);
+        }
 
     private void viewUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         long id = parseLongParameter(request.getParameter("id"), response);
