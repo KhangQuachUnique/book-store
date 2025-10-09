@@ -32,12 +32,12 @@
                         <tr>
                             <td>
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="${item.thumbnail}" alt="${item.title}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
-                                    <span>${item.title}</span>
+                                    <img src="${item.book.thumbnailUrl}" alt="${item.book.title}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                    <span>${item.book.title}</span>
                                 </div>
                             </td>
                             <td>
-                                <form action="cart" method="post" style="display: flex; align-items: center; gap: 4px;">
+                                <form action="${pageContext.request.contextPath}/user/cart" method="post" style="display: flex; align-items: center; gap: 4px;">
                                     <input type="hidden" name="action" value="update"/>
                                     <input type="hidden" name="cartId" value="${item.id}"/>
                                     <input type="number" name="quantity" value="${item.quantity}" min="1" class="cart-quantity-input"/>
@@ -45,10 +45,10 @@
 </div>
 <script src="${pageContext.request.contextPath}/assets/js/cart.js"></script>
                             </td>
-                            <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.price}" type="number" maxFractionDigits="0"/> ₫</span></td>
-                            <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.price * item.quantity}" type="number" maxFractionDigits="0"/> ₫</span></td>
+                            <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.effectiveUnitPrice}" type="number" maxFractionDigits="0"/> ₫</span></td>
+                            <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.subtotal}" type="number" maxFractionDigits="0"/> ₫</span></td>
                             <td class="cart-actions">
-                                <form action="cart" method="post">
+                                <form action="${pageContext.request.contextPath}/user/cart" method="post">
                                     <input type="hidden" name="action" value="remove"/>
                                     <input type="hidden" name="cartId" value="${item.id}"/>
                                     <button type="submit">Remove</button>
@@ -63,7 +63,7 @@
             <div class="checkout-summary">
                 <div class="summary-section">
                     <h3>Order Summary</h3>
-                    <c:set var="shippingCost" value="30000"/>
+                    <c:set var="shippingCost" value="${not empty shippingFee ? shippingFee : 30000}"/>
                     <c:set var="subtotal" value="${cartTotal}"/>
                     <c:set var="total" value="${subtotal + shippingCost}"/>
                     
@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="cart-actions" style="margin-top: 24px;">
-                    <a href="payment" class="checkout-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Proceed to Payment</a>
+                    <a href="${pageContext.request.contextPath}/user/payment" class="checkout-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Proceed to Payment</a>
                 </div>
             </div>
         </div>

@@ -39,4 +39,39 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Book> books;
+
+    @Transient
+    private Long parentIdCache;
+
+    public Long getParentId() {
+        if (parent != null) {
+            return parent.getId();
+        }
+        return parentIdCache;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentIdCache = parentId;
+        if (parentId == null) {
+            this.parent = null;
+            return;
+        }
+        if (this.parent == null) {
+            this.parent = new Category();
+        }
+        this.parent.setId(parentId);
+    }
+
+    public void setParent(Category parent) {
+        this.parent = parent;
+        this.parentIdCache = parent != null ? parent.getId() : null;
+    }
+
+    public boolean getIsLeaf() {
+        return isLeaf;
+    }
+
+    public void setIsLeaf(boolean leaf) {
+        this.isLeaf = leaf;
+    }
 }

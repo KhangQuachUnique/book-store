@@ -64,8 +64,9 @@ public class LoginServlet extends HttpServlet {
                     User user = result.getUser();
 
                     // Gắn role và email vào access token
-                    String accessToken = JwtUtil.generateAccessToken(user.getEmail(), user.getRole());
-                    String refreshToken = JwtUtil.generateRefreshToken(user.getEmail(), user.getRole());
+                    String roleValue = user.getRole() != null ? user.getRole().name() : null;
+                    String accessToken = JwtUtil.generateAccessToken(user.getEmail(), roleValue);
+                    String refreshToken = JwtUtil.generateRefreshToken(user.getEmail(), roleValue);
 
                     // Cookie cho access token (hết hạn sau 60 phút)
                     Cookie accessCookie = new Cookie("access_token", accessToken);
@@ -84,7 +85,7 @@ public class LoginServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_OK);
                     res.addProperty("message", "Login success");
                     res.addProperty("email", user.getEmail());
-                    res.addProperty("role", user.getRole());
+                    res.addProperty("role", roleValue);
 
                     // Set session attribute for server-side auth (used by NotificationServlet)
                     req.getSession(true).setAttribute("user", user);

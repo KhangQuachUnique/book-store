@@ -97,7 +97,97 @@ public class Book implements Serializable {
     @Transient
     private Double price;
 
+    @Transient
+    private Integer categoryIdCache;
+
+    @Transient
+    private Integer fullStars;
+
+    @Transient
+    private Double fractionalStars;
+
+    @Transient
+    private Integer emptyStars;
+
     public Double getPrice() {
-        return price = originalPrice * (100 - discountRate) / 100;
+        if (price != null) {
+            return price;
+        }
+        double effectiveDiscount = discountRate != null ? discountRate : 0;
+        price = originalPrice * (100 - effectiveDiscount) / 100;
+        return price;
+    }
+
+    public Double getRating() {
+        return averageRating;
+    }
+
+    public void setRating(Double rating) {
+        this.averageRating = rating;
+    }
+
+    public Integer getDiscount_rate() {
+        return discountRate != null ? discountRate : 0;
+    }
+
+    public void setDiscount_rate(Integer discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    public Integer getCategoryId() {
+        if (category != null) {
+            return (int) category.getId();
+        }
+        return categoryIdCache;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryIdCache = categoryId;
+        if (categoryId == null) {
+            this.category = null;
+            return;
+        }
+        if (this.category == null) {
+            this.category = new Category();
+        }
+        this.category.setId(categoryId);
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+        this.categoryIdCache = category != null ? (int) category.getId() : null;
+    }
+
+    public void calculateStars() {
+        if (averageRating == null) {
+            fullStars = 0;
+            fractionalStars = 0.0;
+            emptyStars = 5;
+            return;
+        }
+        fullStars = (int) Math.floor(averageRating);
+        fractionalStars = averageRating - fullStars;
+        emptyStars = Math.max(0, 5 - fullStars - (fractionalStars > 0 ? 1 : 0));
+    }
+
+    public Integer getFullStars() {
+        if (fullStars == null) {
+            calculateStars();
+        }
+        return fullStars;
+    }
+
+    public Double getFractionalStars() {
+        if (fractionalStars == null) {
+            calculateStars();
+        }
+        return fractionalStars;
+    }
+
+    public Integer getEmptyStars() {
+        if (emptyStars == null) {
+            calculateStars();
+        }
+        return emptyStars;
     }
 }

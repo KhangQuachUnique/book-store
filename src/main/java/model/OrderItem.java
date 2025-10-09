@@ -22,4 +22,27 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orderId", nullable = false)
     private Order order;
+
+    @Transient
+    private String bookTitle;
+
+    @Transient
+    private Double price;
+
+    @Transient
+    private String thumbnailUrl;
+
+    @Transient
+    private Double originalPrice;
+
+    @Transient
+    private Integer discountRate;
+
+    public void setPrice(int price) {
+        this.price = (double) price;
+    }
+
+    public void setDiscountRate(int discountRate) {
+        this.discountRate = discountRate;
+    }
 }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,4 +26,13 @@ public class ViewedProductItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"viewedProductId\"", nullable = false)
     private ViewedProduct viewedProduct;
+
+    @Transient
+    private Timestamp viewedAt;
+
+    public ViewedProductItem(Long id, Book book, Timestamp viewedAt) {
+        this.id = id;
+        this.book = book;
+        this.viewedAt = viewedAt;
+    }
 }

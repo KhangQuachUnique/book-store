@@ -137,4 +137,12 @@ public class User {
         safe.setPasswordHash(null);
         return safe;
     }
+
+    public String getPhone() {
+        return phoneNumber;
+    }
+
+    public void setPhone(String phone) {
+        this.phoneNumber = phone;
+    }
 }

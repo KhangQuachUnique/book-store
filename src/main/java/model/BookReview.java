@@ -1,13 +1,18 @@
 package model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookReview {
+    private Long bookId;
+    private List<ReviewShow> reviewShows = Collections.emptyList();
     private List<Review> reviews;
     private Double averageRating;
     private Integer totalReviews;
@@ -37,10 +42,19 @@ public class BookReview {
     }
 
     public void calculateStarCounts() {
-        fiveStarCount = (int) reviews.stream().filter(r -> r.getRating() == 5).count();
-        fourStarCount = (int) reviews.stream().filter(r -> r.getRating() == 4).count();
-        threeStarCount = (int) reviews.stream().filter(r -> r.getRating() == 3).count();
-        twoStarCount = (int) reviews.stream().filter(r -> r.getRating() == 2).count();
-        oneStarCount = (int) reviews.stream().filter(r -> r.getRating() == 1).count();
+        List<Double> sourceRatings;
+        if (reviewShows != null && !reviewShows.isEmpty()) {
+            sourceRatings = reviewShows.stream().map(ReviewShow::getRating).toList();
+        } else if (reviews != null && !reviews.isEmpty()) {
+            sourceRatings = reviews.stream().map(r -> (double) r.getRating()).toList();
+        } else {
+            sourceRatings = Collections.emptyList();
+        }
+
+        fiveStarCount = (int) sourceRatings.stream().filter(r -> r != null && r.intValue() == 5).count();
+        fourStarCount = (int) sourceRatings.stream().filter(r -> r != null && r.intValue() == 4).count();
+        threeStarCount = (int) sourceRatings.stream().filter(r -> r != null && r.intValue() == 3).count();
+        twoStarCount = (int) sourceRatings.stream().filter(r -> r != null && r.intValue() == 2).count();
+        oneStarCount = (int) sourceRatings.stream().filter(r -> r != null && r.intValue() == 1).count();
     }
 }
