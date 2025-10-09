@@ -1,8 +1,10 @@
 package service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import model.Order;
+import model.OrderItem;
 import model.OrderStatus;
 import util.JPAUtil;
 
@@ -11,9 +13,7 @@ import java.util.List;
 public class OrderService {
 
     /**
-     * Lấy đơn theo user + trạng thái.
-     * statusParam = null hoặc "ALL" -> lấy tất cả.
-     * Dùng JOIN FETCH để nạp sẵn items & book, tránh LazyInitializationException khi render JSP.
+     * Lấy danh sách đơn theo user + trạng thái
      */
     public List<Order> getOrdersByUserAndStatus(Long userId, String statusParam) {
         EntityManager em = JPAUtil.getEntityManager();
@@ -22,7 +22,7 @@ public class OrderService {
             StringBuilder jpql = new StringBuilder(
                     "SELECT DISTINCT o FROM Order o " +
                             "LEFT JOIN FETCH o.items oi " +
-                            "LEFT JOIN FETCH oi.book b " +  // JSP đang dùng item.book.title/thumbnail/price
+                            "LEFT JOIN FETCH oi.book b " +
                             "WHERE o.user.id = :userId "
             );
 
@@ -36,14 +36,47 @@ public class OrderService {
                     .setParameter("userId", userId);
 
             if (!all) {
-                // Chuẩn hoá về UPPER để tránh lỗi valueOf khi client truyền thường
                 OrderStatus status = OrderStatus.valueOf(statusParam.toUpperCase());
                 query.setParameter("status", status);
             }
 
             return query.getResultList();
         } finally {
-            em.close(); // Trả về entity đã fetch sẵn associations cần dùng
+            em.close();
+        }
+    }
+
+    /**
+     * 🧾 Hàm tạo đơn hàng mới — lưu cả giá từng item và tổng tiền
+     */
+    public void createOrder(Order order) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+
+            double totalAmount = 0.0;
+
+            for (OrderItem item : order.getItems()) {
+                // ✅ Tính giá thật tại thời điểm checkout
+                double discountedPrice = item.getBook().getOriginalPrice()
+                        * (1 - (item.getBook().getDiscountRate() / 100.0));
+
+                item.setPrice(discountedPrice); // Lưu giá tại thời điểm mua
+                item.setOrder(order);           // Gán quan hệ ngược
+                totalAmount += discountedPrice * item.getQuantity();
+            }
+
+            order.setTotalAmount(totalAmount);
+            em.persist(order);
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
         }
     }
 }

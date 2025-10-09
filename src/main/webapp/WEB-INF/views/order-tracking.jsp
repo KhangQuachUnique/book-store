@@ -49,8 +49,6 @@
                         <div class="order-items">
                             <h4>Sản phẩm:</h4>
                             <ul>
-                                <c:set var="orderTotal" value="0"/>
-
                                 <c:forEach var="item" items="${order.items}">
                                     <li>
                                         <img src="${item.book.thumbnailUrl}" alt="${item.book.title}"
@@ -59,47 +57,36 @@
                                         <div class="book-info">
                                             <p class="book"><strong>${item.book.title}</strong></p>
 
+                                            <!-- 💰 Hiển thị giá đã lưu (có discount nếu có) -->
                                             <p class="price">
-                                                <c:choose>
-                                                    <c:when test="${item.book.discountRate > 0}">
-                                                        <span class="original-price">
-                                                            <fmt:formatNumber value="${item.book.originalPrice}"
-                                                                              type="number"/> VNĐ
-                                                        </span>
-                                                        <span class="discount-rate">
-                                                            -${item.book.discountRate}%
-                                                        </span>
-                                                        <span class="current-price">
-                                                            <fmt:formatNumber
-                                                                    value="${item.book.originalPrice * (1 - (item.book.discountRate / 100.0))}"
-                                                                    type="number"/> VNĐ
-                                                        </span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span class="current-price">
-                                                            <fmt:formatNumber value="${item.book.originalPrice}"
-                                                                              type="number"/> VNĐ
-                                                        </span>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <c:if test="${item.book.discountRate > 0}">
+                                                    <span class="original-price">
+                                                        <fmt:formatNumber value="${item.book.originalPrice}"
+                                                                          type="number"/> VNĐ
+                                                    </span>
+                                                    <span class="discount-rate">-${item.book.discountRate}%</span>
+                                                </c:if>
+
+                                                <span class="current-price">
+                                                    <fmt:formatNumber value="${item.price}" type="number"/> VNĐ
+                                                </span>
                                             </p>
 
                                             <p class="qty">x ${item.quantity}</p>
                                         </div>
                                     </li>
-
-                                    <c:set var="orderTotal"
-                                           value="${orderTotal + (item.book.originalPrice * (1 - (item.book.discountRate / 100.0)) * item.quantity)}"/>
                                 </c:forEach>
                             </ul>
 
+                            <!-- 💵 Tổng tiền -->
                             <p class="total"><strong>Thành tiền:</strong>
-                                <fmt:formatNumber value="${orderTotal}" type="number"/> VNĐ
+                                <fmt:formatNumber value="${order.totalAmount}" type="number"/> VNĐ
                             </p>
                         </div>
                     </div>
                 </c:forEach>
             </c:when>
+
             <c:otherwise>
                 <p class="no-orders">Bạn chưa có đơn hàng nào!</p>
             </c:otherwise>
