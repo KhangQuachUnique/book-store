@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +19,13 @@ public class VerifyServlet extends HttpServlet {
         String token = req.getParameter("token");
         boolean verified = false;
 
-        if (token != null && !token.isEmpty())
-            verified = userService.verifyUser(token);
+        if (token != null && !token.isEmpty()) {
+            try {
+                verified = userService.verifyUser(token);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         // Redirect đến login kèm thông tin verified
         resp.sendRedirect(req.getContextPath() + "/login?verified=" + verified);

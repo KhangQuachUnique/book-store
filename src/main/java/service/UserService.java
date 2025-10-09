@@ -18,32 +18,34 @@ import model.User;
 
 public class UserService {
     private UserDao userDao = new UserDao();
-    private static final int PAGE_SIZE = 20;
+    private static final int pageSize = 20;
 
     /**
      * Đăng ký hoặc trả về null nếu email đã tồn tại
      */
-    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException {
+    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException, SQLException {
         Optional<User> existing = userDao.findByEmail(user.getEmail());
         if (existing.isPresent())
             return null;
 
         user.setPasswordHash(BCrypt.hashpw(rawPassword, BCrypt.gensalt()));
         user.setIsVerified(false);
-        user.setRole("customer");
+        // Role set in dao.save via prePersist or in createUser
 
         String token = UUID.randomUUID().toString();
         user.setVerifyToken(token);
         user.setVerifyExpire(Timestamp.from(Instant.now().plus(15, ChronoUnit.MINUTES)));
 
-        userDao.save(user);
-        return token; // dùng để gửi mail xác thực
+        if (userDao.save(user)) {
+            return token; // dùng để gửi mail xác thực
+        }
+        return null;
     }
 
     /**
      * Login, trả về LoginResult
      */
-    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException {
+    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException, SQLException {
         LoginResult result = new LoginResult();
 
         Optional<User> userOpt = userDao.findByEmail(email);
@@ -88,7 +90,7 @@ public class UserService {
     /**
      * Xác thực token email
      */
-    public boolean verifyUser(String token) {
+    public boolean verifyUser(String token) throws SQLException {
         User user = userDao.findByVerifyToken(token);
         if (user == null)
             return false;
@@ -162,6 +164,6 @@ public class UserService {
 
     public int getTotalPages(String queryType, String query) throws SQLException {
         long totalUsers = getTotalUsers(queryType, query);
-        return (int) Math.ceil((double) totalUsers / PAGE_SIZE);
+        return (int) Math.ceil((double) totalUsers / pageSize);
     }
 }
