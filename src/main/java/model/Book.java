@@ -54,17 +54,20 @@ public class Book implements Serializable {
     @Column(name = "\"averageRating\"")
     private Double averageRating;
 
+    @Column(name = "\"sold\"")
+    private Integer sold;
+
     @Column(name = "\"originalPrice\"")
     private double originalPrice;
 
     @Column(name = "\"discountRate\"")
     @Min(value = 0, message = "Discount rate must be non-negative")
     @Max(value = 100, message = "Discount rate must not exceed 100")
-    private int discountRate;
+    private Integer discountRate;
 
     @Column(name = "\"stock\"")
     @Min(value = 0, message = "Stock must be non-negative")
-    private int stock;
+    private Integer stock;
 
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
