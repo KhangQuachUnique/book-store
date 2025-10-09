@@ -101,7 +101,7 @@ public class CategoryBookDao {
 
     private static Book mapResultSetToBook(ResultSet rs) throws SQLException {
         Book b = new Book();
-        b.setId(rs.getInt("id"));
+        b.setId(rs.getLong("id"));
         b.setTitle(rs.getString("title"));
         b.setStock(rs.getInt("stock"));
         b.setAuthor(rs.getString("author"));

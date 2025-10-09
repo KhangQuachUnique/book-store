@@ -4,7 +4,6 @@ import constant.PathConstants;
 import dao.CategoryBookDao;
 import model.Book;
 import model.Category;
-import service.BookService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
