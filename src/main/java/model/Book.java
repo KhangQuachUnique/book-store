@@ -42,7 +42,7 @@ public class Book implements Serializable {
     @Column(name = "\"thumbnailUrl\"")
     private String thumbnailUrl;
 
-    @Column(name = "\"description\"", columnDefinition = "TEXT")
+    @Column(name = "\"description\"")
     private String description;
 
     @Column(name = "\"publishYear\"")

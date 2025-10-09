@@ -6,12 +6,12 @@ const BASE_URL = contextPath;
 
 export const bookReviewApi = {
     likeReview: async (reviewId) => {
-        const response = await fetchUtil(BASE_URL + `/user/book-review`, 'POST', {reviewId: reviewId});
+        const response = await fetchUtil(BASE_URL + `/review`, 'POST', {reviewId: reviewId});
         // console.log(response)
         return response;
     },
     unlikeReview: async (reviewId) => {
-        const response = await fetchUtil(BASE_URL + `/user/book-review`, 'DELETE', {reviewId: reviewId});
+        const response = await fetchUtil(BASE_URL + `/review`, 'DELETE', {reviewId: reviewId});
         // console.log(response)
         return response;
     },

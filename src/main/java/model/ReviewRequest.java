@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookReviewRequest {
-    private Integer reviewId;
+public class ReviewRequest {
+    private Long reviewId;
 }
