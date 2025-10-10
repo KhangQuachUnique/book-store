@@ -1,9 +1,9 @@
 package controller;
 
 import constant.PathConstants;
-import dao.CategoryBookDao;
 import model.Book;
 import model.Category;
+import service.CategoryBookService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,13 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/categories")
 public class CategoryBookServlet extends HttpServlet {
-    private static final int MAX_PAGE_DISPLAY = 5;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int page = 1;
@@ -96,36 +93,36 @@ public class CategoryBookServlet extends HttpServlet {
         List<Book> books;
         int totalPages;
 
-        // Sử dụng BookService.filterBooks thay vì CategoryBookDao nếu có filter
+        // Sử dụng CategoryBookService.filterBook thay vì CategoryBookDao nếu có filter
         if ((title != null && !title.trim().isEmpty()) || 
             (includeCategories != null && !includeCategories.isEmpty()) ||
             (excludeCategories != null && !excludeCategories.isEmpty())) {
             try {
-                books = BookService.filterBooks(title, null, includeCategories, excludeCategories, page);
-                totalPages = BookService.getTotalPages(title, null, includeCategories, excludeCategories);
-            } catch (SQLException e) {
+                books = CategoryBookService.filterBook(title, null, includeCategories, excludeCategories, page);
+                totalPages = CategoryBookService.getTotalPage(title, null, includeCategories, excludeCategories);
+            } catch (Exception e) {
                 e.printStackTrace();
                 books = new java.util.ArrayList<>();
                 totalPages = 1;
             }
         } else if (categoryId != null) {
-            books = CategoryBookDao.getBooksByCategoryId(categoryId, page);
-            totalPages = CategoryBookDao.getTotalPagesByCategory(categoryId);
+            books = CategoryBookService.getBooksByCategoryId(categoryId, page);
+            totalPages = CategoryBookService.getTotalPagesByCategory(categoryId);
         } else {
-            books = CategoryBookDao.getAllBook(page);
-            totalPages = CategoryBookDao.getTotalPages();
+            books = CategoryBookService.getAllBook(page);
+            totalPages = CategoryBookService.getTotalPages();
         }
 
         // Lấy danh sách tất cả categories để hiển thị trong bảng category
         List<Category> categories = null;
         try {
-            categories = BookService.getAllCategories();
-        } catch (SQLException e) {
+            categories = CategoryBookService.getAllCategory();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // Tính toán các trang sẽ hiển thị
-        int[] visiblePages = calculateVisiblePages(page, totalPages);
+        int[] visiblePages = CategoryBookService.calculateVisiblePages(page, totalPages);
 
         req.setAttribute("books", books);
         req.setAttribute("categories", categories);
@@ -145,29 +142,5 @@ public class CategoryBookServlet extends HttpServlet {
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
-    private int[] calculateVisiblePages(int currentPage, int totalPages) {
-        // Xử lý trường hợp không có trang nào hoặc totalPages không hợp lệ
-        if (totalPages <= 0) {
-            return new int[]{1}; // Trả về array với page 1 thay vì empty array
-        }
-        
-        if (totalPages <= MAX_PAGE_DISPLAY) {
-            int[] pages = new int[totalPages];
-            for (int i = 0; i < totalPages; i++) {
-                pages[i] = i + 1;
-            }
-            return pages;
-        }
 
-        if (currentPage <= 3) {
-            // Đầu: 1 2 3 4 5 ... totalPages
-            return new int[]{1, 2, 3, 4, 5};
-        } else if (currentPage >= totalPages - 2) {
-            // Cuối: 1 ... totalPages-4 totalPages-3 totalPages-2 totalPages-1 totalPages
-            return new int[]{totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages};
-        } else {
-            // Giữa: 1 ... currentPage-1 currentPage currentPage+1 ... totalPages
-            return new int[]{currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2};
-        }
-    }
 }
