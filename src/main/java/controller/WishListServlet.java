@@ -21,19 +21,47 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page = PathConstants.VIEW_WISHLIST;
-        req.setAttribute("contentPage", page);
+        //Get current user
         User sessionUser = (User) req.getSession().getAttribute("user");
         Long currentUserId = 0L;
-
         if (sessionUser != null) {
             currentUserId = sessionUser.getId();
         }
-        WishList wishList = wishListService.getWishListBooks(101L, 1, 100);
+
+        //Pagination parameters
+        int currentPage = 1;      // default
+        int pageSize = 5;  // default
+
+        String pageParam = req.getParameter("page");
+        String pageSizeParam = req.getParameter("pageSize");
+
+        if (pageParam != null) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
+
+        if (pageSizeParam != null) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+            } catch (NumberFormatException e) {
+                pageSize = 5;
+            }
+        }
+
+        //Get wish list
+        WishList wishList = wishListService.getWishListBooks(101L, currentPage, pageSize);
         if (wishList.getItems().isEmpty()) {
             req.setAttribute("message", "Your wish list is empty.");
         }
         req.setAttribute("wishList", wishList);
+        req.setAttribute("currentPage", wishList.getCurrentPage());
+        req.setAttribute("pageSize", wishList.getPageSize());
+        req.setAttribute("totalPages", wishList.getTotalPages());
+
+        req.setAttribute("contentPage", PathConstants.VIEW_WISHLIST);
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
