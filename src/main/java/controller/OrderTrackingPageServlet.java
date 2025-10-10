@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import constant.PathConstants;
-import dao.OrderDAO;
 import dao.OrderStatusDAO;
 import model.Order;
 import model.OrderStatus;
@@ -65,4 +64,3 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 }
-

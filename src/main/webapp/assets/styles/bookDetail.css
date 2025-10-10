@@ -4,9 +4,9 @@
 
 /* Base Styles - Matching global.css color scheme */
 .book-detail-container {
-    max-width: 1200px;
+
     margin: 0 auto;
-    padding: 20px;
+    padding: 60px;
     font-family: Arial, sans-serif;
     background-color: #fff;
 }
@@ -17,7 +17,7 @@
     align-items: center;
     margin-bottom: 30px;
     padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d1d1d1;
     font-size: 14px;
 }
 
@@ -72,8 +72,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid #eee;
+    border: 1px solid #d1d1d1;
 }
 
 .book-detail-image {
@@ -114,7 +113,6 @@
 .quick-actions .btn {
     width: 100%;
     padding: 14px 20px;
-    border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
@@ -126,8 +124,15 @@
     gap: 8px;
 }
 
+.quick-actions .btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 .btn-primary {
     background-color: var(--primary-color);
+    border: none;
     color: white;
 }
 
@@ -140,7 +145,7 @@
 .btn-secondary {
     background-color: #fff;
     color: #666;
-    border: 2px solid #ddd;
+    border: 2px solid #666;
 }
 
 .btn-secondary:hover {
@@ -183,7 +188,7 @@
 
 /* Book Header */
 .book-header {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d1d1d1;
     padding-bottom: 20px;
 }
 
@@ -212,7 +217,7 @@
     align-items: center;
     gap: 15px;
     padding: 15px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d1d1d1;
 }
 
 .rating-display {
@@ -338,9 +343,13 @@
 /* Book Details Grid */
 .book-details-section {
     background-color: #fff;
-    border: 1px solid #eee;
+    border: 1px solid #d1d1d1;
     border-radius: 10px;
     overflow: hidden;
+}
+
+.book-details-section h3 {
+    margin: 20px 20px 10px 20px    ;
 }
 
 .details-grid {
@@ -353,7 +362,7 @@
     display: grid;
     grid-template-columns: 150px 1fr;
     padding: 15px 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d1d1d1;
     align-items: center;
 }
 
@@ -393,7 +402,7 @@
 .related-actions {
     margin-top: 30px;
     padding-top: 30px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #d1d1d1;
     text-align: center;
 }
 
@@ -567,12 +576,12 @@
     }
 }
 
-/* Focus States for Accessibility */
-.btn:focus,
-.breadcrumb a:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
+/*!* Focus States for Accessibility *!*/
+/*.btn:focus,*/
+/*.breadcrumb a:focus {*/
+/*    outline: 2px solid var(--primary-color);*/
+/*    outline-offset: 2px;*/
+/*}*/
 
 /* Print Styles */
 @media print {

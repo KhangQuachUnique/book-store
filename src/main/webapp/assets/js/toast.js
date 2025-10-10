@@ -1,18 +1,73 @@
-// assets/js/toast.js
+// toast.js
+let toastIndex = 0;
 
-function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
+function showToast(message, type = 'success', duration = 3000) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
 
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 3000);
+    // Calculate position for stacking
+    const existingToasts = document.querySelectorAll('.toast');
+    const topOffset = 100 + (existingToasts.length * 80);
+
+    toast.style.top = `${topOffset}px`;
+
+    // Toast content
+    toast.innerHTML = `
+        <div class="toast-content">
+            <span class="toast-icon">${getToastIcon(type)}</span>
+            <span class="toast-message">${message}</span>
+            <button class="toast-close">&times;</button>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(toast);
+
+    // Show toast with animation
+    requestAnimationFrame(() => {
+        toast.classList.add('toast-show');
+    });
+
+    // Auto hide and reposition others
+    const hideToast = () => {
+        toast.classList.remove('toast-show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+                repositionToasts(); // Reposition remaining toasts
+            }
+        }, 300);
+    };
+
+    // Close button event
+    toast.querySelector('.toast-close').addEventListener('click', hideToast);
+
+    // Auto hide after duration
+    if (duration > 0) {
+        setTimeout(hideToast, duration);
+    }
+
+    return toast;
 }
 
-// Nếu có biến `TOAST_MESSAGE` thì show luôn khi load trang
-window.addEventListener("load", function () {
-    if (typeof TOAST_MESSAGE !== "undefined" && TOAST_MESSAGE) {
-        showToast(TOAST_MESSAGE);
-    }
-});
+function repositionToasts() {
+    const toasts = document.querySelectorAll('.toast');
+    toasts.forEach((toast, index) => {
+        const topOffset = 100 + (index * 80);
+        toast.style.top = `${topOffset}px`;
+    });
+}
+
+function getToastIcon(type) {
+    const icons = {
+        success: '✓',
+        error: '✕',
+        warning: '⚠',
+        info: 'ℹ'
+    };
+    return icons[type] || icons.info;
+}
+
+// Make it globally available
+window.showToast = showToast;

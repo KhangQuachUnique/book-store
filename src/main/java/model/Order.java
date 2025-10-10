@@ -1,84 +1,47 @@
 package model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "\"orders\"")
 public class Order {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
     private Long id;
-    private String createdAt;
-    private double totalAmount; // có thể bỏ, vì JSP tự tính
+
+    @Column(name = "\"paymentMethod\"")
     private String paymentMethod;
 
-    private Long statusId;
-    private String statusName;
+    @Column(name = "\"createdAt\"")
+    private Timestamp createdAt;
 
+    @Column(name = "\"totalAmount\"")
+    private double totalAmount;
+
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"userId\"", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"promotionId\"")
+    private Promotion promotion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "\"status\"")
+    private OrderStatus status;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> items;
-
-    public Order() {
-    }
-
-    public Order(Long id, String createdAt, double totalAmount, String paymentMethod, Long statusId, String statusName) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.totalAmount = totalAmount;
-        this.paymentMethod = paymentMethod;
-        this.statusId = statusId;
-        this.statusName = statusName;
-    }
-
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public Long getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(Long statusId) {
-        this.statusId = statusId;
-    }
-
-    public String getStatusName() {
-        return statusName;
-    }
-
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<OrderItem> items) {
-        this.items = items;
-    }
 }

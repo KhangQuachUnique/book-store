@@ -1,32 +1,35 @@
 package model;
 
-import java.util.Date;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "\"promotions\"")
 public class Promotion {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"id\"")
+    private Long id;
+
+    @Column(name = "\"code\"", unique = true, nullable = false)
     private String code;
+
+    @Column(name = "\"discount\"")
     private double discount;
-    private Date expiryDate;
 
-    public Promotion() {}
+    @Column(name = "\"expireAt\"")
+    private Timestamp expireAt;
 
-    public Promotion(int id, String code, double discount, Date expiryDate) {
-        this.id = id;
-        this.code = code;
-        this.discount = discount;
-        this.expiryDate = expiryDate;
-    }
-
-    // Getters & Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
-
-    public double getDiscount() { return discount; }
-    public void setDiscount(double discount) { this.discount = discount; }
-
-    public Date getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(Date expiryDate) { this.expiryDate = expiryDate; }
+    // Relationships
+    @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Order> orders;
 }
