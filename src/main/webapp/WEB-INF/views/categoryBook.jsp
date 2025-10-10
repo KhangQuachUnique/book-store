@@ -73,25 +73,26 @@
                                         <h3 class="book-title">${book.title}</h3>
                                         <div class="book-price-row">
                                             <span class="book-price-badge">
-                                                <fmt:formatNumber value="${book.price}" type="number" />
+                                                <fmt:formatNumber value="${book.getPrice()}" type="number" />
                                                 VND
                                             </span>
-                                            <c:if test="${book.discount_rate > 0}">
-                                                <span class="discount">-${book.discount_rate}%</span>
+                                            <c:if test="${book.discountRate > 0}">
+                                                <span class="discount">-${book.discountRate}%</span>
                                             </c:if>
                                         </div>
                                         <p class="book-author">Author: ${book.author}</p>
                                         <p class="book-publisher">Publisher: ${book.publisher}</p>
 
-                                        <div class="book-rating">
-                                            <jsp:include page="ratingStar.jsp">
-                                                <jsp:param name="fullStars" value="${book.fullStars}" />
-                                                <jsp:param name="partialFraction" value="${book.partialFraction}" />
-                                                <jsp:param name="emptyStars" value="${book.emptyStars}" />
-                                                <jsp:param name="size" value="16" />
-                                            </jsp:include>
-                                            <span class="rating-value">${book.rating} / 5</span>
-                                        </div>
+<%--                                        <div class="book-rating">--%>
+<%--                                            <jsp:include page="ratingStar.jsp">--%>
+<%--                                                <jsp:param name="fullStars" value="${book.fullStars}" />--%>
+<%--                                                <jsp:param name="partialFraction" value="${book.partialFraction}" />--%>
+<%--                                                <jsp:param name="emptyStars" value="${book.emptyStars}" />--%>
+<%--                                                <jsp:param name="size" value="16" />--%>
+<%--                                            </jsp:include>--%>
+<%--                                            <span class="rating-value">${book.rating} / 5</span>--%>
+<%--                                        </div>--%>
+
                                     </div>
                                 </a>
                             </div>
