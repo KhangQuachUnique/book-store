@@ -46,8 +46,8 @@
                     <input type="number" id="original_price" name="original_price" class="input" step="0.01" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="discount_rate">Discount Rate (%)</label>
-                    <input type="number" id="discount_rate" name="discount_rate" class="input" min="0" max="100">
+                    <label for="discountRate">Discount Rate (%)</label>
+                    <input type="number" id="discountRate" name="discountRate" class="input" min="0" max="100">
                 </div>
                 <div class="form-group">
                     <label for="thumbnail_url">Thumbnail URL</label>
@@ -66,12 +66,17 @@
                     <input type="number" id="pages" name="pages" class="input" min="1">
                 </div>
                 <div class="form-group">
-                    <label for="rating_average">Rating Average</label>
-                    <input type="number" id="rating_average" name="rating_average" class="input" step="0.1" min="0" max="5">
+                    <label for="averageRating">Rating Average</label>
+                    <input type="number" id="averageRating" name="averageRating" class="input" step="0.1" min="0" max="5">
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
                     <input type="number" id="price" name="price" class="input" step="0.01" min="0" required>
+                </div>
+                <!-- Fixed: Added input field for sold -->
+                <div class="form-group">
+                    <label for="sold">Books Sold</label>
+                    <input type="number" id="sold" name="sold" class="input" min="0" value="0">
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Add Book" class="btn btn-primary">

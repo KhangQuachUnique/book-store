@@ -1,11 +1,9 @@
 package model;
 
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-// ✅ Đổi từ javax → jakarta
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -15,13 +13,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
-/**
- * Model class representing a book.
- */
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "Book")
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +34,22 @@ public class Book implements Serializable {
 
     @Column(name = "\"publisher\"")
     private String publisher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"categoryId\"", nullable = false)
+    private Category category;
+
+    @Column(name = "\"stock\"")
+    @Min(value = 0, message = "Stock must be non-negative")
+    private Integer stock;
+
+    @Column(name = "\"originalPrice\"")
+    private Double originalPrice;
+
+    @Column(name = "\"discountRate\"")
+    @Min(value = 0, message = "Discount rate must be non-negative")
+    @Max(value = 100, message = "Discount rate must not exceed 100")
+    private Integer discountRate;
 
     @Column(name = "\"thumbnailUrl\"")
     private String thumbnailUrl;
@@ -57,26 +69,10 @@ public class Book implements Serializable {
     @Column(name = "\"sold\"")
     private Integer sold;
 
-    @Column(name = "\"originalPrice\"")
-    private double originalPrice;
-
-    @Column(name = "\"discountRate\"")
-    @Min(value = 0, message = "Discount rate must be non-negative")
-    @Max(value = 100, message = "Discount rate must not exceed 100")
-    private Integer discountRate;
-
-    @Column(name = "\"stock\"")
-    @Min(value = 0, message = "Stock must be non-negative")
-    private Integer stock;
-
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
     // Relationships
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"categoryId\"", nullable = false)
-    private Category category;
-
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Review> reviews;
 
@@ -92,12 +88,61 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ViewedProductItem> viewedProductItems;
 
-
     // Transient fields
     @Transient
     private Double price;
 
     public Double getPrice() {
-        return price = originalPrice * (100 - discountRate) / 100;
+        if (originalPrice == null || discountRate == null) {
+            return 0.0;
+        }
+        return originalPrice * (100 - discountRate) / 100.0;
+    }
+
+    public Integer getSold() {
+        return sold != null ? sold : 0;
+    }
+
+    public void setSold(Integer sold) {
+        this.sold = (sold != null && sold >= 0) ? sold : 0;
+    }
+
+    public void setCategoryId(int categoryId) {
+        Category category = new Category();
+        category.setId(categoryId);
+        this.category = category;
+    }
+
+    // Ensure non-null defaults for nullable fields
+    public String getAuthor() {
+        return author != null ? author : "";
+    }
+
+    public String getPublisher() {
+        return publisher != null ? publisher : "";
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl != null ? thumbnailUrl : "";
+    }
+
+    public String getDescription() {
+        return description != null ? description : "";
+    }
+
+    public Integer getStock() {
+        return stock != null ? stock : 0;
+    }
+
+    public Double getOriginalPrice() {
+        return originalPrice != null ? originalPrice : 0.0;
+    }
+
+    public Integer getDiscountRate() {
+        return discountRate != null ? discountRate : 0;
+    }
+
+    public Double getAverageRating() {
+        return averageRating != null ? averageRating : 0.0;
     }
 }

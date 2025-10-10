@@ -6,74 +6,79 @@ import com.google.common.cache.LoadingCache;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import dao.BookDao;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import model.Book;
 import model.Category;
+import util.JPAUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-/**
- * Service layer for managing book operations with caching.
- */
 public class BookService {
+    private static final Logger LOGGER = Logger.getLogger(BookService.class.getName());
     private static final int PAGE_SIZE = 20;
     private static final Validator validator;
 
-    // Cache for books list (key: page, value: List<Book>)
     private static final LoadingCache<Integer, List<Book>> booksCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(new CacheLoader<Integer, List<Book>>() {
                 @Override
-                public List<Book> load(Integer page) throws SQLException {
-                    return BookDao.getAllBooks(page);
+                public List<Book> load(Integer page) {
+                    List<Book> books = BookDao.getAllBooks(page);
+                    LOGGER.info("Loaded " + books.size() + " books for page " + page);
+                    return books;
                 }
             });
 
-    // Cache for book by ID (key: id, value: Book)
     private static final LoadingCache<Long, Book> bookByIdCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(new CacheLoader<Long, Book>() {
                 @Override
-                public Book load(Long id) throws SQLException {
-                    return BookDao.getBookById(id);
+                public Book load(Long id) {
+                    Book book = BookDao.getBookById(id);
+                    LOGGER.info("Loaded book with ID " + id + ": " + (book != null ? book.getTitle() : "null"));
+                    return book;
                 }
             });
 
-    // Cache for all categories (no params, use dummy key)
     private static final LoadingCache<String, List<Category>> categoriesCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, List<Category>>() {
                 @Override
-                public List<Category> load(String dummyKey) throws SQLException {
-                    return BookDao.getAllCategories();
+                public List<Category> load(String dummyKey) {
+                    List<Category> categories = BookDao.getAllCategories();
+                    LOGGER.info("Loaded " + categories.size() + " categories");
+                    return categories;
                 }
             });
 
-    // Cache for filtered books (key: custom string from parameters, value: List<Book>)
     private static final LoadingCache<String, List<Book>> filterCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(new CacheLoader<String, List<Book>>() {
                 @Override
-                public List<Book> load(String filterKey) throws SQLException {
+                public List<Book> load(String filterKey) {
                     String[] parts = filterKey.split("\\|");
                     String title = parts[0].equals("null") ? null : parts[0];
                     Integer publishYear = parts[1].equals("null") ? null : Integer.parseInt(parts[1]);
                     List<Long> includeCategories = parseLongList(parts[2]);
                     List<Long> excludeCategories = parseLongList(parts[3]);
                     int page = Integer.parseInt(parts[4]);
-                    return BookDao.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
+                    List<Book> books = BookDao.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
+                    LOGGER.info("Loaded " + books.size() + " books for filter: " + filterKey);
+                    return books;
                 }
             });
 
@@ -82,142 +87,94 @@ public class BookService {
         validator = factory.getValidator();
     }
 
-    /**
-     * Retrieves all books with pagination, using cache.
-     * @param page The page number.
-     * @return List of books.
-     * @throws SQLException If a database or cache error occurs.
-     */
-    public static List<Book> getAllBooks(int page) throws SQLException {
+    public static List<Book> getAllBooks(int page) throws RuntimeException {
         try {
-            return booksCache.get(page);
+            List<Book> books = booksCache.get(page);
+            return books != null ? books : new ArrayList<>();
         } catch (Exception e) {
-            throw new SQLException("Error retrieving books from cache", e);
+            LOGGER.severe("Error retrieving books from cache: " + e.getMessage());
+            throw new RuntimeException("Error retrieving books from cache", e);
         }
     }
 
-    /**
-     * Retrieves a book by ID, using cache.
-     * @param id The book ID.
-     * @return The Book object or null if not found.
-     * @throws SQLException If a database or cache error occurs.
-     */
-    public static Book getBookById(long id) throws SQLException {
+    public static Book getBookById(long id) throws RuntimeException {
         try {
             return bookByIdCache.get(id);
         } catch (Exception e) {
-            throw new SQLException("Error retrieving book from cache", e);
+            LOGGER.severe("Error retrieving book from cache: " + e.getMessage());
+            throw new RuntimeException("Error retrieving book from cache", e);
         }
     }
 
-    /**
-     * Adds a new book after validation.
-     * @param book The Book object.
-     * @return True if successful.
-     * @throws SQLException If a database error occurs.
-     * @throws IllegalArgumentException If validation fails.
-     */
-    public static boolean addBook(Book book) throws SQLException {
+    public static boolean addBook(Book book) throws RuntimeException {
         validateBook(book);
         boolean success = BookDao.addBook(book);
         if (success) {
             invalidateCaches();
+            LOGGER.info("Book added: " + book.getTitle());
         }
         return success;
     }
 
-    /**
-     * Updates an existing book after validation.
-     * @param book The Book object.
-     * @return True if successful.
-     * @throws SQLException If a database error occurs.
-     * @throws IllegalArgumentException If validation fails.
-     */
-    public static boolean updateBook(Book book) throws SQLException {
+    public static boolean updateBook(Book book) throws RuntimeException {
         validateBook(book);
         boolean success = BookDao.updateBook(book);
         if (success) {
             invalidateCaches();
+            LOGGER.info("Book updated: " + book.getTitle());
         }
         return success;
     }
 
-    /**
-     * Deletes a book by ID.
-     * @param id The book ID.
-     * @return True if successful.
-     * @throws SQLException If a database error occurs.
-     */
-    public static boolean deleteBook(long id) throws SQLException {
+    public static boolean deleteBook(long id) throws RuntimeException {
         boolean success = BookDao.deleteBook(id);
         if (success) {
             invalidateCaches();
+            LOGGER.info("Book deleted: ID " + id);
         }
         return success;
     }
 
-    /**
-     * Filters books by criteria, using cache.
-     * @param title The title to search.
-     * @param publishYear The publication year.
-     * @param includeCategories Categories to include.
-     * @param excludeCategories Categories to exclude.
-     * @param page The page number.
-     * @return List of matching books.
-     * @throws SQLException If a database or cache error occurs.
-     */
     public static List<Book> filterBooks(String title, Integer publishYear, List<Long> includeCategories,
-                                         List<Long> excludeCategories, int page) throws SQLException {
+                                         List<Long> excludeCategories, int page) throws RuntimeException {
         String filterKey = (title == null ? "null" : title) + "|" +
                 (publishYear == null ? "null" : publishYear.toString()) + "|" +
                 (includeCategories == null ? "null" : includeCategories.toString()) + "|" +
                 (excludeCategories == null ? "null" : excludeCategories.toString()) + "|" + page;
         try {
-            return filterCache.get(filterKey);
+            List<Book> books = filterCache.get(filterKey);
+            return books != null ? books : new ArrayList<>();
         } catch (Exception e) {
-            throw new SQLException("Error retrieving filtered books from cache", e);
+            LOGGER.severe("Error retrieving filtered books from cache: " + e.getMessage());
+            throw new RuntimeException("Error retrieving filtered books from cache", e);
         }
     }
 
-    /**
-     * Calculates total pages for pagination.
-     * @param title The title to search.
-     * @param publishYear The publication year.
-     * @param includeCategories Categories to include.
-     * @param excludeCategories Categories to exclude.
-     * @return Total number of pages.
-     * @throws SQLException If a database error occurs.
-     */
     public static int getTotalPages(String title, Integer publishYear, List<Long> includeCategories,
-                                    List<Long> excludeCategories) throws SQLException {
-        long totalBooks = BookDao.countBooks(title, publishYear, includeCategories, excludeCategories);
-        int totalPages = (int) Math.ceil((double) totalBooks / PAGE_SIZE);
-        return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
-    }
-
-    /**
-     * Retrieves all categories, using cache.
-     * @return List of categories.
-     * @throws SQLException If a database or cache error occurs.
-     */
-    public static List<Category> getAllCategories() throws SQLException {
+                                    List<Long> excludeCategories) throws RuntimeException {
         try {
-            return categoriesCache.get("dummy");
+            long totalBooks = BookDao.countBooks(title, publishYear, includeCategories, excludeCategories);
+            int totalPages = (int) Math.ceil((double) totalBooks / PAGE_SIZE);
+            LOGGER.info("Total pages calculated: " + totalPages + " for filter title=" + title + ", publishYear=" + publishYear);
+            return Math.max(1, totalPages);
         } catch (Exception e) {
-            throw new SQLException("Error retrieving categories from cache", e);
+            LOGGER.severe("Error calculating total pages: " + e.getMessage());
+            throw new RuntimeException("Error calculating total pages", e);
         }
     }
 
-    /**
-     * Imports books from a CSV file.
-     * @param csvStream The CSV file input stream.
-     * @return Error message if validation fails, null if successful.
-     * @throws SQLException If a database error occurs.
-     * @throws IOException If an I/O error occurs.
-     * @throws CsvValidationException If CSV parsing fails.
-     */
+    public static List<Category> getAllCategories() throws RuntimeException {
+        try {
+            List<Category> categories = categoriesCache.get("dummy");
+            return categories != null ? categories : new ArrayList<>();
+        } catch (Exception e) {
+            LOGGER.severe("Error retrieving categories from cache: " + e.getMessage());
+            throw new RuntimeException("Error retrieving categories from cache", e);
+        }
+    }
+
     public static String importBooksFromCSV(InputStream csvStream)
-            throws SQLException, IOException, CsvValidationException {
+            throws RuntimeException, IOException, CsvValidationException {
         List<Book> books = new ArrayList<>();
         StringBuilder errors = new StringBuilder();
         try (CSVReader reader = new CSVReader(new InputStreamReader(csvStream))) {
@@ -228,39 +185,52 @@ public class BookService {
 
             String[] line;
             int lineNumber = 1;
-            while ((line = reader.readNext()) != null) {
-                lineNumber++;
-                try {
-                    Book book = parseCSVLine(line);
-                    validateBook(book);
-                    books.add(book);
-                } catch (Exception e) {
-                    errors.append("Error at line ").append(lineNumber).append(": ").append(e.getMessage()).append("\n");
+            EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+            try {
+                em.getTransaction().begin();
+                while ((line = reader.readNext()) != null) {
+                    lineNumber++;
+                    try {
+                        Book book = parseCSVLine(line, em);
+                        validateBook(book);
+                        books.add(book);
+                    } catch (Exception e) {
+                        errors.append("Error at line ").append(lineNumber).append(": ").append(e.getMessage()).append("\n");
+                    }
                 }
-            }
 
-            if (errors.length() > 0) {
-                return errors.toString();
-            }
+                if (errors.length() > 0) {
+                    return errors.toString();
+                }
 
-            for (Book book : books) {
-                BookDao.addBook(book);
+                for (Book book : books) {
+                    book.setCreatedAt(Timestamp.valueOf(java.time.LocalDateTime.now()));
+                    em.persist(book);
+                }
+                em.createNativeQuery("INSERT INTO import_logs (table_name, imported_data, imported_at) VALUES (?1, ?2, CURRENT_TIMESTAMP)")
+                        .setParameter(1, "books")
+                        .setParameter(2, new com.google.gson.Gson().toJson(books))
+                        .executeUpdate();
+                em.getTransaction().commit();
+                invalidateCaches();
+                LOGGER.info("Imported " + books.size() + " books from CSV");
+                return null;
+            } catch (Exception e) {
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+                LOGGER.severe("Error importing books: " + e.getMessage());
+                throw new RuntimeException("Error importing books", e);
+            } finally {
+                em.close();
             }
-            BookDao.logImport("books", new com.google.gson.Gson().toJson(books));
-            invalidateCaches();
-            return null;
         }
     }
 
-    /**
-     * Validates CSV headers.
-     * @param headers The CSV headers.
-     * @return True if headers are valid.
-     */
     private static boolean validateCSVHeaders(String[] headers) {
-        String[] expected = { "title", "author", "publisher", "category_id", "stock", "original_price",
-                "discount_rate", "thumbnail_url", "description", "publish_year", "pages",
-                "rating_average", "price" };
+        String[] expected = { "title", "author", "publisher", "categoryId", "stock", "originalPrice",
+                "discountRate", "thumbnailUrl", "description", "publishYear", "pages",
+                "averageRating", "price", "sold" };
         if (headers.length != expected.length)
             return false;
         for (int i = 0; i < headers.length; i++) {
@@ -270,37 +240,32 @@ public class BookService {
         return true;
     }
 
-    /**
-     * Parses a CSV line into a Book object.
-     * @param line The CSV line.
-     * @return The Book object.
-     * @throws Exception If parsing fails.
-     */
-    private static Book parseCSVLine(String[] line) throws Exception {
-        if (line.length != 13)
+    private static Book parseCSVLine(String[] line, EntityManager em) throws Exception {
+        if (line.length != 14)
             throw new Exception("Invalid number of columns");
         Book book = new Book();
         book.setTitle(line[0]);
         book.setAuthor(line[1]);
         book.setPublisher(line[2]);
-        book.setCategoryId(Integer.parseInt(line[3]));
+        int categoryId = Integer.parseInt(line[3]);
+        Category category = em.find(Category.class, categoryId);
+        if (category == null) {
+            throw new Exception("Invalid category ID: " + line[3]);
+        }
+        book.setCategoryId(categoryId);
         book.setStock(Integer.parseInt(line[4]));
         book.setOriginalPrice(Double.parseDouble(line[5]));
-        book.setDiscount_rate(Integer.parseInt(line[6]));
+        book.setDiscountRate(Integer.parseInt(line[6]));
         book.setThumbnailUrl(line[7]);
         book.setDescription(line[8]);
         book.setPublishYear(line[9].isEmpty() ? null : Integer.parseInt(line[9]));
         book.setPages(line[10].isEmpty() ? null : Integer.parseInt(line[10]));
-        book.setRating(Double.parseDouble(line[11]));
+        book.setAverageRating(line[11].isEmpty() ? null : Double.parseDouble(line[11]));
         book.setPrice(Double.parseDouble(line[12]));
+        book.setSold(line[13].isEmpty() ? 0 : Integer.parseInt(line[13]));
         return book;
     }
 
-    /**
-     * Validates a Book object using Bean Validation and custom rules.
-     * @param book The Book object.
-     * @throws IllegalArgumentException If validation fails.
-     */
     private static void validateBook(Book book) throws IllegalArgumentException {
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         if (!violations.isEmpty()) {
@@ -320,29 +285,25 @@ public class BookService {
         if (book.getOriginalPrice() < 0) {
             throw new IllegalArgumentException("Original price must be non-negative");
         }
-        if (book.getDiscount_rate() < 0 || book.getDiscount_rate() > 100) {
+        if (book.getDiscountRate() < 0 || book.getDiscountRate() > 100) {
             throw new IllegalArgumentException("Discount rate must be between 0 and 100");
         }
         if (book.getStock() < 0) {
             throw new IllegalArgumentException("Stock must be non-negative");
         }
+        if (book.getSold() < 0) {
+            throw new IllegalArgumentException("Sold must be non-negative");
+        }
     }
 
-    /**
-     * Invalidates all caches after data modification.
-     */
     private static void invalidateCaches() {
         booksCache.invalidateAll();
         bookByIdCache.invalidateAll();
         categoriesCache.invalidateAll();
         filterCache.invalidateAll();
+        LOGGER.info("All caches invalidated");
     }
 
-    /**
-     * Parses a string of comma-separated longs into a List<Long>.
-     * @param str The input string.
-     * @return List of longs.
-     */
     private static List<Long> parseLongList(String str) {
         if (str == null || str.equals("null") || str.isEmpty()) {
             return new ArrayList<>();
