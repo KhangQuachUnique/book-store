@@ -58,7 +58,7 @@ public class Book implements Serializable {
 
     @Min(value = 0, message = "Discount rate must be non-negative")
     @Max(value = 100, message = "Discount rate must not exceed 100")
-    private int discount_rate;
+    private int discountRate;
 
     private Timestamp createdAt;
 

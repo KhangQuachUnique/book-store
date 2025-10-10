@@ -1,26 +1,38 @@
 package model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Model class representing a category.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "categories")
 public class Category implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
-    private Long parentId;
-    private boolean isLeaf;
-    private Timestamp createdAt;
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public Long getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
-    public boolean getIsLeaf() { return isLeaf; }
-    public void setIsLeaf(boolean isLeaf) { this.isLeaf = isLeaf; }
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    @NotNull(message = "Name is required")
+    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
+    private String name;
+
+    @Column(name = "parentId")
+    private Long parentId;
+
+    @Column(name = "isLeaf")
+    private boolean isLeaf;
+
+    @Column(name = "createdAt")
+    private Timestamp createdAt;
 }
