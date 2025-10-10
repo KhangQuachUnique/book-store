@@ -14,16 +14,25 @@
 
 <form action="${pageContext.request.contextPath}/apply-promotion" method="post">
     <div class="promo-wrapper">
-        <input id="promoInput" type="text" name="code" placeholder="Nhập hoặc chọn mã khuyến mãi..." required
-               autocomplete="off">
+        <input id="promoInput" type="text" name="code" placeholder="Nhập hoặc chọn mã khuyến mãi..."
+               required autocomplete="off">
         <div id="promoList" class="promo-list">
+
+            <c:set var="now" value="<%= java.time.OffsetDateTime.now() %>"/>
             <c:forEach var="promo" items="${validPromotions}">
-                <div class="promo-item" onmousedown="selectPromo('${promo.code}')">
+                <c:set var="daysLeft"
+                       value="${(promo.expireAt.toEpochSecond() - now.toEpochSecond()) / (60*60*24)}"/>
+
+                <!-- Nếu sắp hết hạn (≤ 7 ngày) thì thêm class 'soon-expire' -->
+                <div class="promo-item ${daysLeft le 7 ? 'soon-expire' : ''}"
+                     onmousedown="selectPromo('${promo.code}')">
                     <strong>${promo.code}</strong> – Giảm ${promo.discount}%
-                    <span class="expire">(HSD: <fmt:formatDate value="${promo.expireAtDate}"
-                                                               pattern="dd/MM/yyyy"/>)</span>
+                    <span class="expire">(HSD:
+                        <fmt:formatDate value="${promo.expireAtDate}" pattern="dd/MM/yyyy"/>
+                    )</span>
                 </div>
             </c:forEach>
+
         </div>
     </div>
     <button type="submit">Áp dụng</button>
@@ -35,8 +44,10 @@
             <c:when test="${promotionResult.success}">
                 <p class="success">${promotionResult.message}</p>
                 <p>Mã: <strong>${promotionResult.promotionCode}</strong></p>
-                <p>Giảm giá: <strong><fmt:formatNumber value="${promotionResult.discountPercent}" type="number"
-                                                       maxFractionDigits="1"/>%</strong></p>
+                <p>Giảm giá: <strong>
+                    <fmt:formatNumber value="${promotionResult.discountPercent}" type="number"
+                                      maxFractionDigits="1"/>%
+                </strong></p>
                 <p>Tổng tiền:
                     <fmt:formatNumber value="${promotionResult.subtotal}" type="number" groupingUsed="true"/> ₫
                 </p>
@@ -54,7 +65,7 @@
     </div>
 </c:if>
 
-<!-- ✅ JS: hiển thị danh sách khi click và chọn mã -->
+<!-- ✅ JS: hiển thị danh sách và chọn mã -->
 <script>
     const promoInput = document.getElementById("promoInput");
     const promoList = document.getElementById("promoList");
@@ -70,6 +81,7 @@
     function selectPromo(code) {
         promoInput.value = code;
         promoList.style.display = "none";
+        promoInput.focus(); // Giữ lại focus sau khi chọn
     }
 </script>
 

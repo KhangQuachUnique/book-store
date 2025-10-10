@@ -125,3 +125,12 @@ strong {
 .result-box strong:last-child {
     color: #007bff;
 }
+
+/* 🔶 Mã sắp hết hạn */
+.soon-expire {
+    background-color: #fff7e6; /* vàng nhạt */
+}
+
+.soon-expire:hover {
+    background-color: #ffe4b3;
+}
