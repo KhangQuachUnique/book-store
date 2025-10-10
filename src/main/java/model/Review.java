@@ -21,13 +21,22 @@ public class Review {
     private Long id;
 
     @Column(name = "\"rating\"")
-    private double rating;
+    private Integer rating;
 
     @Column(name = "\"comment\"")
     private String comment;
 
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
+
+
+    //Transient fields
+    @Transient
+    private Long likeCount;
+
+    @Transient
+    private Boolean likedByCurrentUser;
+
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)

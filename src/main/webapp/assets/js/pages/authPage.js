@@ -40,20 +40,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const res = await fetchApi(payload());
-
                 const data = await res.json();
 
                 if (res.ok) {
+                    // Success cases - SC_OK (200)
                     showMessage(resultEl, data.message || "Success", true);
-                    // redirect về root sau khi login thành công
+                    showResult(data.message || "Success", true);
                     setTimeout(() => window.location.href = BASE_URL + "/home", 700);
                 } else {
-                    showMessage(resultEl, res.error || "Failed", false);
+                    // Error cases từ servlet
+                    let errorMsg = "Failed";
+                    
+                    switch (res.status) {
+                        case 400: // SC_BAD_REQUEST
+                            if (data.error && data.error.includes("already exists")) {
+                                errorMsg = "Email already exists. Please use a different email";
+                            } else {
+                                errorMsg = data.error || "Invalid input data";
+                            }
+                            break;
+                        case 401: // SC_UNAUTHORIZED - Login invalid
+                            errorMsg = "Invalid email or password";
+                            break;
+                        case 403: // SC_FORBIDDEN - Unverified/Blocked
+                            if (data.error && data.error.includes("not verified")) {
+                                errorMsg = "Please check your email to verify your account";
+                            } else if (data.error && data.error.includes("blocked")) {
+                                if (data.blockedUntil) {
+                                    errorMsg = `Account is blocked until ${data.blockedUntil}`;
+                                } else {
+                                    errorMsg = "Account is blocked";
+                                }
+                            } else {
+                                errorMsg = data.error || "Access denied";
+                            }
+                            break;
+                        case 500: // SC_INTERNAL_SERVER_ERROR
+                            if (data.error && data.error.includes("email could not be sent")) {
+                                errorMsg = "Account created but verification email failed to send. Please contact support";
+                            } else {
+                                errorMsg = data.error || "Server error. Please try again later";
+                            }
+                            break;
+                        default:
+                            errorMsg = data.error || data.message || "An error occurred";
+                    }
+                    
+                    showMessage(resultEl, errorMsg, false);
+                    if (res.status >= 500) {
+                        showResult(errorMsg, false);
+                    }
                 }
 
             } catch (err) {
                 console.error(err);
-                showMessage(resultEl, "Server error, try again", false);
+                const errorMsg = "Connection error. Please try again";
+                showMessage(resultEl, errorMsg, false);
+                showResult(errorMsg, false);
             } finally {
                 spinner.style.display = "none";
             }

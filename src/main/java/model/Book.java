@@ -51,33 +51,23 @@ public class Book implements Serializable {
     @Column(name = "\"pages\"")
     private Integer pages;
 
+    @Column(name = "\"averageRating\"")
+    private Double averageRating;
+
+    @Column(name = "\"sold\"")
+    private Integer sold;
+
     @Column(name = "\"originalPrice\"")
     private double originalPrice;
 
     @Column(name = "\"discountRate\"")
     @Min(value = 0, message = "Discount rate must be non-negative")
     @Max(value = 100, message = "Discount rate must not exceed 100")
-    private int discountRate;
+    private Integer discountRate;
 
     @Column(name = "\"stock\"")
     @Min(value = 0, message = "Stock must be non-negative")
-    private int stock;
-
-    @Column(name = "\"rating\"")
-    @Min(value = 0, message = "Rating must be non-negative")
-    @Max(value = 5, message = "Rating must not exceed 5")
-    private double rating;
-
-    @Transient
-    private Integer fullStars;
-    @Transient
-    private Double partialFraction;
-    @Transient
-    private Integer emptyStars;
-
-    @Column(name = "\"price\"")
-    @Min(value = 0, message = "Price must be non-negative")
-    private double price;
+    private Integer stock;
 
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
@@ -102,9 +92,12 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ViewedProductItem> viewedProductItems;
 
-    public void calculateStars() {
-        this.fullStars = (int) rating;
-        this.partialFraction = rating - fullStars;
-        this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
+
+    // Transient fields
+    @Transient
+    private Double price;
+
+    public Double getPrice() {
+        return price = originalPrice * (100 - discountRate) / 100;
     }
 }

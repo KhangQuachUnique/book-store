@@ -30,48 +30,48 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-
-        String path = req.getRequestURI().substring(req.getContextPath().length());
-
-        String access_token = null;
-        String refresh_token = null;
-
-        if (req.getCookies() != null) {
-            for (Cookie c : req.getCookies()) {
-                if ("access_token".equals(c.getName()))
-                    access_token = c.getValue();
-                if ("refresh_token".equals(c.getName()))
-                    refresh_token = c.getValue();
-            }
-        }
-
-        boolean loggedIn = false;
-        String email = null;
-        String role = null;
-
-        // Check access token
-        if (access_token != null && JwtUtil.validateToken(access_token)) {
-            loggedIn = true;
-            email = JwtUtil.getEmail(access_token);
-            role = JwtUtil.getRole(access_token);
-        }
-        // Nếu access token hết hạn, dùng refresh token cấp mới
-        else if (refresh_token != null && JwtUtil.validateToken(refresh_token)
-                && JwtUtil.isRefreshToken(refresh_token)) {
-            email = JwtUtil.getEmail(refresh_token);
-            role = JwtUtil.getRole(refresh_token);
-            access_token = JwtUtil.generateAccessToken(email, role);
-
-            Cookie newAccessCookie = new Cookie("access_token", access_token);
-            newAccessCookie.setHttpOnly(true);
-            newAccessCookie.setPath("/");
-            newAccessCookie.setMaxAge(15 * 60); // 15 phút
-            res.addCookie(newAccessCookie);
-            loggedIn = true;
-        }
-
+//        HttpServletRequest req = (HttpServletRequest) request;
+//        HttpServletResponse res = (HttpServletResponse) response;
+//
+//        String path = req.getRequestURI().substring(req.getContextPath().length());
+//
+//        String access_token = null;
+//        String refresh_token = null;
+//
+//        if (req.getCookies() != null) {
+//            for (Cookie c : req.getCookies()) {
+//                if ("access_token".equals(c.getName()))
+//                    access_token = c.getValue();
+//                if ("refresh_token".equals(c.getName()))
+//                    refresh_token = c.getValue();
+//            }
+//        }
+//
+//        boolean loggedIn = false;
+//        String email = null;
+//        String role = null;
+//
+//        // Check access token
+//        if (access_token != null && JwtUtil.validateToken(access_token)) {
+//            loggedIn = true;
+//            email = JwtUtil.getEmail(access_token);
+//            role = JwtUtil.getRole(access_token);
+//        }
+//        // Nếu access token hết hạn, dùng refresh token cấp mới
+//        else if (refresh_token != null && JwtUtil.validateToken(refresh_token)
+//                && JwtUtil.isRefreshToken(refresh_token)) {
+//            email = JwtUtil.getEmail(refresh_token);
+//            role = JwtUtil.getRole(refresh_token);
+//            access_token = JwtUtil.generateAccessToken(email, role);
+//
+//            Cookie newAccessCookie = new Cookie("access_token", access_token);
+//            newAccessCookie.setHttpOnly(true);
+//            newAccessCookie.setPath("/");
+//            newAccessCookie.setMaxAge(15 * 60); // 15 phút
+//            res.addCookie(newAccessCookie);
+//            loggedIn = true;
+//        }
+//
 //        // Kiểm tra phân quyền
 //        if (!loggedIn) {
 //            // Yêu cầu login để truy cập tính năng của user
