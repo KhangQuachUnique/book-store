@@ -48,4 +48,9 @@ public class PromotionService {
         System.out.println("[INFO] Promotion applied successfully: " + promotion.getCode());
         return result;
     }
+
+    // ✅ Hàm mới: lấy danh sách các promotion còn hiệu lực
+    public List<Promotion> getAllValidPromotions() {
+        return promotionDAO.getAllValidPromotions();
+    }
 }

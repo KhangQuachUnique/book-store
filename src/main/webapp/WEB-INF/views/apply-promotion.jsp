@@ -3,66 +3,29 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Áp dụng khuyến mãi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #fafafa;
-            margin: 50px;
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-        input[type=text] {
-            padding: 6px;
-            width: 200px;
-        }
-
-        button {
-            padding: 6px 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .success {
-            color: green;
-            font-weight: bold;
-        }
-
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-
-        .result-box {
-            background: #fff;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 350px;
-        }
-
-        .result-box p {
-            margin: 5px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="<c:url value='/assets/styles/promotion.css'/>">
 </head>
 <body>
 <h2>Áp dụng mã khuyến mãi</h2>
 
 <form action="${pageContext.request.contextPath}/apply-promotion" method="post">
-    <input type="text" name="code" placeholder="Nhập mã khuyến mãi..." required>
+    <div class="promo-wrapper">
+        <input id="promoInput" type="text" name="code" placeholder="Nhập hoặc chọn mã khuyến mãi..." required
+               autocomplete="off">
+        <div id="promoList" class="promo-list">
+            <c:forEach var="promo" items="${validPromotions}">
+                <div class="promo-item" onmousedown="selectPromo('${promo.code}')">
+                    <strong>${promo.code}</strong> – Giảm ${promo.discount}%
+                    <span class="expire">(HSD: <fmt:formatDate value="${promo.expireAtDate}"
+                                                               pattern="dd/MM/yyyy"/>)</span>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
     <button type="submit">Áp dụng</button>
 </form>
 
@@ -72,13 +35,17 @@
             <c:when test="${promotionResult.success}">
                 <p class="success">${promotionResult.message}</p>
                 <p>Mã: <strong>${promotionResult.promotionCode}</strong></p>
-                <p>Giảm giá: <strong>${promotionResult.discountPercent}%</strong></p>
-                <p>Tổng tiền: <fmt:formatNumber value="${promotionResult.subtotal}" type="number" groupingUsed="true"/>
-                    ₫</p>
-                <p>Giảm được: <fmt:formatNumber value="${promotionResult.discountAmount}" type="number"
-                                                groupingUsed="true"/> ₫</p>
-                <p><strong>Thành tiền: <fmt:formatNumber value="${promotionResult.finalTotal}" type="number"
-                                                         groupingUsed="true"/> ₫</strong></p>
+                <p>Giảm giá: <strong><fmt:formatNumber value="${promotionResult.discountPercent}" type="number"
+                                                       maxFractionDigits="1"/>%</strong></p>
+                <p>Tổng tiền:
+                    <fmt:formatNumber value="${promotionResult.subtotal}" type="number" groupingUsed="true"/> ₫
+                </p>
+                <p>Giảm được:
+                    <fmt:formatNumber value="${promotionResult.discountAmount}" type="number" groupingUsed="true"/> ₫
+                </p>
+                <p><strong>Thành tiền:
+                    <fmt:formatNumber value="${promotionResult.finalTotal}" type="number" groupingUsed="true"/> ₫
+                </strong></p>
             </c:when>
             <c:otherwise>
                 <p class="error">${promotionResult.message}</p>
@@ -86,5 +53,25 @@
         </c:choose>
     </div>
 </c:if>
+
+<!-- ✅ JS: hiển thị danh sách khi click và chọn mã -->
+<script>
+    const promoInput = document.getElementById("promoInput");
+    const promoList = document.getElementById("promoList");
+
+    promoInput.addEventListener("focus", () => {
+        promoList.style.display = "block";
+    });
+
+    promoInput.addEventListener("blur", () => {
+        setTimeout(() => promoList.style.display = "none", 150);
+    });
+
+    function selectPromo(code) {
+        promoInput.value = code;
+        promoList.style.display = "none";
+    }
+</script>
+
 </body>
 </html>

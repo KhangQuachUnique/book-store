@@ -7,9 +7,12 @@ import model.Promotion;
 import util.JPAUtil;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PromotionDAO {
 
+    // ✅ Tìm khuyến mãi theo mã code (dành cho người dùng nhập)
     public Promotion getPromotionByCode(String code) {
         EntityManager em = JPAUtil.getEntityManager();
         Promotion promotion = null;
@@ -17,7 +20,7 @@ public class PromotionDAO {
         try {
             System.out.println("[DEBUG] Finding promotion with code=" + code);
 
-            // ✅ Truy vấn chính xác + kiểm tra hạn sử dụng
+            // Truy vấn chính xác + kiểm tra hạn sử dụng
             String jpql = "SELECT p FROM Promotion p WHERE LOWER(p.code) = LOWER(:code) AND p.expireAt >= :now";
             TypedQuery<Promotion> query = em.createQuery(jpql, Promotion.class);
             query.setParameter("code", code.trim());
@@ -36,5 +39,29 @@ public class PromotionDAO {
         }
 
         return promotion;
+    }
+
+    // ✅ Lấy tất cả các promotion còn hiệu lực (dùng cho <datalist>)
+    public List<Promotion> getAllValidPromotions() {
+        EntityManager em = JPAUtil.getEntityManager();
+        List<Promotion> promotions = new ArrayList<>();
+
+        try {
+            System.out.println("[DEBUG] Fetching all valid promotions...");
+
+            String jpql = "SELECT p FROM Promotion p WHERE p.expireAt >= :now ORDER BY p.expireAt ASC";
+            TypedQuery<Promotion> query = em.createQuery(jpql, Promotion.class);
+            query.setParameter("now", OffsetDateTime.now());
+            promotions = query.getResultList();
+
+            System.out.println("[DEBUG] Found " + promotions.size() + " valid promotions");
+        } catch (Exception e) {
+            System.err.println("[ERROR] Exception when fetching valid promotions: ");
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+
+        return promotions;
     }
 }

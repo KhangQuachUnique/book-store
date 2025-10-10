@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -35,5 +36,10 @@ public class Promotion {
 
     public boolean isValid() {
         return expireAt != null && expireAt.isAfter(OffsetDateTime.now());
+    }
+
+    // ✅ Getter mới: giúp JSP hiểu được kiểu Date khi format
+    public Date getExpireAtDate() {
+        return expireAt == null ? null : Date.from(expireAt.toInstant());
     }
 }

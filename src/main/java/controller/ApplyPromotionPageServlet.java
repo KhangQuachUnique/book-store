@@ -18,6 +18,11 @@ public class ApplyPromotionPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // ✅ Lấy danh sách promotion còn hiệu lực để hiển thị trong datalist
+        List<model.Promotion> validPromotions = promotionService.getAllValidPromotions();
+        request.setAttribute("validPromotions", validPromotions);
+
         // Hiển thị trang nhập mã
         request.getRequestDispatcher("/WEB-INF/views/apply-promotion.jsp")
                 .forward(request, response);
@@ -39,6 +44,13 @@ public class ApplyPromotionPageServlet extends HttpServlet {
 
         // ✅ Gửi kết quả sang JSP
         request.setAttribute("promotionResult", result);
+        request.getRequestDispatcher("/WEB-INF/views/apply-promotion.jsp")
+                .forward(request, response);
+
+        // ✅ Gửi lại danh sách khuyến mãi (để khi refresh trang không mất gợi ý)
+        List<model.Promotion> validPromotions = promotionService.getAllValidPromotions();
+        request.setAttribute("validPromotions", validPromotions);
+
         request.getRequestDispatcher("/WEB-INF/views/apply-promotion.jsp")
                 .forward(request, response);
     }

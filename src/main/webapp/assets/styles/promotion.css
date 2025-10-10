@@ -1,0 +1,127 @@
+/* 📘 File: /assets/styles/promotion.css */
+
+/* Tổng thể */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #f5f7fa;
+    margin: 50px;
+    color: #333;
+}
+
+/* Tiêu đề */
+h2 {
+    color: #222;
+    margin-bottom: 20px;
+}
+
+/* Form nhập mã */
+form {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.promo-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+#promoInput {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+}
+
+#promoInput:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.4);
+}
+
+/* Danh sách khuyến mãi */
+.promo-list {
+    display: none;
+    position: absolute;
+    top: 105%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* Mỗi item trong danh sách */
+.promo-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+
+.promo-item:hover {
+    background: #e9f2ff;
+}
+
+.expire {
+    color: #666;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+/* Nút bấm */
+button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Kết quả */
+.result-box {
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-box p {
+    margin: 5px 0;
+}
+
+/* Trạng thái thông báo */
+.success {
+    color: #0f9d58;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.error {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* Phần nhấn mạnh */
+strong {
+    color: #000;
+}
+
+.result-box strong:last-child {
+    color: #007bff;
+}
