@@ -12,7 +12,7 @@
 <div class="container py-4">
     <h1 class="mb-4" style="color: #800020;">Edit Category</h1>
 
-    <form action="${pageContext.request.contextPath}/admin/category" method="post" class="card p-4 shadow-sm">
+    <form action="${pageContext.request.contextPath}/adminn/category" method="post" class="card p-4 shadow-sm">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id" value="${category.id}">
 
@@ -40,12 +40,12 @@
 
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" name="is_leaf" value="true"
-                   id="leafCheck" <c:if test="${category.isLeaf}">checked</c:if>>
+                   id="leafCheck" <c:if test="${category.leaf}">checked</c:if>>
             <label class="form-check-label" for="leafCheck">Is Leaf</label>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Category</button>
-        <a href="${pageContext.request.contextPath}/admin/category?action=list" class="btn btn-secondary mt-2">Cancel</a>
+        <a href="${pageContext.request.contextPath}/adminn/category?action=list" class="btn btn-secondary mt-2">Cancel</a>
     </form>
 </div>
 

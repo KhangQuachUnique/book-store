@@ -1,177 +1,194 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import model.Category;
-import util.DBConnection;
+import util.JPAUtil;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 public class CategoryDao {
 
-    // Wrapper mở kết nối riêng (giữ tương thích)
+    // Queries use entity field names, not column names
+    
     public List<Category> findAll() {
-        try (Connection conn = DBConnection.getConnection()) {
-            return findAll(conn);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            TypedQuery<Category> q = em.createQuery("SELECT c FROM Category c ORDER BY c.id DESC", Category.class);
+            return q.getResultList();
+        } finally {
+            em.close();
         }
-    }
-
-    // Dùng một Connection được truyền vào (ưu tiên trong Servlet)
-    public List<Category> findAll(Connection conn) {
-        List<Category> list = new ArrayList<>();
-        String sql = "SELECT * FROM categories ORDER BY id DESC";
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(mapRow(rs));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 
     public Category findById(Long id) {
-        try (Connection conn = DBConnection.getConnection()) {
-            return findById(conn, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.find(Category.class, id);
+        } finally {
+            em.close();
         }
     }
 
-    public Category findById(Connection conn, Long id) {
-        String sql = "SELECT * FROM categories WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapRow(rs);
+    public List<Category> findByParentId(Long parentId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            if (parentId == null) {
+                return em.createQuery("SELECT c FROM Category c WHERE c.parent IS NULL ORDER BY c.id DESC", Category.class)
+                        .getResultList();
+            }
+            return em.createQuery("SELECT c FROM Category c WHERE c.parent.id = :pid ORDER BY c.id DESC", Category.class)
+                    .setParameter("pid", parentId)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean existsByName(String name, Long excludeId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT COUNT(c) FROM Category c WHERE LOWER(c.name) = LOWER(:name)"
+                    + (excludeId != null ? " AND c.id <> :excludeId" : "");
+            TypedQuery<Long> q = em.createQuery(jpql, Long.class)
+                    .setParameter("name", name);
+            if (excludeId != null) q.setParameter("excludeId", excludeId);
+            Long count = q.getSingleResult();
+            return count != null && count > 0;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Category saveCategory(Category c) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            
+            if (c.getId() == 0) {
+                em.persist(c);
+            } else {
+                c = em.merge(c);
+            }
+            
+            tx.commit();
+            return c;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi lưu Category: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Category createWithParent(String name, Long parentId, Boolean isLeaf) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            
+            Category c = new Category();
+            c.setName(name);
+            c.setLeaf(isLeaf != null ? isLeaf : false);
+            c.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            
+            if (parentId != null) {
+                Category parent = em.find(Category.class, parentId);
+                if (parent == null) {
+                    throw new RuntimeException("Parent category không tồn tại");
                 }
+                c.setParent(parent);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String create(Category c) {
-        try (Connection conn = DBConnection.getConnection()) {
-            return create(conn, c);
-        } catch (Exception e) {
-            return e.getMessage();
+            
+            em.persist(c);
+            tx.commit();
+            return c;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi tạo Category: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
         }
     }
-
-    public String create(Connection conn, Category c) {
-        String sql = "INSERT INTO categories (name, parent_id, is_leaf) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, c.getName());
-            if (c.getParentId() != null) {
-                ps.setLong(2, c.getParentId());
+    
+    public Category updateCategory(Long id, String name, Long parentId, Boolean isLeaf) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            
+            Category existing = em.find(Category.class, id);
+            if (existing == null) {
+                throw new RuntimeException("Category không tồn tại");
+            }
+            
+            if (name != null) {
+                existing.setName(name);
+            }
+            
+            if (isLeaf != null) {
+                existing.setLeaf(isLeaf);
+            }
+            
+            if (parentId != null) {
+                if (id.equals(parentId)) {
+                    throw new RuntimeException("Không thể đặt parent bằng chính nó");
+                }
+                Category parent = em.find(Category.class, parentId);
+                if (parent == null) {
+                    throw new RuntimeException("Parent category không tồn tại");
+                }
+                existing.setParent(parent);
             } else {
-                ps.setNull(2, Types.BIGINT);
+                existing.setParent(null);
             }
-            ps.setBoolean(3, c.getIsLeaf());
-
-            int affected = ps.executeUpdate();
-            if (affected > 0)
-                return null;
-            else
-                return "Không thêm được category (không có dòng nào bị ảnh hưởng)";
-        } catch (Exception e) {
-            return e.getMessage();
+            
+            em.merge(existing);
+            tx.commit();
+            return existing;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi cập nhật Category: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
         }
     }
 
-    public String update(Category c) {
-        try (Connection conn = DBConnection.getConnection()) {
-            return update(conn, c);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    public String update(Connection conn, Category c) {
-        String sql = "UPDATE categories SET name=?, parent_id=?, is_leaf=? WHERE id=?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, c.getName());
-            if (c.getParentId() != null) {
-                ps.setLong(2, c.getParentId());
-            } else {
-                ps.setNull(2, Types.BIGINT);
+    public void delete(Long id) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Category existing = em.find(Category.class, id);
+            if (existing != null) {
+                // Khởi tạo các collection để tránh lỗi LazyInitializationException
+                if (existing.getChildren() != null) {
+                    existing.getChildren().size(); // Kích hoạt lazy loading
+                }
+                if (existing.getBooks() != null) {
+                    existing.getBooks().size(); // Kích hoạt lazy loading
+                }
+                
+                // Kiểm tra xem có danh mục con hoặc sách không trước khi xóa
+                if (!existing.getChildren().isEmpty()) {
+                    throw new RuntimeException("Không thể xóa danh mục có danh mục con");
+                }
+                
+                if (!existing.getBooks().isEmpty()) {
+                    throw new RuntimeException("Không thể xóa danh mục có sản phẩm");
+                }
+                
+                em.remove(existing);
             }
-            ps.setBoolean(3, c.getIsLeaf());
-            ps.setLong(4, c.getId());
-
-            int affected = ps.executeUpdate();
-            if (affected > 0)
-                return null;
-            else
-                return "Không cập nhật được category (không có dòng nào bị ảnh hưởng)";
-        } catch (Exception e) {
-            return e.getMessage();
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi xóa Category: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
         }
-    }
-
-    public String delete(Long id) {
-        try (Connection conn = DBConnection.getConnection()) {
-            return delete(conn, id);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    public String delete(Connection conn, Long id) {
-        String sql = "DELETE FROM categories WHERE id=?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            int affected = ps.executeUpdate();
-            if (affected > 0)
-                return null;
-            else
-                return "Không xóa được category (không có dòng nào bị ảnh hưởng)";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    private Category mapRow(ResultSet rs) throws SQLException {
-        Category category = new Category();
-        category.setId(rs.getLong("id"));
-        category.setName(rs.getString("name"));
-        category.setParentId(rs.getObject("parent_id") != null ? rs.getLong("parent_id") : null);
-        category.setCreatedAt(rs.getTimestamp("created_at"));
-        category.setIsLeaf(rs.getBoolean("is_leaf"));
-        return category;
-    }
-
-    public boolean isCategoryNameExists(String name) {
-        try (Connection conn = DBConnection.getConnection()) {
-            return isCategoryNameExists(conn, name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean isCategoryNameExists(Connection conn, String name) {
-        String sql = "SELECT 1 FROM categories WHERE LOWER(name) = LOWER(?) LIMIT 1";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, name);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

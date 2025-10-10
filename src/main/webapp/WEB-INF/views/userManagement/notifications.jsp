@@ -72,13 +72,14 @@
                 <c:when test="${not empty notifications}">
                     <c:forEach var="n" items="${notifications}">
                         <%-- Thêm class 'unread' nếu is_read = false --%>
-                        <li class="notification-item ${not n.isRead() ? 'unread' : ''}">
+                        <li class="notification-item ${not n.isRead ? 'unread' : ''}">
                             <div class="notification-icon">
                                 <i class="fas fa-receipt"></i> </div>
                             <div class="notification-content">
+                                <h4>${n.title}</h4>
                                 <p class="notification-message">${n.message}</p>
                                 <div class="notification-time">
-                                    <fmt:formatDate value="${n.createdAt}" pattern="HH:mm 'ngày' dd/MM/yyyy"/>
+                                    ${n.id}
                                 </div>
                             </div>
                         </li>

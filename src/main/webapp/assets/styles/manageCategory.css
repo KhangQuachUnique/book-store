@@ -1,4 +1,3 @@
-/* Category Management CSS File */
 
 /* Reset styles */
 * {
@@ -263,12 +262,47 @@
 
 /* Custom button styles for category management */
 .add-category-btn {
-    background-color: #800020;
+    background-color: var(--primary-color);
     border: none;
-    color: white;
+    color: var(--text-primary);
     margin-bottom: 1rem;
 }
 
 .add-category-btn:hover {
-    background-color: #660019;
+    background-color: var(--primary-color-hover);
+}
+
+/* CSS đơn giản cho phân trang */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.page-item {
+    margin: 0 2px;
+}
+
+.page-link {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: var(--text-secondary);
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: var(--text-primary);
+    border-color: var(--primary-color);
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }

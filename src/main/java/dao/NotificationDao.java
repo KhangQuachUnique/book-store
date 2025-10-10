@@ -1,76 +1,155 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+import model.Notification;
+import model.User;
+import util.JPAUtil;
+
 import java.util.List;
 
-import model.Notification;
-import util.DBConnection;
-
+/**
+ * Data Access Object cho Notification
+ * Xử lý các thao tác truy xuất dữ liệu liên quan đến Notification
+ */
 public class NotificationDao {
 
-    // Đếm số thông báo CHƯA ĐỌC của một user
+    /**
+     * Đếm số thông báo chưa đọc của một người dùng
+     */
     public int countUnreadByUserId(long userId) {
-        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE";
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi đếm thông báo chưa đọc cho user " + userId + ": " + e.getMessage());
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            Long count = em.createQuery(
+                            "SELECT COUNT(n) FROM Notification n WHERE n.user.id = :uid AND n.isRead = false",
+                            Long.class)
+                    .setParameter("uid", userId)
+                    .getSingleResult();
+            return count != null ? count.intValue() : 0;
+        } finally {
+            em.close();
         }
-        return 0;
     }
 
-    // Lấy tất cả thông báo của một user, sắp xếp mới nhất lên đầu
+    /**
+     * Tìm tất cả thông báo của một người dùng, sắp xếp theo ID giảm dần
+     */
     public List<Notification> findByUserId(long userId) {
-        List<Notification> notifications = new ArrayList<>();
-        String sql = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC";
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Notification notification = new Notification();
-                    notification.setId(rs.getLong("id"));
-                    notification.setUserId(rs.getLong("user_id"));
-                    notification.setMessage(rs.getString("message"));
-                    notification.setType(rs.getString("type"));
-                    notification.setCreatedAt(rs.getTimestamp("created_at"));
-                    notification.setRead(rs.getBoolean("is_read"));
-                    notifications.add(notification);
-                }
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy danh sách thông báo cho user " + userId + ": " + e.getMessage());
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            TypedQuery<Notification> q = em.createQuery(
+                    "SELECT n FROM Notification n WHERE n.user.id = :uid ORDER BY n.id DESC",
+                    Notification.class);
+            q.setParameter("uid", userId);
+            return q.getResultList();
+        } finally {
+            em.close();
         }
-        return notifications;
     }
 
-    // Đánh dấu tất cả thông báo của user là đã đọc
+    /**
+     * Đánh dấu tất cả thông báo của một người dùng là đã đọc
+     */
     public void markAllAsRead(long userId) {
-        String sql = "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.createQuery("UPDATE Notification n SET n.isRead = true WHERE n.user.id = :uid AND (n.isRead = false OR n.isRead IS NULL)")
+                    .setParameter("uid", userId)
+                    .executeUpdate();
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
 
-            ps.setLong(1, userId);
-            ps.executeUpdate();
+    /**
+     * Tìm thông báo theo ID
+     */
+    public Notification findById(Long id) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.find(Notification.class, id);
+        } finally {
+            em.close();
+        }
+    }
 
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi đánh dấu thông báo đã đọc cho user " + userId + ": " + e.getMessage());
+    /**
+     * Lưu hoặc cập nhật một thông báo
+     */
+    public Notification save(Notification n) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Notification result;
+            if (n.getId() == null) {
+                em.persist(n);
+                result = n;
+            } else {
+                result = em.merge(n);
+            }
+            tx.commit();
+            return result;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Tạo thông báo mới cho một người dùng
+     */
+    public Notification createForUser(long userId, String title, String message) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            User user = em.getReference(User.class, userId);
+            
+            Notification notification = new Notification();
+            notification.setTitle(title);
+            notification.setMessage(message);
+            notification.setIsRead(false);
+            notification.setUser(user);
+            
+            em.persist(notification);
+            tx.commit();
+            return notification;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Xóa một thông báo theo ID
+     */
+    public void delete(Long id) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Notification found = em.find(Notification.class, id);
+            if (found != null) {
+                em.remove(found);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 }
