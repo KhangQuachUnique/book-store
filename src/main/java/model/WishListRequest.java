@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WishListRequest {
-    int userId;
-    int bookId;
+    Long userId;
+    Long bookId;
 }

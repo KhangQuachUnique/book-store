@@ -42,7 +42,7 @@ public class Book implements Serializable {
     @Column(name = "\"thumbnailUrl\"")
     private String thumbnailUrl;
 
-    @Column(name = "\"description\"", columnDefinition = "TEXT")
+    @Column(name = "\"description\"")
     private String description;
 
     @Column(name = "\"publishYear\"")
@@ -51,17 +51,23 @@ public class Book implements Serializable {
     @Column(name = "\"pages\"")
     private Integer pages;
 
+    @Column(name = "\"averageRating\"")
+    private Double averageRating;
+
+    @Column(name = "\"sold\"")
+    private Integer sold;
+
     @Column(name = "\"originalPrice\"")
     private double originalPrice;
 
     @Column(name = "\"discountRate\"")
     @Min(value = 0, message = "Discount rate must be non-negative")
     @Max(value = 100, message = "Discount rate must not exceed 100")
-    private int discountRate;
+    private Integer discountRate;
 
     @Column(name = "\"stock\"")
     @Min(value = 0, message = "Stock must be non-negative")
-    private int stock;
+    private Integer stock;
 
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
@@ -90,7 +96,6 @@ public class Book implements Serializable {
     // Transient fields
     @Transient
     private Double price;
-
 
     public Double getPrice() {
         return price = originalPrice * (100 - discountRate) / 100;
