@@ -6,7 +6,7 @@ import jakarta.persistence.TypedQuery;
 import model.Promotion;
 import util.JPAUtil;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 public class PromotionDAO {
 
@@ -15,15 +15,21 @@ public class PromotionDAO {
         Promotion promotion = null;
 
         try {
-            String jpql = "SELECT p FROM Promotion p WHERE p.code = :code AND p.expiryDate >= :now";
+            System.out.println("[DEBUG] Finding promotion with code=" + code);
+
+            // ✅ Truy vấn chính xác + kiểm tra hạn sử dụng
+            String jpql = "SELECT p FROM Promotion p WHERE LOWER(p.code) = LOWER(:code) AND p.expireAt >= :now";
             TypedQuery<Promotion> query = em.createQuery(jpql, Promotion.class);
-            query.setParameter("code", code);
-            query.setParameter("now", new Timestamp(System.currentTimeMillis()));
+            query.setParameter("code", code.trim());
+            query.setParameter("now", OffsetDateTime.now());
 
             promotion = query.getSingleResult();
+            System.out.println("[DEBUG] Found promotion: " + promotion);
+
         } catch (NoResultException e) {
-            // Không tìm thấy => promotion = null
+            System.out.println("[DEBUG] No promotion found for code: " + code);
         } catch (Exception e) {
+            System.err.println("[ERROR] Exception when finding promotion: ");
             e.printStackTrace();
         } finally {
             em.close();

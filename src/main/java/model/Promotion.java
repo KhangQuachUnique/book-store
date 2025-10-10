@@ -4,31 +4,36 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "promotions") // không cần dấu ngoặc kép
+@Table(name = "promotions")
 public class Promotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "\"code\"", unique = true, nullable = false)
     private String code;
 
-    @Column(nullable = false)
+    @Column(name = "discount", nullable = false)
     private double discount;
 
-    // Trùng với cột trong database
-    @Column(name = "expiry_date", nullable = false)
-    private Timestamp expiryDate;
+    @Column(name = "\"expireAt\"", columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
+    private OffsetDateTime expireAt;
 
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Order> orders;
+
+    public boolean isValid() {
+        return expireAt != null && expireAt.isAfter(OffsetDateTime.now());
+    }
 }

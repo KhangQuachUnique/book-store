@@ -1,11 +1,3 @@
-// Package: model
-// Các sửa đổi chính: Thêm ràng buộc validation @NotBlank và @Email cho các trường quan trọng để đảm bảo dữ liệu hợp lệ ngay tại model.
-// Thêm @Column cho phoneNumber mapping đến cột "phoneNumber" trong DB với quotes.
-// Thêm @PrePersist và @PreUpdate để tự động set createdAt/updatedAt.
-// Thêm enum Role.
-// Sử dụng quotes cho tất cả tên cột trong @Column để phù hợp với schema DB.
-// Điều chỉnh các trường Boolean để null-safe.
-// Thêm import cho lifecycle callbacks và time.
 package model;
 
 import java.sql.Timestamp;
@@ -17,6 +9,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -74,38 +67,36 @@ public class User {
 
     // Relationships
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Notification> notifications;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Address> addresses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Order> orders;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Cart cart;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private WishList wishList;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private ViewedProduct viewedProduct;
 
     @PrePersist
     private void prePersist() {
         Timestamp now = new Timestamp(Instant.now().toEpochMilli());
-        if (createdAt == null) {
-            createdAt = now;
-        }
-        if (updatedAt == null) {
-            updatedAt = now;
-        }
-        if (isBlocked == null) {
-            isBlocked = false;
-        }
-        if (isVerified == null) {
-            isVerified = false;
-        }
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
+        if (isBlocked == null) isBlocked = false;
+        if (isVerified == null) isVerified = false;
     }
 
     @PreUpdate
@@ -113,9 +104,6 @@ public class User {
         updatedAt = new Timestamp(Instant.now().toEpochMilli());
     }
 
-    /**
-     * Trả về bản User "safe", không có passwordHash
-     */
     public User safeUser() {
         User safe = new User();
         safe.setId(this.id);
@@ -132,8 +120,6 @@ public class User {
         safe.setVerifyToken(this.verifyToken);
         safe.setVerifyExpire(this.verifyExpire);
         safe.setAddresses(this.addresses);
-
-        // Không set passwordHash
         safe.setPasswordHash(null);
         return safe;
     }
