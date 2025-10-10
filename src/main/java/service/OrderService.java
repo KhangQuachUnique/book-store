@@ -23,6 +23,7 @@ public class OrderService {
                     "SELECT DISTINCT o FROM Order o " +
                             "LEFT JOIN FETCH o.items oi " +
                             "LEFT JOIN FETCH oi.book b " +
+                            "LEFT JOIN FETCH o.promotion p " + // ✅ thêm để lấy luôn promotion
                             "WHERE o.user.id = :userId "
             );
 
@@ -40,11 +41,31 @@ public class OrderService {
                 query.setParameter("status", status);
             }
 
-            return query.getResultList();
+            List<Order> orders = query.getResultList();
+
+            // ✅ Tính lại tổng tiền sau khuyến mãi (chỉ để hiển thị)
+            for (Order o : orders) {
+                double subtotal = 0;
+                if (o.getItems() != null) {
+                    subtotal = o.getItems().stream()
+                            .mapToDouble(i -> i.getPrice() * i.getQuantity())
+                            .sum();
+                }
+
+                double discountAmount = 0;
+                if (o.getPromotion() != null) {
+                    discountAmount = subtotal * o.getPromotion().getDiscount() / 100.0;
+                }
+
+                o.setTotalAmount(subtotal - discountAmount);
+            }
+
+            return orders;
         } finally {
             em.close();
         }
     }
+
 
     /**
      * 🧾 Hàm tạo đơn hàng mới — lưu cả giá từng item và tổng tiền

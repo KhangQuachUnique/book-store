@@ -46,6 +46,15 @@
 
                         <p><strong>Thanh toán:</strong> ${order.paymentMethod}</p>
 
+                        <!-- ✅ Hiển thị khuyến mãi nếu có -->
+                        <c:if test="${not empty order.promotion}">
+                            <p class="promo-info">
+                                Khuyến mãi: ${order.promotion.code}
+                                – Giảm
+                                <fmt:formatNumber value="${order.promotion.discount}" maxFractionDigits="0"/>%
+                            </p>
+                        </c:if>
+
                         <div class="order-items">
                             <h4>Sản phẩm:</h4>
                             <ul>
@@ -57,7 +66,6 @@
                                         <div class="book-info">
                                             <p class="book"><strong>${item.book.title}</strong></p>
 
-                                            <!-- 💰 Hiển thị giá đã lưu (có discount nếu có) -->
                                             <p class="price">
                                                 <c:if test="${item.book.discountRate > 0}">
                                                     <span class="original-price">
@@ -66,7 +74,6 @@
                                                     </span>
                                                     <span class="discount-rate">-${item.book.discountRate}%</span>
                                                 </c:if>
-
                                                 <span class="current-price">
                                                     <fmt:formatNumber value="${item.price}" type="number"/> VNĐ
                                                 </span>
@@ -78,10 +85,33 @@
                                 </c:forEach>
                             </ul>
 
-                            <!-- 💵 Tổng tiền -->
-                            <p class="total"><strong>Thành tiền:</strong>
-                                <fmt:formatNumber value="${order.totalAmount}" type="number"/> VNĐ
-                            </p>
+                            <!-- ✅ Tính toán tổng tiền -->
+                            <c:set var="subtotal" value="0"/>
+                            <c:forEach var="item" items="${order.items}">
+                                <c:set var="subtotal" value="${subtotal + (item.price * item.quantity)}"/>
+                            </c:forEach>
+
+                            <c:set var="discountAmount" value="0"/>
+                            <c:if test="${not empty order.promotion}">
+                                <c:set var="discountAmount"
+                                       value="${subtotal * order.promotion.discount / 100.0}"/>
+                            </c:if>
+
+                            <c:set var="finalTotal" value="${subtotal - discountAmount}"/>
+
+                            <div class="price-summary">
+                                <p>Tạm tính:
+                                    <fmt:formatNumber value="${subtotal}" type="number"/> VNĐ
+                                </p>
+                                <c:if test="${discountAmount > 0}">
+                                    <p>Giảm mã:
+                                        -<fmt:formatNumber value="${discountAmount}" type="number"/> VNĐ
+                                    </p>
+                                </c:if>
+                                <p><strong>Thành tiền:
+                                    <fmt:formatNumber value="${finalTotal}" type="number"/> VNĐ
+                                </strong></p>
+                            </div>
                         </div>
                     </div>
                 </c:forEach>
