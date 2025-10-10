@@ -12,24 +12,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"promotions\"")
+@Table(name = "promotions") // không cần dấu ngoặc kép
 public class Promotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "\"code\"", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String code;
 
-    @Column(name = "\"discount\"")
+    @Column(nullable = false)
     private double discount;
 
-    @Column(name = "\"expireAt\"")
-    private Timestamp expireAt;
+    // Trùng với cột trong database
+    @Column(name = "expiry_date", nullable = false)
+    private Timestamp expiryDate;
 
-    // Relationships
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Order> orders;
 }

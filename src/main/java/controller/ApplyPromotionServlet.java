@@ -14,7 +14,7 @@ import java.util.*;
 
 @WebServlet("/api/apply-promotion")
 public class ApplyPromotionServlet extends HttpServlet {
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -33,30 +33,29 @@ public class ApplyPromotionServlet extends HttpServlet {
         }
 
         try {
-            // ===== GIẢ LẬP GIỎ HÀNG (test) =====
+            // ✅ Giả lập giỏ hàng
             List<Map<String, Object>> items = new ArrayList<>();
-
-            Map<String, Object> book1 = new HashMap<>();
-            book1.put("bookId", 101);
-            book1.put("title", "Sách A");
-            book1.put("originalPrice", 100000.0);
-            book1.put("currentPrice", 80000.0);
-            book1.put("quantity", 1);
-            book1.put("lineTotal", 80000.0);
+            Map<String, Object> book1 = Map.of(
+                    "bookId", 101,
+                    "title", "Sách A",
+                    "originalPrice", 100000.0,
+                    "currentPrice", 80000.0,
+                    "quantity", 1,
+                    "lineTotal", 80000.0
+            );
+            Map<String, Object> book2 = Map.of(
+                    "bookId", 102,
+                    "title", "Sách B",
+                    "originalPrice", 150000.0,
+                    "currentPrice", 120000.0,
+                    "quantity", 2,
+                    "lineTotal", 240000.0
+            );
             items.add(book1);
-
-            Map<String, Object> book2 = new HashMap<>();
-            book2.put("bookId", 102);
-            book2.put("title", "Sách B");
-            book2.put("originalPrice", 150000.0);
-            book2.put("currentPrice", 120000.0);
-            book2.put("quantity", 2);
-            book2.put("lineTotal", 240000.0);
             items.add(book2);
 
-            double subtotal = 80000 + 240000; // 320000
+            double subtotal = 80000 + 240000;
 
-            // ===== KIỂM TRA PROMOTION =====
             PromotionDAO promotionDAO = new PromotionDAO();
             Promotion promotion = promotionDAO.getPromotionByCode(code);
 
