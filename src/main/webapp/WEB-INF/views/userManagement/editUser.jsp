@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -26,13 +25,13 @@
                 </div>
                 <div class="form-group">
                     <label for="phone" class="label">Phone:</label>
-                    <input type="text" id="phone" name="phone" value="${user.phone}" class="input" required>
+                    <input type="text" id="phone" name="phone" value="${user.phoneNumber}" class="input" required>
                 </div>
                 <div class="form-group">
                     <label for="role" class="label">Role:</label>
                     <select id="role" name="role" class="select">
-                        <option value="customer" ${user.role == 'customer' ? 'selected' : ''}>Customer</option>
-                        <option value="admin" ${user.role == 'admin' ? 'selected' : ''}>Admin</option>
+                        <option value="CUSTOMER" ${user.role.toString() eq 'CUSTOMER' ? 'selected' : ''}>Customer</option>
+                        <option value="ADMIN" ${user.role.toString() eq 'ADMIN' ? 'selected' : ''}>Admin</option>
                     </select>
                 </div>
                 <div class="action-buttons">
