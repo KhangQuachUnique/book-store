@@ -1,6 +1,6 @@
-import { bookReviewApi } from "../services/BookReviewService.js";
+import { bookReviewApi } from "../services/ReviewService.js";
 
-// BookReviewPage.js
+// ReviewPage.js
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".like-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {

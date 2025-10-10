@@ -63,7 +63,7 @@
                         <td>${user.id}</td>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
-                        <td>${user.phone}</td>
+                        <td>${user.phoneNumber}</td>
                         <td>${user.role}</td>
                         <td>${user.isBlocked ? "Yes" : "No"}</td>
                         <td class="action-buttons">
@@ -72,12 +72,12 @@
                             <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${user.id}">
-                                <input type="submit" value="Delete" class="btn btn-destructive btn-sm btn-lowe" onclick="return confirm('Are you sure you want to delete this user?')">
+                                <input type="submit" value="Delete" class="btn btn-destructive btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">
                             </form>
                             <form action="${pageContext.request.contextPath}/admin/user" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="${user.isBlocked ? 'unblock' : 'block'}">
                                 <input type="hidden" name="id" value="${user.id}">
-                                <input type="submit" value="${user.isBlocked ? 'Unblock' : 'Block'}" class="btn btn-secondary btn-sm btn-lowe">
+                                <input type="submit" value="${user.isBlocked ? 'Unblock' : 'Block'}" class="btn btn-secondary btn-sm">
                             </form>
                         </td>
                     </tr>

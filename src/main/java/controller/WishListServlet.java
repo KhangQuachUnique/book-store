@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,28 +10,58 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import constant.PathConstants;
-import model.ApiResponse;
-import model.User;
-import model.WishListRequest;
+import model.*;
+import service.WishListService;
 import util.JsonUtil;
 
 @WebServlet("/user/wishlist")
 public class WishListServlet extends HttpServlet {
+
+    private final WishListService wishListService = new WishListService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page = PathConstants.VIEW_WISHLIST;
-        req.setAttribute("contentPage", page);
+        //Get current user
         User sessionUser = (User) req.getSession().getAttribute("user");
         Long currentUserId = 0L;
-
         if (sessionUser != null) {
             currentUserId = sessionUser.getId();
         }
-        ApiResponse response = service.WishListService.getWishListBooks(currentUserId.intValue());
-        if (!response.isSuccess()) {
+
+        //Pagination parameters
+        int currentPage = 1;      // default
+        int pageSize = 5;  // default
+
+        String pageParam = req.getParameter("page");
+        String pageSizeParam = req.getParameter("pageSize");
+
+        if (pageParam != null) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
+
+        if (pageSizeParam != null) {
+            try {
+                pageSize = Integer.parseInt(pageSizeParam);
+            } catch (NumberFormatException e) {
+                pageSize = 5;
+            }
+        }
+
+        //Get wish list
+        WishList wishList = wishListService.getWishListBooks(101L, currentPage, pageSize);
+        if (wishList.getItems().isEmpty()) {
             req.setAttribute("message", "Your wish list is empty.");
         }
-        req.setAttribute("wishListBooks", response.getData());
+        req.setAttribute("wishList", wishList);
+        req.setAttribute("currentPage", wishList.getCurrentPage());
+        req.setAttribute("pageSize", wishList.getPageSize());
+        req.setAttribute("totalPages", wishList.getTotalPages());
+
+        req.setAttribute("contentPage", PathConstants.VIEW_WISHLIST);
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
@@ -43,8 +74,8 @@ public class WishListServlet extends HttpServlet {
             currentUserId = sessionUser.getId();
         }
         WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
-        int bookId = body.getBookId();
-        ApiResponse response = service.WishListService.addBookToWishList(currentUserId.intValue(), bookId);
+        Long bookId = body.getBookId();
+        ApiResponse response = wishListService.addBookToWishList(101L, bookId);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -58,8 +89,8 @@ public class WishListServlet extends HttpServlet {
         if (sessionUser != null) {
             currentUserId = sessionUser.getId();
         }        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
-        int bookId = body.getBookId();
-        ApiResponse response = service.WishListService.removeBookToWishList(currentUserId.intValue(), bookId);
+        Long bookId = body.getBookId();
+        ApiResponse response = wishListService.removeBookToWishList(101L, bookId);
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
     }

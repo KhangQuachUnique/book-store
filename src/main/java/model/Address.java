@@ -23,15 +23,30 @@ public class Address implements Serializable {
     private String address;
 
     @Column(name = "\"isDefault\"")
-    private boolean isDefaultAddress;
+    private boolean isDefault;
+
+    // Explicit accessors to match desired EL property 'isDefaultAddress'
+    public boolean isDefaultAddress() {
+        return isDefault;
+    }
+
+    public void setDefaultAddress(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
+
+    @PrePersist
+    private void prePersist() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
+    }
 
     @Override
     public String toString() {
