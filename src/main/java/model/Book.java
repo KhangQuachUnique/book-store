@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import service.BookService;
 
 @Entity
 @Data
@@ -79,8 +80,9 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<CartItem> cartItems;
+
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishListItem> wishlistItems;
@@ -107,11 +109,11 @@ public class Book implements Serializable {
         this.sold = (sold != null && sold >= 0) ? sold : 0;
     }
 
-    public void setCategoryId(int categoryId) {
-        Category category = new Category();
-        category.setId(categoryId);
-        this.category = category;
-    }
+//    public void setCategoryId(int categoryId) {
+//        Category category = new Category();
+//        category.setId(categoryId);
+//        this.category = category;
+//    }
 
     // Ensure non-null defaults for nullable fields
     public String getAuthor() {
@@ -144,5 +146,12 @@ public class Book implements Serializable {
 
     public Double getAverageRating() {
         return averageRating != null ? averageRating : 0.0;
+    }
+    public void setCategoryId(int categoryId) {
+        Category category = BookService.getCategoryById(categoryId);
+        if (category == null) {
+            throw new IllegalArgumentException("Invalid category ID: " + categoryId);
+        }
+        this.category = category;
     }
 }

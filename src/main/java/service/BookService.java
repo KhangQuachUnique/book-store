@@ -43,6 +43,17 @@ public class BookService {
                 }
             });
 
+    public static Category getCategoryById(long id) throws RuntimeException {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            Category category = em.find(Category.class, (int) id);
+            LOGGER.info("Fetched category with ID " + id + ": " + (category != null ? category.getName() : "null"));
+            return category;
+        } finally {
+            em.close();
+        }
+    }
+
     private static final LoadingCache<Long, Book> bookByIdCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(new CacheLoader<Long, Book>() {

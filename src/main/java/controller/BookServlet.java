@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import service.BookService;
 
 @WebServlet("/admin/book/*")
 public class BookServlet extends HttpServlet {
+    private static final Logger LOGGER = Logger.getLogger(BookServlet.class.getName());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -184,12 +186,28 @@ public class BookServlet extends HttpServlet {
         }
         try {
             long id = Long.parseLong(idParam);
-            Book book = new Book();
-            book.setId((int) id);
+            Book book = BookService.getBookById(id);
+            if (book == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
+                return;
+            }
             book.setTitle(req.getParameter("title"));
             book.setAuthor(req.getParameter("author"));
             book.setPublisher(req.getParameter("publisher"));
-            book.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
+
+            // Fetch and set the Category object
+            int categoryId = Integer.parseInt(req.getParameter("category_id"));
+            Category category = BookService.getCategoryById(categoryId);
+            if (category == null) {
+                LOGGER.warning("Invalid category ID: " + categoryId);
+                req.setAttribute("errorMessage", "Invalid category ID: " + categoryId);
+                req.setAttribute("book", book);
+                req.setAttribute("categories", BookService.getAllCategories());
+                req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);
+                return;
+            }
+            book.setCategory(category);
+
             book.setStock(Integer.parseInt(req.getParameter("stock")));
             book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
             book.setDiscountRate(Integer.parseInt(req.getParameter("discountRate")));
@@ -204,15 +222,18 @@ public class BookServlet extends HttpServlet {
             String pages = req.getParameter("pages");
             book.setPages(pages != null && !pages.isEmpty() ? Integer.parseInt(pages) : null);
 
+            LOGGER.info("Updating book: id=" + id + ", title=" + book.getTitle() + ", categoryId=" + categoryId);
             BookService.updateBook(book);
             resp.sendRedirect(req.getContextPath() + "/admin/book?action=list");
         } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "Invalid input data");
+            LOGGER.warning("Invalid input data: " + e.getMessage());
+            req.setAttribute("errorMessage", "Invalid input data: " + e.getMessage());
             req.setAttribute("book", BookService.getBookById(Long.parseLong(idParam)));
             req.setAttribute("categories", BookService.getAllCategories());
             req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);
         } catch (RuntimeException e) {
-            req.setAttribute("errorMessage", e.getMessage());
+            LOGGER.severe("Error updating book: " + e.getMessage());
+            req.setAttribute("errorMessage", "Error updating book: " + e.getMessage());
             req.setAttribute("book", BookService.getBookById(Long.parseLong(idParam)));
             req.setAttribute("categories", BookService.getAllCategories());
             req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);

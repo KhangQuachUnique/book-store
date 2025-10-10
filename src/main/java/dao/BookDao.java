@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import jakarta.persistence.EntityManager;
+import org.hibernate.Hibernate;
+
+
 public class BookDao {
     private static final Logger LOGGER = Logger.getLogger(BookDao.class.getName());
     private static final int PAGE_SIZE = 20;
@@ -34,10 +38,18 @@ public class BookDao {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             Book book = em.find(Book.class, (int) id);
-            if (book != null && book.getCategory() != null) {
-                em.refresh(book.getCategory()); // Ensure category is fully loaded
+            if (book != null) {
+                // Initialize lazy-loaded collections
+                Hibernate.initialize(book.getCartItems());
+                Hibernate.initialize(book.getReviews());
+                Hibernate.initialize(book.getOrderItems());
+                Hibernate.initialize(book.getWishlistItems());
+                Hibernate.initialize(book.getViewedProductItems());
+                if (book.getCategory() != null) {
+                    em.refresh(book.getCategory()); // Ensure category is fully loaded
+                }
+                LOGGER.info("Fetched book with ID " + id + ": " + (book != null ? book.getTitle() : "null"));
             }
-            LOGGER.info("Fetched book with ID " + id + ": " + (book != null ? book.getTitle() : "null"));
             return book;
         } finally {
             em.close();
@@ -77,7 +89,8 @@ public class BookDao {
                 em.getTransaction().rollback();
             }
             LOGGER.severe("Error updating book: " + e.getMessage());
-            throw new RuntimeException("Error updating book", e);
+            e.printStackTrace(); // Log the full stack trace for debugging
+            throw new RuntimeException("Error updating book: " + e.getMessage(), e);
         } finally {
             em.close();
         }
