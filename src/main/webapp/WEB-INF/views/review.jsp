@@ -84,18 +84,20 @@
                 </c:choose>
                 <div class="comment-content">
                     <div class="comment-header">
-                        <span class="username">${review.user.name}</span>
-                        <span class="comment-date">
-                            <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy" />
-                        </span>
-                    </div>
-                    <div class="comment-rating">
-                        <jsp:include page="ratingStar.jsp">
-                            <jsp:param name="fullStars" value="${review.rating}" />
-                            <jsp:param name="partialFraction" value="${0}" />
-                            <jsp:param name="emptyStars" value="${5 - review.rating}" />
-                            <jsp:param name="size" value="18" />
-                        </jsp:include>
+                        <div>
+                            <span class="username">${review.user.name}</span>
+                            <span class="comment-date">
+                                <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy" />
+                            </span>
+                        </div>
+                        <div class="comment-rating">
+                            <jsp:include page="ratingStar.jsp">
+                                <jsp:param name="fullStars" value="${review.rating}" />
+                                <jsp:param name="partialFraction" value="${0}" />
+                                <jsp:param name="emptyStars" value="${5 - review.rating}" />
+                                <jsp:param name="size" value="18" />
+                            </jsp:include>
+                        </div>
                     </div>
                     <div class="comment-text">
                         ${review.comment}
