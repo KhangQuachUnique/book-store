@@ -1,50 +1,40 @@
 //package service;
 //
 //import model.ApiResponse;
-//import model.WishList;
-//import model.WishListItem;
 //
 //public class WishListService {
-//
-//    private final WishListDao wishListDao;
-//
-//    public WishListService() {
-//        this.wishListDao = new WishListDao();
-//    }
-//
-//    public WishList getWishListBooks(Long userId, int page, int pageSize) {
-//        WishList wishList = wishListDao.getWishListByUser(userId);
-//        for (WishListItem item : wishList.getItems()) {
-//            item.calculateStars();
+//    //Get wish list books by user id
+//    public static ApiResponse getWishListBooks(int userId) {
+//        if (userId <= 0) {
+//            return new ApiResponse(false, "ID không hợp lệ", null);
 //        }
-//        int fromIndex = Math.min((page - 1) * pageSize, wishList.getItems().size());
-//        int toIndex = Math.min(fromIndex + pageSize, wishList.getItems().size());
-//        wishList.setItems(wishList.getItems().subList(fromIndex, toIndex));
-//        return wishList;
+//
+//        return new ApiResponse(true, "Lấy danh sách yêu thích thành công", WishListDao.getWishListBooks(userId));
 //    }
 //
 //    //Add book to wish list
-//    public ApiResponse addBookToWishList(Long userId, Long bookId) {
+//    public static ApiResponse addBookToWishList(int userId, int bookId) {
 //        if (userId <= 0 || bookId <= 0) {
 //            return new ApiResponse(false, "ID không hợp lệ", null);
 //        }
 //
-//        boolean result = wishListDao.addBookToWishlist(userId, bookId);
-//
-//        if (result) {
+//        String result = WishListDao.addBookToWishList(userId, bookId);
+//        if ("success".equals(result)) {
 //            return new ApiResponse(true, "Thêm sách vào danh sách yêu thích thành công", null);
+//        } else if ("exists".equals(result)) {
+//            return new ApiResponse(false, "Sách đã có trong danh sách yêu thích", null);
 //        } else {
 //            return new ApiResponse(false, "Thêm sách vào danh sách yêu thích thất bại", null);
 //        }
 //    }
 //
 //    //Remove book from wish list
-//    public ApiResponse removeBookToWishList(Long userId, Long bookId) {
+//    public static  ApiResponse removeBookToWishList(int userId, int bookId) {
 //        if (userId <= 0 || bookId <= 0) {
 //            return new ApiResponse(false, "ID không hợp lệ", null);
 //        }
 //
-//        boolean success = wishListDao.removeBookFromWishlist(userId, bookId);
+//        boolean success = WishListDao.deleteBookFromWishList(userId, bookId);
 //        if (success) {
 //            return new ApiResponse(true, "Xóa sách khỏi danh sách yêu thích thành công", null);
 //        } else {

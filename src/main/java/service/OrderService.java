@@ -1,25 +1,82 @@
-//package service;
-//
-//import java.util.List;
-//
-//import model.Order;
-//
-//public class OrderService {
-//    private OrderDAO orderDAO;
-//
-//    public OrderService() {
-//        this.orderDAO = new OrderDAO();
-//    }
-//
-//    /**
-//     * Lấy danh sách đơn hàng theo user và trạng thái
-//     *
-//     * @param userId   ID người dùng
-//     * @param statusId trạng thái (all hoặc id cụ thể)
-//     * @return danh sách đơn hàng
-//     */
-//    public List<Order> getOrdersByUserAndStatus(Long userId, String statusId) {
-//        // Gọi thẳng xuống DAO (DAO đã tự xử lý "all")
-//        return orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
-//    }
-//}
+package service;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+import model.Order;
+import model.OrderItem;
+import model.OrderStatus;
+import util.JPAUtil;
+
+import java.util.List;
+
+public class OrderService {
+
+    /**
+     * Lấy danh sách đơn theo user + trạng thái
+     */
+    public List<Order> getOrdersByUserAndStatus(Long userId, String statusParam) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            boolean all = (statusParam == null || "ALL".equalsIgnoreCase(statusParam));
+            StringBuilder jpql = new StringBuilder(
+                    "SELECT DISTINCT o FROM Order o " +
+                            "LEFT JOIN FETCH o.items oi " +
+                            "LEFT JOIN FETCH oi.book b " +
+                            "WHERE o.user.id = :userId "
+            );
+
+            if (!all) {
+                jpql.append("AND o.status = :status ");
+            }
+
+            jpql.append("ORDER BY o.createdAt DESC");
+
+            TypedQuery<Order> query = em.createQuery(jpql.toString(), Order.class)
+                    .setParameter("userId", userId);
+
+            if (!all) {
+                OrderStatus status = OrderStatus.valueOf(statusParam.toUpperCase());
+                query.setParameter("status", status);
+            }
+
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * 🧾 Hàm tạo đơn hàng mới — lưu cả giá từng item và tổng tiền
+     */
+    public void createOrder(Order order) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+
+            double totalAmount = 0.0;
+
+            for (OrderItem item : order.getItems()) {
+                // ✅ Tính giá thật tại thời điểm checkout
+                double discountedPrice = item.getBook().getOriginalPrice()
+                        * (1 - (item.getBook().getDiscountRate() / 100.0));
+
+                item.setPrice(discountedPrice); // Lưu giá tại thời điểm mua
+                item.setOrder(order);           // Gán quan hệ ngược
+                totalAmount += discountedPrice * item.getQuantity();
+            }
+
+            order.setTotalAmount(totalAmount);
+            em.persist(order);
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+}

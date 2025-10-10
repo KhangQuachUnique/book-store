@@ -1,14 +1,16 @@
 package util;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class JPAUtil {
     private static final EntityManagerFactory emf = buildEntityManagerFactory();
 
     static {
-        // Shutdown hook
+        // Đóng EntityManagerFactory khi server tắt
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (emf.isOpen()) {
+            if (emf != null && emf.isOpen()) {
                 emf.close();
                 System.out.println("EMF closed on server shutdown");
             }
@@ -20,11 +22,12 @@ public class JPAUtil {
             // "bookstore" trùng tên persistence-unit trong persistence.xml
             return Persistence.createEntityManagerFactory("bookstore");
         } catch (Throwable ex) {
-            System.err.println("Initial EntityManagerFactory creation failed." + ex);
+            System.err.println("Initial EntityManagerFactory creation failed. " + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
+    /** Lấy EntityManager mới mỗi lần gọi (thread-safe ở mức EMF) */
     public static EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
@@ -34,6 +37,8 @@ public class JPAUtil {
     }
 
     public static void close() {
-        emf.close();
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
     }
 }

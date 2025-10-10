@@ -16,35 +16,33 @@
 //import model.User;
 //
 //public class UserService {
-//    private static final int pageSize = 20;
 //    private UserDao userDao = new UserDao();
+//    private static final int PAGE_SIZE = 20;
 //
 //    /**
 //     * Đăng ký hoặc trả về null nếu email đã tồn tại
 //     */
-//    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException, SQLException {
+//    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException {
 //        Optional<User> existing = userDao.findByEmail(user.getEmail());
 //        if (existing.isPresent())
 //            return null;
 //
 //        user.setPasswordHash(BCrypt.hashpw(rawPassword, BCrypt.gensalt()));
 //        user.setIsVerified(false);
-//        // Role set in dao.save via prePersist or in createUser
+//        user.setRole("customer");
 //
 //        String token = UUID.randomUUID().toString();
 //        user.setVerifyToken(token);
 //        user.setVerifyExpire(Timestamp.from(Instant.now().plus(15, ChronoUnit.MINUTES)));
 //
-//        if (userDao.save(user)) {
-//            return token; // dùng để gửi mail xác thực
-//        }
-//        return null;
+//        userDao.save(user);
+//        return token; // dùng để gửi mail xác thực
 //    }
 //
 //    /**
 //     * Login, trả về LoginResult
 //     */
-//    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException, SQLException {
+//    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException {
 //        LoginResult result = new LoginResult();
 //
 //        Optional<User> userOpt = userDao.findByEmail(email);
@@ -89,7 +87,7 @@
 //    /**
 //     * Xác thực token email
 //     */
-//    public boolean verifyUser(String token) throws SQLException {
+//    public boolean verifyUser(String token) {
 //        User user = userDao.findByVerifyToken(token);
 //        if (user == null)
 //            return false;
@@ -163,6 +161,6 @@
 //
 //    public int getTotalPages(String queryType, String query) throws SQLException {
 //        long totalUsers = getTotalUsers(queryType, query);
-//        return (int) Math.ceil((double) totalUsers / pageSize);
+//        return (int) Math.ceil((double) totalUsers / PAGE_SIZE);
 //    }
 //}

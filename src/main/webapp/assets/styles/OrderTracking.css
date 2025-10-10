@@ -1,51 +1,100 @@
+/* Tổng thể */
 .order-tracking {
     font-family: "Montserrat", Arial, sans-serif;
     background-color: #f8f9fa;
     color: #333;
     padding: 40px;
+    min-height: 100vh;
 }
 
 .page-title {
     color: #800020;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    font-weight: 700;
 }
 
+/* Thanh trạng thái */
+.status-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+    scrollbar-width: none; /* Ẩn thanh cuộn Firefox */
+}
+
+.status-bar::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn Chrome */
+}
+
+.status-bar a {
+    flex: 1;
+    text-align: center;
+    padding: 10px 5px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.status-bar a:hover {
+    background: #f0f0f0;
+}
+
+.status-bar a.active {
+    color: #fff;
+    background-color: #800020;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(128, 0, 32, 0.25);
+}
+
+/* Container danh sách đơn */
 .orders-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Card đơn hàng */
 .order-card {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .order-card:hover {
     transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
+/* Header đơn hàng */
 .order-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .order-id {
-    font-weight: bold;
+    font-weight: 600;
     color: #800020;
+    font-size: 1.05em;
 }
 
 .order-status {
-    padding: 5px 10px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.9em;
-    font-weight: bold;
+    font-weight: 600;
     text-transform: capitalize;
 }
 
@@ -54,156 +103,174 @@
     background-color: #fff3e0;
     color: #ef6c00;
 }
-.order-status.confirmed {
+
+.order-status.processing {
     background-color: #ede7f6;
     color: #4527a0;
 }
-.order-status.shipped {
+
+.order-status.shipping {
     background-color: #e3f2fd;
     color: #1565c0;
 }
-.order-status.completed {
+
+.order-status.delivered {
     background-color: #e6f4ea;
     color: #2e7d32;
 }
+
 .order-status.cancelled {
     background-color: #fdecea;
     color: #c62828;
 }
 
-.order-status.waiting-payment {
-    background-color: #ffe0b2;
-    color: #e65100;
-}
-.order-status.shipping {
-    background-color: #b2ebf2;
-    color: #006064;
+/* Thông tin đơn hàng */
+.order-card p {
+    margin: 5px 0;
+    line-height: 1.5;
 }
 
-.total {
-    font-weight: bold;
+/* Danh sách sản phẩm */
+.order-items {
+    margin-top: 15px;
 }
 
 .order-items h4 {
-    margin-top: 15px;
+    margin-bottom: 10px;
     color: #444;
+    font-weight: 600;
 }
 
 .order-items ul {
-    padding-left: 20px;
+    padding-left: 0;
+    list-style-type: none;
+    margin: 0;
 }
 
 .order-items li {
-    margin: 5px 0;
-}
-
-.book {
-    font-weight: bold;
-}
-.qty {
-    margin-left: 10px;
-    color: #555;
-}
-.price {
-    margin-left: 10px;
-    color: #800020;
-    font-weight: bold;
-}
-
-.order-card ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.order-card li {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
-    padding: 8px;
+    gap: 10px;
     border: 1px solid #eee;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #fafafa;
+    padding: 10px;
+    transition: background 0.2s ease;
 }
 
-.order-card li p {
-    margin: 3px 0;
+.order-items li:hover {
+    background: #f5f5f5;
 }
 
+/* Hình ảnh sách */
 .book-thumbnail {
     width: 80px;
     height: 100px;
     object-fit: cover;
-    margin-right: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
-.order-items li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px; /* thêm khoảng cách giữa ảnh và text */
-}
-
+/* Thông tin sách */
 .book-info {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
-.status-bar {
-    display: flex;
-    justify-content: space-between; /* hoặc space-around */
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
+.book-info .book {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 1em;
 }
 
-.status-bar a {
-    flex-grow: 1; /* Cho phép mỗi tab chiếm cùng một khoảng không gian */
-    text-align: center;
-    padding: 10px 5px;
-    text-decoration: none;
+.qty {
     color: #555;
-    white-space: nowrap; /* Ngăn text bị xuống dòng */
+    font-size: 0.95em;
 }
 
-.status-bar a.active {
-    color: #dc3545; /* Màu đỏ nổi bật cho tab đang chọn */
-    font-weight: bold;
+/* Hiển thị giá */
+.price {
+    margin: 3px 0;
 }
 
-.status-bar a:hover {
-    background: #f0f0f0;
-}
-
-/* Trong OrderTracking.css */
 .original-price {
-    text-decoration: line-through; /* Gạch ngang giá gốc */
-    color: #999; /* Màu xám nhạt */
-    margin-right: 5px;
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 6px;
+    font-size: 0.95em;
 }
 
 .discount-rate {
-    color: #800020; /* Màu đỏ nổi bật */
-    font-weight: bold;
-    margin-right: 5px;
+    color: #b71c1c;
+    font-weight: 600;
+    margin-right: 6px;
+    font-size: 0.95em;
 }
 
 .current-price {
     color: #800020;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 1.05em;
 }
 
+/* Tổng tiền */
+.total {
+    font-weight: bold;
+    color: #111;
+    margin-top: 10px;
+    text-align: right;
+    font-size: 1.05em;
+}
+
+/* Khi không có đơn hàng */
 .no-orders {
     display: inline-block;
     width: 100%;
     text-align: center;
     font-size: 1.3em;
     font-weight: 600;
-    color: #b71c1c; /* đỏ đậm */
-    /*background: #fff0f0; !* nền hồng nhạt *!*/
+    color: #b71c1c;
     border: 2px solid #b71c1c;
     border-radius: 12px;
     padding: 20px;
     margin-top: 40px;
     box-shadow: 0 4px 10px rgba(183, 28, 28, 0.15);
+    background-color: #fffdfd;
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+    .order-tracking {
+        padding: 20px;
+    }
+
+    .status-bar {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+    .status-bar a {
+        flex: unset;
+        margin: 0 5px;
+    }
+
+    .book-thumbnail {
+        width: 60px;
+        height: 80px;
+    }
+
+    .order-status {
+        font-size: 0.85em;
+        padding: 4px 10px;
+    }
+
+    .book-info .book {
+        font-size: 0.95em;
+    }
+
+    .current-price {
+        font-size: 1em;
+    }
+}
