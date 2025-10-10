@@ -128,43 +128,18 @@
                     </c:url>
                     <c:choose>
                         <c:when test="${currentPage > 1}">
-                            <a href="${prevUrl}" class="btn btn-primary">&lt;</a>
+                            <a href="${prevUrl}" class="btn btn-primary">Previous</a>
                         </c:when>
                         <c:otherwise>
-                            <span class="btn btn-primary disabled">&lt;</span>
+                            <span class="btn btn-primary disabled">Previous</span>
                         </c:otherwise>
                     </c:choose>
 
-                    <c:forEach begin="1" end="${totalPages}" var="pageNum">
-                        <c:url var="pageUrl" value="/admin/book">
-                            <c:param name="action" value="filter"/>
-                            <c:param name="page" value="${pageNum}"/>
-                            <c:if test="${not empty title}">
-                                <c:param name="title" value="${title}"/>
-                            </c:if>
-                            <c:if test="${not empty publishYear}">
-                                <c:param name="publish_year" value="${publishYear}"/>
-                            </c:if>
-                            <c:if test="${not empty includeCategories}">
-                                <c:forEach var="cat" items="${includeCategories}">
-                                    <c:param name="includeCategories" value="${cat}"/>
-                                </c:forEach>
-                            </c:if>
-                            <c:if test="${not empty excludeCategories}">
-                                <c:forEach var="cat" items="${excludeCategories}">
-                                    <c:param name="excludeCategories" value="${cat}"/>
-                                </c:forEach>
-                            </c:if>
-                        </c:url>
-                        <c:choose>
-                            <c:when test="${pageNum == currentPage}">
-                                <span class="btn btn-primary active">${pageNum}</span>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${pageUrl}" class="btn btn-primary">${pageNum}</a>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
+                    <div class="page-input">
+                        <input type="number" id="pageInput" min="1" max="${totalPages}" value="${currentPage}" class="input" style="width: 60px; text-align: center;">
+                        <span>/ ${totalPages}</span>
+                        <button type="button" onclick="goToPage()" class="btn btn-primary">Go</button>
+                    </div>
 
                     <c:url var="nextUrl" value="/admin/book">
                         <c:param name="action" value="filter"/>
@@ -188,10 +163,10 @@
                     </c:url>
                     <c:choose>
                         <c:when test="${currentPage < totalPages}">
-                            <a href="${nextUrl}" class="btn btn-primary">&gt;</a>
+                            <a href="${nextUrl}" class="btn btn-primary">Next</a>
                         </c:when>
                         <c:otherwise>
-                            <span class="btn btn-primary disabled">&gt;</span>
+                            <span class="btn btn-primary disabled">Next</span>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -231,6 +206,36 @@
         document.getElementById('includeCategories').value = includeCategories.join(',');
         document.getElementById('excludeCategories').value = excludeCategories.join(',');
         document.querySelector('.search-form').submit();
+    }
+
+    function goToPage() {
+        const pageInput = document.getElementById('pageInput');
+        let page = parseInt(pageInput.value);
+        const totalPages = ${totalPages};
+
+        // Validate page input
+        if (isNaN(page) || page < 1) {
+            page = 1;
+        } else if (page > totalPages) {
+            page = totalPages;
+        }
+
+        // Construct URL with current filter parameters
+        let url = '${pageContext.request.contextPath}/admin/book?action=filter&page=' + page;
+        <c:if test="${not empty title}">
+        url += '&title=${title}';
+        </c:if>
+        <c:if test="${not empty publishYear}">
+        url += '&publish_year=${publishYear}';
+        </c:if>
+        if (includeCategories.length > 0) {
+            url += '&includeCategories=' + includeCategories.join(',');
+        }
+        if (excludeCategories.length > 0) {
+            url += '&excludeCategories=' + excludeCategories.join(',');
+        }
+
+        window.location.href = url;
     }
 </script>
 </body>
