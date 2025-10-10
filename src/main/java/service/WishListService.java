@@ -15,12 +15,13 @@ public class WishListService {
         this.wishListDao = new WishListDao();
     }
 
-    public WishList getWishListBooks(Long userId, int page, int pageSize) {
+    public WishList getWishListBooks(Long userId, int currentPage, int pageSize) {
         WishList wishList = wishListDao.getWishListByUser(userId);
         for (WishListItem item : wishList.getItems()) {
             item.calculateStars();
         }
-        int fromIndex = Math.min((page - 1) * pageSize, wishList.getItems().size());
+        wishList.setUpPagination(currentPage, pageSize);
+        int fromIndex = Math.min((currentPage - 1) * pageSize, wishList.getItems().size());
         int toIndex = Math.min(fromIndex + pageSize, wishList.getItems().size());
         wishList.setItems(wishList.getItems().subList(fromIndex, toIndex));
         return wishList;

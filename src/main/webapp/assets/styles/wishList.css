@@ -77,9 +77,9 @@ h1 {
 }
 
 .white-list-item-price {
-    font-size: 23px;
-    color: var(--text-secondary);
-    font-weight: 700;
+    font-size: 21px;
+    color: var(--text-display);
+    font-weight: 600;
 }
 
 .white-list-item-rating {
@@ -91,6 +91,7 @@ h1 {
 
 .white-list-item-price-old {
     font-size: 16px;
+    color: var(--text-secondary);
     text-decoration: line-through;
 }
 
@@ -132,10 +133,10 @@ h1 {
 
 
 .actions button {
-    width: 46px;
-    height: 46px;
-    min-width: 46px;
-    min-height: 46px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -163,6 +164,12 @@ h1 {
 .actions .heart-icon.selected path {
     fill: var(--primary-color);
     stroke: var(--primary-color);
+    transition: stroke 0.2s, fill 0.2s;
+}
+
+.actions .heart-icon.selected path:hover {
+    fill: var(--primary-color-hover);
+    stroke: var(--primary-color-hover);
 }
 
 .actions button {
