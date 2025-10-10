@@ -16,9 +16,9 @@
 
 .review-section .review-header {
     font-size: 28px;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 20px;
-    color: #2e2e2e;
+    color: var(--text-display);
 }
 
 .review-overall {
@@ -36,7 +36,7 @@
 
     span {
         font-size: 36px;
-        font-weight: 800;
+        font-weight: 700;
         color: #2e2e2e;
     }
 }
@@ -72,6 +72,7 @@
     display: flex;
     gap: 16px;
     margin-top: 15px;
+    padding-bottom: 15px;
     align-items: flex-start;
     border-bottom: 1px solid #d1d1d1;
 }
@@ -81,6 +82,7 @@
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
+    fill: #bdbdbd;
 }
 
 .comment-content {
@@ -89,6 +91,7 @@
 
 .comment-header {
     display: flex;
+    justify-content: space-between;
     gap: 12px;
     align-items: center;
     font-weight: 600;
@@ -100,8 +103,9 @@
 }
 
 .comment-date {
+    margin-left: 15px;
     color: #888;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .comment-rating {
@@ -157,7 +161,7 @@
 }
 
 .like-btn:hover svg {
-    fill: #b22234; /* a lighter red for hover */
+    /*fill: #b22234; !* a lighter red for hover *!*/
     transform: scale(1.1);
 }
 
@@ -169,7 +173,7 @@
 
 .like-btn svg {
     height: 29px;
-    fill: #858585; /* default màu khi chưa like */
+    fill: #bdbdbd; /* default màu khi chưa like */
     transition: fill 0.3s ease, transform 0.2s ease;
 }
 
