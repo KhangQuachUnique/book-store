@@ -1,33 +1,46 @@
 package model;
 
+import lombok.*;
+
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class BookReview {
-    private Long id;
-    private Long bookId;
-    private List<ReviewShow> reviewShows;
+    private List<Review> reviews;
     private Double averageRating;
     private Integer totalReviews;
+
     private Integer fullStars;
-    private Double partialFraction;
+    private Double fractionalStars;
     private Integer emptyStars;
+
     private Integer fiveStarCount;
     private Integer fourStarCount;
     private Integer threeStarCount;
     private Integer twoStarCount;
     private Integer oneStarCount;
 
+    // Method to calculate star representation
     public void calculateStars() {
-        // This method can be used to calculate star representation if needed
-        this.fullStars = averageRating.intValue();
-        this.partialFraction = averageRating - fullStars;
-        this.emptyStars = (partialFraction > 0) ? (4 - fullStars) : (5 - fullStars);
+        if (averageRating == null) {
+            fullStars = 0;
+            fractionalStars = 0.0;
+            emptyStars = 5;
+            return;
+        }
+
+        fullStars = averageRating.intValue();
+        fractionalStars = averageRating - fullStars;
+        emptyStars = 5 - fullStars - (fractionalStars > 0 ? 1 : 0);
+    }
+
+    public void calculateStarCounts() {
+        fiveStarCount = (int) reviews.stream().filter(r -> r.getRating() == 5).count();
+        fourStarCount = (int) reviews.stream().filter(r -> r.getRating() == 4).count();
+        threeStarCount = (int) reviews.stream().filter(r -> r.getRating() == 3).count();
+        twoStarCount = (int) reviews.stream().filter(r -> r.getRating() == 2).count();
+        oneStarCount = (int) reviews.stream().filter(r -> r.getRating() == 1).count();
     }
 }

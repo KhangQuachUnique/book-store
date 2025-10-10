@@ -1,22 +1,20 @@
 package model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "\"cartItems\"")
-public class CartItem {
+@Table(name = "\"viewedProductItems\"")
+public class ViewedProductItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "\"id\"")
     private Long id;
-
-    @Column(name = "\"quantity\"")
-    @Min(value = 1, message = "Quantity must be at least 1")
-    private int quantity;
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,6 +22,6 @@ public class CartItem {
     private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"cartId\"", nullable = false)
-    private Cart cart;
+    @JoinColumn(name = "\"viewedProductId\"", nullable = false)
+    private ViewedProduct viewedProduct;
 }

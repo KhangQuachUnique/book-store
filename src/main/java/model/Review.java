@@ -12,36 +12,41 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"orders\"")
-public class Order {
+@Table(name = "\"reviews\"")
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"id\"")
     private Long id;
 
-    @Column(name = "\"paymentMethod\"")
-    private String paymentMethod;
+    @Column(name = "\"rating\"")
+    private double rating;
+
+    @Column(name = "\"comment\"")
+    private String comment;
 
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    @Column(name = "\"totalAmount\"")
-    private double totalAmount;
+
+    //Transient fields
+    @Transient
+    private Long likeCount;
+
+    @Transient
+    private Boolean likedByCurrentUser;
+
 
     // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"bookId\"", nullable = false)
+    private Book book;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"promotionId\"")
-    private Promotion promotion;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "\"status\"")
-    private OrderStatus status;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<OrderItem> items;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LikeReview> likes;
 }
