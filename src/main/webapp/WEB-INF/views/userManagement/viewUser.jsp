@@ -50,7 +50,7 @@
                         <div class="info-item">
                             <strong>Role:</strong>
                             <select name="role" class="select">
-                                <option value="CUSTOMER" ${user.role.toString() eq 'CUSTOMER' ? 'selected' : ''}>Customer</option>
+                                <option value="USER" ${user.role.toString() eq 'USER' ? 'selected' : ''}>Customer</option>
                                 <option value="ADMIN" ${user.role.toString() eq 'ADMIN' ? 'selected' : ''}>Administrator</option>
                             </select>
                         </div>

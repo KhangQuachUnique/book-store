@@ -29,7 +29,7 @@
                 <div class="form-group">
                     <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-group-find">
                     <input type="submit" value="Find" class="btn btn-primary">
                 </div>
                 <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
@@ -87,7 +87,7 @@
                         <td><c:out value="${book.publisher}" default="N/A"/></td>
                         <td><c:out value="${book.category != null ? book.category.name : 'N/A'}" default="N/A"/></td>
                         <td><c:out value="${book.stock != null ? book.stock : '0'}" default="0"/></td>
-                        <td><fmt:formatNumber value="${book.price != null ? book.price : 0}" type="currency" currencySymbol="$"/></td>
+                        <td><fmt:formatNumber value="${book.price != null ? book.price : 0}" type="currency" currencySymbol="VND"/></td>
                         <td class="action-buttons">
                             <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-primary btn-sm">Edit</a>
                             <a href="${pageContext.request.contextPath}/admin/book?action=delete&id=${book.id}"

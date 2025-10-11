@@ -124,7 +124,7 @@ public class AuthFilter implements Filter {
                    request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
                    return;
                }
-           } else if (path.startsWith("/admin") && !"admin".equals(role)) {
+           } else if (path.startsWith("/admin") && !"ADMIN".equals(role)) {
                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
                return;
            }

@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label for="role" class="label">Role:</label>
                     <select id="role" name="role" class="select">
-                        <option value="CUSTOMER" ${user.role.toString() eq 'CUSTOMER' ? 'selected' : ''}>Customer</option>
+                        <option value="USER" ${user.role.toString() eq 'USER' ? 'selected' : ''}>Customer</option>
                         <option value="ADMIN" ${user.role.toString() eq 'ADMIN' ? 'selected' : ''}>Admin</option>
                     </select>
                 </div>

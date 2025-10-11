@@ -73,12 +73,11 @@
                     <label for="price">Price</label>
                     <input type="number" id="price" name="price" class="input" step="0.01" min="0" required>
                 </div>
-                <!-- Fixed: Added input field for sold -->
                 <div class="form-group">
                     <label for="sold">Books Sold</label>
                     <input type="number" id="sold" name="sold" class="input" min="0" value="0">
                 </div>
-                <div class="form-group">
+                <div class="form-group form-actions">
                     <input type="submit" value="Add Book" class="btn btn-primary">
                     <a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-secondary">Return</a>
                 </div>

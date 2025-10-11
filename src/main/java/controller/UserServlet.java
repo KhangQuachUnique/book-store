@@ -335,6 +335,8 @@ public class UserServlet extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String roleStr = request.getParameter("role");
+        System.out.println("roleStr = " + roleStr);
+
 
         User user = new User();
         user.setId(id);
