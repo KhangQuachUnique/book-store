@@ -15,11 +15,11 @@
 </head>
 <body class="bg-background text-foreground">
 <div class="container">
-    <div class="card">
+    <div class="card" style="max-width: 810px;">
         <div class="card-header">
             <h1 class="card-title">User Details</h1>
         </div>
-        <div class="card-content">
+        <div class="card-content" style="width: 810px;">
             <c:if test="${not empty errorMessage}">
                 <p class="error">${errorMessage}</p>
             </c:if>
