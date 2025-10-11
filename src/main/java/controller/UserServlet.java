@@ -124,10 +124,10 @@ public class UserServlet extends HttpServlet {
                     unblockUser(request, response);
                     break;
                 case "createAdmin":
-                    createAdmin(request, response);
+                    createAccount(request, response, true);
                     break;
                 case "createUser":
-                    createUser(request, response);
+                    createAccount(request, response, false);
                     break;
                 case "search":
                     searchUsers(request, response);
@@ -414,7 +414,63 @@ public class UserServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + baseUrl + "?action=list");
     }
 
-    private void createAdmin(HttpServletRequest request, HttpServletResponse response)
+//    private void createAdmin(HttpServletRequest request, HttpServletResponse response)
+//            throws SQLException, IOException, ServletException {
+//        String name = request.getParameter("name");
+//        String email = request.getParameter("email");
+//        String password = request.getParameter("password");
+//        String phone = request.getParameter("phone");
+//
+//        User user = new User();
+//        user.setName(name);
+//        user.setEmail(email);
+//        user.setPhoneNumber(phone);
+//        user.setPasswordHash(PasswordUtil.hashPassword(password));
+//
+//        Set<ConstraintViolation<User>> violations = validator.validate(user);
+//        if (!violations.isEmpty()) {
+//            StringBuilder errorMessage = new StringBuilder();
+//            for (ConstraintViolation<User> violation : violations) {
+//                errorMessage.append(violation.getMessage()).append("; ");
+//            }
+//            request.setAttribute("errorMessage", errorMessage.toString());
+//            showNewAdminForm(request, response);
+//            return;
+//        }
+//
+//        userService.createAdmin(user);
+//        response.sendRedirect(request.getContextPath() + baseUrl + "?action=list");
+//    }
+//
+//    private void createUser(HttpServletRequest request, HttpServletResponse response)
+//            throws SQLException, IOException, ServletException {
+//        String name = request.getParameter("name");
+//        String email = request.getParameter("email");
+//        String password = request.getParameter("password");
+//        String phone = request.getParameter("phone");
+//
+//        User user = new User();
+//        user.setName(name);
+//        user.setEmail(email);
+//        user.setPhoneNumber(phone);
+//        user.setPasswordHash(PasswordUtil.hashPassword(password));
+//
+//        Set<ConstraintViolation<User>> violations = validator.validate(user);
+//        if (!violations.isEmpty()) {
+//            StringBuilder errorMessage = new StringBuilder();
+//            for (ConstraintViolation<User> violation : violations) {
+//                errorMessage.append(violation.getMessage()).append("; ");
+//            }
+//            request.setAttribute("errorMessage", errorMessage.toString());
+//            showNewUserForm(request, response);
+//            return;
+//        }
+//
+//        userService.createUser(user);
+//        response.sendRedirect(request.getContextPath() + baseUrl + "?action=list");
+//    }
+
+    private void createAccount(HttpServletRequest request, HttpServletResponse response, boolean isAdmin)
             throws SQLException, IOException, ServletException {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
@@ -434,41 +490,21 @@ public class UserServlet extends HttpServlet {
                 errorMessage.append(violation.getMessage()).append("; ");
             }
             request.setAttribute("errorMessage", errorMessage.toString());
-            showNewAdminForm(request, response);
+            if (isAdmin)
+                showNewAdminForm(request, response);
+            else
+                showNewUserForm(request, response);
             return;
         }
 
-        userService.createAdmin(user);
+        if (isAdmin)
+            userService.createAdmin(user);
+        else
+            userService.createUser(user);
+
         response.sendRedirect(request.getContextPath() + baseUrl + "?action=list");
     }
 
-    private void createUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String phone = request.getParameter("phone");
-
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPhoneNumber(phone);
-        user.setPasswordHash(PasswordUtil.hashPassword(password));
-
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        if (!violations.isEmpty()) {
-            StringBuilder errorMessage = new StringBuilder();
-            for (ConstraintViolation<User> violation : violations) {
-                errorMessage.append(violation.getMessage()).append("; ");
-            }
-            request.setAttribute("errorMessage", errorMessage.toString());
-            showNewUserForm(request, response);
-            return;
-        }
-
-        userService.createUser(user);
-        response.sendRedirect(request.getContextPath() + baseUrl + "?action=list");
-    }
 
     // CHANGE: Cập nhật createAddress: Thêm log để debug userId, đảm bảo lấy từ
     // parameter không từ session
