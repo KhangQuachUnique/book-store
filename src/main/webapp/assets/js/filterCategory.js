@@ -1,8 +1,8 @@
 // filterCategory.js
 document.addEventListener('DOMContentLoaded', function() {
     // --- Add Category: kiểm tra trùng tên ---
-    const nameInput = document.querySelector('form[action*="/admin/category"] input[name="name"]');
-    const addForm = document.querySelector('form[action*="/admin/category"]');
+    const nameInput = document.querySelector('form[action*="/adminn/category"] input[name="name"]');
+    const addForm = document.querySelector('form[action*="/adminn/category"]');
 
     if (nameInput && addForm) {
         let debounceTimer;
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Fallback nếu không có localList (trường hợp trang không inject)
                     const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
-                    const checkUrl = `${base}/admin/category?action=checkName&name=${encodeURIComponent(val)}`;
+                    const checkUrl = `${base}/adminn/category?action=checkName&name=${encodeURIComponent(val)}`;
                     fetch(checkUrl)
                         .then(res => { if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
                         .then(data => {
@@ -117,13 +117,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Edit Category: tự động lọc combobox tên ---
-    const editNameInput = document.querySelector('form[action$="/admin/category"] input[name="name"]');
+    const editNameInput = document.querySelector('form[action$="/adminn/category"] input[name="name"]');
     if (editNameInput) {
         editNameInput.addEventListener('input', function() {
             const val = editNameInput.value.trim();
             if (val.length > 0) {
                 const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
-                fetch(`${base}/admin/category?action=listNames&keyword=${encodeURIComponent(val)}`)
+                fetch(`${base}/adminn/category?action=listNames&keyword=${encodeURIComponent(val)}`)
                     .then(res => res.json())
                     .then(data => {
                         let datalist = document.getElementById('category-names');
