@@ -6,7 +6,8 @@
     <title>Login</title>
 
     <!-- JS -->
-    <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script></script>
 
     <!-- CSS global & form -->
     <link rel="stylesheet"
@@ -19,6 +20,8 @@
           href="${pageContext.request.contextPath}/assets/styles/footer.css">
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/styles/form.css">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/styles/toast.css">
 </head>
 <body>
 <div class="logo">
