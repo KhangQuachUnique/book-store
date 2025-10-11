@@ -23,7 +23,7 @@ public class OrderService {
                     "SELECT DISTINCT o FROM Order o " +
                             "LEFT JOIN FETCH o.items oi " +
                             "LEFT JOIN FETCH oi.book b " +
-                            "LEFT JOIN FETCH o.promotion p " + // ✅ thêm để lấy luôn promotion
+                            "LEFT JOIN FETCH o.promotion p " +
                             "WHERE o.user.id = :userId "
             );
 
@@ -43,21 +43,9 @@ public class OrderService {
 
             List<Order> orders = query.getResultList();
 
-            // ✅ Tính lại tổng tiền sau khuyến mãi (chỉ để hiển thị)
+            // ✅ Tính tổng cho từng order (subtotal, discount, final)
             for (Order o : orders) {
-                double subtotal = 0;
-                if (o.getItems() != null) {
-                    subtotal = o.getItems().stream()
-                            .mapToDouble(i -> i.getPrice() * i.getQuantity())
-                            .sum();
-                }
-
-                double discountAmount = 0;
-                if (o.getPromotion() != null) {
-                    discountAmount = subtotal * o.getPromotion().getDiscount() / 100.0;
-                }
-
-                o.setTotalAmount(subtotal - discountAmount);
+                o.calculateTotals();
             }
 
             return orders;
@@ -66,9 +54,8 @@ public class OrderService {
         }
     }
 
-
     /**
-     * 🧾 Hàm tạo đơn hàng mới — lưu cả giá từng item và tổng tiền
+     * 🧾 Tạo đơn hàng mới (tính giá và lưu)
      */
     public void createOrder(Order order) {
         EntityManager em = JPAUtil.getEntityManager();
@@ -80,12 +67,10 @@ public class OrderService {
             double totalAmount = 0.0;
 
             for (OrderItem item : order.getItems()) {
-                // ✅ Tính giá thật tại thời điểm checkout
                 double discountedPrice = item.getBook().getOriginalPrice()
                         * (1 - (item.getBook().getDiscountRate() / 100.0));
-
-                item.setPrice(discountedPrice); // Lưu giá tại thời điểm mua
-                item.setOrder(order);           // Gán quan hệ ngược
+                item.setPrice(discountedPrice);
+                item.setOrder(order);
                 totalAmount += discountedPrice * item.getQuantity();
             }
 

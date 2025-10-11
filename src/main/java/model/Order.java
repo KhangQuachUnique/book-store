@@ -47,4 +47,37 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<OrderItem> items;
+
+    // ✅ Các trường chỉ để hiển thị (không lưu DB)
+    @Transient
+    private double subtotal;
+
+    @Transient
+    private double discountAmount;
+
+    @Transient
+    private double finalTotal;
+
+    // ✅ Hàm tiện ích: set tổng tiền tự động
+    public void calculateTotals() {
+        if (items != null) {
+            this.subtotal = items.stream()
+                    .mapToDouble(i -> i.getPrice() * i.getQuantity())
+                    .sum();
+        }
+        if (promotion != null) {
+            this.discountAmount = subtotal * promotion.getDiscount() / 100.0;
+        } else {
+            this.discountAmount = 0;
+        }
+        this.finalTotal = subtotal - discountAmount;
+        this.totalAmount = finalTotal; // để đồng bộ field DB
+    }
+
+    @PrePersist
+    public void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
+    }
 }

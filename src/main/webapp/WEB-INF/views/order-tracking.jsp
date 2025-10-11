@@ -27,7 +27,6 @@
         </c:forEach>
     </div>
 
-    <!-- Danh sách đơn hàng -->
     <div class="orders-container">
         <c:choose>
             <c:when test="${not empty orders}">
@@ -46,11 +45,9 @@
 
                         <p><strong>Thanh toán:</strong> ${order.paymentMethod}</p>
 
-                        <!-- ✅ Hiển thị khuyến mãi nếu có -->
                         <c:if test="${not empty order.promotion}">
                             <p class="promo-info">
-                                Khuyến mãi: ${order.promotion.code}
-                                – Giảm
+                                Khuyến mãi: ${order.promotion.code} – Giảm
                                 <fmt:formatNumber value="${order.promotion.discount}" maxFractionDigits="0"/>%
                             </p>
                         </c:if>
@@ -62,10 +59,8 @@
                                     <li>
                                         <img src="${item.book.thumbnailUrl}" alt="${item.book.title}"
                                              class="book-thumbnail"/>
-
                                         <div class="book-info">
-                                            <p class="book"><strong>${item.book.title}</strong></p>
-
+                                            <p><strong>${item.book.title}</strong></p>
                                             <p class="price">
                                                 <c:if test="${item.book.discountRate > 0}">
                                                     <span class="original-price">
@@ -78,45 +73,29 @@
                                                     <fmt:formatNumber value="${item.price}" type="number"/> VNĐ
                                                 </span>
                                             </p>
-
                                             <p class="qty">x ${item.quantity}</p>
                                         </div>
                                     </li>
                                 </c:forEach>
                             </ul>
 
-                            <!-- ✅ Tính toán tổng tiền -->
-                            <c:set var="subtotal" value="0"/>
-                            <c:forEach var="item" items="${order.items}">
-                                <c:set var="subtotal" value="${subtotal + (item.price * item.quantity)}"/>
-                            </c:forEach>
-
-                            <c:set var="discountAmount" value="0"/>
-                            <c:if test="${not empty order.promotion}">
-                                <c:set var="discountAmount"
-                                       value="${subtotal * order.promotion.discount / 100.0}"/>
-                            </c:if>
-
-                            <c:set var="finalTotal" value="${subtotal - discountAmount}"/>
-
                             <div class="price-summary">
                                 <p>Tạm tính:
-                                    <fmt:formatNumber value="${subtotal}" type="number"/> VNĐ
+                                    <fmt:formatNumber value="${order.subtotal}" type="number"/> VNĐ
                                 </p>
-                                <c:if test="${discountAmount > 0}">
+                                <c:if test="${order.discountAmount > 0}">
                                     <p>Giảm mã:
-                                        -<fmt:formatNumber value="${discountAmount}" type="number"/> VNĐ
+                                        -<fmt:formatNumber value="${order.discountAmount}" type="number"/> VNĐ
                                     </p>
                                 </c:if>
                                 <p><strong>Thành tiền:
-                                    <fmt:formatNumber value="${finalTotal}" type="number"/> VNĐ
+                                    <fmt:formatNumber value="${order.finalTotal}" type="number"/> VNĐ
                                 </strong></p>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
             </c:when>
-
             <c:otherwise>
                 <p class="no-orders">Bạn chưa có đơn hàng nào!</p>
             </c:otherwise>

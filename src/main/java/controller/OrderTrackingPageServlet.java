@@ -23,22 +23,7 @@ public class OrderTrackingPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-//        HttpSession session = req.getSession(false);
-//        User user = (session != null) ? (User) session.getAttribute("user") : null;
-//
-//        if (user == null) {
-//            resp.sendRedirect(req.getContextPath() + "/login");
-//            return;
-//        }
-//
-//        Long userId = user.getId();
-//        String status = req.getParameter("status");
-//        if (status == null) {
-//            status = "ALL";
-//        }
-
-        // ✅ BỎ QUA LOGIN để test
-        // Giả lập user id = 1 (hoặc id nào bạn có trong bảng orders)
+        // ✅ Test mode: giả lập user
         model.User mockUser = new model.User();
         mockUser.setId(101L);
         HttpSession session = req.getSession(true);
@@ -59,9 +44,6 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("statuses", statuses);
         req.setAttribute("selectedStatus", status);
         req.setAttribute("orderStatusService", orderStatusService);
-
-//        req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
-//        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
 
         req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp").forward(req, resp);
     }
