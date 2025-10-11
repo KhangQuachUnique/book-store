@@ -5,7 +5,13 @@ const contextPath = injected ?? (window.location.pathname.split("/")[1] ? `/${wi
 const BASE_URL = contextPath;
 
 function showResult(message, success = true) {
-    showToast(message, success ? 'success' : 'error', 3000);
+    // Check if showToast is available, otherwise use console and alert as fallback
+    if (typeof showToast === 'function') {
+        showToast(message, success ? 'success' : 'error', 3000);
+    } else {
+        console.log(`Toast: ${message} (${success ? 'success' : 'error'})`);
+        alert(message);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         el.style.color = success ? "green" : "red";
     }
 
-    async function handleForm(formId, resultId, fetchApi, payload) {
+    async function handleForm(formId, resultId, fetchApi, payload, shouldRedirect = false) {
         const form = document.getElementById(formId);
         const resultEl = document.getElementById(resultId);
         if (!form) return;
@@ -44,9 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (res.ok) {
                     // Success cases - SC_OK (200)
-                    showMessage(resultEl, data.message || "Success", true);
-                    showResult(data.message || "Success", true);
-                    setTimeout(() => window.location.href = BASE_URL + "/home", 700);
+                    const successMsg = data.message || "Success";
+                    showMessage(resultEl, successMsg, true);
+                    showResult(successMsg, true);
+                    
+                    // Only redirect for login, not for registration
+                    if (shouldRedirect) {
+                        setTimeout(() => window.location.href = BASE_URL + "/home", 700);
+                    }
                 } else {
                     // Error cases từ servlet
                     let errorMsg = "Failed";

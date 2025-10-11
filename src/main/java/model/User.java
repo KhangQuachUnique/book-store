@@ -106,6 +106,9 @@ public class User {
         if (isVerified == null) {
             isVerified = false;
         }
+        if (role == null) {
+            role = Role.USER; // Set default role for new users
+        }
     }
 
     @PreUpdate
