@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -15,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.resend.core.exception.ResendException;
 
 import dao.UserDao;
-import jakarta.mail.MessagingException;
 import model.User;
 import util.SendMailUtil;
 
@@ -79,7 +78,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
             resp.getWriter().print(gson.toJson(new Response("Reset link sent to your email")));
 
-        } catch (MessagingException | UnsupportedEncodingException e) {
+        } catch (ResendException | IOException e) {
             System.out.println("DEBUG: Email sending failed: " + e.getMessage()); // Debug log
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
