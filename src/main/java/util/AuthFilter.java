@@ -86,8 +86,7 @@ public class AuthFilter implements Filter {
             }
            // Bảo vệ các url của admin
            if (path.startsWith("/admin")) {
-               request.setAttribute("contentPage", PathConstants.VIEW_NOT_FOUND);
-               request.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(request, response);
+               request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
                return;
             }
        } else {
@@ -96,7 +95,7 @@ public class AuthFilter implements Filter {
            if (session == null || session.getAttribute("user") == null) {
                try {
                    Optional<User> userOpt = userDao.findByEmail(email);
-                   
+
                    if (userOpt.isPresent()) {
                        HttpSession newSession = req.getSession(true); // tạo mới nếu cần
                        User user = userOpt.get();
@@ -112,7 +111,7 @@ public class AuthFilter implements Filter {
                    loggedIn = false;
                }
            }
-           
+
            // Recheck loggedIn status after potential database error
            if (!loggedIn) {
                if (path.startsWith("/user")) {

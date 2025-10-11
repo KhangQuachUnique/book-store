@@ -10,7 +10,7 @@ public class PathConstants {
     public static final String VIEW_ADMIN_LAYOUT = "/WEB-INF/views/adminLayout.jsp";
     public static final String VIEW_HOME = "/WEB-INF/views/home.jsp";
     public static final String VIEW_PLEASE_LOGIN = "/WEB-INF/views/pleaseLogin.jsp";
-    public static final String VIEW_NOT_FOUND = "/WEB-INF/views/notfound.jsp";
+    public static final String VIEW_NOT_FOUND = "/WEB-INF/views/notFound.jsp";
     public static final String VIEW_HEADER = "/WEB-INF/views/fragment/header.jsp";
     public static final String VIEW_FOOTER = "/WEB-INF/views/fragment/footer.jsp";
     public static final String VIEW_SIDEBAR = "/WEB-INF/views/fragment/sidebar.jsp";

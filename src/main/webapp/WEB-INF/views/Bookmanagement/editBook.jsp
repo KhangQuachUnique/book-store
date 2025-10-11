@@ -29,7 +29,7 @@
                     <label for="category_id">Category</label>
                     <select id="category_id" name="category_id" class="input" required>
                         <c:forEach var="category" items="${categories}">
-                            <option value="${category.id}" ${category.id == book.categoryId ? 'selected' : ''}>${category.name}</option>
+                            <option value="${category.id}" ${category.id == book.category.id ? 'selected' : ''}>${category.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -42,8 +42,8 @@
                     <input type="number" id="original_price" name="original_price" step="0.01" value="${book.originalPrice}" class="input" required>
                 </div>
                 <div class="form-group">
-                    <label for="discount_rate">Discount Rate</label>
-                    <input type="number" id="discount_rate" name="discount_rate" value="${book.discount_rate}" class="input" required>
+                    <label for="discountRate">Discount Rate</label>
+                    <input type="number" id="discountRate" name="discountRate" value="${book.discountRate}" class="input" required>
                 </div>
                 <div class="form-group">
                     <label for="thumbnail_url">Thumbnail URL</label>
@@ -62,12 +62,17 @@
                     <input type="number" id="pages" name="pages" value="${book.pages}" class="input">
                 </div>
                 <div class="form-group">
-                    <label for="rating_average">Rating</label>
-                    <input type="number" id="rating_average" name="rating_average" step="0.1" value="${book.rating}" class="input" required>
+                    <label for="averageRating">Rating</label>
+                    <input type="number" id="averageRating" name="averageRating" step="0.1" value="${book.averageRating}" class="input" required>
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
                     <input type="number" id="price" name="price" step="0.01" value="${book.price}" class="input" required>
+                </div>
+                <!-- Fixed: Added input field for sold -->
+                <div class="form-group">
+                    <label for="sold">Books Sold</label>
+                    <input type="number" id="sold" name="sold" value="${book.sold}" class="input" min="0" required>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Update Book" class="btn btn-primary">
