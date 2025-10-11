@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -11,8 +12,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
-import service.BookService;
 
 @Entity
 @Data
@@ -73,16 +72,14 @@ public class Book implements Serializable {
     @Column(name = "\"createdAt\"")
     private Timestamp createdAt;
 
-    // Relationships
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
-
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishListItem> wishlistItems;
@@ -90,7 +87,6 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ViewedProductItem> viewedProductItems;
 
-    // Transient fields
     @Transient
     private Double price;
 
@@ -109,13 +105,6 @@ public class Book implements Serializable {
         this.sold = (sold != null && sold >= 0) ? sold : 0;
     }
 
-//    public void setCategoryId(int categoryId) {
-//        Category category = new Category();
-//        category.setId(categoryId);
-//        this.category = category;
-//    }
-
-    // Ensure non-null defaults for nullable fields
     public String getAuthor() {
         return author != null ? author : "";
     }
@@ -146,12 +135,5 @@ public class Book implements Serializable {
 
     public Double getAverageRating() {
         return averageRating != null ? averageRating : 0.0;
-    }
-    public void setCategoryId(int categoryId) {
-        Category category = BookService.getCategoryById(categoryId);
-        if (category == null) {
-            throw new IllegalArgumentException("Invalid category ID: " + categoryId);
-        }
-        this.category = category;
     }
 }

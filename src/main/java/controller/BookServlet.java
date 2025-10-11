@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import constant.PathConstants;
 import model.Book;
 import model.Category;
 import service.BookService;
@@ -20,6 +22,8 @@ import service.BookService;
 @WebServlet("/admin/book/*")
 public class BookServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(BookServlet.class.getName());
+    private final BookService bookService = new BookService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -50,8 +54,11 @@ public class BookServlet extends HttpServlet {
                     listBooks(req, resp);
             }
         } catch (Exception e) {
+            LOGGER.severe("Error processing GET request: " + e.getMessage());
             req.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -69,8 +76,11 @@ public class BookServlet extends HttpServlet {
                 listBooks(req, resp);
             }
         } catch (Exception e) {
+            LOGGER.severe("Error processing POST request: " + e.getMessage());
             req.setAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -85,27 +95,37 @@ public class BookServlet extends HttpServlet {
             }
         }
         try {
-            List<Book> books = BookService.getAllBooks(page);
-            List<Category> categories = BookService.getAllCategories();
+            List<Book> books = bookService.getAllBooks(page);
+            List<Category> categories = bookService.getAllCategories();
             req.setAttribute("books", books != null ? books : new ArrayList<>());
             req.setAttribute("categories", categories != null ? categories : new ArrayList<>());
-            req.setAttribute("totalPages", BookService.getTotalPages(null, null, null, null));
+            req.setAttribute("totalPages", bookService.getTotalPages(null, null, null, null));
             req.setAttribute("currentPage", page);
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         } catch (RuntimeException e) {
+            LOGGER.severe("Error retrieving books: " + e.getMessage());
             req.setAttribute("errorMessage", "Error retrieving books: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
     private void showAddForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            List<Category> categories = BookService.getAllCategories();
+            List<Category> categories = bookService.getAllCategories();
             req.setAttribute("categories", categories != null ? categories : new ArrayList<>());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/addBook.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/addBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         } catch (RuntimeException e) {
+            LOGGER.severe("Error retrieving categories: " + e.getMessage());
             req.setAttribute("errorMessage", "Error retrieving categories: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -117,20 +137,21 @@ public class BookServlet extends HttpServlet {
         }
         try {
             long id = Long.parseLong(idParam);
-            Book book = BookService.getBookById(id);
-            if (book == null) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
-                return;
-            }
-            List<Category> categories = BookService.getAllCategories();
+            Book book = bookService.getBookById(id);
+            List<Category> categories = bookService.getAllCategories();
             req.setAttribute("book", book);
             req.setAttribute("categories", categories != null ? categories : new ArrayList<>());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/editBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Book ID");
         } catch (RuntimeException e) {
+            LOGGER.severe("Error retrieving book: " + e.getMessage());
             req.setAttribute("errorMessage", "Error retrieving book: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -140,25 +161,29 @@ public class BookServlet extends HttpServlet {
         book.setAuthor(req.getParameter("author"));
         book.setPublisher(req.getParameter("publisher"));
         try {
-            book.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
-        } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "Invalid category ID");
-            req.setAttribute("categories", BookService.getAllCategories());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/addBook.jsp").forward(req, resp);
+            long categoryId = Long.parseLong(req.getParameter("category_id"));
+            book.setCategory(bookService.getCategoryById(categoryId));
+        } catch (RuntimeException e) {
+            req.setAttribute("errorMessage", "Invalid category ID: " + e.getMessage());
+            req.setAttribute("categories", bookService.getAllCategories());
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/addBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
             return;
         }
         try {
             book.setStock(Integer.parseInt(req.getParameter("stock")));
             book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
             book.setDiscountRate(Integer.parseInt(req.getParameter("discountRate")));
-            book.setPrice(Double.parseDouble(req.getParameter("price")));
             book.setAverageRating(Double.parseDouble(req.getParameter("averageRating")));
             String soldParam = req.getParameter("sold");
             book.setSold(soldParam != null && !soldParam.isEmpty() ? Integer.parseInt(soldParam) : 0);
         } catch (NumberFormatException e) {
             req.setAttribute("errorMessage", "Invalid numeric input");
-            req.setAttribute("categories", BookService.getAllCategories());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/addBook.jsp").forward(req, resp);
+            req.setAttribute("categories", bookService.getAllCategories());
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/addBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
             return;
         }
         book.setThumbnailUrl(req.getParameter("thumbnail_url"));
@@ -169,12 +194,15 @@ public class BookServlet extends HttpServlet {
         book.setPages(pages != null && !pages.isEmpty() ? Integer.parseInt(pages) : null);
 
         try {
-            BookService.addBook(book);
+            bookService.addBook(book);
             resp.sendRedirect(req.getContextPath() + "/admin/book?action=list");
         } catch (RuntimeException e) {
+            LOGGER.severe("Error adding book: " + e.getMessage());
             req.setAttribute("errorMessage", e.getMessage());
-            req.setAttribute("categories", BookService.getAllCategories());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/addBook.jsp").forward(req, resp);
+            req.setAttribute("categories", bookService.getAllCategories());
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/addBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -186,32 +214,25 @@ public class BookServlet extends HttpServlet {
         }
         try {
             long id = Long.parseLong(idParam);
-            Book book = BookService.getBookById(id);
-            if (book == null) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
-                return;
-            }
+            Book book = bookService.getBookById(id);
             book.setTitle(req.getParameter("title"));
             book.setAuthor(req.getParameter("author"));
             book.setPublisher(req.getParameter("publisher"));
-
-            // Fetch and set the Category object
-            int categoryId = Integer.parseInt(req.getParameter("category_id"));
-            Category category = BookService.getCategoryById(categoryId);
-            if (category == null) {
-                LOGGER.warning("Invalid category ID: " + categoryId);
-                req.setAttribute("errorMessage", "Invalid category ID: " + categoryId);
+            try {
+                long categoryId = Long.parseLong(req.getParameter("category_id"));
+                book.setCategory(bookService.getCategoryById(categoryId));
+            } catch (RuntimeException e) {
+                req.setAttribute("errorMessage", "Invalid category ID: " + e.getMessage());
                 req.setAttribute("book", book);
-                req.setAttribute("categories", BookService.getAllCategories());
-                req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);
+                req.setAttribute("categories", bookService.getAllCategories());
+                req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/editBook.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+                dispatcher.forward(req, resp);
                 return;
             }
-            book.setCategory(category);
-
             book.setStock(Integer.parseInt(req.getParameter("stock")));
             book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
             book.setDiscountRate(Integer.parseInt(req.getParameter("discountRate")));
-            book.setPrice(Double.parseDouble(req.getParameter("price")));
             book.setAverageRating(Double.parseDouble(req.getParameter("averageRating")));
             String soldParam = req.getParameter("sold");
             book.setSold(soldParam != null && !soldParam.isEmpty() ? Integer.parseInt(soldParam) : 0);
@@ -222,21 +243,24 @@ public class BookServlet extends HttpServlet {
             String pages = req.getParameter("pages");
             book.setPages(pages != null && !pages.isEmpty() ? Integer.parseInt(pages) : null);
 
-            LOGGER.info("Updating book: id=" + id + ", title=" + book.getTitle() + ", categoryId=" + categoryId);
-            BookService.updateBook(book);
+            bookService.updateBook(book);
             resp.sendRedirect(req.getContextPath() + "/admin/book?action=list");
         } catch (NumberFormatException e) {
             LOGGER.warning("Invalid input data: " + e.getMessage());
             req.setAttribute("errorMessage", "Invalid input data: " + e.getMessage());
-            req.setAttribute("book", BookService.getBookById(Long.parseLong(idParam)));
-            req.setAttribute("categories", BookService.getAllCategories());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);
+            req.setAttribute("book", bookService.getBookById(Long.parseLong(idParam)));
+            req.setAttribute("categories", bookService.getAllCategories());
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/editBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         } catch (RuntimeException e) {
             LOGGER.severe("Error updating book: " + e.getMessage());
             req.setAttribute("errorMessage", "Error updating book: " + e.getMessage());
-            req.setAttribute("book", BookService.getBookById(Long.parseLong(idParam)));
-            req.setAttribute("categories", BookService.getAllCategories());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/editBook.jsp").forward(req, resp);
+            req.setAttribute("book", bookService.getBookById(Long.parseLong(idParam)));
+            req.setAttribute("categories", bookService.getAllCategories());
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/editBook.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -248,13 +272,16 @@ public class BookServlet extends HttpServlet {
         }
         try {
             long id = Long.parseLong(idParam);
-            BookService.deleteBook(id);
+            bookService.deleteBook(id);
             resp.sendRedirect(req.getContextPath() + "/admin/book?action=list");
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Book ID");
         } catch (RuntimeException e) {
+            LOGGER.severe("Error deleting book: " + e.getMessage());
             req.setAttribute("errorMessage", "Error deleting book: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 
@@ -276,21 +303,26 @@ public class BookServlet extends HttpServlet {
         }
 
         try {
-            List<Book> books = BookService.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
-            List<Category> categories = BookService.getAllCategories();
+            List<Book> books = bookService.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
+            List<Category> categories = bookService.getAllCategories();
             req.setAttribute("books", books != null ? books : new ArrayList<>());
             req.setAttribute("categories", categories != null ? categories : new ArrayList<>());
             req.setAttribute("totalPages",
-                    BookService.getTotalPages(title, publishYear, includeCategories, excludeCategories));
+                    bookService.getTotalPages(title, publishYear, includeCategories, excludeCategories));
             req.setAttribute("currentPage", page);
             req.setAttribute("title", title);
             req.setAttribute("publishYear", publishYear);
             req.setAttribute("includeCategories", includeCategories);
             req.setAttribute("excludeCategories", excludeCategories);
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         } catch (RuntimeException e) {
+            LOGGER.severe("Error filtering books: " + e.getMessage());
             req.setAttribute("errorMessage", "Error filtering books: " + e.getMessage());
-            req.getRequestDispatcher("/WEB-INF/views/Bookmanagement/bookList.jsp").forward(req, resp);
+            req.setAttribute("contentPage", "/WEB-INF/views/Bookmanagement/bookList.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+            dispatcher.forward(req, resp);
         }
     }
 

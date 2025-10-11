@@ -11,15 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import jakarta.persistence.EntityManager;
-import org.hibernate.Hibernate;
-
-
 public class BookDao {
     private static final Logger LOGGER = Logger.getLogger(BookDao.class.getName());
     private static final int PAGE_SIZE = 20;
 
-    public static List<Book> getAllBooks(int page) {
+    public List<Book> getAllBooks(int page) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             TypedQuery<Book> query = em.createQuery(
@@ -34,21 +30,12 @@ public class BookDao {
         }
     }
 
-    public static Book getBookById(long id) {
+    public Book getBookById(long id) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             Book book = em.find(Book.class, (int) id);
             if (book != null) {
-                // Initialize lazy-loaded collections
-                Hibernate.initialize(book.getCartItems());
-                Hibernate.initialize(book.getReviews());
-                Hibernate.initialize(book.getOrderItems());
-                Hibernate.initialize(book.getWishlistItems());
-                Hibernate.initialize(book.getViewedProductItems());
-                if (book.getCategory() != null) {
-                    em.refresh(book.getCategory()); // Ensure category is fully loaded
-                }
-                LOGGER.info("Fetched book with ID " + id + ": " + (book != null ? book.getTitle() : "null"));
+                LOGGER.info("Fetched book with ID " + id + ": " + book.getTitle());
             }
             return book;
         } finally {
@@ -56,7 +43,7 @@ public class BookDao {
         }
     }
 
-    public static boolean addBook(Book book) {
+    public boolean addBook(Book book) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             em.getTransaction().begin();
@@ -76,7 +63,7 @@ public class BookDao {
         }
     }
 
-    public static boolean updateBook(Book book) {
+    public boolean updateBook(Book book) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             em.getTransaction().begin();
@@ -89,14 +76,13 @@ public class BookDao {
                 em.getTransaction().rollback();
             }
             LOGGER.severe("Error updating book: " + e.getMessage());
-            e.printStackTrace(); // Log the full stack trace for debugging
-            throw new RuntimeException("Error updating book: " + e.getMessage(), e);
+            throw new RuntimeException("Error updating book", e);
         } finally {
             em.close();
         }
     }
 
-    public static boolean deleteBook(long id) {
+    public boolean deleteBook(long id) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             em.getTransaction().begin();
@@ -120,8 +106,8 @@ public class BookDao {
         }
     }
 
-    public static List<Book> filterBooks(String title, Integer publishYear, List<Long> includeCategories,
-                                         List<Long> excludeCategories, int page) {
+    public List<Book> filterBooks(String title, Integer publishYear, List<Long> includeCategories,
+                                  List<Long> excludeCategories, int page) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             StringBuilder jpql = new StringBuilder("SELECT b FROM Book b JOIN FETCH b.category WHERE 1=1");
@@ -162,8 +148,8 @@ public class BookDao {
         }
     }
 
-    public static long countBooks(String title, Integer publishYear, List<Long> includeCategories,
-                                  List<Long> excludeCategories) {
+    public long countBooks(String title, Integer publishYear, List<Long> includeCategories,
+                           List<Long> excludeCategories) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             StringBuilder jpql = new StringBuilder("SELECT COUNT(b) FROM Book b WHERE 1=1");
@@ -201,7 +187,7 @@ public class BookDao {
         }
     }
 
-    public static List<Category> getAllCategories() {
+    public List<Category> getAllCategories() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             TypedQuery<Category> query = em.createQuery("SELECT c FROM Category c ORDER BY c.name", Category.class);
@@ -213,7 +199,18 @@ public class BookDao {
         }
     }
 
-    public static boolean logImport(String tableName, String importedData) {
+    public Category getCategoryById(long id) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            Category category = em.find(Category.class, id);
+            LOGGER.info("Fetched category with ID " + id);
+            return category;
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean logImport(String tableName, String importedData) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             em.getTransaction().begin();

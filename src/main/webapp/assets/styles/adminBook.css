@@ -193,7 +193,10 @@ body {
 
 .action-buttons {
     display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
     gap: 0.5rem;
+    height: 100%; /* Đảm bảo ô chiếm toàn bộ chiều cao của hàng */
 }
 
 .btn {
