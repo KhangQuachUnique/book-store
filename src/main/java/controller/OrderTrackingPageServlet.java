@@ -57,6 +57,7 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("orderStatusService", orderStatusService);
 
         // ✅ Chuyển hướng sang trang JSP
-        req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
+        req.getRequestDispatcher("/WEB-INF/views/layout.jsp").forward(req, resp);
     }
 }
