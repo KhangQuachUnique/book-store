@@ -73,10 +73,15 @@ public class CartServlet extends HttpServlet {
 
         User user = (User) req.getSession().getAttribute("user");
         if (user == null) {
-            if ("update".equals(action)) {
+            // Check if this is an AJAX request
+            String requestedWith = req.getHeader("X-Requested-With");
+            String ajax = req.getParameter("ajax");
+            boolean isAjax = "XMLHttpRequest".equals(requestedWith) || "true".equals(ajax);
+            
+            if ("update".equals(action) || isAjax) {
                 resp.setContentType("application/json");
                 resp.setStatus(401);
-                resp.getWriter().write("{\"success\":false,\"message\":\"Please log in\"}");
+                resp.getWriter().write("{\"success\":false,\"message\":\"Please log in to add items to cart\"}");
             } else {
                 resp.sendRedirect(req.getContextPath() + "/login.jsp");
             }
@@ -92,6 +97,16 @@ public class CartServlet extends HttpServlet {
                     quantity = Integer.parseInt(req.getParameter("quantity"));
                 }
                 cartService.addToCart(userId, bookId, quantity);
+                
+                // Check if this is an AJAX request (look for X-Requested-With header or ajax parameter)
+                String requestedWith = req.getHeader("X-Requested-With");
+                String ajax = req.getParameter("ajax");
+                if ("XMLHttpRequest".equals(requestedWith) || "true".equals(ajax)) {
+                    // AJAX request - return JSON response
+                    resp.setContentType("application/json");
+                    resp.getWriter().write("{\"success\":true,\"message\":\"Book added to cart successfully!\"}");
+                    return;
+                }
             } else if ("remove".equals(action)) {
                 Long cartId = Long.parseLong(req.getParameter("cartId"));
                 cartService.removeItem(userId, cartId);
@@ -113,10 +128,16 @@ public class CartServlet extends HttpServlet {
 
         } catch (Exception e) {
             log.log(Level.SEVERE, "Cart action failed", e);
-            if ("update".equals(action)) {
+            
+            // Check if this is an AJAX request for error handling
+            String requestedWith = req.getHeader("X-Requested-With");
+            String ajax = req.getParameter("ajax");
+            boolean isAjax = "XMLHttpRequest".equals(requestedWith) || "true".equals(ajax);
+            
+            if ("update".equals(action) || isAjax) {
                 resp.setContentType("application/json");
                 resp.setStatus(500);
-                resp.getWriter().write("{\"success\":false,\"message\":\"An error occurred\"}");
+                resp.getWriter().write("{\"success\":false,\"message\":\"An error occurred while processing your request\"}");
             } else {
                 resp.sendRedirect(req.getContextPath() + "/user/cart?error=true");
             }
