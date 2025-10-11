@@ -24,7 +24,6 @@
 		<jwt.version>4.4.0</jwt.version>
 		<bcrypt.version>0.4</bcrypt.version>
 		<jakarta.mail.version>2.0.1</jakarta.mail.version>
-		<resend.version>3.0.0</resend.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
 		<jakarta.el.version>4.0.0</jakarta.el.version>
@@ -110,13 +109,6 @@
 		    <groupId>com.sun.mail</groupId>
 		    <artifactId>jakarta.mail</artifactId>
 		    <version>${jakarta.mail.version}</version>
-		</dependency>
-
-		<!-- Resend API for email sending -->
-		<dependency>
-		    <groupId>com.resend</groupId>
-		    <artifactId>resend-java</artifactId>
-		    <version>${resend.version}</version>
 		</dependency>
 
 		<!-- Jakarta Bean Validation -->

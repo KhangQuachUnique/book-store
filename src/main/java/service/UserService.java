@@ -1,6 +1,7 @@
 package service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -9,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.mail.MessagingException;
 import org.mindrot.jbcrypt.BCrypt;
 
-import com.resend.core.exception.ResendException;
+
 
 import dao.UserDao;
 import model.LoginResult;
@@ -24,7 +26,7 @@ public class UserService {
     /**
      * Đăng ký hoặc trả về null nếu email đã tồn tại
      */
-    public String register(User user, String rawPassword) throws ResendException, IOException, SQLException {
+    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException, IOException, SQLException {
         Optional<User> existing = userDao.findByEmail(user.getEmail());
         if (existing.isPresent())
             return null;
@@ -46,7 +48,7 @@ public class UserService {
     /**
      * Login, trả về LoginResult
      */
-    public LoginResult login(String email, String rawPassword) throws ResendException, IOException, SQLException {
+    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException, IOException, SQLException {
         LoginResult result = new LoginResult();
 
         Optional<User> userOpt = userDao.findByEmail(email);
