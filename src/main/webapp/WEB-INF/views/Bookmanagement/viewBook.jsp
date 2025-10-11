@@ -28,7 +28,7 @@
             <p><strong>Description:</strong> ${book.description}</p>
             <p><strong>Publish Year:</strong> ${book.publishYear}</p>
             <p><strong>Pages:</strong> ${book.pages}</p>
-            <p><strong>Rating Average:</strong> ${book.rating}</p>
+            <p><strong>Rating Average:</strong> ${book.averageRating}</p>
             <p><strong>Created At:</strong> ${book.createdAt}</p>
             <div class="action-buttons">
                 <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-primary">Edit</a>

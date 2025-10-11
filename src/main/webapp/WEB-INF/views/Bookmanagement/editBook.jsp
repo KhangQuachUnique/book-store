@@ -63,7 +63,7 @@
                 </div>
                 <div class="form-group">
                     <label for="rating_average">Rating</label>
-                    <input type="number" id="rating_average" name="rating_average" step="0.1" value="${book.rating}" class="input" required>
+                    <input type="number" id="rating_average" name="rating_average" step="0.1" value="${book.averageRating}" class="input" required>
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>

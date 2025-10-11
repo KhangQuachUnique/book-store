@@ -85,7 +85,7 @@
                         </jsp:include>
                     </div>
                     <span class="rating-text">
-                        <fmt:formatNumber value="${book.rating}" type="number" maxFractionDigits="1"/> out of 5
+                        <fmt:formatNumber value="${book.averageRating}" type="number" maxFractionDigits="1"/> out of 5
                     </span>
                 </div>
             </div>

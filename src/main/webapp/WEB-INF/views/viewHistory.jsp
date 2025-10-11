@@ -47,7 +47,7 @@
                                 <jsp:param name="emptyStars" value="${item.book.emptyStars}" />
                                 <jsp:param name="size" value="16" />
                     </jsp:include>
-                    ${item.book.rating}
+                    ${item.book.averageRating}
                 </span>
 
                 <span class="viewed-at">
