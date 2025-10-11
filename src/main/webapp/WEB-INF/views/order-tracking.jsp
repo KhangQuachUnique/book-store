@@ -57,15 +57,26 @@
                             <ul>
                                 <c:forEach var="item" items="${order.items}">
                                     <li>
-                                        <img src="${item.book.thumbnailUrl}" alt="${item.book.title}"
-                                             class="book-thumbnail"/>
+                                        <!-- Tạo URL đến trang chi tiết sản phẩm -->
+                                        <c:url var="bookDetailUrl" value="/book-detail">
+                                            <c:param name="id" value="${item.book.id}" />
+                                        </c:url>
+
+                                        <!-- Click vào ảnh để qua chi tiết -->
+                                        <a href="${bookDetailUrl}" class="book-link">
+                                            <img src="${item.book.thumbnailUrl}" alt="${item.book.title}" class="book-thumbnail"/>
+                                        </a>
+
                                         <div class="book-info">
-                                            <p><strong>${item.book.title}</strong></p>
+                                            <!-- Click vào tên để qua chi tiết -->
+                                            <a href="${bookDetailUrl}" class="book-title-link">
+                                                <p class="book"><strong>${item.book.title}</strong></p>
+                                            </a>
+
                                             <p class="price">
                                                 <c:if test="${item.book.discountRate > 0}">
                                                     <span class="original-price">
-                                                        <fmt:formatNumber value="${item.book.originalPrice}"
-                                                                          type="number"/> VNĐ
+                                                        <fmt:formatNumber value="${item.book.originalPrice}" type="number"/> VNĐ
                                                     </span>
                                                     <span class="discount-rate">-${item.book.discountRate}%</span>
                                                 </c:if>

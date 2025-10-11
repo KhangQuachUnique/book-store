@@ -286,3 +286,19 @@
         font-size: 1em;
     }
 }
+
+/* Link tên sách - hiển thị tự nhiên, không bị gạch dưới hay tím */
+.book-title-link,
+.book-title-link:link,
+.book-title-link:visited,
+.book-title-link:active {
+    text-decoration: none !important;  /* bỏ gạch dưới hoàn toàn */
+    color: #333 !important;             /* màu chữ tự nhiên */
+    font-weight: 600;                   /* in đậm nhẹ */
+}
+
+/* Khi hover chỉ đổi màu nhẹ */
+.book-title-link:hover {
+    text-decoration: none !important;
+    color: #800020 !important;          /* đỏ trầm tông chủ đạo */
+}
