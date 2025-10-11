@@ -12,7 +12,7 @@ import com.resend.services.emails.model.CreateEmailResponse;
  * Updated to use Resend API for email delivery
  */
 public class SendMailUtil {
-    private static final String RESEND_API_KEY = "re_xxxxxxxxx"; // Replace with your Resend API key
+    private static final String RESEND_API_KEY = "re_Q55VeEeJ_LPLJQP2SZM18Yh1c4QohuWCM"; // Replace with your Resend API key
     private static final String FROM_EMAIL = "BookieCake <onboarding@resend.dev>"; // Change this to your verified domain
     private static final String REPLY_TO_EMAIL = "support@bookiecake.vn"; // Change this
 
