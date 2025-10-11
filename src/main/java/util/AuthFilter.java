@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import constant.PathConstants;
 import dao.UserDao;
+import model.Role;
 import model.User;
 
 @WebFilter("/*")
@@ -49,20 +50,22 @@ public class AuthFilter implements Filter {
 
        boolean loggedIn = false;
        String email = null;
-       String role = null;
+       Role userRole = null;
 
        // Check access token
        if (access_token != null && JwtUtil.validateToken(access_token)) {
            loggedIn = true;
            email = JwtUtil.getEmail(access_token);
-           role = JwtUtil.getRole(access_token);
+           String roleString = JwtUtil.getRole(access_token);
+           userRole = Role.valueOf(roleString.toUpperCase());
        }
        // Nếu access token hết hạn, dùng refresh token cấp mới
        else if (refresh_token != null && JwtUtil.validateToken(refresh_token)
                && JwtUtil.isRefreshToken(refresh_token)) {
            email = JwtUtil.getEmail(refresh_token);
-           role = JwtUtil.getRole(refresh_token);
-           access_token = JwtUtil.generateAccessToken(email, role);
+           String roleString = JwtUtil.getRole(refresh_token);
+           userRole = Role.valueOf(roleString.toUpperCase());
+           access_token = JwtUtil.generateAccessToken(email, roleString);
 
            Cookie newAccessCookie = new Cookie("access_token", access_token);
            newAccessCookie.setHttpOnly(true);
@@ -99,7 +102,7 @@ public class AuthFilter implements Filter {
                });
 
            }
-           if (path.startsWith("/admin") && !"admin".equals(role)) {
+           if (path.startsWith("/admin") && userRole != Role.ADMIN) {
                request.getRequestDispatcher(PathConstants.VIEW_NOT_FOUND).forward(request, response);
                return;
            }
