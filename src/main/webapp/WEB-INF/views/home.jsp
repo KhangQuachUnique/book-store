@@ -33,6 +33,9 @@
             <i>Chưa có tin tức nào.</i>
         </p>
     </c:if>
+
+    <jsp:include page="/recommend-books" />
+
 </section>
 
 </body>
