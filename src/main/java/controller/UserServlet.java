@@ -482,6 +482,7 @@ public class UserServlet extends HttpServlet {
         user.setEmail(email);
         user.setPhoneNumber(phone);
         user.setPasswordHash(PasswordUtil.hashPassword(password));
+        user.setIsVerified(true);
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
