@@ -16,7 +16,6 @@ import model.User;
 
 @WebServlet("/user/cart")
 public class CartServlet extends HttpServlet {
-    private final CartDAO cartDAO = new CartDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,7 +37,7 @@ public class CartServlet extends HttpServlet {
                 req.setAttribute("error", "An error occurred while updating your cart.");
             }
 
-            List<CartItem> cart = cartDAO.getCartByUser(user.getId().intValue());
+            List<CartItem> cart = CartDAO.getCartByUser(user.getId().intValue());
 
             // Initialize cart total
             double cartTotal = 0.0;
@@ -46,7 +45,7 @@ public class CartServlet extends HttpServlet {
             // Calculate totals only if cart is not empty
             if (cart != null && !cart.isEmpty()) {
                 cartTotal = cart.stream()
-                        .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                        .mapToDouble(item -> item.getBook().getPrice() * item.getQuantity())
                         .sum();
             }
 
@@ -83,19 +82,19 @@ public class CartServlet extends HttpServlet {
         try {
             if ("add".equals(action)) {
                 int bookId = Integer.parseInt(req.getParameter("bookId"));
-                cartDAO.addToCart(userId, bookId, 1);
+                CartDAO.addToCart(userId, bookId, 1);
             } else if ("remove".equals(action)) {
                 int cartId = Integer.parseInt(req.getParameter("cartId"));
-                cartDAO.removeFromCart(cartId);
+                CartDAO.removeFromCart(cartId);
             } else if ("update".equals(action)) {
                 int cartId = Integer.parseInt(req.getParameter("cartId"));
                 int quantity = Integer.parseInt(req.getParameter("quantity"));
-                cartDAO.updateCartQuantity(cartId, quantity);
+                CartDAO.updateCartQuantity(cartId, quantity);
 
                 // Get updated cart data
-                List<CartItem> cart = cartDAO.getCartByUser(userId);
+                List<CartItem> cart = CartDAO.getCartByUser(userId);
                 double cartTotal = cart.stream()
-                        .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                        .mapToDouble(item -> item.getBook().getPrice() * item.getQuantity())
                         .sum();
                 CartItem updatedItem = cart.stream()
                         .filter(item -> item.getId() == cartId)
@@ -105,7 +104,7 @@ public class CartServlet extends HttpServlet {
                 resp.setContentType("application/json");
                 resp.getWriter().write(String.format(
                         "{\"success\":true,\"itemTotal\":%.0f,\"cartTotal\":%.0f}",
-                        updatedItem != null ? updatedItem.getPrice() * updatedItem.getQuantity() : 0,
+                        updatedItem != null ? updatedItem.getBook().getPrice() * updatedItem.getQuantity() : 0,
                         cartTotal));
             }
             if (!"update".equals(action)) {

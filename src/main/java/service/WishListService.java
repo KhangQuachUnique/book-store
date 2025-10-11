@@ -5,8 +5,6 @@ import model.ApiResponse;
 import model.WishList;
 import model.WishListItem;
 
-import java.util.List;
-
 public class WishListService {
 
     private final WishListDao wishListDao;

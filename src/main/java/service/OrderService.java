@@ -6,10 +6,8 @@ import dao.OrderDAO;
 import model.Order;
 
 public class OrderService {
-    private OrderDAO orderDAO;
 
     public OrderService() {
-        this.orderDAO = new OrderDAO();
     }
 
     /**
@@ -20,6 +18,6 @@ public class OrderService {
      */
     public List<Order> getOrdersByUserAndStatus(Long userId, String statusId) {
         // Gọi thẳng xuống DAO (DAO đã tự xử lý "all")
-        return orderDAO.getOrdersByUserIdAndStatus(userId, statusId);
+        return OrderDAO.getOrdersByUserIdAndStatus(userId, statusId);
     }
 }

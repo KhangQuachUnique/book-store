@@ -17,8 +17,6 @@ import java.util.List;
 @WebServlet("/user/history")
 public class ViewHistoryServlet extends HttpServlet {
 
-    private final ViewHistoryDao historyDao = new ViewHistoryDao();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -34,7 +32,7 @@ public class ViewHistoryServlet extends HttpServlet {
         }
 
         // Lấy lịch sử xem của user
-        List<ViewedProductItem> history = historyDao.getHistoryByUserId(user.getId());
+        List<ViewedProductItem> history = ViewHistoryDao.getHistoryByUserId(user.getId());
         System.out.println("DEBUG: History size for user " + user.getId() + " = " + history.size());
         req.setAttribute("history", history);
 

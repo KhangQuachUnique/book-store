@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.Book;
 import model.Category;
 import service.BookService;
+import dao.CategoryDao;
 
 @WebServlet("/admin/book/*")
 public class BookServlet extends HttpServlet {
@@ -122,10 +123,13 @@ public class BookServlet extends HttpServlet {
         book.setTitle(req.getParameter("title"));
         book.setAuthor(req.getParameter("author"));
         book.setPublisher(req.getParameter("publisher"));
-        book.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
+        // Cần lấy Category entity thay vì chỉ ID
+        CategoryDao categoryDao = new CategoryDao();
+        Category category = categoryDao.findById(Long.parseLong(req.getParameter("category_id")));
+        book.setCategory(category);
         book.setStock(Integer.parseInt(req.getParameter("stock")));
         book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
-        book.setDiscount_rate(Integer.parseInt(req.getParameter("discount_rate")));
+        book.setDiscountRate(Integer.parseInt(req.getParameter("discount_rate")));
         book.setThumbnailUrl(req.getParameter("thumbnail_url"));
         book.setDescription(req.getParameter("description"));
         book.setPublishYear(req.getParameter("publish_year") != null && !req.getParameter("publish_year").isEmpty()
@@ -134,8 +138,8 @@ public class BookServlet extends HttpServlet {
         book.setPages(req.getParameter("pages") != null && !req.getParameter("pages").isEmpty()
                 ? Integer.parseInt(req.getParameter("pages"))
                 : null);
-        book.setRating(Double.parseDouble(req.getParameter("rating_average")));
-        book.setPrice(Double.parseDouble(req.getParameter("price")));
+        // Note: averageRating is calculated from reviews, not set directly
+        // book.setPrice is transient, calculated from originalPrice and discountRate
 
         try {
             BookService.addBook(book);
@@ -158,10 +162,12 @@ public class BookServlet extends HttpServlet {
             book.setTitle(req.getParameter("title"));
             book.setAuthor(req.getParameter("author"));
             book.setPublisher(req.getParameter("publisher"));
-            book.setCategoryId(Integer.parseInt(req.getParameter("category_id")));
+            CategoryDao categoryDao = new CategoryDao();
+            Category category = categoryDao.findById(Long.parseLong(req.getParameter("category_id")));
+            book.setCategory(category);
             book.setStock(Integer.parseInt(req.getParameter("stock")));
             book.setOriginalPrice(Double.parseDouble(req.getParameter("original_price")));
-            book.setDiscount_rate(Integer.parseInt(req.getParameter("discount_rate")));
+            book.setDiscountRate(Integer.parseInt(req.getParameter("discount_rate")));
             book.setThumbnailUrl(req.getParameter("thumbnail_url"));
             book.setDescription(req.getParameter("description"));
             book.setPublishYear(req.getParameter("publish_year") != null && !req.getParameter("publish_year").isEmpty()
@@ -170,8 +176,7 @@ public class BookServlet extends HttpServlet {
             book.setPages(req.getParameter("pages") != null && !req.getParameter("pages").isEmpty()
                     ? Integer.parseInt(req.getParameter("pages"))
                     : null);
-            book.setRating(Double.parseDouble(req.getParameter("rating_average")));
-            book.setPrice(Double.parseDouble(req.getParameter("price")));
+            // Note: averageRating and price are calculated fields
 
             BookService.updateBook(book);
             resp.sendRedirect(req.getContextPath() + "/admin/book?action=list");

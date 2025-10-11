@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
             User user = new User();
             user.setName(name);
             user.setEmail(email);
-            user.setPhone(phone);
+            user.setPhoneNumber(phone);
 
             // ⚡ Đăng ký + tạo verify token trong DB
             String verifyToken = userService.register(user, password);

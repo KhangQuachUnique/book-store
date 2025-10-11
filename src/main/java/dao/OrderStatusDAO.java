@@ -1,40 +1,30 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import model.OrderStatus;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import model.OrderStatus;
-import util.DBConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OrderStatusDAO {
+    private static final Logger log = Logger.getLogger(OrderStatusDAO.class.getName());
 
     /**
-     * Lấy toàn bộ danh sách trạng thái đơn hàng từ bảng status
+     * Lấy toàn bộ danh sách trạng thái đơn hàng
      */
-    public List<OrderStatus> getAllStatuses() {
-        List<OrderStatus> list = new ArrayList<>();
-        list.add(new OrderStatus(0L, "Tất cả"));
-
-        String sql = "SELECT id, name FROM status WHERE id != 8 ORDER BY id";
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                list.add(new OrderStatus(
-                        rs.getLong("id"),
-                        rs.getString("name")));
+    public static List<OrderStatus> getAllStatuses() {
+        try {
+            // Trả về tất cả các enum values của OrderStatus
+            List<OrderStatus> list = new ArrayList<>();
+            for (OrderStatus status : OrderStatus.values()) {
+                list.add(status);
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return list;
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Lỗi khi lấy danh sách trạng thái đơn hàng", e);
+            return new ArrayList<>();
         }
-        return list;
     }
 
 }

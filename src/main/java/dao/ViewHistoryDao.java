@@ -1,87 +1,83 @@
 package dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import model.Book;
+import model.User;
+import model.ViewedProduct;
 import model.ViewedProductItem;
-import util.DBConnection;
+import util.JPAUtil;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ViewHistoryDao {
+    private static final Logger log = Logger.getLogger(ViewHistoryDao.class.getName());
 
     /**
      * Lấy lịch sử xem sách theo userId
      */
-    public List<ViewedProductItem> getHistoryByUserId(Long userId) {
-        List<ViewedProductItem> list = new ArrayList<>();
-        String sql = """
-            SELECT v.id, v.viewed_at,
-                   b.id AS book_id, b.title, b.author, b.publisher,
-                   b.category_id, b.thumbnail_url, b.description, b.stock,
-                   b.publish_year, b.pages, b.rating_average,
-                   b.price, b.original_price, b.discount_rate, b.created_at
-            FROM viewed v
-            JOIN books b ON v.book_id = b.id
-            WHERE v.user_id = ?
-            ORDER BY v.viewed_at DESC
-        """;
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                // Map Book
-                Book book = new Book();
-                book.setId(rs.getInt("book_id"));
-                book.setTitle(rs.getString("title"));
-                book.setAuthor(rs.getString("author"));
-                book.setPublisher(rs.getString("publisher"));
-                book.setCategoryId(rs.getInt("category_id"));
-                book.setThumbnailUrl(rs.getString("thumbnail_url"));
-                book.setDescription(rs.getString("description"));
-                book.setStock(rs.getInt("stock"));
-                book.setPublishYear(rs.getInt("publish_year"));
-                book.setPages(rs.getInt("pages"));
-                book.setRating(rs.getDouble("rating_average"));   // ✅ map vào field rating
-                book.setPrice(rs.getDouble("price"));
-                book.setOriginalPrice(rs.getDouble("original_price"));
-                book.setDiscount_rate(rs.getInt("discount_rate")); // ✅ map vào field discount_rate
-                book.setCreatedAt(rs.getTimestamp("created_at"));
-                book.calculateStars();
-                // Map ViewHistoryItem
-                ViewedProductItem item = new ViewedProductItem(
-                        rs.getLong("id"),
-                        book,
-                        rs.getTimestamp("viewed_at")
-                );
-
-                list.add(item);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static List<ViewedProductItem> getHistoryByUserId(Long userId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            TypedQuery<ViewedProductItem> query = em.createQuery(
+                "SELECT vpi FROM ViewedProductItem vpi " +
+                "LEFT JOIN FETCH vpi.book " +
+                "LEFT JOIN FETCH vpi.book.category " +
+                "WHERE vpi.viewedProduct.user.id = :userId " +
+                "ORDER BY vpi.id DESC", ViewedProductItem.class);
+            query.setParameter("userId", userId);
+            return query.getResultList();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Lỗi khi lấy lịch sử xem cho user " + userId, e);
+            return new ArrayList<>();
+        } finally {
+            em.close();
         }
-        return list;
     }
 
     /**
      * Ghi lại lịch sử xem sách
      */
-    public void addHistory(Long userId, Long bookId) {
-        String sql = "INSERT INTO viewed (user_id, book_id) VALUES (?, ?)";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-            ps.setLong(2, bookId);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static void addHistory(Long userId, Long bookId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            em.getTransaction().begin();
+            
+            // Find or create ViewedProduct for user
+            ViewedProduct viewedProduct = null;
+            try {
+                TypedQuery<ViewedProduct> query = em.createQuery(
+                    "SELECT vp FROM ViewedProduct vp WHERE vp.user.id = :userId", ViewedProduct.class);
+                query.setParameter("userId", userId);
+                viewedProduct = query.getSingleResult();
+            } catch (NoResultException e) {
+                // Create new ViewedProduct for user
+                viewedProduct = new ViewedProduct();
+                User user = em.getReference(User.class, userId);
+                viewedProduct.setUser(user);
+                em.persist(viewedProduct);
+                em.flush(); // Ensure ID is generated
+            }
+            
+            // Create new ViewedProductItem
+            ViewedProductItem item = new ViewedProductItem();
+            Book book = em.getReference(Book.class, bookId.intValue());
+            item.setBook(book);
+            item.setViewedProduct(viewedProduct);
+            em.persist(item);
+            
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            log.log(Level.SEVERE, "Lỗi khi ghi lại lịch sử xem cho user " + userId + ", book " + bookId, e);
+        } finally {
+            em.close();
         }
     }
 }

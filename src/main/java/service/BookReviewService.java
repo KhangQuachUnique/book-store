@@ -3,7 +3,7 @@ package service;
 import dao.BookReviewDao;
 import model.ApiResponse;
 import model.BookReview;
-import model.ReviewShow;
+import model.Review;
 
 public class BookReviewService {
     public static BookReview getReviewsByBookId(long bookId, long currentUserId) {
@@ -13,9 +13,9 @@ public class BookReviewService {
         Integer threeStarCount = 0;
         Integer twoStarCount = 0;
         Integer oneStarCount = 0;
-        if (bookReview != null && bookReview.getReviewShows() != null) {
-            for (ReviewShow reviewShow : bookReview.getReviewShows()) {
-                switch (reviewShow.getRating().intValue()) {
+        if (bookReview != null && bookReview.getReviews() != null) {
+            for (Review review : bookReview.getReviews()) {
+                switch (review.getRating().intValue()) {
                     case 5:
                         fiveStarCount++;
                         break;

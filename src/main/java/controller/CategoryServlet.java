@@ -153,10 +153,12 @@ public class CategoryServlet extends HttpServlet {
 
         String parentIdStr = req.getParameter("parent_id");
         if (parentIdStr != null && !parentIdStr.isEmpty()) {
-            c.setParentId(Long.parseLong(parentIdStr));
+            CategoryDao categoryDao = new CategoryDao();
+            Category parent = categoryDao.findById(Long.parseLong(parentIdStr));
+            c.setParent(parent);
         }
 
-        c.setIsLeaf("true".equals(req.getParameter("is_leaf")));
+        c.setLeaf("true".equals(req.getParameter("is_leaf")));
         c.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
         return categoryDao.create(c);
@@ -169,12 +171,14 @@ public class CategoryServlet extends HttpServlet {
 
         String parentIdStr = req.getParameter("parent_id");
         if (parentIdStr != null && !parentIdStr.isEmpty()) {
-            c.setParentId(Long.parseLong(parentIdStr));
+            CategoryDao categoryDao = new CategoryDao();
+            Category parent = categoryDao.findById(Long.parseLong(parentIdStr));
+            c.setParent(parent);
         } else {
-            c.setParentId(null);
+            c.setParent(null);
         }
 
-        c.setIsLeaf("true".equals(req.getParameter("is_leaf")));
+        c.setLeaf("true".equals(req.getParameter("is_leaf")));
 
         return categoryDao.update(c);
     }

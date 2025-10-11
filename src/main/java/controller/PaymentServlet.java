@@ -19,7 +19,6 @@ import service.AddressService;
 
 @WebServlet("/user/payment")
 public class PaymentServlet extends HttpServlet {
-    private CartDAO cartDAO = new CartDAO();
     private AddressService addressService = new AddressService();
 
     @Override
@@ -32,10 +31,10 @@ public class PaymentServlet extends HttpServlet {
             return;
         }
         try {
-            List<CartItem> cart = cartDAO.getCartByUser(user.getId().intValue());
+            List<CartItem> cart = CartDAO.getCartByUser(user.getId().intValue());
             double cartTotal = 0.0;
             if (cart != null && !cart.isEmpty()) {
-                cartTotal = cart.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
+                cartTotal = cart.stream().mapToDouble(item -> item.getBook().getPrice() * item.getQuantity()).sum();
             }
             List<Address> addresses = addressService.getAddressesByUserId(user.getId());
             request.setAttribute("cart", cart);

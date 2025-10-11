@@ -1,124 +1,69 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import model.Order;
+import model.OrderStatus;
+import util.JPAUtil;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import model.Order;
-import model.OrderItem;
-import util.DBConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OrderDAO {
+    private static final Logger log = Logger.getLogger(OrderDAO.class.getName());
 
-    public List<Order> getOrdersByUserIdAndStatus(Long userId, String statusId) {
-        List<Order> orders = new ArrayList<>();
-        String sql;
-
-        if (statusId == null || "all".equals(statusId)) {
-            sql = "SELECT o.id, o.created_at, o.total_amount, o.payment_method, " +
-                    "o.status_id, s.name AS status_name " +
-                    "FROM orders o " +
-                    "JOIN status s ON o.status_id = s.id " +
-                    "WHERE o.user_id = ? ORDER BY o.created_at DESC";
-        } else {
-            sql = "SELECT o.id, o.created_at, o.total_amount, o.payment_method, " +
-                    "o.status_id, s.name AS status_name " +
-                    "FROM orders o " +
-                    "JOIN status s ON o.status_id = s.id " +
-                    "WHERE o.user_id = ? AND o.status_id = ? ORDER BY o.created_at DESC";
-        }
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setLong(1, userId); // đổi setInt → setLong
-            if (statusId != null && !"all".equals(statusId)) {
-                stmt.setLong(2, Long.parseLong(statusId)); // đổi parseInt → parseLong
-            }
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Order order = new Order();
-                    order.setId(rs.getLong("id")); // đổi sang long
-                    order.setCreatedAt(rs.getTimestamp("created_at").toString());
-                    order.setTotalAmount(rs.getInt("total_amount"));
-                    order.setPaymentMethod(rs.getString("payment_method"));
-
-                    order.setStatusId(rs.getLong("status_id")); // đổi sang long
-                    order.setStatusName(rs.getString("status_name"));
-
-                    order.setItems(getOrderItemsByOrderId(conn, order.getId()));
-                    orders.add(order);
+    public static List<Order> getOrdersByUserIdAndStatus(Long userId, String statusFilter) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            StringBuilder jpql = new StringBuilder(
+                "SELECT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.user.id = :userId");
+            
+            if (statusFilter != null && !"all".equals(statusFilter)) {
+                try {
+                    OrderStatus.valueOf(statusFilter.toUpperCase()); // Validate status exists
+                    jpql.append(" AND o.status = :status");
+                } catch (IllegalArgumentException e) {
+                    // Invalid status, ignore filter
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
+            jpql.append(" ORDER BY o.createdAt DESC");
+            
+            TypedQuery<Order> query = em.createQuery(jpql.toString(), Order.class);
+            query.setParameter("userId", userId);
+            
+            if (statusFilter != null && !"all".equals(statusFilter)) {
+                try {
+                    OrderStatus status = OrderStatus.valueOf(statusFilter.toUpperCase());
+                    query.setParameter("status", status);
+                } catch (IllegalArgumentException e) {
+                    // Invalid status, ignore filter
+                }
+            }
+            
+            return query.getResultList();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Lỗi khi lấy orders cho user " + userId + " với status " + statusFilter, e);
+            return new ArrayList<>();
+        } finally {
+            em.close();
         }
-        return orders;
     }
 
-    private List<OrderItem> getOrderItemsByOrderId(Connection conn, Long orderId) throws SQLException {
-        List<OrderItem> items = new ArrayList<>();
-        String sql = "SELECT oi.quantity, oi.price, b.title AS book_title, b.thumbnail_url, b.original_price, b.discount_rate " +
-                "FROM order_items oi " +
-                "JOIN books b ON oi.book_id = b.id " +
-                "WHERE oi.order_id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, orderId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    OrderItem item = new OrderItem();
-                    item.setBookTitle(rs.getString("book_title"));
-                    item.setQuantity(rs.getInt("quantity"));
-                    item.setPrice(rs.getInt("price"));
-                    item.setThumbnailUrl(rs.getString("thumbnail_url"));
-
-                    item.setOriginalPrice(rs.getDouble("original_price"));
-                    item.setDiscountRate(rs.getInt("discount_rate"));
-
-                    items.add(item);
-                }
-            }
+    public static Order getOrderById(Long orderId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            TypedQuery<Order> query = em.createQuery(
+                "SELECT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.id = :orderId", Order.class);
+            query.setParameter("orderId", orderId);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Lỗi khi lấy order với ID: " + orderId, e);
+            return null;
+        } finally {
+            em.close();
         }
-        return items;
-    }
-
-    public Order getOrderById(Long orderId) {
-        String sql = "SELECT o.id, o.created_at, o.total_amount, o.payment_method, " +
-                "o.status_id, s.name AS status_name " +
-                "FROM orders o " +
-                "JOIN status s ON o.status_id = s.id " +
-                "WHERE o.id = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setLong(1, orderId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Order order = new Order();
-                    order.setId(rs.getLong("id"));
-                    order.setCreatedAt(rs.getTimestamp("created_at").toString());
-                    order.setTotalAmount(rs.getInt("total_amount"));
-                    order.setPaymentMethod(rs.getString("payment_method"));
-
-                    order.setStatusId(rs.getLong("status_id"));
-                    order.setStatusName(rs.getString("status_name"));
-
-                    order.setItems(getOrderItemsByOrderId(conn, order.getId()));
-                    return order;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

@@ -21,12 +21,10 @@ import java.util.Map;
 @WebServlet("/user/notifications")
 public class NotificationServlet extends HttpServlet {
 
-    private NotificationDao notificationDao;
     private Gson gson;
 
     @Override
     public void init() {
-        notificationDao = new NotificationDao();
         gson = new Gson();
     }
 
@@ -51,7 +49,7 @@ public class NotificationServlet extends HttpServlet {
         switch (action) {
             case "getCount":
                 // Action này dùng cho JavaScript gọi để cập nhật số trên chuông
-                int unreadCount = notificationDao.countUnreadByUserId(userId);
+                int unreadCount = NotificationDao.countUnreadByUserId(userId);
                 Map<String, Integer> countMap = new HashMap<>();
                 countMap.put("unreadCount", unreadCount);
 
@@ -63,11 +61,11 @@ public class NotificationServlet extends HttpServlet {
             case "list":
             default:
                 // Lấy tất cả thông báo để hiển thị trên trang notifications.jsp
-                List<Notification> notifications = notificationDao.findByUserId(userId);
+                List<Notification> notifications = NotificationDao.findByUserId(userId);
                 req.setAttribute("notifications", notifications);
 
                 // Sau khi user vào trang này, đánh dấu tất cả là đã đọc
-                notificationDao.markAllAsRead(userId);
+                NotificationDao.markAllAsRead(userId);
 
                 // Forward to the correct JSP path (folder name is case-sensitive)
                 req.setAttribute("contentPage", "/WEB-INF/views/userManagement/notifications.jsp");

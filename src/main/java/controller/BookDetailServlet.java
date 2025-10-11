@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,7 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.View;
 
 import constant.PathConstants;
 import dao.BookDao;
@@ -64,14 +62,8 @@ public class BookDetailServlet extends HttpServlet {
             if (sessionUser != null) {
                 currentUserId = sessionUser.getId();
             }
-            try {
-                book = BookDao.getBookById(bookId);
-                bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId);
-            } catch (SQLException e) {
-                log.log(Level.SEVERE, "Database error while fetching book with ID: " + bookId, e);
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
-                return;
-            }
+            book = BookDao.getBookById(bookId);
+            bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId);
 
             if (book == null) {
                 log.warning("Book not found with ID: " + bookId);
@@ -81,8 +73,7 @@ public class BookDetailServlet extends HttpServlet {
             
             model.User user = (model.User) req.getSession().getAttribute("user");
                 if (user != null) {
-                dao.ViewHistoryDao ViewHistoryDao = new dao.ViewHistoryDao();
-                ViewHistoryDao.addHistory(user.getId(), bookId);
+                dao.ViewHistoryDao.addHistory(user.getId(), bookId);
             } 
 
             // Set book and book-reviews as request attribute for JSP
@@ -90,7 +81,7 @@ public class BookDetailServlet extends HttpServlet {
             req.setAttribute("bookReview", bookReview);
 
             // Calculate additional display information
-            boolean hasDiscount = book.getDiscount_rate() > 0;
+            boolean hasDiscount = book.getDiscountRate() > 0;
             req.setAttribute("hasDiscount", hasDiscount);
 
             boolean inStock = book.getStock() > 0;

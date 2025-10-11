@@ -20,12 +20,10 @@ import service.OrderService;
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
     private OrderService orderService;
-    private OrderStatusDAO orderStatusDAO;
 
     @Override
     public void init() throws ServletException {
         orderService = new OrderService();
-        orderStatusDAO = new OrderStatusDAO();
     }
 
     @Override
@@ -54,7 +52,7 @@ public class OrderTrackingPageServlet extends HttpServlet {
 
         // 👉 Gọi Service thay vì gọi DAO trực tiếp
         List<Order> orders = orderService.getOrdersByUserAndStatus(userId, statusId);
-        List<OrderStatus> statuses = orderStatusDAO.getAllStatuses();
+        List<OrderStatus> statuses = OrderStatusDAO.getAllStatuses();
 
         req.setAttribute("orders", orders);
         req.setAttribute("statuses", statuses);

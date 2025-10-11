@@ -2,9 +2,7 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
-import model.Address;
 import model.User;
 import util.JPAUtil;
 

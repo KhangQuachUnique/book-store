@@ -30,7 +30,7 @@ public class UserService {
 
         user.setPasswordHash(BCrypt.hashpw(rawPassword, BCrypt.gensalt()));
         user.setIsVerified(false);
-        // Role set in dao.save via prePersist or in createUser
+        user.setRole(model.Role.USER); // Set default role
 
         String token = UUID.randomUUID().toString();
         user.setVerifyToken(token);

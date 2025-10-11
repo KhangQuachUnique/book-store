@@ -23,18 +23,14 @@ public class ReviewServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String bookIdParam = "330658";
+        String bookIdParam = req.getParameter("bookId");
         if (bookIdParam != null) {
             try {
                 Long bookId = Long.parseLong(bookIdParam);
                 User sessionUser = (User) req.getSession().getAttribute("user");
-                Long currentUserId = 0L;
+                Long currentUserId = sessionUser != null ? sessionUser.getId() : 0L;
 
-                if (sessionUser != null) {
-                    currentUserId = sessionUser.getId();
-                }
-
-                BookReview bookReview = reviewService.getReviewsByBookId(330658L, 101L);
+                BookReview bookReview = reviewService.getReviewsByBookId(bookId, currentUserId);
                 req.setAttribute("bookReview", bookReview);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -48,12 +44,13 @@ public class ReviewServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ReviewRequest reviewRequest = JsonUtil.parseJson(req, ReviewRequest.class);
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
 
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
+        if (sessionUser == null) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
+            return;
         }
-        ApiResponse response = reviewService.likeReview(reviewRequest.getReviewId(), 101L);
+        
+        ApiResponse response = reviewService.likeReview(reviewRequest.getReviewId(), sessionUser.getId());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -63,12 +60,13 @@ public class ReviewServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ReviewRequest bookReviewRequest = JsonUtil.parseJson(req, ReviewRequest.class);
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
 
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
+        if (sessionUser == null) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
+            return;
         }
-        ApiResponse response = reviewService.dislikeReview(bookReviewRequest.getReviewId(), 101L);
+        
+        ApiResponse response = reviewService.dislikeReview(bookReviewRequest.getReviewId(), sessionUser.getId());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));

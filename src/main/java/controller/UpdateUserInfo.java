@@ -51,7 +51,7 @@ public class UpdateUserInfo extends HttpServlet {
         String phone = request.getParameter("phone");
         if (isChangeInfo(sessionUser, name, phone)) {
             sessionUser.setName(name);
-            sessionUser.setPhone(phone);
+            sessionUser.setPhoneNumber(phone);
             userService.updateUser(sessionUser);
             request.getSession().setAttribute("user", sessionUser);
 
@@ -66,7 +66,7 @@ public class UpdateUserInfo extends HttpServlet {
 
     private boolean isChangeInfo(User sessionUser, String newName, String newPhone) {
         String name = sessionUser.getName();
-        String phone = sessionUser.getPhone();
+        String phone = sessionUser.getPhoneNumber();
 
         if (newName == null) {
             return false;

@@ -6,7 +6,6 @@ import model.Book;
 import model.Category;
 import util.JPAUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryBookDao {

@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import dao.BookDao;
+import dao.CategoryDao;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -283,16 +284,18 @@ public class BookService {
         book.setTitle(line[0]);
         book.setAuthor(line[1]);
         book.setPublisher(line[2]);
-        book.setCategoryId(Integer.parseInt(line[3]));
+        // Lấy Category entity từ ID
+        CategoryDao categoryDao = new CategoryDao();
+        Category category = categoryDao.findById(Long.parseLong(line[3]));
+        book.setCategory(category);
         book.setStock(Integer.parseInt(line[4]));
         book.setOriginalPrice(Double.parseDouble(line[5]));
-        book.setDiscount_rate(Integer.parseInt(line[6]));
+        book.setDiscountRate(Integer.parseInt(line[6]));
         book.setThumbnailUrl(line[7]);
         book.setDescription(line[8]);
         book.setPublishYear(line[9].isEmpty() ? null : Integer.parseInt(line[9]));
         book.setPages(line[10].isEmpty() ? null : Integer.parseInt(line[10]));
-        book.setRating(Double.parseDouble(line[11]));
-        book.setPrice(Double.parseDouble(line[12]));
+        // Note: averageRating and price are calculated fields, not set directly
         return book;
     }
 
@@ -320,7 +323,7 @@ public class BookService {
         if (book.getOriginalPrice() < 0) {
             throw new IllegalArgumentException("Original price must be non-negative");
         }
-        if (book.getDiscount_rate() < 0 || book.getDiscount_rate() > 100) {
+        if (book.getDiscountRate() < 0 || book.getDiscountRate() > 100) {
             throw new IllegalArgumentException("Discount rate must be between 0 and 100");
         }
         if (book.getStock() < 0) {

@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,13 +20,6 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //Get current user
-        User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }
-
         //Pagination parameters
         int currentPage = 1;      // default
         int pageSize = 5;  // default
@@ -68,14 +60,15 @@ public class WishListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
-
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
+        
+        if (sessionUser == null) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
+            return;
         }
+        
         WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         Long bookId = body.getBookId();
-        ApiResponse response = wishListService.addBookToWishList(101L, bookId);
+        ApiResponse response = wishListService.addBookToWishList(sessionUser.getId(), bookId);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -84,13 +77,15 @@ public class WishListServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
 
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
+        if (sessionUser == null) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
+            return;
+        }
+        
+        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         Long bookId = body.getBookId();
-        ApiResponse response = wishListService.removeBookToWishList(101L, bookId);
+        ApiResponse response = wishListService.removeBookToWishList(sessionUser.getId(), bookId);
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
     }
