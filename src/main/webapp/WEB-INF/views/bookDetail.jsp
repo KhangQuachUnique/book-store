@@ -102,7 +102,7 @@
                         <span class="original-price">
                             <fmt:formatNumber value="${book.originalPrice}" type="number"/> VND
                         </span>
-                        <span class="discount-badge">${book.discount_rate}% OFF</span>
+                        <span class="discount-badge">${book.discountRate}% OFF</span>
                         <div class="savings-text">
                             You save: <fmt:formatNumber value="${savings}" type="number"/> VND
                         </div>

@@ -22,7 +22,7 @@
             </p>
             <p><strong>Stock:</strong> ${book.stock}</p>
             <p><strong>Original Price:</strong> ${book.originalPrice}</p>
-            <p><strong>Discount Rate:</strong> ${book.discount_rate}%</p>
+            <p><strong>Discount Rate:</strong> ${book.discountRate}%</p>
             <p><strong>Price:</strong> ${book.price}</p>
             <p><strong>Thumbnail URL:</strong> ${book.thumbnailUrl}</p>
             <p><strong>Description:</strong> ${book.description}</p>

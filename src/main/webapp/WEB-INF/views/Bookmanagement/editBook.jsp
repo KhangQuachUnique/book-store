@@ -43,7 +43,7 @@
                 </div>
                 <div class="form-group">
                     <label for="discount_rate">Discount Rate</label>
-                    <input type="number" id="discount_rate" name="discount_rate" value="${book.discount_rate}" class="input" required>
+                    <input type="number" id="discount_rate" name="discount_rate" value="${book.discountRate}" class="input" required>
                 </div>
                 <div class="form-group">
                     <label for="thumbnail_url">Thumbnail URL</label>
