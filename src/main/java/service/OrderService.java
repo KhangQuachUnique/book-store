@@ -1,23 +1,31 @@
 package service;
 
-import java.util.List;
-
 import dao.OrderDAO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import model.Order;
+import model.OrderItem;
+import model.OrderStatus;
+import util.JPAUtil;
+
+import java.util.List;
 
 public class OrderService {
 
-    public OrderService() {
+    private final OrderDAO orderDAO = new OrderDAO();
+
+    /**
+     * Lấy danh sách đơn theo user + trạng thái
+     */
+    public List<Order> getOrdersByUserAndStatus(Long userId, String statusParam) {
+        return orderDAO.getOrdersByUserIdAndStatus(userId, statusParam);
     }
 
     /**
-     * Lấy danh sách đơn hàng theo user và trạng thái
-     * @param userId   ID người dùng
-     * @param statusId trạng thái (all hoặc id cụ thể)
-     * @return danh sách đơn hàng
+     * 🧾 Tạo đơn hàng mới (tính giá và lưu)
      */
-    public List<Order> getOrdersByUserAndStatus(Long userId, String statusId) {
-        // Gọi thẳng xuống DAO (DAO đã tự xử lý "all")
-        return OrderDAO.getOrdersByUserIdAndStatus(userId, statusId);
+    public void createOrder(Order order) {
+        orderDAO.createOrder(order);
     }
 }
