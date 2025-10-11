@@ -246,7 +246,6 @@ body {
 }
 
 .page-input {
-    width: 60px;
     text-align: center;
     background-color: var(--background);
     border: 1px solid var(--input);
