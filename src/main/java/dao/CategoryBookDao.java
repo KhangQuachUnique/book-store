@@ -1,122 +1,194 @@
-// package dao;
+package dao;
 
-// import model.Book;
-// import util.DBConnection;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import model.Book;
+import model.Category;
+import util.JPAUtil;
 
-// import java.sql.Connection;
-// import java.sql.PreparedStatement;
-// import java.sql.ResultSet;
-// import java.sql.SQLException;
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-// public class CategoryBookDao {
-//     private static final int BOOKS_PER_PAGE = 40;
+public class CategoryBookDao {
+    private static final int BOOKS_PER_PAGE = 40;
 
-//     public static List<Book> getAllBook(int page) {
-//         String sql = "SELECT * FROM books LIMIT ? OFFSET ?";
-//         try (Connection conn = DBConnection.getConnection();
-//              PreparedStatement ps = conn.prepareStatement(sql)) {
+    /**
+     * Lấy tất cả sách với phân trang
+     */
+    public static List<Book> getAllBook(int page) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT b FROM Book b ORDER BY b.id";
+            TypedQuery<Book> query = em.createQuery(jpql, Book.class);
+            query.setFirstResult((page - 1) * BOOKS_PER_PAGE);
+            query.setMaxResults(BOOKS_PER_PAGE);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
-//             ps.setInt(1, BOOKS_PER_PAGE);
-//             ps.setInt(2, (page - 1) * BOOKS_PER_PAGE);
+    /**
+     * Đếm tổng số sách
+     */
+    public static long getTotalBooks() {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT COUNT(b) FROM Book b";
+            return em.createQuery(jpql, Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 
-//             try (ResultSet rs = ps.executeQuery()) {
-//                 List<Book> books = new java.util.ArrayList<>();
-//                 while (rs.next()) {
-//                     Book b = mapResultSetToBook(rs);
-//                     books.add(b);
-//                 }
-//                 return books;
-//             }
-//         } catch (SQLException e) {
-//             throw new RuntimeException(e);
-//         }
-//     }
+    /**
+     * Lấy sách theo category ID với phân trang
+     */
+    public static List<Book> getBooksByCategoryId(int categoryId, int page) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT b FROM Book b WHERE b.category.id = :categoryId ORDER BY b.id";
+            TypedQuery<Book> query = em.createQuery(jpql, Book.class);
+            query.setParameter("categoryId", (long) categoryId);
+            query.setFirstResult((page - 1) * BOOKS_PER_PAGE);
+            query.setMaxResults(BOOKS_PER_PAGE);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
-//     public static int getTotalBooks() {
-//         String sql = "SELECT COUNT(*) as total FROM books";
-//         try (Connection conn = DBConnection.getConnection();
-//              PreparedStatement ps = conn.prepareStatement(sql);
-//              ResultSet rs = ps.executeQuery()) {
+    /**
+     * Đếm tổng số sách theo category ID
+     */
+    public static long getTotalBooksByCategory(int categoryId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT COUNT(b) FROM Book b WHERE b.category.id = :categoryId";
+            TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+            query.setParameter("categoryId", (long) categoryId);
+            return query.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 
-//             if (rs.next()) {
-//                 return rs.getInt("total");
-//             }
-//             return 0;
-//         } catch (SQLException e) {
-//             throw new RuntimeException(e);
-//         }
-//     }
+    /**
+     * Lọc sách theo tiêu đề, năm xuất bản, và categories (include/exclude)
+     */
+    public static List<Book> filterBooks(String title, Integer publishYear, 
+                                         List<Long> includeCategories, 
+                                         List<Long> excludeCategories, 
+                                         int page) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            StringBuilder jpql = new StringBuilder("SELECT b FROM Book b WHERE 1=1");
+            
+            if (title != null && !title.trim().isEmpty()) {
+                jpql.append(" AND LOWER(b.title) LIKE LOWER(:title)");
+            }
+            
+            if (publishYear != null) {
+                jpql.append(" AND b.publishYear = :publishYear");
+            }
+            
+            if (includeCategories != null && !includeCategories.isEmpty()) {
+                jpql.append(" AND b.category.id IN :includeCategories");
+            }
+            
+            if (excludeCategories != null && !excludeCategories.isEmpty()) {
+                jpql.append(" AND b.category.id NOT IN :excludeCategories");
+            }
+            
+            jpql.append(" ORDER BY b.id");
+            
+            TypedQuery<Book> query = em.createQuery(jpql.toString(), Book.class);
+            
+            if (title != null && !title.trim().isEmpty()) {
+                query.setParameter("title", "%" + title.trim() + "%");
+            }
+            
+            if (publishYear != null) {
+                query.setParameter("publishYear", publishYear);
+            }
+            
+            if (includeCategories != null && !includeCategories.isEmpty()) {
+                query.setParameter("includeCategories", includeCategories);
+            }
+            
+            if (excludeCategories != null && !excludeCategories.isEmpty()) {
+                query.setParameter("excludeCategories", excludeCategories);
+            }
+            
+            query.setFirstResult((page - 1) * BOOKS_PER_PAGE);
+            query.setMaxResults(BOOKS_PER_PAGE);
+            
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
-//     public static int getTotalPages() {
-//         int totalBooks = getTotalBooks();
-//         int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
-//         return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
-//     }
+    /**
+     * Đếm số sách theo filter
+     */
+    public static long countBooks(String title, Integer publishYear, 
+                                  List<Long> includeCategories, 
+                                  List<Long> excludeCategories) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            StringBuilder jpql = new StringBuilder("SELECT COUNT(b) FROM Book b WHERE 1=1");
+            
+            if (title != null && !title.trim().isEmpty()) {
+                jpql.append(" AND LOWER(b.title) LIKE LOWER(:title)");
+            }
+            
+            if (publishYear != null) {
+                jpql.append(" AND b.publishYear = :publishYear");
+            }
+            
+            if (includeCategories != null && !includeCategories.isEmpty()) {
+                jpql.append(" AND b.category.id IN :includeCategories");
+            }
+            
+            if (excludeCategories != null && !excludeCategories.isEmpty()) {
+                jpql.append(" AND b.category.id NOT IN :excludeCategories");
+            }
+            
+            TypedQuery<Long> query = em.createQuery(jpql.toString(), Long.class);
+            
+            if (title != null && !title.trim().isEmpty()) {
+                query.setParameter("title", "%" + title.trim() + "%");
+            }
+            
+            if (publishYear != null) {
+                query.setParameter("publishYear", publishYear);
+            }
+            
+            if (includeCategories != null && !includeCategories.isEmpty()) {
+                query.setParameter("includeCategories", includeCategories);
+            }
+            
+            if (excludeCategories != null && !excludeCategories.isEmpty()) {
+                query.setParameter("excludeCategories", excludeCategories);
+            }
+            
+            return query.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 
-//     public static List<Book> getBooksByCategoryId(int categoryId, int page) {
-//         String sql = "SELECT * FROM books WHERE category_id = ? LIMIT ? OFFSET ?";
-
-//         try (Connection conn = DBConnection.getConnection();
-//              PreparedStatement ps = conn.prepareStatement(sql)) {
-//             ps.setInt(1, categoryId);
-//             ps.setInt(2, BOOKS_PER_PAGE);
-//             ps.setInt(3, (page - 1) * BOOKS_PER_PAGE);
-
-//             try (var rs = ps.executeQuery()) {
-//                 List<Book> books = new java.util.ArrayList<>();
-//                 while (rs.next()) {
-//                     Book b = mapResultSetToBook(rs);
-//                     books.add(b);
-//                 }
-//                 return books;
-//             }
-//         } catch (SQLException e) {
-//             throw new RuntimeException(e);
-//         }
-//     }
-
-//     public static int getTotalBooksByCategory(int categoryId) {
-//         String sql = "SELECT COUNT(*) as total FROM books WHERE category_id = ?";
-//         try (Connection conn = DBConnection.getConnection();
-//              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-//             ps.setInt(1, categoryId);
-//             try (ResultSet rs = ps.executeQuery()) {
-//                 if (rs.next()) {
-//                     return rs.getInt("total");
-//                 }
-//                 return 0;
-//             }
-//         } catch (SQLException e) {
-//             throw new RuntimeException(e);
-//         }
-//     }
-
-//     public static int getTotalPagesByCategory(int categoryId) {
-//         int totalBooks = getTotalBooksByCategory(categoryId);
-//         int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
-//         return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
-//     }
-
-//     private static Book mapResultSetToBook(ResultSet rs) throws SQLException {
-//         Book b = new Book();
-//         b.setId(rs.getInt("id"));
-//         b.setTitle(rs.getString("title"));
-//         b.setStock(rs.getInt("stock"));
-//         b.setAuthor(rs.getString("author"));
-//         b.setPublisher(rs.getString("publisher"));
-//         b.setThumbnailUrl(rs.getString("thumbnail_url"));
-//         b.setDescription(rs.getString("description"));
-//         b.setPublishYear(rs.getInt("publish_year"));
-//         b.setPages(rs.getInt("pages"));
-//         b.setRating(rs.getDouble("rating_average"));
-//         b.setPrice(rs.getDouble("price"));
-//         b.setOriginalPrice(rs.getDouble("original_price"));
-//         b.setDiscount_rate(rs.getInt("discount_rate"));
-//         b.setCategoryId(rs.getInt("category_id"));
-//         b.setCreatedAt(rs.getTimestamp("created_at"));
-//         b.calculateStars();
-//         return b;
-//     }
-// }
+    /**
+     * Lấy tất cả categories
+     */
+    public static List<Category> getAllCategories() {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT c FROM Category c ORDER BY c.name";
+            return em.createQuery(jpql, Category.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+}
