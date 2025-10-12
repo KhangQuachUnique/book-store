@@ -4,26 +4,26 @@
 
 <html>
 <head>
-    <title>White List Management</title>
+    <title>Wishlist Management</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/wishList.css">
 </head>
 <body>
 
-<section class="white-list">
+<section class="wish-list">
     <h1>Wish List</h1>
     <c:if test="${empty requestScope.wishList.items}">
         <p>Your wish list is empty.</p>
     </c:if>
     <c:if test="${not empty requestScope.wishList.items}">
         <c:forEach var="wishListItem" items="${requestScope.wishList.items}">
-            <div class="white-list-item-display">
-                <div class="white-list-item">
+            <div class="wish-list-item-display">
+                <div class="wish-list-item">
                     <a href="${pageContext.request.contextPath}/book-detail?id=${wishListItem.book.id}">
                         <img src="${wishListItem.book.thumbnailUrl}" alt="temp">
-                        <div class="white-list-item-part-2">
+                        <div class="wish-list-item-part-2">
                             <span class="title">${wishListItem.book.title}</span>
                             <span class="author">Author: ${wishListItem.book.author}</span>
-                            <span class="white-list-item-rating">
+                            <span class="wish-list-item-rating">
                                 <jsp:include page="ratingStar.jsp">
                                     <jsp:param name="fullStars" value="${wishListItem.fullStars}" />
                                     <jsp:param name="partialFraction" value="${wishListItem.fractionalStars}" />
@@ -32,13 +32,13 @@
                                 </jsp:include>
                                     ${wishListItem.book.averageRating}
                             </span>
-                            <span class="white-list-item-sold">Đã bán 238</span>
+                            <span class="wish-list-item-sold">Đã bán 238</span>
                         </div>
                     </a>
                     <div class="wish-list-item-tail-part">
-                        <div class="white-list-item-price-section">
-                            <span class="white-list-item-price"><fmt:formatNumber value="${wishListItem.book.getPrice()}" type="currency" currencySymbol="VND" maxFractionDigits="0"/></span>
-                            <del class="white-list-item-price-old"><fmt:formatNumber value="${wishListItem.book.originalPrice}" type="currency" currencySymbol="VND" maxFractionDigits="0"/></del>
+                        <div class="wish-list-item-price-section">
+                            <span class="wish-list-item-price"><fmt:formatNumber value="${wishListItem.book.getPrice()}" type="currency" currencySymbol="VND" maxFractionDigits="0"/></span>
+                            <del class="wish-list-item-price-old"><fmt:formatNumber value="${wishListItem.book.originalPrice}" type="currency" currencySymbol="VND" maxFractionDigits="0"/></del>
                         </div>
                         <div class="actions">
                             <svg class="heart-icon selected" data-book-id="${wishListItem.book.id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
