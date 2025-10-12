@@ -17,6 +17,9 @@ import service.BookService;
 
 @WebServlet("/recommend-books")
 public class RecommendedBooks extends HttpServlet {
+
+    private static final BookService bookService = new BookService();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Long> recommendedBookIds = Arrays.asList(
@@ -27,13 +30,9 @@ public class RecommendedBooks extends HttpServlet {
 
         List<Book> recommendedBooks = new ArrayList<>();
 
-        try {
-            for (Long id : recommendedBookIds) {
-                Book book = BookService.getBookById(id);
-                recommendedBooks.add(book);
-            }
-        } catch (SQLException e) {
-            throw new ServletException("Error fetching recommended books", e);
+        for (Long id : recommendedBookIds) {
+            Book book = bookService.getBookById(id);
+            recommendedBooks.add(book);
         }
 
         request.setAttribute("recommendedBooks", recommendedBooks);

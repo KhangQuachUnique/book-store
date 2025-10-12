@@ -15,11 +15,7 @@
             <p><strong>Title:</strong> ${book.title}</p>
             <p><strong>Author:</strong> ${book.author}</p>
             <p><strong>Publisher:</strong> ${book.publisher}</p>
-            <p><strong>Category:</strong>
-                <c:forEach var="category" items="${categories}">
-                    <c:if test="${category.id == book.categoryId}">${category.name}</c:if>
-                </c:forEach>
-            </p>
+            <p><strong>Category:</strong> ${book.category.name}</p>
             <p><strong>Stock:</strong> ${book.stock}</p>
             <p><strong>Original Price:</strong> ${book.originalPrice}</p>
             <p><strong>Discount Rate:</strong> ${book.discountRate}%</p>
@@ -29,7 +25,8 @@
             <p><strong>Publish Year:</strong> ${book.publishYear}</p>
             <p><strong>Pages:</strong> ${book.pages}</p>
             <p><strong>Rating Average:</strong> ${book.averageRating}</p>
-            <p><strong>Created At:</strong> ${book.createdAt}</p>
+            <!-- Fixed: Added display for sold -->
+            <p><strong>Books Sold:</strong> ${book.sold}</p>
             <div class="action-buttons">
                 <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-primary">Edit</a>
                 <a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-secondary">Back to List</a>
