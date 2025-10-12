@@ -2,20 +2,13 @@ package controller;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
-import constant.PathConstants;
-import dao.OrderStatusDAO;
 import model.Order;
-import model.OrderStatus;
-import model.User;
 import service.OrderService;
+import service.OrderStatusService;
 
 @WebServlet("/user/order-tracking")
 public class OrderTrackingPageServlet extends HttpServlet {
@@ -30,35 +23,30 @@ public class OrderTrackingPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
+        // ✅ Test mode: giả lập user
+        model.User mockUser = new model.User();
+        mockUser.setId(101L);
+        HttpSession session = req.getSession(true);
+        session.setAttribute("user", mockUser);
 
-        if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
+        Long userId = mockUser.getId();
+        String status = req.getParameter("status");
+        if (status == null) {
+            status = "ALL";
         }
 
-        Long userId = user.getId();
-        String statusId = req.getParameter("statusId");
+        List<Order> orders = orderService.getOrdersByUserAndStatus(userId, status);
 
-        if ("all".equals(statusId)) {
-            resp.sendRedirect(req.getContextPath() + "/user/order-tracking");
-            return;
-        }
-
-        if (statusId == null) {
-            statusId = "all";
-        }
-
-        // 👉 Gọi Service thay vì gọi DAO trực tiếp
-        List<Order> orders = orderService.getOrdersByUserAndStatus(userId, statusId);
-        List<OrderStatus> statuses = OrderStatusDAO.getAllStatuses();
+        OrderStatusService orderStatusService = new OrderStatusService();
+        List<String> statuses = orderStatusService.getAllStatuses();
 
         req.setAttribute("orders", orders);
         req.setAttribute("statuses", statuses);
-        req.setAttribute("selectedStatus", statusId);
+        req.setAttribute("selectedStatus", status);
+        req.setAttribute("orderStatusService", orderStatusService);
 
-        req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
-        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp").forward(req, resp);
     }
+
+
 }
