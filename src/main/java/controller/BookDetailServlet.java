@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import constant.PathConstants;
-import dao.BookDao;
 import model.Book;
 import model.BookReview;
 import model.User;
 import service.BookReviewService;
+import service.BookService;
 
 /**
  * Servlet for handling book detail page requests. Displays detailed information
@@ -27,6 +27,8 @@ import service.BookReviewService;
  */
 @WebServlet("/book-detail")
 public class BookDetailServlet extends HttpServlet {
+
+    private final BookService bookService = new BookService();
 
     private static final Logger log = Logger.getLogger(BookDetailServlet.class.getName());
 
@@ -62,7 +64,7 @@ public class BookDetailServlet extends HttpServlet {
             if (sessionUser != null) {
                 currentUserId = sessionUser.getId();
             }
-            book = BookDao.getBookById(bookId);
+            book = bookService.getBookById(bookId);
             bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId);
 
             if (book == null) {

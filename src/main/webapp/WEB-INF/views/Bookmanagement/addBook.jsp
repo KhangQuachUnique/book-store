@@ -18,19 +18,19 @@
             <form action="${pageContext.request.contextPath}/admin/book" method="post">
                 <input type="hidden" name="action" value="add">
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <label for="title" style="font-weight: bold;">Title</label>
                     <input type="text" id="title" name="title" class="input" required>
                 </div>
                 <div class="form-group">
-                    <label for="author">Author</label>
+                    <label for="author" style="font-weight: bold;">Author</label>
                     <input type="text" id="author" name="author" class="input">
                 </div>
                 <div class="form-group">
-                    <label for="publisher">Publisher</label>
+                    <label for="publisher" style="font-weight: bold;">Publisher</label>
                     <input type="text" id="publisher" name="publisher" class="input">
                 </div>
                 <div class="form-group">
-                    <label for="category_id">Category</label>
+                    <label for="category_id" style="font-weight: bold;">Category</label>
                     <select id="category_id" name="category_id" class="input" required>
                         <c:forEach var="category" items="${categories}">
                             <option value="${category.id}">${category.name}</option>
@@ -38,42 +38,46 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="stock">Stock</label>
+                    <label for="stock" style="font-weight: bold;">Stock</label>
                     <input type="number" id="stock" name="stock" class="input" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label for="original_price">Original Price</label>
+                    <label for="original_price" style="font-weight: bold;">Original Price</label>
                     <input type="number" id="original_price" name="original_price" class="input" step="0.01" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="discount_rate">Discount Rate (%)</label>
-                    <input type="number" id="discount_rate" name="discount_rate" class="input" min="0" max="100">
+                    <label for="discountRate" style="font-weight: bold;">Discount Rate (%)</label>
+                    <input type="number" id="discountRate" name="discountRate" class="input" min="0" max="100">
                 </div>
                 <div class="form-group">
-                    <label for="thumbnail_url">Thumbnail URL</label>
+                    <label for="thumbnail_url" style="font-weight: bold;">Thumbnail URL</label>
                     <input type="text" id="thumbnail_url" name="thumbnail_url" class="input">
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description" style="font-weight: bold;">Description</label>
                     <textarea id="description" name="description" class="input"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="publish_year">Publish Year</label>
+                    <label for="publish_year" style="font-weight: bold;">Publish Year</label>
                     <input type="number" id="publish_year" name="publish_year" class="input">
                 </div>
                 <div class="form-group">
-                    <label for="pages">Pages</label>
+                    <label for="pages" style="font-weight: bold;">Pages</label>
                     <input type="number" id="pages" name="pages" class="input" min="1">
                 </div>
                 <div class="form-group">
-                    <label for="rating_average">Rating Average</label>
-                    <input type="number" id="rating_average" name="rating_average" class="input" step="0.1" min="0" max="5">
+                    <label for="averageRating" style="font-weight: bold;">Rating Average</label>
+                    <input type="number" id="averageRating" name="averageRating" class="input" step="0.1" min="0" max="5">
                 </div>
                 <div class="form-group">
-                    <label for="price">Price</label>
+                    <label for="price" style="font-weight: bold;">Price</label>
                     <input type="number" id="price" name="price" class="input" step="0.01" min="0" required>
                 </div>
                 <div class="form-group">
+                    <label for="sold" style="font-weight: bold;">Books Sold</label>
+                    <input type="number" id="sold" name="sold" class="input" min="0" value="0">
+                </div>
+                <div class="form-group form-actions">
                     <input type="submit" value="Add Book" class="btn btn-primary">
                     <a href="${pageContext.request.contextPath}/admin/book?action=list" class="btn btn-secondary">Return</a>
                 </div>
