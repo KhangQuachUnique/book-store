@@ -46,6 +46,10 @@ public class OrderManagementService {
         return result;
     }
 
+    public Order getOrderDetails(long orderId) throws SQLException {
+        return orderDAO.getOrderById(orderId);
+    }
+
     private boolean isValidStatus(String status) {
         return status != null && (
             status.equals("pending") ||

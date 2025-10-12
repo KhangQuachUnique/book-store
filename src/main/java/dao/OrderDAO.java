@@ -65,7 +65,7 @@ public class OrderDAO {
     /**
      * Lấy chi tiết một đơn hàng theo ID.
      */
-    public Order getOrderById(Long orderId) {
+    public Order getOrderById(long orderId) throws SQLException {
         EntityManager em = emf.createEntityManager();
         try {
             String jpql = "SELECT DISTINCT o FROM Order o " +

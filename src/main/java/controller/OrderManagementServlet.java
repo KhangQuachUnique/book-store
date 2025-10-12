@@ -45,6 +45,18 @@ public class OrderManagementServlet extends HttpServlet {
                 Map<String, Object> topBooks = orderService.getTopSellingBooks(limit);
                 ApiResponse<Map<String, Object>> response = new ApiResponse<>(true, "Top books retrieved successfully", topBooks);
                 resp.getWriter().write(gson.toJson(response, new TypeToken<ApiResponse<Map<String, Object>>>(){}.getType()));
+            } else if (pathInfo.matches("/\\d+")) {
+                // Get order details
+                long orderId = Long.parseLong(pathInfo.substring(1));
+                Order order = orderService.getOrderDetails(orderId);
+                if (order != null) {
+                    ApiResponse<Order> response = new ApiResponse<>(true, "Order details retrieved successfully", order);
+                    resp.getWriter().write(gson.toJson(response, new TypeToken<ApiResponse<Order>>(){}.getType()));
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    ApiResponse<Object> error = new ApiResponse<>(false, "Order not found", null);
+                    resp.getWriter().write(gson.toJson(error));
+                }
             }
         } catch (SQLException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
