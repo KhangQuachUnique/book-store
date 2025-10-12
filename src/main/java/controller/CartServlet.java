@@ -34,13 +34,6 @@ public class CartServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
 
-        // Check if user is logged in
-        if (user == null) {
-            req.setAttribute("contentPage", PathConstants.VIEW_PLEASE_LOGIN);
-            req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
-            return;
-        }
-
         try {
             req.setAttribute("contentPage", PathConstants.VIEW_CART);
 
@@ -72,21 +65,6 @@ public class CartServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         User user = (User) req.getSession().getAttribute("user");
-        if (user == null) {
-            // Check if this is an AJAX request
-            String requestedWith = req.getHeader("X-Requested-With");
-            String ajax = req.getParameter("ajax");
-            boolean isAjax = "XMLHttpRequest".equals(requestedWith) || "true".equals(ajax);
-            
-            if ("update".equals(action) || isAjax) {
-                resp.setContentType("application/json");
-                resp.setStatus(401);
-                resp.getWriter().write("{\"success\":false,\"message\":\"Please log in to add items to cart\"}");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            }
-            return;
-        }
         Long userId = user.getId();
 
         try {
