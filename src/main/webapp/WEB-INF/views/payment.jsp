@@ -91,20 +91,8 @@
                                 <span>Cash on Delivery (COD)</span>
                             </label>
                             <label class="payment-option">
-                                <input type="radio" name="paymentMethod" value="bank">
-                                <span>Bank Transfer</span>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMethod" value="card">
-                                <span>Credit/Debit Card</span>
-                            </label>
-                            <label class="payment-option">
                                 <input type="radio" name="paymentMethod" value="momo">
                                 <span>MoMo E-Wallet</span>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMethod" value="zalo">
-                                <span>ZaloPay</span>
                             </label>
                         </div>
                     </div>
