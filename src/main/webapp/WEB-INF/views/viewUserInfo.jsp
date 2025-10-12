@@ -23,7 +23,7 @@
                 </div>
                 <div class="info-row">
                     <span class="label">Phone:</span>
-                    <span class="value">${sessionScope.user.phone}</span>
+                    <span class="value">${sessionScope.user.phoneNumber}</span>
                 </div>
                 <div class="info-row">
                     <span class="label">Email:</span>

@@ -32,7 +32,7 @@ public class ShowInfoUser extends HttpServlet {
 
         if (addressList != null) {
             for (Address addr : addressList) {
-                if (addr.isDefaultAddress()) {
+                if (addr.isDefault()) {
                     defaultAddress = addr.getAddress();
                 }
             }

@@ -67,7 +67,7 @@ public class AddressDao {
         try {
             em.getTransaction().begin();
             int updatedRows = em.createQuery(
-                            "UPDATE Address a SET a.address = :addressText, a.defaultAddress = :isDefaultAddress WHERE a.id = :addressId AND a.user.id = :userId")
+                            "UPDATE Address a SET a.address = :addressText, a.isDefault = :isDefaultAddress WHERE a.id = :addressId AND a.user.id = :userId")
                     .setParameter("addressText", addressText)
                     .setParameter("isDefaultAddress", isDefaultAddress)
                     .setParameter("addressId", addressId)
@@ -91,12 +91,12 @@ public class AddressDao {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
-            // Reset all to false
-            em.createQuery("UPDATE Address a SET a.defaultAddress = false WHERE a.user.id = :userId")
+
+            em.createQuery("UPDATE Address a SET a.isDefault = false WHERE a.user.id = :userId")
                     .setParameter("userId", userId)
                     .executeUpdate();
-            // Set selected to true
-            int updatedRows = em.createQuery("UPDATE Address a SET a.defaultAddress = true WHERE a.id = :addressId AND a.user.id = :userId")
+
+            int updatedRows = em.createQuery("UPDATE Address a SET a.isDefault = true WHERE a.id = :addressId AND a.user.id = :userId")
                     .setParameter("addressId", addressId)
                     .setParameter("userId", userId)
                     .executeUpdate();
