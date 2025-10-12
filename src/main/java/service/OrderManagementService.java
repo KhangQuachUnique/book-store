@@ -1,6 +1,6 @@
 package service;
 
-import dao.OrderDAO;
+import dao.OrderManagementDAO;
 import model.Order;
 
 import java.sql.SQLException;
@@ -9,10 +9,21 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderManagementService {
-    private final OrderDAO orderDAO = new OrderDAO();
+    private final OrderManagementDAO orderDAO = new OrderManagementDAO();
 
     public List<Order> getAllOrders() throws SQLException {
         return orderDAO.getAllOrders();
+    }
+
+    public List<Order> searchOrders(String keyword) throws SQLException {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllOrders();
+        }
+        return orderDAO.searchOrders(keyword.trim());
+    }
+
+    public List<Order> getOrdersByStatus(String status) throws SQLException {
+        return orderDAO.getOrdersByStatus(status);
     }
 
     public boolean updateOrderStatus(long orderId, String status) throws SQLException {
@@ -20,6 +31,10 @@ public class OrderManagementService {
             return false;
         }
         return orderDAO.updateOrderStatus(orderId, status);
+    }
+
+    public boolean deleteOrder(long orderId) throws SQLException {
+        return orderDAO.deleteOrder(orderId);
     }
 
     public Map<String, Object> getOrderStatistics(String period) throws SQLException {
@@ -52,11 +67,11 @@ public class OrderManagementService {
 
     private boolean isValidStatus(String status) {
         return status != null && (
-            status.equals("pending") ||
-            status.equals("paid") ||
-            status.equals("shipped") ||
-            status.equals("completed") ||
-            status.equals("cancelled")
+            status.equalsIgnoreCase("pending") ||
+            status.equalsIgnoreCase("paid") ||
+            status.equalsIgnoreCase("shipped") ||
+            status.equalsIgnoreCase("completed") ||
+            status.equalsIgnoreCase("cancelled")
         );
     }
 }

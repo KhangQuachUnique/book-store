@@ -9,6 +9,7 @@ import model.OrderItem;
 import model.OrderStatus;
 import util.JPAUtil;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class OrderDAO {

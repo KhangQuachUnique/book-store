@@ -29,11 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
         addToCartBtn.addEventListener('click', async function () {
             const bookId = this.getAttribute('data-book-id');
             const button = this;
-            
+
             // Disable button to prevent double clicks
             button.disabled = true;
             button.textContent = 'Adding...';
-            
+
             try {
                 const response = await cartApi.addToCart({
                     bookId: bookId,
