@@ -28,23 +28,19 @@ public class WishListServlet extends HttpServlet {
         String pageSizeParam = req.getParameter("pageSize");
 
         if (pageParam != null) {
-            try {
-                currentPage = Integer.parseInt(pageParam);
-            } catch (NumberFormatException e) {
-                currentPage = 1;
-            }
+            currentPage = Integer.parseInt(pageParam);
         }
 
         if (pageSizeParam != null) {
-            try {
-                pageSize = Integer.parseInt(pageSizeParam);
-            } catch (NumberFormatException e) {
-                pageSize = 5;
-            }
+            pageSize = Integer.parseInt(pageSizeParam);
         }
 
+        //Get user id from section
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long userId = sessionUser.getId();
+
         //Get wish list
-        WishList wishList = wishListService.getWishListBooks(101L, currentPage, pageSize);
+        WishList wishList = wishListService.getWishListBooks(userId, currentPage, pageSize);
         if (wishList.getItems().isEmpty()) {
             req.setAttribute("message", "Your wish list is empty.");
         }
@@ -59,16 +55,13 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Get user id from section
         User sessionUser = (User) req.getSession().getAttribute("user");
-        
-        if (sessionUser == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
-            return;
-        }
-        
+        Long userId = sessionUser.getId();
+
         WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         Long bookId = body.getBookId();
-        ApiResponse response = wishListService.addBookToWishList(sessionUser.getId(), bookId);
+        ApiResponse response = wishListService.addBookToWishList(userId, bookId);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -76,16 +69,13 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Get user id from section
         User sessionUser = (User) req.getSession().getAttribute("user");
+        Long userId = sessionUser.getId();
 
-        if (sessionUser == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
-            return;
-        }
-        
         WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         Long bookId = body.getBookId();
-        ApiResponse response = wishListService.removeBookToWishList(sessionUser.getId(), bookId);
+        ApiResponse response = wishListService.removeBookToWishList(userId, bookId);
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
     }
