@@ -20,6 +20,8 @@ import model.CartItem;
 import model.User;
 import service.AddressService;
 import service.CartService;
+import service.PromotionService;
+import model.Promotion;
 
 @WebServlet("/user/payment")
 public class PaymentServlet extends HttpServlet {
@@ -43,6 +45,11 @@ public class PaymentServlet extends HttpServlet {
             List<CartItem> items = cart != null && cart.getItems() != null ? cart.getItems() : Collections.emptyList();
             double cartTotal = cartService.calculateSubtotal(items);
             List<Address> addresses = addressService.getAddressesByUserId(user.getId());
+
+            PromotionService promotionService = new PromotionService();
+            List<Promotion> validPromotions = promotionService.getAllValidPromotions();
+            request.setAttribute("validPromotions", validPromotions);
+
             request.setAttribute("cart", items);
             request.setAttribute("cartTotal", cartTotal);
             request.setAttribute("addresses", addresses);
