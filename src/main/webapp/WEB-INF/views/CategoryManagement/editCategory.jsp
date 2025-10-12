@@ -40,7 +40,7 @@
 
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" name="is_leaf" value="true"
-                   id="leafCheck" <c:if test="${category.isLeaf}">checked</c:if>>
+                   id="leafCheck" <c:if test="${category.leaf}">checked</c:if>>
             <label class="form-check-label" for="leafCheck">Is Leaf</label>
         </div>
 

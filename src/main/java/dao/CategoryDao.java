@@ -1,125 +1,192 @@
 package dao;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import model.Category;
 import util.JPAUtil;
 
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CategoryDao {
-    private static final Logger log = Logger.getLogger(CategoryDao.class.getName());
 
-    private EntityManager getEntityManager() {
-        return JPAUtil.getEntityManagerFactory().createEntityManager();
-    }
+    // Queries use entity field names, not column names
 
     public List<Category> findAll() {
-        EntityManager em = getEntityManager();
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            TypedQuery<Category> query = em.createQuery("SELECT c FROM Category c ORDER BY c.id DESC", Category.class);
-            return query.getResultList();
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "Error finding all categories", e);
-            return new ArrayList<>();
+            TypedQuery<Category> q = em.createQuery("SELECT c FROM Category c ORDER BY c.id DESC", Category.class);
+            return q.getResultList();
         } finally {
             em.close();
         }
     }
 
     public Category findById(Long id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             return em.find(Category.class, id);
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "Error finding category by id: " + id, e);
-            return null;
         } finally {
             em.close();
         }
     }
 
-    public String create(Category c) {
-        EntityManager em = getEntityManager();
+    public List<Category> findByParentId(Long parentId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            em.getTransaction().begin();
+            if (parentId == null) {
+                return em.createQuery("SELECT c FROM Category c WHERE c.parent IS NULL ORDER BY c.id DESC", Category.class)
+                        .getResultList();
+            }
+            return em.createQuery("SELECT c FROM Category c WHERE c.parent.id = :pid ORDER BY c.id DESC", Category.class)
+                    .setParameter("pid", parentId)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean existsByName(String name, Long excludeId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            String jpql = "SELECT COUNT(c) FROM Category c WHERE LOWER(c.name) = LOWER(:name)"
+                    + (excludeId != null ? " AND c.id <> :excludeId" : "");
+            TypedQuery<Long> q = em.createQuery(jpql, Long.class)
+                    .setParameter("name", name);
+            if (excludeId != null) q.setParameter("excludeId", excludeId);
+            Long count = q.getSingleResult();
+            return count != null && count > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Category saveCategory(Category c) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            if (c.getId() == 0) {
+                em.persist(c);
+            } else {
+                c = em.merge(c);
+            }
+
+            tx.commit();
+            return c;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi lưu Category: " + ex.getMessage(), ex);
+        } finally {
+            em.close();
+        }
+    }
+
+    public Category createWithParent(String name, Long parentId, Boolean isLeaf) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            Category c = new Category();
+            c.setName(name);
+            c.setLeaf(isLeaf != null ? isLeaf : false);
+            c.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
+            if (parentId != null) {
+                Category parent = em.find(Category.class, parentId);
+                if (parent == null) {
+                    throw new RuntimeException("Parent category không tồn tại");
+                }
+                c.setParent(parent);
+            }
+
             em.persist(c);
-            em.getTransaction().commit();
-            return null; // Success
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            log.log(Level.SEVERE, "Error creating category", e);
-            return e.getMessage();
+            tx.commit();
+            return c;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi tạo Category: " + ex.getMessage(), ex);
         } finally {
             em.close();
         }
     }
 
-    public String update(Category c) {
-        EntityManager em = getEntityManager();
+    public Category updateCategory(Long id, String name, Long parentId, Boolean isLeaf) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            em.getTransaction().begin();
-            Category managedCategory = em.find(Category.class, c.getId());
-            if (managedCategory != null) {
-                managedCategory.setName(c.getName());
-                managedCategory.setParent(c.getParent());
-                managedCategory.setLeaf(c.isLeaf());
-                em.getTransaction().commit();
-                return null; // Success
+            tx.begin();
+
+            Category existing = em.find(Category.class, id);
+            if (existing == null) {
+                throw new RuntimeException("Category không tồn tại");
+            }
+
+            if (name != null) {
+                existing.setName(name);
+            }
+
+            if (isLeaf != null) {
+                existing.setLeaf(isLeaf);
+            }
+
+            if (parentId != null) {
+                if (id.equals(parentId)) {
+                    throw new RuntimeException("Không thể đặt parent bằng chính nó");
+                }
+                Category parent = em.find(Category.class, parentId);
+                if (parent == null) {
+                    throw new RuntimeException("Parent category không tồn tại");
+                }
+                existing.setParent(parent);
             } else {
-                em.getTransaction().rollback();
-                return "Category not found";
+                existing.setParent(null);
             }
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            log.log(Level.SEVERE, "Error updating category", e);
-            return e.getMessage();
+
+            em.merge(existing);
+            tx.commit();
+            return existing;
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi cập nhật Category: " + ex.getMessage(), ex);
         } finally {
             em.close();
         }
     }
 
-    public String delete(Long id) {
-        EntityManager em = getEntityManager();
+    public void delete(Long id) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            em.getTransaction().begin();
-            Category category = em.find(Category.class, id);
-            if (category != null) {
-                em.remove(category);
-                em.getTransaction().commit();
-                return null; // Success
-            } else {
-                em.getTransaction().rollback();
-                return "Category not found";
-            }
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            log.log(Level.SEVERE, "Error deleting category", e);
-            return e.getMessage();
-        } finally {
-            em.close();
-        }
-    }
+            tx.begin();
+            Category existing = em.find(Category.class, id);
+            if (existing != null) {
+                // Khởi tạo các collection để tránh lỗi LazyInitializationException
+                if (existing.getChildren() != null) {
+                    existing.getChildren().size(); // Kích hoạt lazy loading
+                }
+                if (existing.getBooks() != null) {
+                    existing.getBooks().size(); // Kích hoạt lazy loading
+                }
 
-    public boolean isCategoryNameExists(String name) {
-        EntityManager em = getEntityManager();
-        try {
-            TypedQuery<Long> query = em.createQuery(
-                    "SELECT COUNT(c) FROM Category c WHERE LOWER(c.name) = LOWER(:name)", Long.class);
-            query.setParameter("name", name);
-            return query.getSingleResult() > 0;
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "Error checking category name existence", e);
-            return false;
+                // Kiểm tra xem có danh mục con hoặc sách không trước khi xóa
+                if (!existing.getChildren().isEmpty()) {
+                    throw new RuntimeException("Không thể xóa danh mục có danh mục con");
+                }
+
+                if (!existing.getBooks().isEmpty()) {
+                    throw new RuntimeException("Không thể xóa danh mục có sản phẩm");
+                }
+
+                em.remove(existing);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("Lỗi khi xóa Category: " + ex.getMessage(), ex);
         } finally {
             em.close();
         }
