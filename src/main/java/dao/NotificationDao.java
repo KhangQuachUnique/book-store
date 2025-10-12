@@ -39,7 +39,7 @@ public class NotificationDao {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             TypedQuery<Notification> q = em.createQuery(
-                    "SELECT n FROM Notification n WHERE n.user.id = :uid ORDER BY n.id DESC",
+                    "SELECT n FROM Notification n WHERE n.user.id = :uid ORDER BY n.createdAt DESC",
                     Notification.class);
             q.setParameter("uid", userId);
             return q.getResultList();

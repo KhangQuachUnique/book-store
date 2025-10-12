@@ -9,6 +9,9 @@
     <!-- Header/global styles so the header renders properly -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/header.css">
+    <fmt:setLocale value="vi_VN"/>
+    <!-- Optional: ensure timezone is Vietnam local time -->
+    <fmt:setTimeZone value="Asia/Ho_Chi_Minh"/>
     <style>
         /* CSS cho trang thông báo */
         .notifications-container {
@@ -76,10 +79,10 @@
                             <div class="notification-icon">
                                 <i class="fas fa-receipt"></i> </div>
                             <div class="notification-content">
-                                <h4>${n.title}</h4>
+                                <h4>${n.title}</h4><br/>
                                 <p class="notification-message">${n.message}</p>
                                 <div class="notification-time">
-                                    ${n.id}
+                                    <fmt:formatDate value="${n.createdAt}" pattern="d 'tháng' M 'năm' yyyy 'lúc' HH:mm:ss"/>
                                 </div>
                             </div>
                         </li>
