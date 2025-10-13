@@ -96,7 +96,7 @@ public class PaymentProcessServlet extends HttpServlet {
             double discountAmount = 0.0;
             
             if (promotion != null) {
-                discountAmount = subtotal * promotion.getDiscount() / 100.0;
+                discountAmount = (subtotal + shippingFee) * promotion.getDiscount() / 100.0;
             }
             
             double total = subtotal + shippingFee - discountAmount;
@@ -145,7 +145,7 @@ public class PaymentProcessServlet extends HttpServlet {
             req.getSession().setAttribute("pendingMoMoNotes", notes);
 
             // Convert to long (VND - no decimal)
-            long amount = Math.round(total);
+            long amount = (long) total;
             String orderInfo = "Thanh toán đơn hàng BookieCake - " + orderId;
 
             String baseUrl = buildBaseUrl(req);

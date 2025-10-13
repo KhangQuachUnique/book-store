@@ -20,7 +20,7 @@
             <li><a href="${pageContext.request.contextPath}/admin/book">Books</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/category">Category</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/promotion">Promotions</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/promotions">Promotions</a></li>
         </ul>
     </nav>
 </aside>
