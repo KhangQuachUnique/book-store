@@ -37,4 +37,15 @@ public class NotificationService {
 		}
 	}
 
+	/**
+	 * Tạo thông báo mới cho người dùng
+	 */
+	public void createNotification(long userId, String title, String message) {
+		try {
+			notificationDao.createNotification(userId, title, message);
+		} catch (Exception ex) {
+			throw new RuntimeException("Lỗi khi tạo thông báo: " + ex.getMessage(), ex);
+		}
+	}
+
 }

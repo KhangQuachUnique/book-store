@@ -68,4 +68,37 @@ public class NotificationDao {
         }
     }
 
+    /**
+     * Tạo thông báo mới cho người dùng
+     */
+    public void createNotification(long userId, String title, String message) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            
+            // Tìm user
+            User user = em.find(User.class, userId);
+            if (user == null) {
+                throw new IllegalArgumentException("User not found with id: " + userId);
+            }
+
+            // Tạo notification
+            Notification notification = new Notification();
+            notification.setUser(user);
+            notification.setTitle(title);
+            notification.setMessage(message);
+            notification.setIsRead(false);
+            notification.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
+
+            em.persist(notification);
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
 }
