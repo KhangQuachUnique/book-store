@@ -2,6 +2,7 @@ package service;
 
 import dao.OrderManagementDAO;
 import model.Order;
+import model.OrderStatus;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -66,12 +67,16 @@ public class OrderManagementService {
     }
 
     private boolean isValidStatus(String status) {
-        return status != null && (
-            status.equalsIgnoreCase("pending") ||
-            status.equalsIgnoreCase("paid") ||
-            status.equalsIgnoreCase("shipped") ||
-            status.equalsIgnoreCase("completed") ||
-            status.equalsIgnoreCase("cancelled")
-        );
+        if (status == null || status.trim().isEmpty()) {
+            return false;
+        }
+
+        try {
+            // Kiểm tra xem status có tồn tại trong OrderStatus enum không
+            OrderStatus.valueOf(status.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }
