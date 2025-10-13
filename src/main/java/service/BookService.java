@@ -82,4 +82,23 @@ public class BookService {
             throw new RuntimeException("Validation failed: " + errorMessage);
         }
     }
+
+    public List<Book> getAllBooksByCategoryId(long categoryId) {
+        // Lấy dữ liệu từ DAO
+        List<Book> books = bookDao.getAllBooksByCategoryId(categoryId);
+
+        if (books == null || books.isEmpty()) {
+            System.out.println("Book not found with Category ID: " + categoryId);
+        }
+
+        return books;
+    }
+
+    public List<Book> getTopSellingBooks() {
+        return bookDao.getTopSellingBooks();
+    }
+
+    public List<Book> getTopRatedBooks() {
+        return bookDao.getTopRatedBooks();
+    }
 }
