@@ -1,0 +1,14 @@
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+target/classes
+target/test-classes
+target/generated-sources
+target/maven-archiver
+.idea
+*.iml
+*.iws
+*.ipr
+
