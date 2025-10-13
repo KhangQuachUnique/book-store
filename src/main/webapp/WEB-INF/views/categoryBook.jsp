@@ -82,15 +82,15 @@
                                 <p class="book-author">Author: ${book.author}</p>
                                 <p class="book-publisher">Publisher: ${book.publisher}</p>
 
-                                    <%--                                        <div class="book-rating">--%>
-                                    <%--                                            <jsp:include page="ratingStar.jsp">--%>
-                                    <%--                                                <jsp:param name="fullStars" value="${book.fullStars}" />--%>
-                                    <%--                                                <jsp:param name="partialFraction" value="${book.partialFraction}" />--%>
-                                    <%--                                                <jsp:param name="emptyStars" value="${book.emptyStars}" />--%>
-                                    <%--                                                <jsp:param name="size" value="16" />--%>
-                                    <%--                                            </jsp:include>--%>
-                                    <%--                                            <span class="rating-value">${book.rating} / 5</span>--%>
-                                    <%--                                        </div>--%>
+                                <div class="book-rating">
+                                    <jsp:include page="ratingStar.jsp">
+                                        <jsp:param name="fullStars" value="${book.fullStars}" />
+                                        <jsp:param name="partialFraction" value="${book.partialFraction}" />
+                                        <jsp:param name="emptyStars" value="${book.emptyStars}" />
+                                        <jsp:param name="size" value="16" />
+                                    </jsp:include>
+                                    <span class="rating-value">${book.averageRating} / 5</span>
+                                </div>
 
                             </div>
                         </a>

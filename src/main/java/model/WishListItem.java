@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table( name = "\"wishListItems\"",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"wishListId", "bookId"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"\"wishListId\"", "\"bookId\""})
 )
 public class WishListItem {
 
