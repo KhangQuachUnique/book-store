@@ -40,9 +40,55 @@ public class CategoryBookServlet extends HttpServlet {
 
         // Lấy các tham số filter từ form
         String title = req.getParameter("title");
+        String author = req.getParameter("author");
         String includeCategoriesParam = req.getParameter("includeCategories");
         String excludeCategoriesParam = req.getParameter("excludeCategories");
         String action = req.getParameter("action"); // "title" hoặc "categories"
+        String sortBy = req.getParameter("sortBy");
+
+        Integer publishYear = null;
+        String publishYearParam = req.getParameter("publishYear");
+        if (publishYearParam != null && !publishYearParam.trim().isEmpty()) {
+            try {
+                publishYear = Integer.parseInt(publishYearParam.trim());
+            } catch (NumberFormatException e) {
+                // Ignore parsing error, giữ publishYear là null
+            }
+        }
+
+        Integer yearBefore = null;
+        String yearBeforeParam = req.getParameter("yearBefore");
+        if (yearBeforeParam != null && !yearBeforeParam.trim().isEmpty()) {
+            try {
+                yearBefore = Integer.parseInt(yearBeforeParam.trim());
+            } catch (NumberFormatException e) {}
+        }
+        
+        Integer yearAfter = null;
+        String yearAfterParam = req.getParameter("yearAfter");
+        if (yearAfterParam != null && !yearAfterParam.trim().isEmpty()) {
+            try {
+                yearAfter = Integer.parseInt(yearAfterParam.trim());
+            } catch (NumberFormatException e) {}
+        }
+
+        Long priceFrom = null;
+        String priceFromParam = req.getParameter("priceFrom");
+        if (priceFromParam != null && !priceFromParam.trim().isEmpty()) {
+            try {
+                priceFrom = Long.parseLong(priceFromParam.trim());
+            } catch (NumberFormatException e) {}
+        }
+        
+        Long priceUpTo = null;
+        String priceUpToParam = req.getParameter("priceUpTo");
+        if (priceUpToParam != null && !priceUpToParam.trim().isEmpty()) {
+            try {
+                priceUpTo = Long.parseLong(priceUpToParam.trim());
+            } catch (NumberFormatException e) {}
+        }
+
+        boolean hasSort = sortBy != null && !sortBy.isEmpty();
 
         List<Long> includeCategories = null;
         if (includeCategoriesParam != null && !includeCategoriesParam.isEmpty()) {
@@ -70,9 +116,13 @@ public class CategoryBookServlet extends HttpServlet {
 
         // Logic exclusive dựa trên action type
         boolean hasTitle = title != null && !title.trim().isEmpty();
+        boolean hasAuthor = author != null && !author.trim().isEmpty();
+        boolean hasYear = publishYear != null;
+        boolean hasYearRange = yearBefore != null || yearAfter != null;
+        boolean hasPriceRange = priceFrom != null || priceUpTo != null;
         boolean hasCategories = (includeCategories != null && !includeCategories.isEmpty()) || 
                                (excludeCategories != null && !excludeCategories.isEmpty());
-        
+         boolean hasAnyFilter = hasTitle || hasAuthor || hasYear || hasYearRange || hasPriceRange || hasCategories;
         if ("title".equals(action)) {
             // User muốn search theo title -> clear categories
             includeCategories = null;
@@ -82,7 +132,13 @@ public class CategoryBookServlet extends HttpServlet {
         } else if ("categories".equals(action)) {
             // User muốn filter theo categories -> clear title
             title = null;
-        } else if (hasTitle && hasCategories) {
+            author = null; 
+            publishYear = null;
+            yearBefore = null;   
+            yearAfter = null;
+            priceFrom = null;    
+            priceUpTo = null;
+        } else if ((hasTitle || hasAuthor) && hasCategories) {
             // Fallback: nếu có cả 2 nhưng không có action, ưu tiên title search
             includeCategories = null;
             excludeCategories = null;
@@ -90,11 +146,44 @@ public class CategoryBookServlet extends HttpServlet {
             excludeCategoriesParam = null;
         }
 
-        List<Book> books;
-        int totalPages;
+        List<Book> books = new java.util.ArrayList<>();
+        int totalPages = 1;
 
+        try {
+            if (hasAnyFilter || hasSort) {
+                // Có filter (Title HOẶC Categories) -> sử dụng filterBook (đã hỗ trợ sort)
+                books = CategoryBookService.filterBook(title, publishYear, includeCategories, excludeCategories, page, sortBy, author, yearBefore, yearAfter, priceFrom, priceUpTo); // 🟢 THAY ĐỔI: Thêm sortBy
+                totalPages = CategoryBookService.getTotalPage(title, publishYear, includeCategories, excludeCategories, author, yearBefore, yearAfter, priceFrom, priceUpTo);
+            }
+            else if (hasSort) { 
+                // Chỉ có Sort (không có filter)
+                if (categoryId != null) {
+                    books = CategoryBookService.sortBooksByCategory(categoryId, sortBy, page);
+                    totalPages = CategoryBookService.getTotalPagesByCategory(categoryId);
+                } else {
+                    books = CategoryBookService.sortAllBooks(sortBy, page);
+                    totalPages = CategoryBookService.getTotalPages();
+                }
+            } 
+            else if (categoryId != null) { 
+                // Chỉ theo Category (không filter, không sort)
+                books = CategoryBookService.getBooksByCategoryId(categoryId, page);
+                totalPages = CategoryBookService.getTotalPagesByCategory(categoryId);
+            } 
+            else { 
+                // Mặc định: All Books
+                books = CategoryBookService.getAllBook(page);
+                totalPages = CategoryBookService.getTotalPages();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            books = new java.util.ArrayList<>();
+            totalPages = 1;
+        }
+
+        /*
         // Sử dụng CategoryBookService.filterBook thay vì CategoryBookDao nếu có filter
-        if ((title != null && !title.trim().isEmpty()) || 
+         if ((title != null && !title.trim().isEmpty()) || 
             (includeCategories != null && !includeCategories.isEmpty()) ||
             (excludeCategories != null && !excludeCategories.isEmpty())) {
             try {
@@ -111,7 +200,7 @@ public class CategoryBookServlet extends HttpServlet {
         } else {
             books = CategoryBookService.getAllBook(page);
             totalPages = CategoryBookService.getTotalPages();
-        }
+        } */
 
         // Lấy danh sách tất cả categories để hiển thị trong bảng category
         List<Category> categories = null;
@@ -135,8 +224,16 @@ public class CategoryBookServlet extends HttpServlet {
 
         // Truyền lại các tham số filter để hiển thị trong form
         req.setAttribute("title", title);
+        req.setAttribute("author", author); 
+        req.setAttribute("publishYear", publishYear != null ? publishYear.toString() : "");
+        req.setAttribute("yearBefore", yearBefore != null ? yearBefore.toString() : ""); 
+        req.setAttribute("yearAfter", yearAfter != null ? yearAfter.toString() : ""); 
+        req.setAttribute("priceFrom", priceFrom != null ? priceFrom.toString() : ""); 
+        req.setAttribute("priceUpTo", priceUpTo != null ? priceUpTo.toString() : ""); 
         req.setAttribute("includeCategories", includeCategoriesParam);
         req.setAttribute("excludeCategories", excludeCategoriesParam);
+
+        req.setAttribute("sortBy", sortBy);
 
         req.setAttribute("contentPage", "/WEB-INF/views/categoryBook.jsp");
         req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
