@@ -37,11 +37,11 @@
                         <label for="status" class="label">Status</label>
                         <select class="input" id="status" name="status" onchange="this.form.submit()">
                             <option value="" ${empty filterStatus ? 'selected' : ''}>All</option>
-                            <option value="PENDING" ${filterStatus == 'PENDING' ? 'selected' : ''}>Pending</option>
-                            <option value="PAID" ${filterStatus == 'PAID' ? 'selected' : ''}>Paid</option>
-                            <option value="SHIPPED" ${filterStatus == 'SHIPPED' ? 'selected' : ''}>Shipped</option>
-                            <option value="COMPLETED" ${filterStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
-                            <option value="CANCELLED" ${filterStatus == 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                            <option value="PENDING_PAYMENT" ${filterStatus == 'PENDING_PAYMENT' ? 'selected' : ''}>Pending Payment</option>
+                            <option value="PROCESSING" ${filterStatus == 'PROCESSING' ? 'selected' : ''}>Processing</option>
+                            <option value="WAITING_DELIVERY" ${filterStatus == 'WAITING_DELIVERY' ? 'selected' : ''}>Waiting for Delivery</option>
+                            <option value="DELIVERED" ${filterStatus == 'DELIVERED' ? 'selected' : ''}>Delivered</option>
+                             <option value="CANCELED" ${filterStatus == 'CANCELED' ? 'selected' : ''}>Cancelled</option>
                         </select>
                     </div>
                     <div>
@@ -56,7 +56,12 @@
     <!-- Orders Table -->
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">Orders List</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="card-title">Orders List</h2>
+                <span class="text-muted" style="font-size: 0.9rem;">
+                    Showing ${empty orders ? 0 : (currentPage - 1) * 10 + 1} - ${(currentPage - 1) * 10 + fn:length(orders)} of ${totalOrders} orders
+                </span>
+            </div>
         </div>
         <div class="card-content">
             <c:if test="${not empty error}">
@@ -88,15 +93,15 @@
                                 <td>${order.user.name}</td>
                                 <td>${order.user.email}</td>
                                 <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                <td><strong>$<fmt:formatNumber value="${order.totalAmount}" pattern="#,##0.00"/></strong></td>
+                                <td><strong><fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/>₫</strong></td>
                                 <td><span class="badge">${order.paymentMethod}</span></td>
                                 <td>
                                     <select class="input status-select ${fn:toLowerCase(order.status)}" data-order-id="${order.id}" onchange="updateStatusQuickFromSelect(this)">
-                                        <option value="PENDING" ${order.status.name() == 'PENDING' ? 'selected' : ''}>Pending</option>
-                                        <option value="PROCESSING" ${order.status.name() == 'PAID' ? 'selected' : ''}>Paid</option>
-                                        <option value="SHIPPED" ${order.status.name() == 'SHIPPED' ? 'selected' : ''}>Shipped</option>
-                                        <option value="DELIVERED" ${order.status.name() == 'COMPLETED' ? 'selected' : ''}>Completed</option>
-                                        <option value="CANCELLED" ${order.status.name() == 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                        <option value="PENDING_PAYMENT" ${order.status == 'PENDING_PAYMENT' ? 'selected' : ''}>Pending Payment</option>
+                                        <option value="PROCESSING" ${order.status == 'PROCESSING' ? 'selected' : ''}>Processing</option>
+                                        <option value="WAITING_DELIVERY" ${order.status == 'WAITING_DELIVERY' ? 'selected' : ''}>Waiting for Delivery</option>
+                                        <option value="DELIVERED" ${order.status == 'DELIVERED' ? 'selected' : ''}>Delivered</option>
+                                        <option value="CANCELED" ${order.status == 'CANCELED' ? 'selected' : ''}>Cancelled</option>
                                     </select>
                                 </td>
                                 <td class="action-buttons">
@@ -107,6 +112,85 @@
                         </c:forEach>
                         </tbody>
                     </table>
+
+                    <!-- Pagination -->
+                    <c:if test="${totalPages > 1}">
+                        <div class="pagination-wrapper">
+                            <div class="pagination">
+                                <!-- Previous Button -->
+                                <c:choose>
+                                    <c:when test="${currentPage > 1}">
+                                        <a href="?page=${currentPage - 1}&keyword=${keyword}&status=${filterStatus}" class="pagination-btn">
+                                            « Previous
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="pagination-btn disabled">« Previous</span>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <!-- Page Numbers -->
+                                <c:choose>
+                                    <c:when test="${totalPages <= 7}">
+                                        <!-- Show all pages if total is 7 or less -->
+                                        <c:forEach var="i" begin="1" end="${totalPages}">
+                                            <c:choose>
+                                                <c:when test="${i == currentPage}">
+                                                    <span class="pagination-btn active">${i}</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="?page=${i}&keyword=${keyword}&status=${filterStatus}" class="pagination-btn">${i}</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- Show first page -->
+                                        <c:if test="${currentPage > 3}">
+                                            <a href="?page=1&keyword=${keyword}&status=${filterStatus}" class="pagination-btn">1</a>
+                                            <c:if test="${currentPage > 4}">
+                                                <span class="pagination-ellipsis">...</span>
+                                            </c:if>
+                                        </c:if>
+
+                                        <!-- Show pages around current page -->
+                                        <c:forEach var="i" begin="${currentPage - 2}" end="${currentPage + 2}">
+                                            <c:if test="${i >= 1 && i <= totalPages}">
+                                                <c:choose>
+                                                    <c:when test="${i == currentPage}">
+                                                        <span class="pagination-btn active">${i}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="?page=${i}&keyword=${keyword}&status=${filterStatus}" class="pagination-btn">${i}</a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:if>
+                                        </c:forEach>
+
+                                        <!-- Show last page -->
+                                        <c:if test="${currentPage < totalPages - 2}">
+                                            <c:if test="${currentPage < totalPages - 3}">
+                                                <span class="pagination-ellipsis">...</span>
+                                            </c:if>
+                                            <a href="?page=${totalPages}&keyword=${keyword}&status=${filterStatus}" class="pagination-btn">${totalPages}</a>
+                                        </c:if>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <!-- Next Button -->
+                                <c:choose>
+                                    <c:when test="${currentPage < totalPages}">
+                                        <a href="?page=${currentPage + 1}&keyword=${keyword}&status=${filterStatus}" class="pagination-btn">
+                                            Next »
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="pagination-btn disabled">Next »</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </c:if>
                 </c:otherwise>
             </c:choose>
 

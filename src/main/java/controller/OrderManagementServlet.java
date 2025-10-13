@@ -17,6 +17,7 @@ import java.util.Map;
 @WebServlet("/admin/orders/*")
 public class OrderManagementServlet extends HttpServlet {
     private final OrderManagementService orderService = new OrderManagementService();
+    private static final int ORDERS_PER_PAGE = 5;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,19 +27,42 @@ public class OrderManagementServlet extends HttpServlet {
             if (pathInfo == null || "/".equals(pathInfo)) {
                 String keyword = req.getParameter("keyword");
                 String status = req.getParameter("status");
-
-                List<Order> orders;
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    orders = orderService.searchOrders(keyword);
-                } else if (status != null && !status.trim().isEmpty() && !"ALL".equalsIgnoreCase(status)) {
-                    orders = orderService.getOrdersByStatus(status);
-                } else {
-                    orders = orderService.getAllOrders();
+                int page = 1;
+                try {
+                    String pageParam = req.getParameter("page");
+                    if (pageParam != null) {
+                        page = Integer.parseInt(pageParam);
+                        if (page < 1) page = 1;
+                    }
+                } catch (NumberFormatException e) {
+                    page = 1;
                 }
+
+                List<Order> allOrders;
+                if (keyword != null && !keyword.trim().isEmpty()) {
+                    allOrders = orderService.searchOrders(keyword);
+                } else if (status != null && !status.trim().isEmpty() && !"ALL".equalsIgnoreCase(status)) {
+                    allOrders = orderService.getOrdersByStatus(status);
+                } else {
+                    allOrders = orderService.getAllOrders();
+                }
+
+                // Pagination logic
+                int totalOrders = allOrders.size();
+                int totalPages = (int) Math.ceil((double) totalOrders / ORDERS_PER_PAGE);
+                if (page > totalPages && totalPages > 0) page = totalPages;
+
+                int startIndex = (page - 1) * ORDERS_PER_PAGE;
+                int endIndex = Math.min(startIndex + ORDERS_PER_PAGE, totalOrders);
+
+                List<Order> orders = allOrders.subList(startIndex, endIndex);
 
                 req.setAttribute("orders", orders);
                 req.setAttribute("keyword", keyword);
                 req.setAttribute("filterStatus", status);
+                req.setAttribute("currentPage", page);
+                req.setAttribute("totalPages", totalPages);
+                req.setAttribute("totalOrders", totalOrders);
                 req.setAttribute("contentPage", "/WEB-INF/views/admin/order-management.jsp");
                 req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT).forward(req, resp);
                 return;

@@ -25,15 +25,26 @@ public class OrderManagementDAO {
     public List<Order> getAllOrders() throws SQLException {
         EntityManager em = emf.createEntityManager();
         try {
+            // Step 1: Fetch orders with user and promotion (no collection join)
             String jpql = "SELECT DISTINCT o FROM Order o " +
-                    "LEFT JOIN FETCH o.user u " +
-                    "LEFT JOIN FETCH o.promotion p " +
-                    "LEFT JOIN FETCH o.items oi " +
-                    "LEFT JOIN FETCH oi.book b " +
+                    "LEFT JOIN FETCH o.user " +
+                    "LEFT JOIN FETCH o.promotion " +
                     "ORDER BY o.createdAt DESC";
 
             TypedQuery<Order> query = em.createQuery(jpql, Order.class);
             List<Order> orders = query.getResultList();
+
+            // Step 2: Fetch items for these orders (if any)
+            if (!orders.isEmpty()) {
+                String itemsJpql = "SELECT DISTINCT o FROM Order o " +
+                        "LEFT JOIN FETCH o.items oi " +
+                        "LEFT JOIN FETCH oi.book " +
+                        "WHERE o IN :orders";
+
+                em.createQuery(itemsJpql, Order.class)
+                        .setParameter("orders", orders)
+                        .getResultList();
+            }
 
             // Calculate totals for each order
             for (Order order : orders) {
@@ -54,11 +65,10 @@ public class OrderManagementDAO {
     public List<Order> searchOrders(String keyword) throws SQLException {
         EntityManager em = emf.createEntityManager();
         try {
+            // Step 1: Fetch orders with user and promotion
             String jpql = "SELECT DISTINCT o FROM Order o " +
                     "LEFT JOIN FETCH o.user u " +
-                    "LEFT JOIN FETCH o.promotion p " +
-                    "LEFT JOIN FETCH o.items oi " +
-                    "LEFT JOIN FETCH oi.book b " +
+                    "LEFT JOIN FETCH o.promotion " +
                     "WHERE CAST(o.id AS string) LIKE :keyword " +
                     "OR LOWER(u.name) LIKE LOWER(:keyword) " +
                     "OR LOWER(u.email) LIKE LOWER(:keyword) " +
@@ -66,8 +76,19 @@ public class OrderManagementDAO {
 
             TypedQuery<Order> query = em.createQuery(jpql, Order.class);
             query.setParameter("keyword", "%" + keyword + "%");
-
             List<Order> orders = query.getResultList();
+
+            // Step 2: Fetch items for these orders
+            if (!orders.isEmpty()) {
+                String itemsJpql = "SELECT DISTINCT o FROM Order o " +
+                        "LEFT JOIN FETCH o.items oi " +
+                        "LEFT JOIN FETCH oi.book " +
+                        "WHERE o IN :orders";
+
+                em.createQuery(itemsJpql, Order.class)
+                        .setParameter("orders", orders)
+                        .getResultList();
+            }
 
             for (Order order : orders) {
                 order.calculateTotals();
@@ -87,18 +108,28 @@ public class OrderManagementDAO {
     public List<Order> getOrdersByStatus(String status) throws SQLException {
         EntityManager em = emf.createEntityManager();
         try {
+            // Step 1: Fetch orders with user and promotion
             String jpql = "SELECT DISTINCT o FROM Order o " +
-                    "LEFT JOIN FETCH o.user u " +
-                    "LEFT JOIN FETCH o.promotion p " +
-                    "LEFT JOIN FETCH o.items oi " +
-                    "LEFT JOIN FETCH oi.book b " +
+                    "LEFT JOIN FETCH o.user " +
+                    "LEFT JOIN FETCH o.promotion " +
                     "WHERE o.status = :status " +
                     "ORDER BY o.createdAt DESC";
 
             TypedQuery<Order> query = em.createQuery(jpql, Order.class);
             query.setParameter("status", OrderStatus.valueOf(status.toUpperCase()));
-
             List<Order> orders = query.getResultList();
+
+            // Step 2: Fetch items for these orders
+            if (!orders.isEmpty()) {
+                String itemsJpql = "SELECT DISTINCT o FROM Order o " +
+                        "LEFT JOIN FETCH o.items oi " +
+                        "LEFT JOIN FETCH oi.book " +
+                        "WHERE o IN :orders";
+
+                em.createQuery(itemsJpql, Order.class)
+                        .setParameter("orders", orders)
+                        .getResultList();
+            }
 
             for (Order order : orders) {
                 order.calculateTotals();
@@ -172,11 +203,10 @@ public class OrderManagementDAO {
     public Order getOrderById(long orderId) throws SQLException {
         EntityManager em = emf.createEntityManager();
         try {
-            String jpql = "SELECT DISTINCT o FROM Order o " +
-                    "LEFT JOIN FETCH o.user u " +
-                    "LEFT JOIN FETCH o.promotion p " +
-                    "LEFT JOIN FETCH o.items oi " +
-                    "LEFT JOIN FETCH oi.book b " +
+            // Step 1: Fetch order with user and promotion
+            String jpql = "SELECT o FROM Order o " +
+                    "LEFT JOIN FETCH o.user " +
+                    "LEFT JOIN FETCH o.promotion " +
                     "WHERE o.id = :orderId";
 
             TypedQuery<Order> query = em.createQuery(jpql, Order.class);
@@ -188,6 +218,17 @@ public class OrderManagementDAO {
             }
 
             Order order = result.get(0);
+
+            // Step 2: Fetch items
+            String itemsJpql = "SELECT o FROM Order o " +
+                    "LEFT JOIN FETCH o.items oi " +
+                    "LEFT JOIN FETCH oi.book " +
+                    "WHERE o.id = :orderId";
+
+            em.createQuery(itemsJpql, Order.class)
+                    .setParameter("orderId", orderId)
+                    .getSingleResult();
+
             order.calculateTotals();
             return order;
         } catch (Exception e) {
@@ -205,7 +246,7 @@ public class OrderManagementDAO {
         try {
             String jpql = "SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o " +
                     "WHERE CAST(o.createdAt AS date) = CURRENT_DATE " +
-                    "AND o.status != model.OrderStatus.CANCELLED";
+                    "AND o.status != model.OrderStatus.CANCELED";
 
             return em.createQuery(jpql, Double.class).getSingleResult();
         } catch (Exception e) {
@@ -241,7 +282,7 @@ public class OrderManagementDAO {
             String jpql = "SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o " +
                     "WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE) " +
                     "AND MONTH(o.createdAt) = MONTH(CURRENT_DATE) " +
-                    "AND o.status != model.OrderStatus.CANCELLED";
+                    "AND o.status != model.OrderStatus.CANCELED";
 
             return em.createQuery(jpql, Double.class).getSingleResult();
         } catch (Exception e) {
@@ -279,7 +320,7 @@ public class OrderManagementDAO {
                     "FROM OrderItem oi " +
                     "JOIN oi.book b " +
                     "JOIN oi.order o " +
-                    "WHERE o.status != model.OrderStatus.CANCELLED " +
+                    "WHERE o.status != model.OrderStatus.CANCELED " +
                     "GROUP BY b.id, b.title " +
                     "ORDER BY totalSold DESC";
 
