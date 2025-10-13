@@ -10,7 +10,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/categoryBook.css">
 </head>
 <body>

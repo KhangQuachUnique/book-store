@@ -74,7 +74,7 @@ public class CategoryBookService {
     /**
      * Lọc sách theo tiêu đề, tác giả, và categories
      */
-    public static List<Book> filterBook(String title, String author,
+    public static List<Book> filterBook(String title, String author, 
                                         List<Long> includeCategories,
                                         List<Long> excludeCategories, 
                                         int page) {
@@ -84,7 +84,7 @@ public class CategoryBookService {
     /**
      * Tính tổng số trang cho kết quả filter
      */
-    public static int getTotalPage(String title, String author,
+    public static int getTotalPage(String title, String author, 
                                    List<Long> includeCategories,
                                    List<Long> excludeCategories) {
         long totalBooks = CategoryBookDao.countBooks(title, author, includeCategories, excludeCategories);
