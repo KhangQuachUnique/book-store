@@ -60,7 +60,7 @@ public class ViewHistoryDao {
     }
 
     /**
-     * Ghi lại lịch sử xem sách
+     * Ghi lại lịch sử xem sách: nếu đã tồn tại (bookId, viewedProductId) thì chỉ cập nhật thời gian; nếu chưa thì thêm mới.
      */
     public static void addHistory(Long userId, Long bookId) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
@@ -85,19 +85,35 @@ public class ViewHistoryDao {
                 em.flush(); // đảm bảo ID được tạo
                 log.fine("[ViewHistory] Created new ViewedProduct id=" + viewedProduct.getId());
             }
-            
-            // Tạo ViewedProductItem mới
-            ViewedProductItem item = new ViewedProductItem();
-            Book book = em.getReference(Book.class, bookId);
-            item.setBook(book);
-            item.setViewedProduct(viewedProduct);
-            // set timestamp để tránh lỗi NOT NULL
-            item.setViewedAt(new Timestamp(System.currentTimeMillis()));
-            em.persist(item);
-            em.flush(); // force insert để phát hiện lỗi DB sớm
+
+            // Upsert ViewedProductItem theo unique (bookId, viewedProductId)
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            ViewedProductItem existing = em.createQuery(
+                    "SELECT vpi FROM ViewedProductItem vpi WHERE vpi.viewedProduct.id = :vpId AND vpi.book.id = :bookId",
+                    ViewedProductItem.class)
+                .setParameter("vpId", viewedProduct.getId())
+                .setParameter("bookId", bookId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+
+            if (existing != null) {
+                // Cập nhật thời gian xem gần nhất
+                existing.setViewedAt(now);
+                // entity đã managed, không cần merge/persist lại
+                log.fine("[ViewHistory] Updated existing ViewedProductItem id=" + existing.getId());
+            } else {
+                // Tạo mới
+                ViewedProductItem item = new ViewedProductItem();
+                Book book = em.getReference(Book.class, bookId);
+                item.setBook(book);
+                item.setViewedProduct(viewedProduct);
+                item.setViewedAt(now);
+                em.persist(item);
+                log.fine("[ViewHistory] Inserted new ViewedProductItem for bookId=" + bookId + ", vpId=" + viewedProduct.getId());
+            }
 
             em.getTransaction().commit();
-            log.fine("[ViewHistory] Saved ViewedProductItem id=" + item.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
