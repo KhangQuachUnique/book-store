@@ -16,7 +16,7 @@ public class CategoryDao {
     public List<Category> findAll() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            TypedQuery<Category> q = em.createQuery("SELECT c FROM Category c ORDER BY c.id DESC", Category.class);
+            TypedQuery<Category> q = em.createQuery("SELECT c FROM Category c ORDER BY c.id", Category.class);
             return q.getResultList();
         } finally {
             em.close();
