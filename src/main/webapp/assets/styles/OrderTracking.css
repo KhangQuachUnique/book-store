@@ -11,6 +11,16 @@
     color: #800020;
     margin-bottom: 24px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title svg {
+    width: 32px;
+    height: 32px;
+    fill: #800020;
+    vertical-align: middle;
 }
 
 /* Thanh trạng thái */

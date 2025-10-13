@@ -6,7 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import constant.PathConstants;
 import model.Order;
+import model.User;
 import service.OrderService;
 import service.OrderStatusService;
 
@@ -23,13 +25,11 @@ public class OrderTrackingPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // ✅ Test mode: giả lập user
-        model.User mockUser = new model.User();
-        mockUser.setId(101L);
-        HttpSession session = req.getSession(true);
-        session.setAttribute("user", mockUser);
+        //Get user id from section
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long userId = sessionUser.getId();
 
-        Long userId = mockUser.getId();
+        //Get filter status from request
         String status = req.getParameter("status");
         if (status == null) {
             status = "ALL";
@@ -45,7 +45,8 @@ public class OrderTrackingPageServlet extends HttpServlet {
         req.setAttribute("selectedStatus", status);
         req.setAttribute("orderStatusService", orderStatusService);
 
-        req.getRequestDispatcher("/WEB-INF/views/order-tracking.jsp").forward(req, resp);
+        req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
+        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
     }
 
 
