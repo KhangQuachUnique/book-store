@@ -69,17 +69,20 @@
                         </div>
 
                         <!-- 🧾 Promotion -->
+                        <!-- 🧾 Promotion -->
                         <div class="summary-section">
                             <h3>Promotion</h3>
-                            <div class="promo-container">
-                                <input type="text" name="promoCode" id="promoCodeInput"
-                                       placeholder="Enter promotion code"
-                                       value="${appliedCode != null ? appliedCode : ''}" />
-                                <button type="button" class="apply-btn">Apply</button>
+                            <div class="promo-wrapper">
+                                <label class="promo-label" for="promoCodeInput">Enter your promo code:</label>
+                                <div class="promo-flex">
+                                    <input type="text" name="promoCode" id="promoCodeInput"
+                                           placeholder="e.g. BOOK20"
+                                           value="${appliedCode != null ? appliedCode : ''}" />
+                                    <button type="button" class="apply-btn">Apply</button>
+                                </div>
+                                <p id="promoMessage" class="promo-message"></p>
+                                <div id="discountRow"></div>
                             </div>
-
-                            <p id="promoMessage" style="font-size:0.9rem;margin:5px 0 0 0;"></p>
-                            <div id="discountRow"></div>
                         </div>
 
                         <!-- 💰 Total -->
