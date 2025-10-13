@@ -87,7 +87,7 @@
                 <select name="addressId" class="address-select">
                     <c:forEach var="address" items="${addresses}">
                         <option value="${address.id}">
-                                ${address.streetAddress}, ${address.city}
+                                ${address.address}
                         </option>
                     </c:forEach>
                 </select>

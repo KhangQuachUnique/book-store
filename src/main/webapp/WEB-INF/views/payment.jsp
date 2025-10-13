@@ -17,7 +17,7 @@
     </c:if>
 
     <c:if test="${not empty cart}">
-        <form action="${pageContext.request.contextPath}/user/payment/process" method="post" class="pay-form" id="paymentForm">
+        <form action="${pageContext.request.contextPath}/user/checkout/process" method="POST" class="pay-form" id="paymentForm">
             <div class="payment-content">
 
                 <!-- 🛒 CART TABLE -->
@@ -95,7 +95,7 @@
                         <c:if test="${not empty addresses}">
                             <select name="addressId" class="address-select">
                                 <c:forEach var="address" items="${addresses}">
-                                    <option value="${address.id}">${address.streetAddress}, ${address.city}</option>
+                                    <option value="${address.id}">${address.address}</option>
                                 </c:forEach>
                             </select>
                         </c:if>
@@ -110,10 +110,7 @@
                         <h3>Payment Method</h3>
                         <div class="payment-methods">
                             <label class="payment-option"><input type="radio" name="paymentMethod" value="cod" checked>Cash on Delivery (COD)</label>
-                            <label class="payment-option"><input type="radio" name="paymentMethod" value="bank">Bank Transfer</label>
-                            <label class="payment-option"><input type="radio" name="paymentMethod" value="card">Credit/Debit Card</label>
                             <label class="payment-option"><input type="radio" name="paymentMethod" value="momo">MoMo E-Wallet</label>
-                            <label class="payment-option"><input type="radio" name="paymentMethod" value="zalo">ZaloPay</label>
                         </div>
                     </div>
 
@@ -124,7 +121,7 @@
                     </div>
 
                     <div class="pay-actions" style="margin-top: 24px;">
-                        <button type="submit" class="pay-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Pay Now</button>
+                        <button type="submit" class="pay-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Place Order</button>
                     </div>
                 </div>
             </div>

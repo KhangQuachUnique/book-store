@@ -40,6 +40,11 @@ public class Order {
     @ToString.Exclude
     private Promotion promotion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "\"address\"")
+    @ToString.Exclude
+    private Address address;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "\"status\"")
     private OrderStatus status;

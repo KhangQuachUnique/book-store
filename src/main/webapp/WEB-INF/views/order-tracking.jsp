@@ -15,6 +15,25 @@
         Danh sách đơn hàng
     </h2>
 
+    <!-- Success/Error Messages -->
+    <c:if test="${not empty sessionScope.successMessage}">
+        <div class="alert alert-success" style="padding: 12px; margin-bottom: 20px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+            ${sessionScope.successMessage}
+            <c:if test="${not empty sessionScope.orderId}">
+                <strong>Mã đơn hàng: #${sessionScope.orderId}</strong>
+            </c:if>
+        </div>
+        <c:remove var="successMessage" scope="session"/>
+        <c:remove var="orderId" scope="session"/>
+    </c:if>
+
+    <c:if test="${not empty sessionScope.paymentError}">
+        <div class="alert alert-danger" style="padding: 12px; margin-bottom: 20px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">
+            ${sessionScope.paymentError}
+        </div>
+        <c:remove var="paymentError" scope="session"/>
+    </c:if>
+
     <!-- Thanh bar filter trạng thái -->
     <div class="status-bar">
         <a href="${pageContext.request.contextPath}/user/order-tracking"
