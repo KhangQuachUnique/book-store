@@ -24,7 +24,7 @@
                 <!-- Thanh tìm kiếm - cấu trúc hiện đại -->
                 <form action="${pageContext.request.contextPath}/categories" method="get" class="search-form">
                     <div class="form-group">
-                        <input type="text" name="title" placeholder="Search by title" value="${title}" class="input">
+                        <input type="text" name="search" placeholder="Search by title or author" value="${search}" class="input">
                     </div>
                     <div class="form-group button-group">
                         <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
@@ -101,11 +101,11 @@
                 </c:choose>
             </div>
 
-    <!-- Giữ nguyên phần pagination nhưng sửa links để bảo toàn filter -->
+    <!-- Pagination -->
     <div class="pagination">
         <c:choose>
             <c:when test="${currentPage > 1}">
-                <a href="?page=${currentPage - 1}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
+                <a href="?page=${currentPage - 1}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
             </c:when>
             <c:otherwise>
                 <span class="disabled">&lt;</span>
@@ -113,7 +113,7 @@
         </c:choose>
 
         <c:if test="${showFirstEllipsis}">
-            <a href="?page=1&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
+            <a href="?page=1&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
             <span class="ellipsis">...</span>
         </c:if>
 
@@ -123,19 +123,19 @@
                     <span class="active">${pageNum}</span>
                 </c:when>
                 <c:otherwise>
-                    <a href="?page=${pageNum}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
+                    <a href="?page=${pageNum}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
 
         <c:if test="${showLastEllipsis}">
             <span class="ellipsis">...</span>
-            <a href="?page=${totalPages}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
+            <a href="?page=${totalPages}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
         </c:if>
 
         <c:choose>
             <c:when test="${currentPage < totalPages}">
-                <a href="?page=${currentPage + 1}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
+                <a href="?page=${currentPage + 1}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
             </c:when>
             <c:otherwise>
                 <span class="disabled">&gt;</span>

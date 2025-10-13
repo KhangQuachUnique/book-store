@@ -72,22 +72,22 @@ public class CategoryBookService {
     }
 
     /**
-     * Lọc sách theo tiêu đề, năm xuất bản, và categories
+     * Lọc sách theo tiêu đề, tác giả, và categories
      */
-    public static List<Book> filterBook(String title, Integer publishYear, 
+    public static List<Book> filterBook(String title, String author,
                                         List<Long> includeCategories,
                                         List<Long> excludeCategories, 
                                         int page) {
-        return CategoryBookDao.filterBooks(title, publishYear, includeCategories, excludeCategories, page);
+        return CategoryBookDao.filterBooks(title, author, includeCategories, excludeCategories, page);
     }
 
     /**
      * Tính tổng số trang cho kết quả filter
      */
-    public static int getTotalPage(String title, Integer publishYear, 
+    public static int getTotalPage(String title, String author,
                                    List<Long> includeCategories,
                                    List<Long> excludeCategories) {
-        long totalBooks = CategoryBookDao.countBooks(title, publishYear, includeCategories, excludeCategories);
+        long totalBooks = CategoryBookDao.countBooks(title, author, includeCategories, excludeCategories);
         int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
         return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
     }

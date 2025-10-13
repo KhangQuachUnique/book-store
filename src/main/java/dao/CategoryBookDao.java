@@ -74,55 +74,60 @@ public class CategoryBookDao {
     }
 
     /**
-     * Lọc sách theo tiêu đề, năm xuất bản, và categories (include/exclude)
+     * Lọc sách theo tiêu đề, tác giả, và categories (include/exclude)
      */
-    public static List<Book> filterBooks(String title, Integer publishYear, 
-                                         List<Long> includeCategories, 
-                                         List<Long> excludeCategories, 
+    public static List<Book> filterBooks(String title, String author,
+                                         List<Long> includeCategories,
+                                         List<Long> excludeCategories,
                                          int page) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             StringBuilder jpql = new StringBuilder("SELECT b FROM Book b WHERE 1=1");
-            
-            if (title != null && !title.trim().isEmpty()) {
-                jpql.append(" AND LOWER(b.title) LIKE LOWER(:title)");
+
+            // Tìm kiếm theo title hoặc author với OR logic
+            if ((title != null && !title.trim().isEmpty()) || (author != null && !author.trim().isEmpty())) {
+                jpql.append(" AND (");
+                if (title != null && !title.trim().isEmpty()) {
+                    jpql.append("LOWER(b.title) LIKE LOWER(:searchTerm)");
+                }
+                if ((title != null && !title.trim().isEmpty()) && (author != null && !author.trim().isEmpty())) {
+                    jpql.append(" OR ");
+                }
+                if (author != null && !author.trim().isEmpty()) {
+                    jpql.append("LOWER(b.author) LIKE LOWER(:searchTerm)");
+                }
+                jpql.append(")");
             }
-            
-            if (publishYear != null) {
-                jpql.append(" AND b.publishYear = :publishYear");
-            }
-            
+
             if (includeCategories != null && !includeCategories.isEmpty()) {
                 jpql.append(" AND b.category.id IN :includeCategories");
             }
-            
+
             if (excludeCategories != null && !excludeCategories.isEmpty()) {
                 jpql.append(" AND b.category.id NOT IN :excludeCategories");
             }
-            
+
             jpql.append(" ORDER BY b.id");
-            
+
             TypedQuery<Book> query = em.createQuery(jpql.toString(), Book.class);
-            
-            if (title != null && !title.trim().isEmpty()) {
-                query.setParameter("title", "%" + title.trim() + "%");
+
+            // Sử dụng cùng một tham số searchTerm cho cả title và author
+            if ((title != null && !title.trim().isEmpty()) || (author != null && !author.trim().isEmpty())) {
+                String searchTerm = title != null && !title.trim().isEmpty() ? title.trim() : author.trim();
+                query.setParameter("searchTerm", "%" + searchTerm + "%");
             }
-            
-            if (publishYear != null) {
-                query.setParameter("publishYear", publishYear);
-            }
-            
+
             if (includeCategories != null && !includeCategories.isEmpty()) {
                 query.setParameter("includeCategories", includeCategories);
             }
-            
+
             if (excludeCategories != null && !excludeCategories.isEmpty()) {
                 query.setParameter("excludeCategories", excludeCategories);
             }
-            
+
             query.setFirstResult((page - 1) * BOOKS_PER_PAGE);
             query.setMaxResults(BOOKS_PER_PAGE);
-            
+
             return query.getResultList();
         } finally {
             em.close();
@@ -132,47 +137,52 @@ public class CategoryBookDao {
     /**
      * Đếm số sách theo filter
      */
-    public static long countBooks(String title, Integer publishYear, 
-                                  List<Long> includeCategories, 
+    public static long countBooks(String title, String author,
+                                  List<Long> includeCategories,
                                   List<Long> excludeCategories) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             StringBuilder jpql = new StringBuilder("SELECT COUNT(b) FROM Book b WHERE 1=1");
-            
-            if (title != null && !title.trim().isEmpty()) {
-                jpql.append(" AND LOWER(b.title) LIKE LOWER(:title)");
+
+            // Tìm kiếm theo title hoặc author với OR logic
+            if ((title != null && !title.trim().isEmpty()) || (author != null && !author.trim().isEmpty())) {
+                jpql.append(" AND (");
+                if (title != null && !title.trim().isEmpty()) {
+                    jpql.append("LOWER(b.title) LIKE LOWER(:searchTerm)");
+                }
+                if ((title != null && !title.trim().isEmpty()) && (author != null && !author.trim().isEmpty())) {
+                    jpql.append(" OR ");
+                }
+                if (author != null && !author.trim().isEmpty()) {
+                    jpql.append("LOWER(b.author) LIKE LOWER(:searchTerm)");
+                }
+                jpql.append(")");
             }
-            
-            if (publishYear != null) {
-                jpql.append(" AND b.publishYear = :publishYear");
-            }
-            
+
             if (includeCategories != null && !includeCategories.isEmpty()) {
                 jpql.append(" AND b.category.id IN :includeCategories");
             }
-            
+
             if (excludeCategories != null && !excludeCategories.isEmpty()) {
                 jpql.append(" AND b.category.id NOT IN :excludeCategories");
             }
-            
+
             TypedQuery<Long> query = em.createQuery(jpql.toString(), Long.class);
-            
-            if (title != null && !title.trim().isEmpty()) {
-                query.setParameter("title", "%" + title.trim() + "%");
+
+            // Sử dụng cùng một tham số searchTerm cho cả title và author
+            if ((title != null && !title.trim().isEmpty()) || (author != null && !author.trim().isEmpty())) {
+                String searchTerm = title != null && !title.trim().isEmpty() ? title.trim() : author.trim();
+                query.setParameter("searchTerm", "%" + searchTerm + "%");
             }
-            
-            if (publishYear != null) {
-                query.setParameter("publishYear", publishYear);
-            }
-            
+
             if (includeCategories != null && !includeCategories.isEmpty()) {
                 query.setParameter("includeCategories", includeCategories);
             }
-            
+
             if (excludeCategories != null && !excludeCategories.isEmpty()) {
                 query.setParameter("excludeCategories", excludeCategories);
             }
-            
+
             return query.getSingleResult();
         } finally {
             em.close();
@@ -192,3 +202,4 @@ public class CategoryBookDao {
         }
     }
 }
+
