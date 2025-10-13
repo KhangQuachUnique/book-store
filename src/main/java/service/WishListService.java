@@ -5,8 +5,6 @@ import model.ApiResponse;
 import model.WishList;
 import model.WishListItem;
 
-import java.util.List;
-
 public class WishListService {
 
     private final WishListDao wishListDao;
@@ -15,7 +13,15 @@ public class WishListService {
         this.wishListDao = new WishListDao();
     }
 
-    public WishList getWishListBooks(Long userId, int currentPage, int pageSize) {
+    public WishList getWishListBooks(Long userId) {
+        WishList wishList = wishListDao.getWishListByUser(userId);
+        for (WishListItem item : wishList.getItems()) {
+            item.calculateStars();
+        }
+        return wishList;
+    }
+
+    public WishList getWishListBooksByPage(Long userId, int currentPage, int pageSize) {
         WishList wishList = wishListDao.getWishListByUser(userId);
         for (WishListItem item : wishList.getItems()) {
             item.calculateStars();

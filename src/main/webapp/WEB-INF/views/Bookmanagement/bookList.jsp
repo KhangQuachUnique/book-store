@@ -10,6 +10,11 @@
 <div class="container">
     <h1 class="page-title">Book Management</h1>
 
+    <!-- Display error message if present -->
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-danger">${errorMessage}</div>
+    </c:if>
+
     <!-- Thanh tìm kiếm -->
     <div class="card">
         <div class="card-content">
@@ -24,7 +29,7 @@
                 <div class="form-group">
                     <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-group-find">
                     <input type="submit" value="Find" class="btn btn-primary">
                 </div>
                 <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
@@ -34,13 +39,13 @@
     </div>
 
     <!-- Bảng category -->
-    <div id="categoryTable" class="modal">
+    <div id="categoryTable" class="modal" style="display: none;">
         <div class="card-content">
             <button type="button" class="btn btn-primary" onclick="submitFilterForm()">Submit</button>
             <div class="category-list">
                 <c:forEach var="category" items="${categories}">
-                    <c:set var="isInclude" value="${includeCategories != null && includeCategories.contains(category.id.toString())}"/>
-                    <c:set var="isExclude" value="${excludeCategories != null && excludeCategories.contains(category.id.toString())}"/>
+                    <c:set var="isInclude" value="${includeCategories != null && includeCategories.contains(category.id)}"/>
+                    <c:set var="isExclude" value="${excludeCategories != null && excludeCategories.contains(category.id)}"/>
                     <div class="category-item ${isInclude ? 'include' : ''} ${isExclude ? 'exclude' : ''}"
                          data-id="${category.id}"
                          onclick="toggleCategory(this, ${category.id})">
@@ -77,12 +82,12 @@
                 <c:forEach var="book" items="${books}">
                     <tr>
                         <td>${book.id}</td>
-                        <td>${book.title}</td>
-                        <td>${book.author}</td>
-                        <td>${book.publisher}</td>
-                        <td>${book.categoryId}</td>
-                        <td>${book.stock}</td>
-                        <td>${book.price}</td>
+                        <td><c:out value="${book.title}" default="N/A"/></td>
+                        <td><c:out value="${book.author}" default="N/A"/></td>
+                        <td><c:out value="${book.publisher}" default="N/A"/></td>
+                        <td><c:out value="${book.category != null ? book.category.name : 'N/A'}" default="N/A"/></td>
+                        <td><c:out value="${book.stock != null ? book.stock : '0'}" default="0"/></td>
+                        <td><fmt:formatNumber value="${book.price != null ? book.price : 0}" type="currency" currencySymbol="VND"/></td>
                         <td class="action-buttons">
                             <a href="${pageContext.request.contextPath}/admin/book?action=edit&id=${book.id}" class="btn btn-primary btn-sm">Edit</a>
                             <a href="${pageContext.request.contextPath}/admin/book?action=delete&id=${book.id}"
@@ -90,132 +95,14 @@
                         </td>
                     </tr>
                 </c:forEach>
+                <c:if test="${empty books}">
+                    <tr>
+                        <td colspan="8">No books found.</td>
+                    </tr>
+                </c:if>
                 </tbody>
             </table>
 
-            <!-- Phân trang -->
-<%--            <c:if test="${totalPages > 1}">--%>
-<%--                <div class="pagination">--%>
-<%--                    <c:url var="prevUrl" value="/admin/book">--%>
-<%--                        <c:param name="action" value="filter"/>--%>
-<%--                        <c:param name="page" value="${currentPage - 1}"/>--%>
-<%--                        <c:if test="${not empty title}">--%>
-<%--                            <c:param name="title" value="${title}"/>--%>
-<%--                        </c:if>--%>
-<%--                        <c:if test="${not empty publishYear}">--%>
-<%--                            <c:param name="publish_year" value="${publishYear}"/>--%>
-<%--                        </c:if>--%>
-<%--                        <c:forEach var="includeCat" items="${paramValues.includeCategories}">--%>
-<%--                            <c:param name="includeCategories" value="${includeCat}"/>--%>
-<%--                        </c:forEach>--%>
-<%--                        <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">--%>
-<%--                            <c:param name="excludeCategories" value="${excludeCat}"/>--%>
-<%--                        </c:forEach>--%>
-<%--                    </c:url>--%>
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${currentPage > 1}">--%>
-<%--                            <a href="${prevUrl}" class="btn btn-primary">&lt;</a>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <span class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">&lt;</span>--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
-
-<%--                    <c:if test="${showFirstEllipsis}">--%>
-<%--                        <c:url var="firstPageUrl" value="/admin/book">--%>
-<%--                            <c:param name="action" value="filter"/>--%>
-<%--                            <c:param name="page" value="1"/>--%>
-<%--                            <c:if test="${not empty title}">--%>
-<%--                                <c:param name="title" value="${title}"/>--%>
-<%--                            </c:if>--%>
-<%--                            <c:if test="${not empty publishYear}">--%>
-<%--                                <c:param name="publish_year" value="${publishYear}"/>--%>
-<%--                            </c:if>--%>
-<%--                            <c:forEach var="includeCat" items="${paramValues.includeCategories}">--%>
-<%--                                <c:param name="includeCategories" value="${includeCat}"/>--%>
-<%--                            </c:forEach>--%>
-<%--                            <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">--%>
-<%--                                <c:param name="excludeCategories" value="${excludeCat}"/>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:url>--%>
-<%--                        <a href="${firstPageUrl}" class="btn btn-primary">1</a>--%>
-<%--                        <span class="ellipsis">...</span>--%>
-<%--                    </c:if>--%>
-
-<%--                    <c:forEach items="${visiblePages}" var="pageNum">--%>
-<%--                        <c:url var="pageUrl" value="/admin/book">--%>
-<%--                            <c:param name="action" value="filter"/>--%>
-<%--                            <c:param name="page" value="${pageNum}"/>--%>
-<%--                            <c:if test="${not empty title}">--%>
-<%--                                <c:param name="title" value="${title}"/>--%>
-<%--                            </c:if>--%>
-<%--                            <c:if test="${not empty publishYear}">--%>
-<%--                                <c:param name="publish_year" value="${publishYear}"/>--%>
-<%--                            </c:if>--%>
-<%--                            <c:forEach var="includeCat" items="${paramValues.includeCategories}">--%>
-<%--                                <c:param name="includeCategories" value="${includeCat}"/>--%>
-<%--                            </c:forEach>--%>
-<%--                            <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">--%>
-<%--                                <c:param name="excludeCategories" value="${excludeCat}"/>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:url>--%>
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${pageNum == currentPage}">--%>
-<%--                                <span class="btn btn-primary active">${pageNum}</span>--%>
-<%--                            </c:when>--%>
-<%--                            <c:otherwise>--%>
-<%--                                <a href="${pageUrl}" class="btn btn-primary">${pageNum}</a>--%>
-<%--                            </c:otherwise>--%>
-<%--                        </c:choose>--%>
-<%--                    </c:forEach>--%>
-
-<%--                    <c:if test="${showLastEllipsis}">--%>
-<%--                        <span class="ellipsis">...</span>--%>
-<%--                        <c:url var="lastPageUrl" value="/admin/book">--%>
-<%--                            <c:param name="action" value="filter"/>--%>
-<%--                            <c:param name="page" value="${totalPages}"/>--%>
-<%--                            <c:if test="${not empty title}">--%>
-<%--                                <c:param name="title" value="${title}"/>--%>
-<%--                            </c:if>--%>
-<%--                            <c:if test="${not empty publishYear}">--%>
-<%--                                <c:param name="publish_year" value="${publishYear}"/>--%>
-<%--                            </c:if>--%>
-<%--                            <c:forEach var="includeCat" items="${paramValues.includeCategories}">--%>
-<%--                                <c:param name="includeCategories" value="${includeCat}"/>--%>
-<%--                            </c:forEach>--%>
-<%--                            <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">--%>
-<%--                                <c:param name="excludeCategories" value="${excludeCat}"/>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:url>--%>
-<%--                        <a href="${lastPageUrl}" class="btn btn-primary">${totalPages}</a>--%>
-<%--                    </c:if>--%>
-
-<%--                    <c:url var="nextUrl" value="/admin/book">--%>
-<%--                        <c:param name="action" value="filter"/>--%>
-<%--                        <c:param name="page" value="${currentPage + 1}"/>--%>
-<%--                        <c:if test="${not empty title}">--%>
-<%--                            <c:param name="title" value="${title}"/>--%>
-<%--                        </c:if>--%>
-<%--                        <c:if test="${not empty publishYear}">--%>
-<%--                            <c:param name="publish_year" value="${publishYear}"/>--%>
-<%--                        </c:if>--%>
-<%--                        <c:forEach var="includeCat" items="${paramValues.includeCategories}">--%>
-<%--                            <c:param name="includeCategories" value="${includeCat}"/>--%>
-<%--                        </c:forEach>--%>
-<%--                        <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">--%>
-<%--                            <c:param name="excludeCategories" value="${excludeCat}"/>--%>
-<%--                        </c:forEach>--%>
-<%--                    </c:url>--%>
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${currentPage < totalPages}">--%>
-<%--                            <a href="${nextUrl}" class="btn btn-primary">&gt;</a>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <span class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">&gt;</span>--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
-<%--                </div>--%>
-<%--            </c:if>--%>
             <!-- Phân trang -->
             <c:if test="${totalPages > 1}">
                 <div class="pagination">
@@ -228,115 +115,31 @@
                         <c:if test="${not empty publishYear}">
                             <c:param name="publish_year" value="${publishYear}"/>
                         </c:if>
-                        <c:forEach var="includeCat" items="${paramValues.includeCategories}">
-                            <c:param name="includeCategories" value="${includeCat}"/>
-                        </c:forEach>
-                        <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">
-                            <c:param name="excludeCategories" value="${excludeCat}"/>
-                        </c:forEach>
+                        <c:if test="${not empty includeCategories}">
+                            <c:forEach var="cat" items="${includeCategories}">
+                                <c:param name="includeCategories" value="${cat}"/>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${not empty excludeCategories}">
+                            <c:forEach var="cat" items="${excludeCategories}">
+                                <c:param name="excludeCategories" value="${cat}"/>
+                            </c:forEach>
+                        </c:if>
                     </c:url>
                     <c:choose>
                         <c:when test="${currentPage > 1}">
-                            <a href="${prevUrl}" class="btn btn-primary">&lt;</a>
+                            <a href="${prevUrl}" class="btn btn-primary">Previous</a>
                         </c:when>
                         <c:otherwise>
-                            <span class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">&lt;</span>
+                            <span class="btn btn-primary disabled">Previous</span>
                         </c:otherwise>
                     </c:choose>
 
-                    <c:if test="${showFirstEllipsis}">
-                        <c:url var="firstPageUrl" value="/admin/book">
-                            <c:param name="action" value="filter"/>
-                            <c:param name="page" value="1"/>
-                            <c:if test="${not empty title}">
-                                <c:param name="title" value="${title}"/>
-                            </c:if>
-                            <c:if test="${not empty publishYear}">
-                                <c:param name="publish_year" value="${publishYear}"/>
-                            </c:if>
-                            <c:forEach var="includeCat" items="${paramValues.includeCategories}">
-                                <c:param name="includeCategories" value="${includeCat}"/>
-                            </c:forEach>
-                            <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">
-                                <c:param name="excludeCategories" value="${excludeCat}"/>
-                            </c:forEach>
-                        </c:url>
-                        <a href="${firstPageUrl}" class="btn btn-primary">1</a>
-                        <span class="ellipsis">...</span>
-                    </c:if>
-
-                    <c:forEach items="${visiblePages}" var="pageNum">
-                        <c:url var="pageUrl" value="/admin/book">
-                            <c:param name="action" value="filter"/>
-                            <c:param name="page" value="${pageNum}"/>
-                            <c:if test="${not empty title}">
-                                <c:param name="title" value="${title}"/>
-                            </c:if>
-                            <c:if test="${not empty publishYear}">
-                                <c:param name="publish_year" value="${publishYear}"/>
-                            </c:if>
-                            <c:forEach var="includeCat" items="${paramValues.includeCategories}">
-                                <c:param name="includeCategories" value="${includeCat}"/>
-                            </c:forEach>
-                            <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">
-                                <c:param name="excludeCategories" value="${excludeCat}"/>
-                            </c:forEach>
-                        </c:url>
-                        <c:choose>
-                            <c:when test="${pageNum == currentPage}">
-                                <span class="btn btn-primary active">${pageNum}</span>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${pageUrl}" class="btn btn-primary">${pageNum}</a>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-
-                    <c:if test="${showLastEllipsis}">
-                        <span class="ellipsis">...</span>
-                        <c:url var="lastPageUrl" value="/admin/book">
-                            <c:param name="action" value="filter"/>
-                            <c:param name="page" value="${totalPages}"/>
-                            <c:if test="${not empty title}">
-                                <c:param name="title" value="${title}"/>
-                            </c:if>
-                            <c:if test="${not empty publishYear}">
-                                <c:param name="publish_year" value="${publishYear}"/>
-                            </c:if>
-                            <c:forEach var="includeCat" items="${paramValues.includeCategories}">
-                                <c:param name="includeCategories" value="${includeCat}"/>
-                            </c:forEach>
-                            <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">
-                                <c:param name="excludeCategories" value="${excludeCat}"/>
-                            </c:forEach>
-                        </c:url>
-                        <a href="${lastPageUrl}" class="btn btn-primary">${totalPages}</a>
-                    </c:if>
-
-                    <input type="number" min="1" max="${totalPages}" value="${currentPage}"
-                           class="page-input"
-                           onkeypress="if(event.key === 'Enter' && this.value >= 1 && this.value <= ${totalPages}) {
-                                   let url = '${pageContext.request.contextPath}/admin/book?action=filter&page=' + this.value;
-                           <c:if test="${not empty title}">
-                                   url += '&title=${title}';
-                           </c:if>
-                           <c:if test="${not empty publishYear}">
-                                   url += '&publish_year=${publishYear}';
-                           </c:if>
-                           <c:if test="${not empty paramValues.includeCategories}">
-                           <c:forEach var="includeCat" items="${paramValues.includeCategories}">
-                                   url += '&includeCategories=${includeCat}';
-                           </c:forEach>
-                           </c:if>
-                           <c:if test="${not empty paramValues.excludeCategories}">
-                           <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">
-                                   url += '&excludeCategories=${excludeCat}';
-                           </c:forEach>
-                           </c:if>
-                                   window.location.href = url;
-                                   }">
-
-                    <span>of ${totalPages}</span>
+                    <div class="page-input">
+                        <input type="number" id="pageInput" min="1" max="${totalPages}" value="${currentPage}" class="input" style="width: 60px; text-align: center;">
+                        <span>/ ${totalPages}</span>
+                        <button type="button" onclick="goToPage()" class="btn btn-primary">Go</button>
+                    </div>
 
                     <c:url var="nextUrl" value="/admin/book">
                         <c:param name="action" value="filter"/>
@@ -347,19 +150,23 @@
                         <c:if test="${not empty publishYear}">
                             <c:param name="publish_year" value="${publishYear}"/>
                         </c:if>
-                        <c:forEach var="includeCat" items="${paramValues.includeCategories}">
-                            <c:param name="includeCategories" value="${includeCat}"/>
-                        </c:forEach>
-                        <c:forEach var="excludeCat" items="${paramValues.excludeCategories}">
-                            <c:param name="excludeCategories" value="${excludeCat}"/>
-                        </c:forEach>
+                        <c:if test="${not empty includeCategories}">
+                            <c:forEach var="cat" items="${includeCategories}">
+                                <c:param name="includeCategories" value="${cat}"/>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${not empty excludeCategories}">
+                            <c:forEach var="cat" items="${excludeCategories}">
+                                <c:param name="excludeCategories" value="${cat}"/>
+                            </c:forEach>
+                        </c:if>
                     </c:url>
                     <c:choose>
                         <c:when test="${currentPage < totalPages}">
-                            <a href="${nextUrl}" class="btn btn-primary">&gt;</a>
+                            <a href="${nextUrl}" class="btn btn-primary">Next</a>
                         </c:when>
                         <c:otherwise>
-                            <span class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">&gt;</span>
+                            <span class="btn btn-primary disabled">Next</span>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -369,37 +176,66 @@
 </div>
 
 <script>
+    // Initialize category arrays from server-side data
     let includeCategories = ${includeCategories != null ? includeCategories : '[]'};
     let excludeCategories = ${excludeCategories != null ? excludeCategories : '[]'};
 
     function toggleCategoryTable() {
         const table = document.getElementById('categoryTable');
-        table.classList.toggle('show');
+        table.style.display = table.style.display === 'none' ? 'block' : 'none';
     }
 
     function toggleCategory(element, categoryId) {
-        if (element.classList.contains('include')) {
-            element.classList.remove('include');
-            element.classList.add('exclude');
+        // Remove existing classes
+        element.classList.remove('include', 'exclude');
+
+        // Check current state and update arrays
+        if (includeCategories.includes(categoryId)) {
             includeCategories = includeCategories.filter(id => id !== categoryId);
-            if (!excludeCategories.includes(categoryId)) {
-                excludeCategories.push(categoryId);
-            }
-        } else if (element.classList.contains('exclude')) {
-            element.classList.remove('exclude');
+            excludeCategories.push(categoryId);
+            element.classList.add('exclude');
+        } else if (excludeCategories.includes(categoryId)) {
             excludeCategories = excludeCategories.filter(id => id !== categoryId);
         } else {
+            includeCategories.push(categoryId);
             element.classList.add('include');
-            if (!includeCategories.includes(categoryId)) {
-                includeCategories.push(categoryId);
-            }
         }
     }
 
     function submitFilterForm() {
-        document.getElementById('includeCategories').value = includeCategories.length > 0 ? includeCategories.join(',') : '';
-        document.getElementById('excludeCategories').value = excludeCategories.length > 0 ? excludeCategories.join(',') : '';
+        document.getElementById('includeCategories').value = includeCategories.join(',');
+        document.getElementById('excludeCategories').value = excludeCategories.join(',');
         document.querySelector('.search-form').submit();
+    }
+
+    function goToPage() {
+        const pageInput = document.getElementById('pageInput');
+        let page = parseInt(pageInput.value);
+        const totalPages = ${totalPages};
+
+        // Validate page input
+        if (isNaN(page) || page < 1) {
+            page = 1;
+        } else if (page > totalPages) {
+            page = totalPages;
+        }
+
+        // Construct URL with current filter parameters
+        let url = '${pageContext.request.contextPath}/admin/book?action=filter&page=' + page;
+        <c:if test="${not empty title}">
+        url += '&title=${title}';
+        </c:if>
+        <c:if test="${not empty publishYear}">
+        url += '&publish_year=${publishYear}';
+        </c:if>
+        if (includeCategories.length > 0) {
+            url += '&includeCategories=' + includeCategories.join(',');
+        }
+        if (excludeCategories.length > 0) {
+            url += '&excludeCategories=' + excludeCategories.join(',');
+        }
+
+        window.location.href = url;
     }
 </script>
 </body>

@@ -12,7 +12,7 @@ import java.util.List;
 public class CategoryDao {
 
     // Queries use entity field names, not column names
-    
+
     public List<Category> findAll() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -61,19 +61,19 @@ public class CategoryDao {
             em.close();
         }
     }
-    
+
     public Category saveCategory(Category c) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            
+
             if (c.getId() == 0) {
                 em.persist(c);
             } else {
                 c = em.merge(c);
             }
-            
+
             tx.commit();
             return c;
         } catch (Exception ex) {
@@ -83,18 +83,18 @@ public class CategoryDao {
             em.close();
         }
     }
-    
+
     public Category createWithParent(String name, Long parentId, Boolean isLeaf) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            
+
             Category c = new Category();
             c.setName(name);
             c.setLeaf(isLeaf != null ? isLeaf : false);
             c.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            
+
             if (parentId != null) {
                 Category parent = em.find(Category.class, parentId);
                 if (parent == null) {
@@ -102,7 +102,7 @@ public class CategoryDao {
                 }
                 c.setParent(parent);
             }
-            
+
             em.persist(c);
             tx.commit();
             return c;
@@ -113,26 +113,26 @@ public class CategoryDao {
             em.close();
         }
     }
-    
+
     public Category updateCategory(Long id, String name, Long parentId, Boolean isLeaf) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            
+
             Category existing = em.find(Category.class, id);
             if (existing == null) {
                 throw new RuntimeException("Category không tồn tại");
             }
-            
+
             if (name != null) {
                 existing.setName(name);
             }
-            
+
             if (isLeaf != null) {
                 existing.setLeaf(isLeaf);
             }
-            
+
             if (parentId != null) {
                 if (id.equals(parentId)) {
                     throw new RuntimeException("Không thể đặt parent bằng chính nó");
@@ -145,7 +145,7 @@ public class CategoryDao {
             } else {
                 existing.setParent(null);
             }
-            
+
             em.merge(existing);
             tx.commit();
             return existing;
@@ -171,16 +171,16 @@ public class CategoryDao {
                 if (existing.getBooks() != null) {
                     existing.getBooks().size(); // Kích hoạt lazy loading
                 }
-                
+
                 // Kiểm tra xem có danh mục con hoặc sách không trước khi xóa
                 if (!existing.getChildren().isEmpty()) {
                     throw new RuntimeException("Không thể xóa danh mục có danh mục con");
                 }
-                
+
                 if (!existing.getBooks().isEmpty()) {
                     throw new RuntimeException("Không thể xóa danh mục có sản phẩm");
                 }
-                
+
                 em.remove(existing);
             }
             tx.commit();

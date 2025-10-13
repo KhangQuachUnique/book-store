@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,13 +20,6 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //Get current user
-        User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }
-
         //Pagination parameters
         int currentPage = 1;      // default
         int pageSize = 5;  // default
@@ -36,23 +28,19 @@ public class WishListServlet extends HttpServlet {
         String pageSizeParam = req.getParameter("pageSize");
 
         if (pageParam != null) {
-            try {
-                currentPage = Integer.parseInt(pageParam);
-            } catch (NumberFormatException e) {
-                currentPage = 1;
-            }
+            currentPage = Integer.parseInt(pageParam);
         }
 
         if (pageSizeParam != null) {
-            try {
-                pageSize = Integer.parseInt(pageSizeParam);
-            } catch (NumberFormatException e) {
-                pageSize = 5;
-            }
+            pageSize = Integer.parseInt(pageSizeParam);
         }
 
+        //Get user id from section
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        Long userId = sessionUser.getId();
+
         //Get wish list
-        WishList wishList = wishListService.getWishListBooks(101L, currentPage, pageSize);
+        WishList wishList = wishListService.getWishListBooksByPage(userId, currentPage, pageSize);
         if (wishList.getItems().isEmpty()) {
             req.setAttribute("message", "Your wish list is empty.");
         }
@@ -67,15 +55,13 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Get user id from section
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
+        Long userId = sessionUser.getId();
 
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }
         WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         Long bookId = body.getBookId();
-        ApiResponse response = wishListService.addBookToWishList(101L, bookId);
+        ApiResponse response = wishListService.addBookToWishList(userId, bookId);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
@@ -83,14 +69,13 @@ public class WishListServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Get user id from section
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Long currentUserId = 0L;
+        Long userId = sessionUser.getId();
 
-        if (sessionUser != null) {
-            currentUserId = sessionUser.getId();
-        }        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
+        WishListRequest body = JsonUtil.parseJson(req, WishListRequest.class);
         Long bookId = body.getBookId();
-        ApiResponse response = wishListService.removeBookToWishList(101L, bookId);
+        ApiResponse response = wishListService.removeBookToWishList(userId, bookId);
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(new com.google.gson.Gson().toJson(response));
     }

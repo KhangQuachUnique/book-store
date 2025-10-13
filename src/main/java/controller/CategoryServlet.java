@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/adminn/category")
+@WebServlet("/admin/category")
 public class CategoryServlet extends HttpServlet {
 
     private CategoryService categoryService;
@@ -78,12 +78,12 @@ public class CategoryServlet extends HttpServlet {
             case "list":
             default: {
                 List<Category> allCategories = categoryService.getAll();
-                
+
                 // Phân trang
                 int pageSize = 15; // Số danh mục trên mỗi trang
                 int totalCategories = allCategories.size();
                 int totalPages = (int) Math.ceil((double) totalCategories / pageSize);
-                
+
                 // Lấy tham số page từ request, mặc định là trang 1
                 int currentPage = 1;
                 String pageParam = req.getParameter("page");
@@ -100,11 +100,11 @@ public class CategoryServlet extends HttpServlet {
                         // Bỏ qua lỗi, sử dụng giá trị mặc định là 1
                     }
                 }
-                
+
                 // Tính toán chỉ số bắt đầu và kết thúc cho danh sách hiện tại
                 int startIndex = (currentPage - 1) * pageSize;
                 int endIndex = Math.min(startIndex + pageSize, totalCategories);
-                
+
                 // Lấy danh sách danh mục cho trang hiện tại
                 List<Category> currentPageCategories;
                 if (startIndex < totalCategories) {
@@ -112,7 +112,7 @@ public class CategoryServlet extends HttpServlet {
                 } else {
                     currentPageCategories = List.of(); // Trả về danh sách rỗng nếu chỉ số không hợp lệ
                 }
-                
+
                 // Tính toán các giá trị cho phân trang nâng cao
                 int startPage = Math.max(1, currentPage - 2);
                 int endPage = Math.min(totalPages, currentPage + 2);
@@ -120,7 +120,7 @@ public class CategoryServlet extends HttpServlet {
                 boolean showLastPage = currentPage < totalPages - 2;
                 boolean showEllipsisFirst = currentPage > 4;
                 boolean showEllipsisLast = currentPage < totalPages - 3;
-                
+
                 // Đặt các thuộc tính cần thiết cho JSP
                 req.setAttribute("categories", allCategories); // Giữ lại để tương thích với mã cũ
                 req.setAttribute("currentPageCategories", currentPageCategories);
@@ -132,7 +132,7 @@ public class CategoryServlet extends HttpServlet {
                 req.setAttribute("showLastPage", showLastPage);
                 req.setAttribute("showEllipsisFirst", showEllipsisFirst);
                 req.setAttribute("showEllipsisLast", showEllipsisLast);
-                
+
                 req.setAttribute("contentPage", "/WEB-INF/views/CategoryManagement/manageCategory.jsp");
                 RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
                 dispatcher.forward(req, resp);
@@ -189,7 +189,7 @@ public class CategoryServlet extends HttpServlet {
         }
 
         session.setAttribute("message", message);
-        resp.sendRedirect(req.getContextPath() + "/adminn/category?action=list");
+        resp.sendRedirect(req.getContextPath() + "/admin/category?action=list");
     }
 
     private String handleCreate(HttpServletRequest req) {

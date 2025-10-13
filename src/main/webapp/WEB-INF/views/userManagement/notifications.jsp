@@ -58,7 +58,7 @@
             color: var(--text-display);
             margin: 0;
             white-space: pre-line; /* preserve newlines from DB (\n, \r\n) */
-            
+
         }
         .notification-time {
             font-size: 0.85rem;
@@ -68,33 +68,33 @@
     </style>
 </head>
 <body>
-    <div class="notifications-container">
-        <h1><i class="fas fa-bell"></i> Thông Báo</h1>
-        <ul class="notification-list">
-            <c:choose>
-                <c:when test="${not empty notifications}">
-                    <c:forEach var="n" items="${notifications}">
-                        <%-- Thêm class 'unread' nếu is_read = false --%>
-                        <li class="notification-item ${not n.isRead ? 'unread' : ''}">
-                            <div class="notification-icon">
-                                <i class="fas fa-receipt"></i> </div>
-                            <div class="notification-content">
-                                <h4>${n.title}</h4><br/>
-                                <p class="notification-message">${n.message}</p>
-                                <div class="notification-time">
-                                    <fmt:formatDate value="${n.createdAt}" pattern="d 'tháng' M 'năm' yyyy 'lúc' HH:mm:ss"/>
-                                </div>
+<div class="notifications-container">
+    <h1><i class="fas fa-bell"></i> Thông Báo</h1>
+    <ul class="notification-list">
+        <c:choose>
+            <c:when test="${not empty notifications}">
+                <c:forEach var="n" items="${notifications}">
+                    <%-- Thêm class 'unread' nếu is_read = false --%>
+                    <li class="notification-item ${not n.isRead ? 'unread' : ''}">
+                        <div class="notification-icon">
+                            <i class="fas fa-receipt"></i> </div>
+                        <div class="notification-content">
+                            <h4>${n.title}</h4><br/>
+                            <p class="notification-message">${n.message}</p>
+                            <div class="notification-time">
+                                <fmt:formatDate value="${n.createdAt}" pattern="d 'tháng' M 'năm' yyyy 'lúc' HH:mm:ss"/>
                             </div>
-                        </li>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <li class="notification-item" style="justify-content: center;">
-                        <p>Bạn không có thông báo nào.</p>
+                        </div>
                     </li>
-                </c:otherwise>
-            </c:choose>
-        </ul>
-    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <li class="notification-item" style="justify-content: center;">
+                    <p>Bạn không có thông báo nào.</p>
+                </li>
+            </c:otherwise>
+        </c:choose>
+    </ul>
+</div>
 </body>
 </html>

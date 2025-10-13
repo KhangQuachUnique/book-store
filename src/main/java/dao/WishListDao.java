@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import jakarta.persistence.*;
 import model.Book;

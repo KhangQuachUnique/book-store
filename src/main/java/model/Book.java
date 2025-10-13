@@ -97,7 +97,32 @@ public class Book implements Serializable {
     @Transient
     private Double price;
 
+    @Transient
+    private Integer fullStars;
+    
+    @Transient
+    private Double partialFraction;
+    
+    @Transient
+    private Integer emptyStars;
+
     public Double getPrice() {
         return price = originalPrice * (100 - discountRate) / 100;
+    }
+    
+    // Rating display methods
+    public Integer getFullStars() {
+        if (averageRating == null) return 0;
+        return averageRating.intValue();
+    }
+    
+    public Double getPartialFraction() {
+        if (averageRating == null) return 0.0;
+        return averageRating - averageRating.intValue();
+    }
+    
+    public Integer getEmptyStars() {
+        if (averageRating == null) return 5;
+        return 5 - averageRating.intValue() - (getPartialFraction() > 0 ? 1 : 0);
     }
 }

@@ -39,12 +39,12 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Book> books;
-    
+
     // For backward compatibility with JSPs expecting parentId
     public Long getParentId() {
         return (parent != null) ? parent.getId() : null;
     }
-    
+
     // For backward compatibility with JSPs using setParentId
     public void setParentId(Long parentId) {
         // This is just a placeholder - actual parent setting is done in service layer

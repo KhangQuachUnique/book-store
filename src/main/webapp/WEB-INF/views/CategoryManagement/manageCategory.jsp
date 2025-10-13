@@ -15,18 +15,18 @@
     <h1 class="category-title">Manage Categories</h1>
 
     <!-- Nút thêm mới -->
-    <a class="btn btn-primary add-category-btn" href="${pageContext.request.contextPath}/adminn/category?action=add">+ Add Category</a>
+    <a class="btn btn-primary add-category-btn" href="${pageContext.request.contextPath}/admin/category?action=add">+ Add Category</a>
 
     <!-- Thanh tìm kiếm-->
     <div class="row g-2 mb-3">
         <div class="col-12 col-md-3">
-            <form class="input-group" action="${pageContext.request.contextPath}/adminn/category" method="get">
+            <form class="input-group" action="${pageContext.request.contextPath}/admin/category" method="get">
                 <input type="hidden" name="action" value="search">
                 <input type="text" class="form-control rounded-2" name="id" placeholder="Search ID..." value="${param.id}">
             </form>
         </div>
         <div class="col-12 col-md-9">
-            <form class="input-group" action="${pageContext.request.contextPath}/adminn/category" method="get">
+            <form class="input-group" action="${pageContext.request.contextPath}/admin/category" method="get">
                 <input type="hidden" name="action" value="search">
                 <input type="text" class="form-control rounded-2" name="keyword" placeholder="Search category..." value="${param.keyword}">
             </form>
@@ -62,8 +62,8 @@
                 </td>
                 <td>
                     <a class="btn btn-success btn-sm text-white"
-                       href="${pageContext.request.contextPath}/adminn/category?action=edit&id=${category.id}">Edit</a>
-                    <form action="${pageContext.request.contextPath}/adminn/category" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                       href="${pageContext.request.contextPath}/admin/category?action=edit&id=${category.id}">Edit</a>
+                    <form action="${pageContext.request.contextPath}/admin/category" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
                         <input type="hidden" name="action" value="delete"/>
                         <input type="hidden" name="id" value="${category.id}"/>
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -73,7 +73,7 @@
         </c:forEach>
         </tbody>
     </table>
-    
+
     <!-- Phân trang -->
     <div class="pagination-container d-flex justify-content-center mt-4">
         <nav aria-label="Page navigation">
@@ -81,17 +81,17 @@
                 <!-- Nút Previous -->
                 <c:if test="${currentPage > 1}">
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/adminn/category?action=list&page=${currentPage-1}" aria-label="Previous">
+                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${currentPage-1}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Previous</span>
                         </a>
                     </li>
                 </c:if>
-                
+
                 <!-- Trang đầu tiên -->
                 <c:if test="${showFirstPage}">
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/adminn/category?action=list&page=1">1</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=1">1</a>
                     </li>
                     <!-- Hiển thị dấu "..." nếu không kề với trang đầu tiên -->
                     <c:if test="${showEllipsisFirst}">
@@ -100,7 +100,7 @@
                         </li>
                     </c:if>
                 </c:if>
-                
+
                 <!-- Các trang xung quanh trang hiện tại -->
                 <c:forEach begin="${startPage}" end="${endPage}" var="i">
                     <c:choose>
@@ -108,11 +108,11 @@
                             <li class="page-item active"><a class="page-link" href="#">${i}</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/adminn/category?action=list&page=${i}">${i}</a></li>
+                            <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${i}">${i}</a></li>
                         </c:otherwise>
                     </c:choose>
                 </c:forEach>
-                
+
                 <!-- Trang cuối cùng -->
                 <c:if test="${showLastPage}">
                     <!-- Hiển thị dấu "..." nếu không kề với trang cuối -->
@@ -122,14 +122,14 @@
                         </li>
                     </c:if>
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/adminn/category?action=list&page=${totalPages}">${totalPages}</a>
+                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${totalPages}">${totalPages}</a>
                     </li>
                 </c:if>
-                
+
                 <!-- Nút Next -->
                 <c:if test="${currentPage < totalPages}">
                     <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/adminn/category?action=list&page=${currentPage+1}" aria-label="Next">
+                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${currentPage+1}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Next</span>
                         </a>

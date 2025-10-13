@@ -16,7 +16,7 @@
         <input class="input-value" type="text" id="name" name="name" value="${sessionScope.user.name}" required/><br/>
 
         <label for="phone" class="input-label">Phone:</label><br/>
-        <input class="input-value" type="text" id="phone" name="phone" value="${sessionScope.user.phone}" /><br/>
+        <input class="input-value" type="text" id="phone" name="phone" value="${sessionScope.user.phoneNumber}" /><br/>
 
         <label for="email" class="input-label">Email:</label><br/>
         <input class="email" type="email" id="email" name="email" value="${sessionScope.user.email}" readonly/><br/>
@@ -33,6 +33,7 @@
         </div>
 
         <div class="address-list" id="addressList" style="display:none;">
+            <div class="address-item add-address">➕ Add new address</div>
             <c:forEach var="addr" items="${sessionScope.user.addresses}">
                 <div class="address-item">
                     <label>
@@ -41,7 +42,6 @@
                     </label>
                 </div>
             </c:forEach>
-            <div class="address-item add-address">➕ Add new address</div>
         </div>
 
         <input class="submit" type="submit" value="Confirm update" />
@@ -55,26 +55,27 @@
         const input = document.getElementById("address");
         const defaultAddress = "${sessionScope.defaultAddress}";
 
-        // Toggle hiển thị danh sách
         toggleBtn.addEventListener("click", () => {
             list.style.display = list.style.display === "block" ? "none" : "block";
         });
 
-        // Khi chọn radio
         list.addEventListener("change", (e) => {
             if (e.target.classList.contains("addr-radio")) {
                 input.value = e.target.value;
+                list.style.display = "none";
             }
         });
 
-        // Add new address
         list.addEventListener("click", (e) => {
             if (e.target.classList.contains("add-address")) {
-                alert("TODO: mở popup hoặc redirect để thêm địa chỉ mới");
+                input.removeAttribute("readonly");
+                input.setAttribute("required", "true");
+                input.value = "";
+                input.focus();
+                list.style.display = "none";
             }
         });
 
-        // Click ngoài thì đóng list
         document.addEventListener("click", (e) => {
             if (!list.contains(e.target) && !toggleBtn.contains(e.target)) {
                 list.style.display = "none";

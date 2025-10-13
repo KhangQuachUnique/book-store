@@ -17,7 +17,7 @@
         <div class="mb-3">
             <label class="form-label">Category Name</label>
             <input type="text" class="form-control" name="name" required>
-            </div>
+        </div>
 
         <div class="mb-3">
             <label class="form-label">Parent ID (optional)</label>
@@ -38,9 +38,9 @@
     const contextPath = '${pageContext.request.contextPath}';
     // Danh sách tên category hiện có (server inject) để kiểm tra trùng tại client không cần gọi API
     window.EXISTING_CATEGORY_NAMES = [
-    <c:forEach var="n" items="${categoryNames}" varStatus="st">
+        <c:forEach var="n" items="${categoryNames}" varStatus="st">
         '<c:out value="${n}" />'<c:if test="${!st.last}">,</c:if>
-    </c:forEach>
+        </c:forEach>
     ];
 </script>
 

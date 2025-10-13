@@ -1,5 +1,6 @@
 package service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -9,10 +10,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.mail.MessagingException;
+import model.Role;
 import org.mindrot.jbcrypt.BCrypt;
 
+
+
 import dao.UserDao;
-import jakarta.mail.MessagingException;
 import model.LoginResult;
 import model.User;
 
@@ -23,14 +27,14 @@ public class UserService {
     /**
      * Đăng ký hoặc trả về null nếu email đã tồn tại
      */
-    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException, SQLException {
+    public String register(User user, String rawPassword) throws MessagingException, UnsupportedEncodingException, IOException, SQLException {
         Optional<User> existing = userDao.findByEmail(user.getEmail());
         if (existing.isPresent())
             return null;
 
         user.setPasswordHash(BCrypt.hashpw(rawPassword, BCrypt.gensalt()));
         user.setIsVerified(false);
-        // Role set in dao.save via prePersist or in createUser
+        user.setRole(Role.USER); // Set default role
 
         String token = UUID.randomUUID().toString();
         user.setVerifyToken(token);
@@ -45,7 +49,7 @@ public class UserService {
     /**
      * Login, trả về LoginResult
      */
-    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException, SQLException {
+    public LoginResult login(String email, String rawPassword) throws MessagingException, UnsupportedEncodingException, IOException, SQLException {
         LoginResult result = new LoginResult();
 
         Optional<User> userOpt = userDao.findByEmail(email);

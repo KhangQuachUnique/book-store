@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -40,6 +41,9 @@ public class Address implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "\"userId\"", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Order> orders;
 
     @PrePersist
     private void prePersist() {

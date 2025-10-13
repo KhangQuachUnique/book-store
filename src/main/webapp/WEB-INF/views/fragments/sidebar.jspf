@@ -20,7 +20,7 @@
             <li><a href="${pageContext.request.contextPath}/categories">Categories</a></li>
             <li><a href="${pageContext.request.contextPath}/user/history">Viewed History</a></li>
             <li><a href="${pageContext.request.contextPath}/user/wishlist">Wish List</a></li>
-            <li><a href="${pageContext.request.contextPath}/orders">Orders</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/order-tracking">Orders</a></li>
         </ul>
     </nav>
 </aside>
