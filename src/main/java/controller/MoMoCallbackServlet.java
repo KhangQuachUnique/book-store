@@ -121,7 +121,7 @@ public class MoMoCallbackServlet extends HttpServlet {
                     user.getEmail(),
                     user.getName(),
                     String.valueOf(order.getId()),
-                    String.format("%.0f₫", order.getTotalAmount())
+                    String.format("%.0f", order.getTotalAmount())
                 );
             } catch (Exception mailEx) {
                 log.warning("Không thể gửi email xác nhận đơn hàng: " + mailEx.getMessage());
