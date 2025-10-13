@@ -1,9 +1,5 @@
 import { authApi } from "../services/authService.js";
 
-const injected = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : null;
-const contextPath = injected ?? (window.location.pathname.split("/")[1] ? `/${window.location.pathname.split("/")[1]}` : "");
-const BASE_URL = contextPath;
-
 function showResult(message, success = true) {
     showToast(message, success ? 'success' : 'error', 3000);
 }
@@ -46,7 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Success cases - SC_OK (200)
                     showMessage(resultEl, data.message || "Success", true);
                     showResult(data.message || "Success", true);
-                    setTimeout(() => window.location.href = BASE_URL + "/home", 700);
+                    if (formId === "loginForm") {
+                        setTimeout(() => window.location.href = "/home", 700);
+                    }
                 } else {
                     // Error cases từ servlet
                     let errorMsg = "Failed";
@@ -160,10 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return false;
         }
     }
-
-// expose BASE_URL if needed elsewhere
-    window.BASE_URL = window.BASE_URL || (function(){ return contextPath; })();
-
 })();
 
 window.logout = async function logout() {
@@ -180,7 +174,7 @@ window.logout = async function logout() {
         showResult("Logged out successfully", true);
 
         // Chuyển về home
-        window.location.href = BASE_URL + "/home";
+        window.location.href = "/home";
 
     } catch (err) {
         console.error("Logout error:", err);
