@@ -18,9 +18,23 @@
         <ul>
             <li><a href="${pageContext.request.contextPath}/admin/user">Users</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/book">Books</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/order">Orders</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/category">Category</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/promotion">Promotions</a></li>
         </ul>
     </nav>
 </aside>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+        sidebarLinks.forEach(link => {
+            const li = link.parentElement;
+            li.classList.remove('active');
+            const linkPath = new URL(link.href, window.location.origin).pathname;
+            if (currentPath === linkPath || currentPath.startsWith(linkPath + '/')) {
+                li.classList.add('active');
+            }
+        });
+    });
+</script>

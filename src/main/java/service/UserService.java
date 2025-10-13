@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import jakarta.mail.MessagingException;
+import model.Role;
 import org.mindrot.jbcrypt.BCrypt;
 
 
@@ -33,7 +34,7 @@ public class UserService {
 
         user.setPasswordHash(BCrypt.hashpw(rawPassword, BCrypt.gensalt()));
         user.setIsVerified(false);
-        user.setRole(model.Role.USER); // Set default role
+        user.setRole(Role.USER); // Set default role
 
         String token = UUID.randomUUID().toString();
         user.setVerifyToken(token);

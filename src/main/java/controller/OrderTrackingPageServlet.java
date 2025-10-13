@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import constant.PathConstants;
 import model.Order;
 import model.User;
 import service.OrderService;
@@ -25,29 +24,40 @@ public class OrderTrackingPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        //Get user id from section
-        User sessionUser = (User) req.getSession().getAttribute("user");
-        Long userId = sessionUser.getId();
+        // ✅ Lấy user thật từ session (được set khi login hoặc AuthFilter)
+        HttpSession session = req.getSession(false);
+        User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
 
-        //Get filter status from request
+        // 🔒 Nếu chưa đăng nhập thì chuyển về trang login
+        if (currentUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        // ✅ Lấy userId từ user thật
+        Long userId = currentUser.getId();
+
+        // ✅ Lấy trạng thái filter (nếu có)
         String status = req.getParameter("status");
         if (status == null) {
             status = "ALL";
         }
 
+        // ✅ Lấy danh sách đơn hàng theo userId + trạng thái
         List<Order> orders = orderService.getOrdersByUserAndStatus(userId, status);
 
+        // ✅ Lấy danh sách trạng thái để hiển thị filter
         OrderStatusService orderStatusService = new OrderStatusService();
         List<String> statuses = orderStatusService.getAllStatuses();
 
+        // ✅ Gửi dữ liệu sang JSP
         req.setAttribute("orders", orders);
         req.setAttribute("statuses", statuses);
         req.setAttribute("selectedStatus", status);
         req.setAttribute("orderStatusService", orderStatusService);
 
+        // ✅ Chuyển hướng sang trang JSP
         req.setAttribute("contentPage", "/WEB-INF/views/order-tracking.jsp");
-        req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/layout.jsp").forward(req, resp);
     }
-
-
 }
