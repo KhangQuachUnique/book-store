@@ -6,7 +6,6 @@ import model.Notification;
 import java.util.List;
 
 /**
- * Service layer cho Notification
  * Xử lý business logic liên quan đến thông báo
  */
 public class NotificationService {
@@ -45,34 +44,34 @@ public class NotificationService {
 	 * @param message Nội dung thông báo
 	 * @return Thông báo đã được tạo
 	 */
-	public Notification createForUser(long userId, String title, String message) {
-		try {
-			// Validate đầu vào
-			if (title == null || title.trim().isEmpty()) {
-				throw new IllegalArgumentException("Tiêu đề thông báo không được để trống");
-			}
+	// public Notification createForUser(long userId, String title, String message) {
+	// 	try {
+	// 		// Validate đầu vào
+	// 		if (title == null || title.trim().isEmpty()) {
+	// 			throw new IllegalArgumentException("Tiêu đề thông báo không được để trống");
+	// 		}
 			
-			return notificationDao.createForUser(userId, title, message);
-		} catch (Exception ex) {
-			throw new RuntimeException("Lỗi khi tạo thông báo: " + ex.getMessage(), ex);
-		}
-	}
+	// 		return notificationDao.createForUser(userId, title, message);
+	// 	} catch (Exception ex) {
+	// 		throw new RuntimeException("Lỗi khi tạo thông báo: " + ex.getMessage(), ex);
+	// 	}
+	// }
 
 	/**
 	 * Xóa một thông báo
 	 * @param id ID thông báo cần xóa
 	 */
-	public void delete(Long id) {
-		try {
-			// Kiểm tra thông báo tồn tại
-			Notification notification = notificationDao.findById(id);
-			if (notification == null) {
-				throw new IllegalArgumentException("Thông báo không tồn tại");
-			}
+	// public void delete(Long id) {
+	// 	try {
+	// 		// Kiểm tra thông báo tồn tại
+	// 		Notification notification = notificationDao.findById(id);
+	// 		if (notification == null) {
+	// 			throw new IllegalArgumentException("Thông báo không tồn tại");
+	// 		}
 			
-			notificationDao.delete(id);
-		} catch (Exception ex) {
-			throw new RuntimeException("Lỗi khi xóa thông báo: " + ex.getMessage(), ex);
-		}
-	}
+	// 		notificationDao.delete(id);
+	// 	} catch (Exception ex) {
+	// 		throw new RuntimeException("Lỗi khi xóa thông báo: " + ex.getMessage(), ex);
+	// 	}
+	// }
 }
