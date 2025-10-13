@@ -113,45 +113,45 @@ public class BookDao {
 //    }
 
     /**
-     * Retrieves the top-selling books with pagination.
+     * Retrieves all top-selling books (no pagination).
      *
-     * @param page The page number (1-based).
-     * @return List of top-selling books.
+     * @return List of all top-selling books.
      */
-    public List<Book> getTopSellingBooks(int page) {
+    public List<Book> getTopSellingBooks() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            int firstResult = (page - 1) * PAGE_SIZE;
             TypedQuery<Book> query = em.createQuery(
-                    "SELECT b FROM Book b LEFT JOIN FETCH b.category ORDER BY b.sold DESC", Book.class);
-            query.setFirstResult(firstResult);
-            query.setMaxResults(PAGE_SIZE);
+                    "SELECT b FROM Book b LEFT JOIN FETCH b.category ORDER BY b.sold DESC",
+                    Book.class
+            );
+            query.setMaxResults(50);
             return query.getResultList();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error retrieving top selling books", e);
+            log.log(Level.SEVERE, "Error retrieving all top-selling books", e);
             return new ArrayList<>();
         } finally {
             em.close();
         }
     }
 
+
     /**
-     * Retrieves books with the highest ratings with pagination.
+     * Retrieves all top-rated books (no pagination).
      *
-     * @param page The page number (1-based).
-     * @return List of top-rated books.
+     * @return List of all top-rated books.
      */
-    public List<Book> getTopRatedBooks(int page) {
+    public List<Book> getTopRatedBooks() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
-            int firstResult = (page - 1) * PAGE_SIZE;
             TypedQuery<Book> query = em.createQuery(
-                    "SELECT b FROM Book b LEFT JOIN FETCH b.category WHERE b.averageRating IS NOT NULL ORDER BY b.averageRating DESC", Book.class);
-            query.setFirstResult(firstResult);
-            query.setMaxResults(PAGE_SIZE);
+                    "SELECT b FROM Book b LEFT JOIN FETCH b.category " +
+                            "WHERE b.averageRating IS NOT NULL ORDER BY b.averageRating DESC",
+                    Book.class
+            );
+            query.setMaxResults(50);
             return query.getResultList();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error retrieving top rated books", e);
+            log.log(Level.SEVERE, "Error retrieving all top-selling books", e);
             return new ArrayList<>();
         } finally {
             em.close();
@@ -481,6 +481,30 @@ public class BookDao {
             Category category = em.find(Category.class, id);
             log.info("Fetched category with ID " + id);
             return category;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Retrieves all books belonging to a specific category.
+     *
+     * @param categoryId The category ID.
+     * @return List of books in the specified category.
+     */
+    public List<Book> getAllBooksByCategoryId(long categoryId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            TypedQuery<Book> query = em.createQuery(
+                    "SELECT b FROM Book b LEFT JOIN FETCH b.category WHERE b.category.id = :categoryId ORDER BY b.id",
+                    Book.class);
+            query.setParameter("categoryId", categoryId);
+            List<Book> result = query.getResultList();
+            log.info("Fetched " + result.size() + " books for category ID " + categoryId);
+            return result.isEmpty() ? new ArrayList<>() : result;
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error retrieving books by category ID: " + categoryId, e);
+            return new ArrayList<>();
         } finally {
             em.close();
         }
