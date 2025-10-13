@@ -17,6 +17,32 @@ public class WishListDao {
     }
 
     /**
+     * Explicitly create an empty WishList for a user if none exists.
+     */
+    public void createWishListForUser(Long userId) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            // Check if exists
+            boolean exists = em.createQuery("SELECT COUNT(wl) FROM WishList wl WHERE wl.user.id = :uid", Long.class)
+                    .setParameter("uid", userId)
+                    .getSingleResult() > 0;
+            if (!exists) {
+                WishList wl = new WishList();
+                wl.setUser(em.getReference(User.class, userId));
+                em.persist(wl);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
      * Retrieves a paginated list of books in the specified user's wishlist.
      *
      * @param userId the ID of the user

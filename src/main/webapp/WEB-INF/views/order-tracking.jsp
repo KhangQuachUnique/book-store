@@ -88,6 +88,55 @@
                                                 </span>
                                             </p>
                                             <p class="qty">x ${item.quantity}</p>
+
+                                            <!-- Write Review or badge -->
+                                            <c:if test="${order.status == 'DELIVERED'}">
+                                                <c:choose>
+                                                    <c:when test="${reviewedMap[item.book.id]}">
+                                                        <span class="reviewed-badge" title="Bạn đã đánh giá sản phẩm này">Đã đánh giá</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <button type="button" class="open-review-btn" aria-haspopup="dialog" aria-expanded="false">
+                                                            Write Review
+                                                        </button>
+
+                                                        <div class="review-popover" role="dialog" aria-hidden="true">
+                                                            <div class="popover-arrow" aria-hidden="true"></div>
+                                                            <form method="post" action="${pageContext.request.contextPath}/user/review" class="write-review-form">
+                                                                <input type="hidden" name="bookId" value="${item.book.id}" />
+                                                                <input type="hidden" name="rating" value="" />
+
+                                                                <div class="star-input" aria-label="Select rating" role="group">
+                                                                    <button type="button" class="star" data-value="1" aria-label="1 star" aria-pressed="false">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8 194 150.2 47.9 171.5c-26.2 3.8-36.7 36-17.7 54.6l105.7 103-25 145.5c-4.5 26.1 23 46 46.4 33.7L288 439.6 418.7 508.3c23.4 12.3 50.9-7.6 46.4-33.7l-25-145.5 105.7-103c19-18.6 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>
+                                                                    </button>
+                                                                    <button type="button" class="star" data-value="2" aria-label="2 stars" aria-pressed="false">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8 194 150.2 47.9 171.5c-26.2 3.8-36.7 36-17.7 54.6l105.7 103-25 145.5c-4.5 26.1 23 46 46.4 33.7L288 439.6 418.7 508.3c23.4 12.3 50.9-7.6 46.4-33.7l-25-145.5 105.7-103c19-18.6 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>
+                                                                    </button>
+                                                                    <button type="button" class="star" data-value="3" aria-label="3 stars" aria-pressed="false">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8 194 150.2 47.9 171.5c-26.2 3.8-36.7 36-17.7 54.6l105.7 103-25 145.5c-4.5 26.1 23 46 46.4  33.7L288 439.6 418.7 508.3c23.4 12.3 50.9-7.6 46.4-33.7l-25-145.5 105.7-103c19-18.6 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>
+                                                                    </button>
+                                                                    <button type="button" class="star" data-value="4" aria-label="4 stars" aria-pressed="false">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8 194 150.2 47.9 171.5c-26.2 3.8-36.7 36-17.7 54.6l105.7 103-25 145.5c-4.5 26.1 23 46 46.4 33.7L288 439.6 418.7 508.3c23.4 12.3 50.9-7.6 46.4-33.7l-25-145.5 105.7-103c19-18.6 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>
+                                                                    </button>
+                                                                    <button type="button" class="star" data-value="5" aria-label="5 stars" aria-pressed="false">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M259.3 17.8 194 150.2 47.9 171.5c-26.2 3.8-36.7 36-17.7 54.6l105.7 103-25 145.5c-4.5 26.1 23 46 46.4 33.7L288 439.6 418.7 508.3c23.4 12.3 50.9-7.6 46.4-33.7l-25-145.5 105.7-103c19-18.6 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"/></svg>
+                                                                    </button>
+                                                                </div>
+
+                                                                <label>
+                                                                    Comment:
+                                                                    <textarea name="comment" rows="2" placeholder="Chia sẻ cảm nhận..." maxlength="1000"></textarea>
+                                                                </label>
+                                                                <div class="actions">
+                                                                    <button type="submit">Submit Review</button>
+                                                                    <button type="button" class="close-popover">Cancel</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:if>
                                         </div>
                                     </li>
                                 </c:forEach>
@@ -116,5 +165,6 @@
         </c:choose>
     </div>
 </div>
+<script type="module" src="${pageContext.request.contextPath}/assets/js/pages/OrderTrackingPage.js"></script>
 </body>
 </html>
