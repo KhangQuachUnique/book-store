@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Stage 2: Tomcat
-FROM tomcat:9.0-jdk17-temurin
+FROM tomcat:9.0-jdk21-temurin
 RUN rm -rf /usr/local/tomcat/webapps/*
 COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
