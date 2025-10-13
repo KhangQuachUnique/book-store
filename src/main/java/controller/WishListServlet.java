@@ -40,7 +40,7 @@ public class WishListServlet extends HttpServlet {
         Long userId = sessionUser.getId();
 
         //Get wish list
-        WishList wishList = wishListService.getWishListBooks(userId, currentPage, pageSize);
+        WishList wishList = wishListService.getWishListBooksByPage(userId, currentPage, pageSize);
         if (wishList.getItems().isEmpty()) {
             req.setAttribute("message", "Your wish list is empty.");
         }

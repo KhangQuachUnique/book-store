@@ -1,5 +1,8 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,10 +13,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet("/user/payment/ipn")
+/**
+ * Handle MoMo IPN (Instant Payment Notification)
+ * This is called by MoMo server to notify payment status
+ */
+@WebServlet("/payment/momo/ipn")
 public class MoMoIpnServlet extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(MoMoIpnServlet.class.getName());
+    private final Gson gson = new Gson();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,8 +32,35 @@ public class MoMoIpnServlet extends HttpServlet {
                 payload.append(line);
             }
         }
-        log.info(() -> "Received MoMo IPN payload: " + payload);
-        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        
+        String payloadStr = payload.toString();
+        log.info("Received MoMo IPN payload: " + payloadStr);
+        
+        try {
+            // Parse JSON payload
+            JsonObject json = gson.fromJson(payloadStr, JsonObject.class);
+            
+            if (json != null && json.has("resultCode")) {
+                int resultCode = json.get("resultCode").getAsInt();
+                String orderId = json.has("orderId") ? json.get("orderId").getAsString() : "unknown";
+                String message = json.has("message") ? json.get("message").getAsString() : "";
+                
+                if (resultCode == 0) {
+                    log.info("MoMo IPN: Payment successful for order " + orderId);
+                    // Payment successful - order should be created in callback servlet
+                } else {
+                    log.warning("MoMo IPN: Payment failed for order " + orderId + " - " + message);
+                    // Payment failed
+                }
+            }
+            
+            // Always respond with 204 No Content to acknowledge receipt
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error processing MoMo IPN", e);
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT); // Still acknowledge receipt
+        }
     }
 
     @Override

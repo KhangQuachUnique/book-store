@@ -75,6 +75,46 @@ public class CategoryServlet extends HttpServlet {
                 dispatcher.forward(req, resp);
                 break;
             }
+            case "search": {
+                List<Category> allCategories = categoryService.getAll();
+                String idParam = req.getParameter("id");
+                String keyword = req.getParameter("keyword");
+                
+                // Filter categories based on search criteria
+                List<Category> filteredCategories = allCategories.stream()
+                        .filter(category -> {
+                            boolean matchesId = true;
+                            boolean matchesName = true;
+                            
+                            if (idParam != null && !idParam.trim().isEmpty()) {
+                                try {
+                                    matchesId = String.valueOf(category.getId()).contains(idParam.trim());
+                                } catch (Exception e) {
+                                    matchesId = false;
+                                }
+                            }
+                            
+                            if (keyword != null && !keyword.trim().isEmpty()) {
+                                matchesName = category.getName().toLowerCase()
+                                        .contains(keyword.trim().toLowerCase());
+                            }
+                            
+                            return matchesId && matchesName;
+                        })
+                        .collect(Collectors.toList());
+
+                // For search results, show all without pagination
+                req.setAttribute("categories", allCategories);
+                req.setAttribute("currentPageCategories", filteredCategories);
+                req.setAttribute("isSearching", true);
+                req.setAttribute("searchKeyword", keyword);
+                req.setAttribute("searchId", idParam);
+                
+                req.setAttribute("contentPage", "/WEB-INF/views/CategoryManagement/manageCategory.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT);
+                dispatcher.forward(req, resp);
+                break;
+            }
             case "list":
             default: {
                 List<Category> allCategories = categoryService.getAll();

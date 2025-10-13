@@ -33,6 +33,28 @@ public class CartDAO {
                 .orElse(null);
     }
 
+    public void createCartForUser(Long userId) {
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            User user = em.getReference(User.class, userId);
+            Cart cart = new Cart();
+            cart.setUser(user);
+            cart.setItems(new ArrayList<>());
+            em.persist(cart);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            log.log(Level.SEVERE, "Error creating cart for user", e);
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public Cart getCartWithItems(Long userId) {
         EntityManager em = getEntityManager();
         try {

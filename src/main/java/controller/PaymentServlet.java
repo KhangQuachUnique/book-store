@@ -20,6 +20,8 @@ import model.CartItem;
 import model.User;
 import service.AddressService;
 import service.CartService;
+import service.PromotionService;
+import model.Promotion;
 
 @WebServlet("/user/payment")
 public class PaymentServlet extends HttpServlet {
@@ -43,21 +45,30 @@ public class PaymentServlet extends HttpServlet {
             List<CartItem> items = cart != null && cart.getItems() != null ? cart.getItems() : Collections.emptyList();
             double cartTotal = cartService.calculateSubtotal(items);
             List<Address> addresses = addressService.getAddressesByUserId(user.getId());
+
+            PromotionService promotionService = new PromotionService();
+            List<Promotion> validPromotions = promotionService.getAllValidPromotions();
+            request.setAttribute("validPromotions", validPromotions);
+
             request.setAttribute("cart", items);
             request.setAttribute("cartTotal", cartTotal);
             request.setAttribute("addresses", addresses);
             request.setAttribute("shippingFee", cartService.getShippingFee());
 
-            String resultCode = request.getParameter("resultCode");
-            if (resultCode != null) {
-                String message = request.getParameter("message");
-                if ("0".equals(resultCode)) {
-                    request.setAttribute("paymentSuccess", true);
-                    request.setAttribute("paymentMessage", "Thanh toán MoMo thành công.");
-                } else {
-                    request.setAttribute("paymentSuccess", false);
-                    request.setAttribute("paymentMessage", message != null ? message : "Thanh toán MoMo thất bại. Vui lòng thử lại.");
-                }
+            // Check for payment error from callback
+            String paymentError = (String) session.getAttribute("paymentError");
+            if (paymentError != null) {
+                request.setAttribute("paymentSuccess", false);
+                request.setAttribute("paymentMessage", paymentError);
+                session.removeAttribute("paymentError");
+            }
+            
+            // Check for success message
+            String successMessage = (String) session.getAttribute("successMessage");
+            if (successMessage != null) {
+                request.setAttribute("paymentSuccess", true);
+                request.setAttribute("paymentMessage", successMessage);
+                session.removeAttribute("successMessage");
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Failed to load payment page", e);

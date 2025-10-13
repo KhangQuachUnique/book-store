@@ -11,6 +11,16 @@
     color: #800020;
     margin-bottom: 24px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title svg {
+    width: 32px;
+    height: 32px;
+    fill: #800020;
+    vertical-align: middle;
 }
 
 /* Thanh trạng thái */
@@ -50,8 +60,8 @@
 .status-bar a.active {
     color: #fff;
     background-color: #800020;
+    box-shadow: 0 4px 10px rgba(183, 28, 28, 0.15);
     font-weight: 600;
-    box-shadow: 0 3px 6px rgba(128, 0, 32, 0.25);
 }
 
 /* Container danh sách đơn */
@@ -252,7 +262,188 @@
     background-color: #fffdfd;
 }
 
-/* Responsive */
+/* Write Review form */
+.write-review-form {
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px dashed #e7d7dc;
+    border-left: 4px solid rgba(128, 0, 32, 0.15);
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-width: 640px;
+}
+
+.book-info .write-review-form {
+    margin-top: 12px;
+}
+
+.write-review-form label {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    color: #444;
+    font-weight: 500;
+}
+
+.write-review-form select,
+.write-review-form textarea {
+    border: 1px solid #ddd;
+    background: #fafafa;
+    color: #333;
+    border-radius: 8px;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.write-review-form select {
+    appearance: none;
+    padding: 8px 10px;
+    min-width: 92px;
+}
+
+.write-review-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    min-height: 80px;
+    resize: vertical;
+    line-height: 1.4;
+}
+
+.write-review-form select:focus,
+.write-review-form textarea:focus {
+    outline: none;
+    background: #fff;
+    border-color: #800020;
+    box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.12);
+}
+
+.write-review-form button {
+    width: fit-content;
+    align-self: start;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #800020;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(128, 0, 32, 0.25);
+    transition: transform .05s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.write-review-form button:active {
+    transform: translateY(1px);
+}
+
+/* Small helper text (optional) */
+.write-review-form .hint {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Popover for review */
+.book-info { position: relative; }
+
+.open-review-btn {
+    margin-top: 8px;
+    width: fit-content;
+    padding: 6px 12px;
+    border: 1px solid #800020;
+    color: #800020;
+    background: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.open-review-btn:hover { background: #800020; color: #fff; box-shadow: 0 2px 8px rgba(128,0,32,.25); }
+
+.review-popover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    margin-top: 8px;
+    width: min(520px, 92vw);
+    background: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    padding: 12px 14px;
+    display: none;
+}
+.review-popover.open { display: block; }
+
+.popover-arrow {
+    position: absolute;
+    top: -8px;
+    left: 16px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-left: 1px solid #e9e9e9;
+    border-top: 1px solid #e9e9e9;
+    transform: rotate(45deg);
+}
+
+/* Star input */
+.star-input {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+.star-input .star {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0;
+}
+.star-input .star svg {
+    width: 26px;
+    height: 26px;
+    fill: #ddd;
+    transition: transform .06s ease, fill .15s ease;
+}
+.star-input .star:hover svg { transform: translateY(-1px) scale(1.05); }
+.star-input .star.active svg,
+.star-input .star[aria-pressed="true"] svg { fill: #ffcb3e; }
+
+.star-input button {
+    box-shadow: none;
+}
+
+/* Form actions */
+.write-review-form .actions {
+    display: flex;
+    gap: 8px;
+}
+.write-review-form .actions .close-popover {
+    background: #efefef;
+    color: #333;
+    border: 1px solid #ddd;
+}
+.write-review-form .actions .close-popover:hover {
+    background: #e7e7e7;
+}
+
+/* Badge for already-reviewed */
+.reviewed-badge {
+    display: flex;
+    width: 116px;
+    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #e6f4ea;
+    color: #2e7d32;
+    font-weight: 600;
+    font-size: 0.9em;
+    border: 1px solid #cde6d2;
+}
+
 @media (max-width: 768px) {
     .order-tracking {
         padding: 20px;
@@ -285,4 +476,37 @@
     .current-price {
         font-size: 1em;
     }
+
+    .write-review-form {
+        padding: 10px 12px;
+        max-width: 100%;
+    }
+    .write-review-form label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .write-review-form button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .review-popover { left: 0; right: 0; width: calc(100vw - 40px); }
+    .popover-arrow { left: 10px; }
+}
+
+/* Link tên sách - hiển thị tự nhiên, không bị gạch dưới hay tím */
+.book-title-link,
+.book-title-link:link,
+.book-title-link:visited,
+.book-title-link:active {
+    text-decoration: none !important;  /* bỏ gạch dưới hoàn toàn */
+    color: #333 !important;             /* màu chữ tự nhiên */
+    font-weight: 600;                   /* in đậm nhẹ */
+}
+
+/* Khi hover chỉ đổi màu nhẹ */
+.book-title-link:hover {
+    text-decoration: none !important;
+    color: #800020 !important;          /* đỏ trầm tông chủ đạo */
 }

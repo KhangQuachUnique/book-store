@@ -72,17 +72,17 @@ public class CategoryBookService {
     }
 
     /**
-     * Lọc sách theo tiêu đề, năm xuất bản, và categories
+     * Lọc sách theo tiêu đề, tác giả, và categories
      */
-    public static List<Book> filterBook(String title, Integer publishYear, 
+    public static List<Book> filterBook(String title, String author,
                                         List<Long> includeCategories,
                                         List<Long> excludeCategories, 
                                         int page,
                                         String sortBy,
-                                        String author,
-                                        Integer yearBefore, 
-                                        Integer yearAfter,  
-                                        Long priceFrom,     
+                                        Integer publishYear,
+                                        Integer yearBefore,
+                                        Integer yearAfter,
+                                        Long priceFrom,
                                         Long priceUpTo) {
         return CategoryBookDao.filterBooks(title, publishYear, includeCategories, excludeCategories, page, sortBy, author, yearBefore, yearAfter, priceFrom, priceUpTo);
     }
@@ -90,13 +90,13 @@ public class CategoryBookService {
     /**
      * Tính tổng số trang cho kết quả filter
      */
-    public static int getTotalPage(String title, Integer publishYear, 
+    public static int getTotalPage(String title, String author,
                                    List<Long> includeCategories,
                                    List<Long> excludeCategories,
-                                   String author,  
-                                   Integer yearBefore, 
-                                   Integer yearAfter,  
-                                   Long priceFrom,     
+                                   Integer publishYear,
+                                   Integer yearBefore,
+                                   Integer yearAfter,
+                                   Long priceFrom,
                                    Long priceUpTo) {
         long totalBooks = CategoryBookDao.countBooks(title, publishYear, includeCategories, excludeCategories, author , yearBefore, yearAfter, priceFrom, priceUpTo);
         int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);

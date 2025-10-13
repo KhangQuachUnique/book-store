@@ -90,22 +90,27 @@ function toggleCategory(element, categoryId) {
 }
 
 function submitFilterForm() {
-    // Update hidden inputs với các categories được chọn và loại trừ
-    document.getElementById('includeCategories').value = includeCategories.join(',');
-    document.getElementById('excludeCategories').value = excludeCategories.join(',');
-    
+    // Update hidden inputs với các categories được chọn và loại trừ (form tìm kiếm chính)
+    const includeInput = document.getElementById('includeCategories');
+    const excludeInput = document.getElementById('excludeCategories');
+    if (includeInput) includeInput.value = includeCategories.join(',');
+    if (excludeInput) excludeInput.value = excludeCategories.join(',');
+
     // Set action type là "categories" (ưu tiên category filter)
-    document.getElementById('searchAction').value = 'categories';
-    
+    const actionInput = document.getElementById('searchAction');
+    if (actionInput) actionInput.value = 'categories';
+
     toggleCategoryTable();
 
     // Submit form - form sẽ tự động gửi tất cả input values
-    document.querySelector('.search-form').submit();
+    const form = document.querySelector('.search-form');
+    if (form) form.submit();
 }
 
 function setSearchAction(actionType) {
     // Set action type cho title search
-    document.getElementById('searchAction').value = actionType;
+    const input = document.getElementById('searchAction');
+    if (input) input.value = actionType;
 }
 
 // Initialize when the page loads
@@ -121,6 +126,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Form sẽ tự động submit vì đây là Enter trong input
             }
         });
+    }
+
+    // Auto-open Advanced Panel if any advanced filters are present
+    const advPanel = document.getElementById('advanceSearchPanel');
+    if (advPanel) {
+        const advForm = document.querySelector('.advance-search-form');
+        const authorVal = advForm?.querySelector('input[name="author"]')?.value?.trim();
+        const publishYearVal = advForm?.querySelector('input[name="publishYear"]')?.value?.trim();
+        const yearBeforeVal = advForm?.querySelector('input[name="yearBefore"]')?.value?.trim();
+        const yearAfterVal = advForm?.querySelector('input[name="yearAfter"]')?.value?.trim();
+        const priceFromVal = advForm?.querySelector('input[name="priceFrom"]')?.value?.trim();
+        const priceUpToVal = advForm?.querySelector('input[name="priceUpTo"]')?.value?.trim();
+        const sortByVal = advForm?.querySelector('select[name="sortBy"]')?.value?.trim();
+
+        const hasAdv = Boolean(authorVal || publishYearVal || yearBeforeVal || yearAfterVal || priceFromVal || priceUpToVal || sortByVal)
+            || includeCategories.length > 0 || excludeCategories.length > 0;
+        if (hasAdv) {
+            advPanel.style.display = 'block';
+            setTimeout(() => advPanel.classList.add('show'), 10);
+        }
     }
 });
 
@@ -149,9 +174,29 @@ function syncTitleAndSubmit() {
         advancedTitleInput.value = mainTitleValue;
     }
     
-    // 3. Đặt action cho Advanced Search
-    // Lưu ý: Nếu nút Apply Filters nằm trong form Advanced Search, form sẽ tự submit sau khi hàm này chạy.
-    const searchActionInput = document.getElementById('searchAction');
+    // 3. Đồng bộ category selections sang form Advanced Search
+    const advancedForm = document.querySelector('.advance-search-form');
+    if (advancedForm) {
+        let inc = advancedForm.querySelector('input[name="includeCategories"]');
+        let exc = advancedForm.querySelector('input[name="excludeCategories"]');
+        if (!inc) {
+            inc = document.createElement('input');
+            inc.type = 'hidden';
+            inc.name = 'includeCategories';
+            advancedForm.appendChild(inc);
+        }
+        if (!exc) {
+            exc = document.createElement('input');
+            exc.type = 'hidden';
+            exc.name = 'excludeCategories';
+            advancedForm.appendChild(exc);
+        }
+        inc.value = includeCategories.join(',');
+        exc.value = excludeCategories.join(',');
+    }
+
+    // 4. Đặt action cho Advanced Search
+    const searchActionInput = document.getElementById('advancedAction');
     if (searchActionInput) {
         searchActionInput.value = 'filter'; // Đặt action để Servlet biết đây là filter tổng hợp
     }
@@ -240,11 +285,21 @@ function resetAdvanceSearch() {
     if (searchActionInput) {
         searchActionInput.value = '';
     }
-    
+    const advancedActionInput = document.getElementById('advancedAction');
+    if (advancedActionInput) {
+        advancedActionInput.value = '';
+    }
+
     //Reset các trường filter trong form Advanced Search (nếu form.reset() không hiệu quả)
-    document.querySelector('.advance-search-form input[name="author"]').value = '';
-    document.querySelector('.advance-search-form input[name="publishYear"]').value = '';
-    document.querySelector('.advance-search-form select[name="sortBy"]').value = '';
+    const advForm = document.querySelector('.advance-search-form');
+    if (advForm) {
+        const authorInput = advForm.querySelector('input[name="author"]');
+        const publishYearAdv = advForm.querySelector('input[name="publishYear"]');
+        const sortSelect = advForm.querySelector('select[name="sortBy"]');
+        if (authorInput) authorInput.value = '';
+        if (publishYearAdv) publishYearAdv.value = '';
+        if (sortSelect) sortSelect.value = '';
+    }
 
     // Reset các input Năm và Giá
     const yearBeforeInput = document.getElementById('yearBeforeInput');
@@ -271,3 +326,4 @@ window.toggleAdvanceSearch = toggleAdvanceSearch;
 window.resetAdvanceSearch = resetAdvanceSearch;
 window.toggleCategory = toggleCategory; 
 window.syncTitleAndSubmit = syncTitleAndSubmit; 
+window.submitFilterForm = submitFilterForm;

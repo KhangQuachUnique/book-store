@@ -1,11 +1,15 @@
 package dao;
 
 import jakarta.persistence.*;
+import model.Book;
 import model.LikeReview;
 import model.Review;
 import util.JPAUtil;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ReviewDao {
     private final EntityManagerFactory emf;
@@ -47,6 +51,81 @@ public class ReviewDao {
         }
     }
 
+    /** Check if user already reviewed this book */
+    public boolean hasUserReviewedBook(Long userId, Long bookId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long count = em.createQuery(
+                            "SELECT COUNT(r) FROM Review r WHERE r.user.id = :uid AND r.book.id = :bid",
+                            Long.class)
+                    .setParameter("uid", userId)
+                    .setParameter("bid", bookId)
+                    .getSingleResult();
+            return count != null && count > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+    /** Get ids of books (as Integer) that the user already reviewed from a given list */
+    public Set<Integer> getReviewedBookIds(Long userId, List<Integer> bookIds) {
+        if (bookIds == null || bookIds.isEmpty()) return java.util.Collections.emptySet();
+        EntityManager em = emf.createEntityManager();
+        try {
+            List<Integer> result = em.createQuery(
+                            "SELECT r.book.id FROM Review r WHERE r.user.id = :uid AND r.book.id IN :ids",
+                            Integer.class)
+                    .setParameter("uid", userId)
+                    .setParameter("ids", bookIds)
+                    .getResultList();
+            return result.stream().collect(Collectors.toSet());
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Create a review once. If already exists, return false. Also update the book's averageRating.
+     */
+    public boolean addOrUpdateReview(Long userId, Long bookId, Integer rating, String comment) {
+        // Enforce single review: do not update if exists
+        if (hasUserReviewedBook(userId, bookId)) {
+            return false;
+        }
+
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            Book bookRef = em.getReference(Book.class, bookId);
+            Review review = new Review();
+            review.setUser(em.getReference(model.User.class, userId));
+            review.setBook(bookRef);
+            review.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            review.setRating(rating);
+            review.setComment(comment);
+            em.persist(review);
+
+            // Recalculate average rating for the book
+            Double avg = em.createQuery(
+                            "SELECT AVG(r.rating) FROM Review r WHERE r.book.id = :bid",
+                            Double.class)
+                    .setParameter("bid", bookId)
+                    .getSingleResult();
+            bookRef.setAverageRating(avg != null ? avg : 0.0);
+
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
     public boolean likeReview(Long reviewId, Long userId) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -69,10 +148,8 @@ public class ReviewDao {
             return true;
 
         } catch (PersistenceException e) {
-            // Nếu vi phạm UNIQUE constraint thì DB sẽ ném lỗi ở đây
             if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
                 System.out.println("User đã like review này rồi!");
-                // Không rollback transaction ở đây, vì commit chưa diễn ra
                 return false;
             }
             if (tx.isActive()) tx.rollback();
@@ -95,7 +172,6 @@ public class ReviewDao {
         try {
             tx.begin();
 
-            // Tìm review
             Review review = em.find(Review.class, reviewId);
             if (review == null) {
                 tx.rollback();
@@ -103,25 +179,22 @@ public class ReviewDao {
                 return false;
             }
 
-            // Tìm bản ghi LikeReview tương ứng
-            TypedQuery<LikeReview> query = em.createQuery(
+            TypedQuery<model.LikeReview> query = em.createQuery(
                     "SELECT lr FROM LikeReview lr WHERE lr.review.id = :reviewId AND lr.user.id = :userId",
-                    LikeReview.class
+                    model.LikeReview.class
             );
             query.setParameter("reviewId", reviewId);
             query.setParameter("userId", userId);
 
-            List<LikeReview> results = query.getResultList();
+            List<model.LikeReview> results = query.getResultList();
 
             if (results.isEmpty()) {
-                // chưa like, không có gì để dislike
                 tx.rollback();
                 System.out.println("User chưa like review này, không thể dislike.");
                 return false;
             }
 
-            // có like -> xóa
-            LikeReview likeReview = results.get(0);
+            model.LikeReview likeReview = results.get(0);
             em.remove(likeReview);
 
             tx.commit();

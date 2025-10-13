@@ -14,7 +14,7 @@ import constant.PathConstants;
 import model.Book;
 import model.BookReview;
 import model.User;
-import service.BookReviewService;
+import service.ReviewService;
 import service.BookService;
 
 /**
@@ -29,6 +29,7 @@ import service.BookService;
 public class BookDetailServlet extends HttpServlet {
 
     private final BookService bookService = new BookService();
+    private final ReviewService reviewService = new ReviewService();
 
     private static final Logger log = Logger.getLogger(BookDetailServlet.class.getName());
 
@@ -55,7 +56,7 @@ public class BookDetailServlet extends HttpServlet {
                 return;
             }
 
-            // Fetch book from database using static method
+            // Fetch book
             Book book;
             BookReview bookReview;
             User sessionUser = (User) req.getSession().getAttribute("user");
@@ -65,20 +66,26 @@ public class BookDetailServlet extends HttpServlet {
                 currentUserId = sessionUser.getId();
             }
             book = bookService.getBookById(bookId);
-            bookReview = BookReviewService.getReviewsByBookId(bookId, currentUserId);
+
+            // Load reviews via ReviewService to ensure list is populated for JSP
+            bookReview = reviewService.getReviewsByBookId(bookId, currentUserId);
 
             if (book == null) {
                 log.warning("Book not found with ID: " + bookId);
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Book not found");
                 return;
             }
-            
-            model.User user = (model.User) req.getSession().getAttribute("user");
-                if (user != null) {
-                dao.ViewHistoryDao.addHistory(user.getId(), bookId);
-            } 
 
-            // Set book and book-reviews as request attribute for JSP
+            model.User user = (model.User) req.getSession().getAttribute("user");
+            if (user != null) {
+                try {
+                    dao.ViewHistoryDao.addHistory(user.getId(), bookId);
+                } catch (Exception ex) {
+                    log.log(Level.WARNING, "Không thể lưu lịch sử xem (userId=" + user.getId() + ", bookId=" + bookId + ")", ex);
+                }
+            }
+
+            // Set attributes for JSP
             req.setAttribute("book", book);
             req.setAttribute("bookReview", bookReview);
 
@@ -115,8 +122,8 @@ public class BookDetailServlet extends HttpServlet {
                     + book.getTitle() + ")");
 
             // Forward to book detail JSP
-            req.setAttribute("contentPage", PathConstants.BOOK_DETAIL_PAGE);
-            req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
+            req.setAttribute("contentPage", constant.PathConstants.BOOK_DETAIL_PAGE);
+            req.getRequestDispatcher(constant.PathConstants.VIEW_LAYOUT).forward(req, resp);
 
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error processing book detail request", e);
@@ -128,8 +135,6 @@ public class BookDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // For future implementation of actions like adding to cart, wishlist, etc.
-        // For now, redirect to GET
         doGet(req, resp);
     }
 }

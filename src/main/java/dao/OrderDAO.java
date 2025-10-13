@@ -9,6 +9,7 @@ import model.OrderItem;
 import model.OrderStatus;
 import util.JPAUtil;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class OrderDAO {
@@ -65,7 +66,7 @@ public class OrderDAO {
     /**
      * Lấy chi tiết một đơn hàng theo ID.
      */
-    public Order getOrderById(Long orderId) {
+    public Order getOrderById(long orderId) throws SQLException {
         EntityManager em = emf.createEntityManager();
         try {
             String jpql = "SELECT DISTINCT o FROM Order o " +
@@ -151,6 +152,27 @@ public class OrderDAO {
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Check if user purchased (delivered) a specific book.
+     */
+    public boolean userPurchasedBookDelivered(Long userId, Long bookId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long count = em.createQuery(
+                            "SELECT COUNT(oi) FROM OrderItem oi " +
+                                    "WHERE oi.order.user.id = :uid AND oi.book.id = :bid " +
+                                    "AND oi.order.status = :st",
+                            Long.class)
+                    .setParameter("uid", userId)
+                    .setParameter("bid", bookId)
+                    .setParameter("st", OrderStatus.DELIVERED)
+                    .getSingleResult();
+            return count != null && count > 0;
         } finally {
             em.close();
         }
