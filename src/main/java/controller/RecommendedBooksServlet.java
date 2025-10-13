@@ -20,22 +20,19 @@ public class RecommendedBooksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WishListService wishListService = new WishListService();
-        BookService bookService = new BookService();
 
         List<Book> recommendedBooks = new ArrayList<>();
         User user = (User) request.getSession().getAttribute("user");
 
         if (user != null) {
-            System.out.println("[DEBUG] 1");
             WishList wishList = wishListService.getWishListBooks(user.getId());
-            System.out.println("[DEBUG] 2");
 
-            if (wishList != null) {
+            if (wishList != null && wishList.getItems() != null && !wishList.getItems().isEmpty()) {
                 Map<Long, Integer> categoryCount = new HashMap<>();
 
                 for (WishListItem item : wishList.getItems()) {
                     try {
-                        Long bookId = (long) item.getBook().getId();
+                        long bookId = (long) item.getBook().getId();
                         Book book = bookService.getBookById(bookId);
                         Long categoryId = book.getCategory().getId();
 
@@ -45,25 +42,27 @@ public class RecommendedBooksServlet extends HttpServlet {
                     }
                 }
 
-                Long mostPopularCategoryId = categoryCount.entrySet()
+                List<Long> topCategories = categoryCount.entrySet()
                         .stream()
-                        .max(Map.Entry.comparingByValue())
+                        .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                        .limit(3)
                         .map(Map.Entry::getKey)
-                        .orElse(null);
+                        .toList();
 
-                if (mostPopularCategoryId != null) {
-                    recommendedBooks = bookService.getAllBooksByCategoryId(mostPopularCategoryId);
+                for (Long categoryId : topCategories) {
+                    List<Book> booksByCategory = bookService.getAllBooksByCategoryId(categoryId);
+                    recommendedBooks.addAll(booksByCategory);
                 }
+
+                Collections.shuffle(recommendedBooks);
             }
         }
 
         request.setAttribute("recommendedBooks", recommendedBooks);
 
-        // Top Selling Books
         List<Book> topSellingBooks = bookService.getTopSellingBooks();
         request.setAttribute("topSellingBooks", topSellingBooks);
 
         request.getRequestDispatcher("/WEB-INF/views/recommendedBooks.jsp").include(request, response);
     }
-
 }
