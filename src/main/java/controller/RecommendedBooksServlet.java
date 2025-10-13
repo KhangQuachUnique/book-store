@@ -13,7 +13,7 @@ import service.BookService;
 import service.WishListService;
 
 @WebServlet("/recommend-books")
-public class RecommendedBooks extends HttpServlet {
+public class RecommendedBooksServlet extends HttpServlet {
 
     private static final BookService bookService = new BookService();
 

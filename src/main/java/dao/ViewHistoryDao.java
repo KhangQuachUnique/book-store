@@ -17,6 +17,25 @@ import java.util.logging.Logger;
 public class ViewHistoryDao {
     private static final Logger log = Logger.getLogger(ViewHistoryDao.class.getName());
 
+    public void createViewHistoryForUser(Long userId) {
+        EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.getReference(User.class, userId);
+            ViewedProduct viewedProduct = new ViewedProduct();
+            viewedProduct.setUser(user);
+            em.persist(viewedProduct);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            log.log(Level.SEVERE, "Lỗi khi tạo lịch sử xem cho user " + userId, e);
+        } finally {
+            em.close();
+        }
+    }
+
     /**
      * Lấy lịch sử xem sách theo userId
      */

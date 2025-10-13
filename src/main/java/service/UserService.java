@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import dao.CartDAO;
+import dao.ViewHistoryDao;
+import dao.WishListDao;
 import jakarta.mail.MessagingException;
 import model.Role;
 import org.mindrot.jbcrypt.BCrypt;
@@ -21,7 +24,10 @@ import model.LoginResult;
 import model.User;
 
 public class UserService {
-    private UserDao userDao = new UserDao();
+    private final UserDao userDao = new UserDao();
+    private final CartDAO cartDao = new CartDAO();
+    private final WishListDao wishListDao = new WishListDao();
+    private final ViewHistoryDao viewHistoryDao = new ViewHistoryDao();
     private static final int pageSize = 20;
 
     /**
@@ -41,6 +47,9 @@ public class UserService {
         user.setVerifyExpire(Timestamp.from(Instant.now().plus(15, ChronoUnit.MINUTES)));
 
         if (userDao.save(user)) {
+            cartDao.createCartForUser(user.getId());
+            wishListDao.getWishListByUser(user.getId()); // Tạo wishlist rỗng
+            viewHistoryDao.createViewHistoryForUser(user.getId()); // Tạo view history
             return token; // dùng để gửi mail xác thực
         }
         return null;
