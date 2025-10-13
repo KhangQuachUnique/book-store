@@ -2,7 +2,7 @@
 async function fetchUnreadNotificationCount() {
     try {
         const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
-        const url = `${base}/user/notifications?action=getCount`;
+        const url = `/user/notifications?action=getCount`;
         const response = await fetch(url, { credentials: 'same-origin' });
         
         if (response.status === 401) {
