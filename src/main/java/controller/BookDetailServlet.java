@@ -74,9 +74,13 @@ public class BookDetailServlet extends HttpServlet {
             }
             
             model.User user = (model.User) req.getSession().getAttribute("user");
-                if (user != null) {
-                dao.ViewHistoryDao.addHistory(user.getId(), bookId);
-            } 
+            if (user != null) {
+                try {
+                    dao.ViewHistoryDao.addHistory(user.getId(), bookId);
+                } catch (Exception ex) {
+                    log.log(Level.WARNING, "Không thể lưu lịch sử xem (userId=" + user.getId() + ", bookId=" + bookId + ")", ex);
+                }
+            }
 
             // Set book and book-reviews as request attribute for JSP
             req.setAttribute("book", book);

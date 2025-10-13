@@ -9,6 +9,7 @@ import model.ViewedProduct;
 import model.ViewedProductItem;
 import util.JPAUtil;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -46,31 +47,38 @@ public class ViewHistoryDao {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
             em.getTransaction().begin();
-            
-            // Find or create ViewedProduct for user
-            ViewedProduct viewedProduct = null;
+            log.fine("[ViewHistory] Begin addHistory userId=" + userId + ", bookId=" + bookId);
+
+            // Find or create ViewedProduct cho user
+            ViewedProduct viewedProduct;
             try {
                 TypedQuery<ViewedProduct> query = em.createQuery(
                     "SELECT vp FROM ViewedProduct vp WHERE vp.user.id = :userId", ViewedProduct.class);
                 query.setParameter("userId", userId);
                 viewedProduct = query.getSingleResult();
+                log.fine("[ViewHistory] Found existing ViewedProduct id=" + viewedProduct.getId());
             } catch (NoResultException e) {
-                // Create new ViewedProduct for user
+                // Tạo mới ViewedProduct cho user
                 viewedProduct = new ViewedProduct();
                 User user = em.getReference(User.class, userId);
                 viewedProduct.setUser(user);
                 em.persist(viewedProduct);
-                em.flush(); // Ensure ID is generated
+                em.flush(); // đảm bảo ID được tạo
+                log.fine("[ViewHistory] Created new ViewedProduct id=" + viewedProduct.getId());
             }
             
-            // Create new ViewedProductItem
+            // Tạo ViewedProductItem mới
             ViewedProductItem item = new ViewedProductItem();
-            Book book = em.getReference(Book.class, bookId.intValue());
+            Book book = em.getReference(Book.class, bookId);
             item.setBook(book);
             item.setViewedProduct(viewedProduct);
+            // set timestamp để tránh lỗi NOT NULL
+            item.setViewedAt(new Timestamp(System.currentTimeMillis()));
             em.persist(item);
-            
+            em.flush(); // force insert để phát hiện lỗi DB sớm
+
             em.getTransaction().commit();
+            log.fine("[ViewHistory] Saved ViewedProductItem id=" + item.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
