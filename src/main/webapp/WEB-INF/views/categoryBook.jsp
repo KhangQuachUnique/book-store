@@ -10,7 +10,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/categoryBook.css">
 </head>
 <body>
@@ -24,7 +23,7 @@
                 <!-- Thanh tìm kiếm - cấu trúc hiện đại -->
                 <form action="${pageContext.request.contextPath}/categories" method="get" class="search-form">
                     <div class="form-group">
-                        <input type="text" name="title" placeholder="Search by title" value="${title}" class="input">
+                        <input type="text" name="search" placeholder="Search by title or author" value="${search}" class="input">
                     </div>
                     <div class="form-group button-group">
                         <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
@@ -46,66 +45,66 @@
             </div>
             <c:forEach var="category" items="${categories}">
                 <div class="category-item" data-id="${category.id}" onclick="toggleCategory(this, ${category.id})">
-                    ${category.name}
+                        ${category.name}
                 </div>
             </c:forEach>
         </div>
     </div>
 
-            <div class="book-list">
-                <c:choose>
-                    <c:when test="${empty requestScope.books}">
-                        <div class="no-results">
-                            <h3>No books found</h3>
-                            <p>Try different search criteria or browse all categories</p>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <c:forEach items="${requestScope.books}" var="book">
-                            <div class="book-card">
-                                <a href="${pageContext.request.contextPath}/book-detail?id=${book.id}"
-                                    class="book-link">
-                                    <div class="book-image">
-                                        <img src="${book.thumbnailUrl}" alt="${book.title}"
-                                            class="book-thumbnail">
-                                    </div>
-                                    <div class="book-info">
-                                        <h3 class="book-title">${book.title}</h3>
-                                        <div class="book-price-row">
+    <div class="book-list">
+        <c:choose>
+            <c:when test="${empty requestScope.books}">
+                <div class="no-results">
+                    <h3>No books found</h3>
+                    <p>Try different search criteria or browse all categories</p>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <c:forEach items="${requestScope.books}" var="book">
+                    <div class="book-card">
+                        <a href="${pageContext.request.contextPath}/book-detail?id=${book.id}"
+                           class="book-link">
+                            <div class="book-image">
+                                <img src="${book.thumbnailUrl}" alt="${book.title}"
+                                     class="book-thumbnail">
+                            </div>
+                            <div class="book-info">
+                                <h3 class="book-title">${book.title}</h3>
+                                <div class="book-price-row">
                                             <span class="book-price-badge">
                                                 <fmt:formatNumber value="${book.getPrice()}" type="number" />
                                                 VND
                                             </span>
-                                            <c:if test="${book.discountRate > 0}">
-                                                <span class="discount">-${book.discountRate}%</span>
-                                            </c:if>
-                                        </div>
-                                        <p class="book-author">Author: ${book.author}</p>
-                                        <p class="book-publisher">Publisher: ${book.publisher}</p>
+                                    <c:if test="${book.discountRate > 0}">
+                                        <span class="discount">-${book.discountRate}%</span>
+                                    </c:if>
+                                </div>
+                                <p class="book-author">Author: ${book.author}</p>
+                                <p class="book-publisher">Publisher: ${book.publisher}</p>
 
-                                        <div class="book-rating">
-                                            <jsp:include page="ratingStar.jsp">
-                                                <jsp:param name="fullStars" value="${book.getFullStars()}" />
-                                                <jsp:param name="partialFraction" value="${book.getPartialFraction()}" />
-                                                <jsp:param name="emptyStars" value="${book.getEmptyStars()}" />
-                                                <jsp:param name="size" value="16" />
-                                            </jsp:include>
-                                            <span class="rating-value">${book.averageRating > 0 ? book.averageRating : 0} / 5</span>
-                                        </div>
+                                    <%--                                        <div class="book-rating">--%>
+                                    <%--                                            <jsp:include page="ratingStar.jsp">--%>
+                                    <%--                                                <jsp:param name="fullStars" value="${book.fullStars}" />--%>
+                                    <%--                                                <jsp:param name="partialFraction" value="${book.partialFraction}" />--%>
+                                    <%--                                                <jsp:param name="emptyStars" value="${book.emptyStars}" />--%>
+                                    <%--                                                <jsp:param name="size" value="16" />--%>
+                                    <%--                                            </jsp:include>--%>
+                                    <%--                                            <span class="rating-value">${book.rating} / 5</span>--%>
+                                    <%--                                        </div>--%>
 
-                                    </div>
-                                </a>
                             </div>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+                        </a>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+    </div>
 
-    <!-- Giữ nguyên phần pagination nhưng sửa links để bảo toàn filter -->
+    <!-- Pagination -->
     <div class="pagination">
         <c:choose>
             <c:when test="${currentPage > 1}">
-                <a href="?page=${currentPage - 1}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
+                <a href="?page=${currentPage - 1}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
             </c:when>
             <c:otherwise>
                 <span class="disabled">&lt;</span>
@@ -113,7 +112,7 @@
         </c:choose>
 
         <c:if test="${showFirstEllipsis}">
-            <a href="?page=1&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
+            <a href="?page=1&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
             <span class="ellipsis">...</span>
         </c:if>
 
@@ -123,19 +122,19 @@
                     <span class="active">${pageNum}</span>
                 </c:when>
                 <c:otherwise>
-                    <a href="?page=${pageNum}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
+                    <a href="?page=${pageNum}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
 
         <c:if test="${showLastEllipsis}">
             <span class="ellipsis">...</span>
-            <a href="?page=${totalPages}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
+            <a href="?page=${totalPages}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
         </c:if>
 
         <c:choose>
             <c:when test="${currentPage < totalPages}">
-                <a href="?page=${currentPage + 1}&title=${title}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
+                <a href="?page=${currentPage + 1}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
             </c:when>
             <c:otherwise>
                 <span class="disabled">&gt;</span>
