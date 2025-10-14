@@ -151,7 +151,7 @@ public class BookDao {
             query.setMaxResults(50);
             return query.getResultList();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error retrieving all top-selling books", e);
+            log.log(Level.SEVERE, "Error retrieving all top-rated books", e);
             return new ArrayList<>();
         } finally {
             em.close();

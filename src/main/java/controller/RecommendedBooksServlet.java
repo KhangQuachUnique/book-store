@@ -21,9 +21,9 @@ public class RecommendedBooksServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WishListService wishListService = new WishListService();
 
-        List<Book> recommendedBooks = new ArrayList<>();
         User user = (User) request.getSession().getAttribute("user");
 
+        List<Book> recommendedBooks = new ArrayList<>();
         if (user != null) {
             WishList wishList = wishListService.getWishListBooks(user.getId());
 
@@ -31,15 +31,11 @@ public class RecommendedBooksServlet extends HttpServlet {
                 Map<Long, Integer> categoryCount = new HashMap<>();
 
                 for (WishListItem item : wishList.getItems()) {
-                    try {
-                        long bookId = (long) item.getBook().getId();
-                        Book book = bookService.getBookById(bookId);
-                        Long categoryId = book.getCategory().getId();
+                    long bookId = (long) item.getBook().getId();
+                    Book book = bookService.getBookById(bookId);
+                    Long categoryId = book.getCategory().getId();
 
-                        categoryCount.put(categoryId, categoryCount.getOrDefault(categoryId, 0) + 1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    categoryCount.put(categoryId, categoryCount.getOrDefault(categoryId, 0) + 1);
                 }
 
                 List<Long> topCategories = categoryCount.entrySet()
@@ -54,17 +50,15 @@ public class RecommendedBooksServlet extends HttpServlet {
                     recommendedBooks.addAll(booksByCategory);
                 }
 
-
-
                 Collections.shuffle(recommendedBooks);
             }
         }
 
-        request.setAttribute("recommendedBooks", recommendedBooks);
-
         List<Book> topSellingBooks = bookService.getTopSellingBooks();
         List<Book> topRatedBooks = bookService.getTopRatedBooks();
+
         request.setAttribute("topSellingBooks", topSellingBooks);
+        request.setAttribute("recommendedBooks", recommendedBooks);
         request.setAttribute("topRatedBooks", topRatedBooks);
 
         request.getRequestDispatcher("/WEB-INF/views/recommendedBooks.jsp").include(request, response);
