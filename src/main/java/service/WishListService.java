@@ -6,7 +6,6 @@ import model.WishList;
 import model.WishListItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WishListService {
 
@@ -17,58 +16,37 @@ public class WishListService {
     }
 
     public WishList getWishListBooks(Long userId) {
-        // Validate input
-        if (userId == null || userId <= 0) {
-            WishList empty = new WishList();
-            empty.setItems(new ArrayList<>());
-            empty.setUpPagination(1, 1);
-            return empty;
-        }
-
         WishList wishList = wishListDao.getWishListByUser(userId);
         if (wishList == null) {
             wishList = new WishList();
-        }
-        if (wishList.getItems() == null) {
             wishList.setItems(new ArrayList<>());
         }
-        for (WishListItem item : wishList.getItems()) {
-            item.calculateStars();
+        if (wishList.getItems() != null) {
+            for (WishListItem item : wishList.getItems()) {
+                item.calculateStars();
+            }
         }
         return wishList;
     }
 
     public WishList getWishListBooksByPage(Long userId, int currentPage, int pageSize) {
-        // Guard invalid pagination params
-        if (currentPage <= 0) currentPage = 1;
-        if (pageSize <= 0) pageSize = 10;
-
-        // Validate input
-        if (userId == null || userId <= 0) {
-            WishList empty = new WishList();
-            empty.setItems(new ArrayList<>());
-            empty.setUpPagination(currentPage, pageSize);
-            return empty;
-        }
-
         WishList wishList = wishListDao.getWishListByUser(userId);
         if (wishList == null) {
             wishList = new WishList();
+            wishList.setItems(new ArrayList<>());
         }
-        List<WishListItem> items = wishList.getItems();
-        if (items == null) {
-            items = new ArrayList<>();
-            wishList.setItems(items);
-        }
-        for (WishListItem item : items) {
-            item.calculateStars();
+        if (wishList.getItems() != null) {
+            for (WishListItem item : wishList.getItems()) {
+                item.calculateStars();
+            }
         }
         wishList.setUpPagination(currentPage, pageSize);
-
-        int total = items.size();
-        int fromIndex = Math.min((currentPage - 1) * pageSize, total);
-        int toIndex = Math.min(fromIndex + pageSize, total);
-        wishList.setItems(items.subList(fromIndex, toIndex));
+        int size = wishList.getItems() == null ? 0 : wishList.getItems().size();
+        int fromIndex = Math.min((currentPage - 1) * pageSize, size);
+        int toIndex = Math.min(fromIndex + pageSize, size);
+        if (wishList.getItems() != null) {
+            wishList.setItems(wishList.getItems().subList(fromIndex, toIndex));
+        }
         return wishList;
     }
 

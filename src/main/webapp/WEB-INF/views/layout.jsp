@@ -45,6 +45,7 @@
 <script src="${pageContext.request.contextPath}/assets/js/toggleSidebar.js" defer></script>
 <script src="${pageContext.request.contextPath}/assets/js/toast.js" defer></script>
 <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/categoryBook.js?v=6"></script>
 <script>
     if (!window.ws || window.ws.readyState === WebSocket.CLOSED) {
         window.ws = new WebSocket("ws://localhost:8080/bookiecake/ws/updates");

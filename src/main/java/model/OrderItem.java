@@ -18,7 +18,7 @@ public class OrderItem {
     private Integer quantity;
 
     @Column(nullable = false)
-    private Double price; // 💰 Giá tại thời điểm khách mua
+    private Double price; // Giá tại thời điểm khách mua
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookId", nullable = false)

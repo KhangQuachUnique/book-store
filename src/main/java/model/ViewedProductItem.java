@@ -11,7 +11,9 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"viewedProductItems\"")
+@Table( name = "\"viewedProductItems\"",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"\"bookId\"", "\"viewedProductId\""})
+)
 public class ViewedProductItem {
 
     @Id

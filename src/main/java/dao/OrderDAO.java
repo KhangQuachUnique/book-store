@@ -52,7 +52,7 @@ public class OrderDAO {
 
             List<Order> orders = query.getResultList();
 
-            // ✅ Tính tổng cho từng order (subtotal, discount, final)
+            //Tính tổng cho từng order (subtotal, discount, final)
             for (Order o : orders) {
                 o.calculateTotals();
             }
@@ -152,6 +152,27 @@ public class OrderDAO {
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Check if user purchased (delivered) a specific book.
+     */
+    public boolean userPurchasedBookDelivered(Long userId, Long bookId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long count = em.createQuery(
+                            "SELECT COUNT(oi) FROM OrderItem oi " +
+                                    "WHERE oi.order.user.id = :uid AND oi.book.id = :bid " +
+                                    "AND oi.order.status = :st",
+                            Long.class)
+                    .setParameter("uid", userId)
+                    .setParameter("bid", bookId)
+                    .setParameter("st", OrderStatus.DELIVERED)
+                    .getSingleResult();
+            return count != null && count > 0;
         } finally {
             em.close();
         }

@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/sidebar.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/admin.css"><!-- new admin theme styles -->
     <script>
         // Provide context path globally for admin JS (category checks, etc.)
         window.APP_CONTEXT = '${pageContext.request.contextPath}';

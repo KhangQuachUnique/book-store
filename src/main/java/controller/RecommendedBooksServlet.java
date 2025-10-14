@@ -21,7 +21,6 @@ public class RecommendedBooksServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WishListService wishListService = new WishListService();
 
-        List<Book> topSellingBooks = bookService.getTopSellingBooks();
         List<Book> recommendedBooks = new ArrayList<>();
         User user = (User) request.getSession().getAttribute("user");
 
@@ -55,12 +54,18 @@ public class RecommendedBooksServlet extends HttpServlet {
                     recommendedBooks.addAll(booksByCategory);
                 }
 
+
+
                 Collections.shuffle(recommendedBooks);
             }
         }
 
         request.setAttribute("recommendedBooks", recommendedBooks);
+
+        List<Book> topSellingBooks = bookService.getTopSellingBooks();
+        List<Book> topRatedBooks = bookService.getTopRatedBooks();
         request.setAttribute("topSellingBooks", topSellingBooks);
+        request.setAttribute("topRatedBooks", topRatedBooks);
 
         request.getRequestDispatcher("/WEB-INF/views/recommendedBooks.jsp").include(request, response);
     }

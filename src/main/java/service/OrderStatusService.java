@@ -12,16 +12,16 @@ import java.util.Map;
  */
 public class OrderStatusService {
 
-    // ✅ Map ánh xạ status → tên hiển thị
+    // Map ánh xạ status → tên hiển thị
     private static final Map<OrderStatus, String> DISPLAY_NAMES = Map.of(
-            OrderStatus.PENDING_PAYMENT, "Đang chờ",
-            OrderStatus.PROCESSING, "Đang xử lý",
-            OrderStatus.WAITING_DELIVERY, "Đang giao",
-            OrderStatus.DELIVERED, "Đã giao",
-            OrderStatus.CANCELED, "Đã hủy"
+            OrderStatus.PENDING_PAYMENT, "Pending",
+            OrderStatus.PROCESSING, "Processing",
+            OrderStatus.WAITING_DELIVERY, "Waiting for Delivery",
+            OrderStatus.DELIVERED, "Delivered",
+            OrderStatus.CANCELED, "Canceled"
     );
 
-    // ✅ Map ánh xạ status → class CSS (để đổi màu nhanh)
+    // Map ánh xạ status → class CSS (để đổi màu nhanh)
     private static final Map<OrderStatus, String> CSS_CLASSES = Map.of(
             OrderStatus.PENDING_PAYMENT, "pending",
             OrderStatus.PROCESSING, "processing",

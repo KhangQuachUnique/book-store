@@ -74,7 +74,7 @@
 
     <p class="register-link">
         Already have an account? <a
-            href="<%=request.getContextPath()%>/login">Login</a>
+            href="/login">Login</a>
     </p>
 
     <div id="spinner" class="spinner" style="display: none;"></div>

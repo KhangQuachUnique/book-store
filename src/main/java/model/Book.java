@@ -29,20 +29,19 @@ public class Book implements Serializable {
     private Integer id;
 
     @NotNull(message = "Title is required")
-    @Size(min = 1, max = 255, message = "Title must be between 1 and 255 characters")
-    @Column(name = "\"title\"", nullable = false)
+    @Column(name = "\"title\"", columnDefinition = "TEXT")
     private String title;
 
-    @Column(name = "\"author\"")
+    @Column(name = "\"author\"", columnDefinition = "TEXT")
     private String author;
 
-    @Column(name = "\"publisher\"")
+    @Column(name = "\"publisher\"", columnDefinition = "TEXT")
     private String publisher;
 
-    @Column(name = "\"thumbnailUrl\"")
+    @Column(name = "\"thumbnailUrl\"", columnDefinition = "TEXT")
     private String thumbnailUrl;
 
-    @Column(name = "\"description\"")
+    @Column(name = "\"description\"", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "\"publishYear\"")

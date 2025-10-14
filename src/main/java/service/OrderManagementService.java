@@ -34,6 +34,10 @@ public class OrderManagementService {
         return orderDAO.updateOrderStatus(orderId, status);
     }
 
+    public Order getOrderById(long orderId) throws SQLException {
+        return orderDAO.getOrderById(orderId);
+    }
+
     public boolean deleteOrder(long orderId) throws SQLException {
         return orderDAO.deleteOrder(orderId);
     }

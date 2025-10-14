@@ -48,8 +48,8 @@ public class UserService {
 
         if (userDao.save(user)) {
             cartDao.createCartForUser(user.getId());
-            wishListDao.getWishListByUser(user.getId()); // Tạo wishlist rỗng
-            viewHistoryDao.createViewHistoryForUser(user.getId()); // Tạo view history
+            wishListDao.createWishListForUser(user.getId()); // tạo wishlist rỗng ngay khi đăng ký
+            viewHistoryDao.createViewHistoryForUser(user.getId()); // tạo view history
             return token; // dùng để gửi mail xác thực
         }
         return null;

@@ -170,9 +170,7 @@
         </div>
     </div>
 
-    <jsp:include page="review.jsp">
-        <jsp:param name="bookReview" value="${requestScope.bookReview}"/>
-    </jsp:include>
+    <jsp:include page="review.jsp"/>
 
     <!-- Related Actions -->
     <div class="related-actions">

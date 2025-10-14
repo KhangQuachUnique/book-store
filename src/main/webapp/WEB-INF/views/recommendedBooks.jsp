@@ -12,7 +12,11 @@
 <div class="recommended-section" id="topSellingSection">
     <p>Best Sellers</p>
     <div class="recommended-container">
-        <button class="scroll-btn left">&#10094;</button>
+        <button class="scroll-btn left">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                <path d="M169.4 297.4C156.9 309.9 156.9 330.2 169.4 342.7L361.4 534.7C373.9 547.2 394.2 547.2 406.7 534.7C419.2 522.2 419.2 501.9 406.7 489.4L237.3 320L406.6 150.6C419.1 138.1 419.1 117.8 406.6 105.3C394.1 92.8 373.8 92.8 361.3 105.3L169.3 297.3z"/>
+            </svg>
+        </button>
 
         <div class="recommended-window">
             <div class="recommended-track">
@@ -51,16 +55,24 @@
             </div>
         </div>
 
-        <button class="scroll-btn right">&#10095;</button>
+        <button class="scroll-btn right">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                <path d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"/>
+            </svg>
+        </button>
     </div>
 </div>
 
 <c:if test="${not empty requestScope.recommendedBooks}">
     <!-- ================== RECOMMENDED BOOKS ================== -->
     <div class="recommended-section" id="recommendedSection">
-        <p>You may also like</p>
+        <p>You May Also Like</p>
         <div class="recommended-container">
-            <button class="scroll-btn left">&#10094;</button>
+            <button class="scroll-btn left">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path d="M169.4 297.4C156.9 309.9 156.9 330.2 169.4 342.7L361.4 534.7C373.9 547.2 394.2 547.2 406.7 534.7C419.2 522.2 419.2 501.9 406.7 489.4L237.3 320L406.6 150.6C419.1 138.1 419.1 117.8 406.6 105.3C394.1 92.8 373.8 92.8 361.3 105.3L169.3 297.3z"/>
+                </svg>
+            </button>
 
             <div class="recommended-window">
                 <div class="recommended-track">
@@ -99,7 +111,68 @@
                 </div>
             </div>
 
-            <button class="scroll-btn right">&#10095;</button>
+            <button class="scroll-btn right">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</c:if>
+
+<c:if test="${not empty requestScope.topRatedBooks}">
+    <!-- ================== TOP RATED BOOKS ================== -->
+    <div class="recommended-section" id="topRatedSection">
+        <p>Top Rated Books</p>
+        <div class="recommended-container">
+            <button class="scroll-btn left">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path d="M169.4 297.4C156.9 309.9 156.9 330.2 169.4 342.7L361.4 534.7C373.9 547.2 394.2 547.2 406.7 534.7C419.2 522.2 419.2 501.9 406.7 489.4L237.3 320L406.6 150.6C419.1 138.1 419.1 117.8 406.6 105.3C394.1 92.8 373.8 92.8 361.3 105.3L169.3 297.3z"/>
+                </svg>
+            </button>
+
+            <div class="recommended-window">
+                <div class="recommended-track">
+                    <c:forEach items="${requestScope.topRatedBooks}" var="book">
+                        <div class="book-card small-card">
+                            <a href="${pageContext.request.contextPath}/book-detail?id=${book.id}" class="book-link">
+                                <div class="book-image">
+                                    <img src="${book.thumbnailUrl}" alt="${book.title}" class="book-thumbnail small-thumb">
+                                </div>
+                                <div class="book-info">
+                                    <h4 class="book-title">${book.title}</h4>
+                                    <div class="book-price-row column-price">
+                                        <c:choose>
+                                            <c:when test="${book.discountRate > 0}">
+                                                <span class="book-price-badge">
+                                                    <fmt:formatNumber value="${book.getPrice()}" type="number" /> VND
+                                                </span>
+                                                <div class="original-discount">
+                                                    <span class="original-price">
+                                                        <fmt:formatNumber value="${book.originalPrice}" type="number" /> VND
+                                                    </span>
+                                                    <span class="discount">-${book.discountRate}%</span>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="book-price-badge">
+                                                    <fmt:formatNumber value="${book.originalPrice}" type="number" /> VND
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <button class="scroll-btn right">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"/>
+                </svg>
+            </button>
         </div>
     </div>
 </c:if>
@@ -172,6 +245,7 @@
         // Khởi tạo
         initSlider("topSellingSection");
         initSlider("recommendedSection");
+        initSlider("topRatedSection");
     });
 </script>
 

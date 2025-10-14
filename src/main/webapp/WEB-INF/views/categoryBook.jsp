@@ -23,16 +23,139 @@
                 <!-- Thanh tìm kiếm - cấu trúc hiện đại -->
                 <form action="${pageContext.request.contextPath}/categories" method="get" class="search-form">
                     <div class="form-group">
-                        <input type="text" name="search" placeholder="Search by title or author" value="${search}" class="input">
+                        <input type="text" name="title" id="mainTitleInput" placeholder="Search by title" value="${title}" class="input">
                     </div>
                     <div class="form-group button-group">
-                        <button type="button" class="btn btn-primary" onclick="toggleCategoryTable()">Select Categories</button>
+                        <button type="button" class="btn btn-primary" onclick="toggleAdvanceSearch()">Advanced Search</button>
                         <input type="submit" value="Find" class="btn btn-primary" onclick="setSearchAction('title')">
                     </div>
                     <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
                     <input type="hidden" name="excludeCategories" id="excludeCategories" value="${excludeCategories}">
                     <input type="hidden" name="action" id="searchAction" value="">
+                    <input type="hidden" name="page" value="1">
+                    <c:if test="${not empty sortBy}">
+                        <input type="hidden" name="sortBy" value="${sortBy}"/>
+                    </c:if>
                 </form>
+                <!-- Advanced Search Panel -->
+                <div id="advanceSearchPanel" class="advance-search-panel" style="display:none; margin-top:15px;">
+                    <h3>Advanced Search</h3>
+                    <form action="${pageContext.request.contextPath}/categories" method="get" class="advance-search-form">
+                        <div class="form-group">
+                            <label>Sort by</label>
+                            <select name="sortBy" class="input">
+                                <option value="" ${empty sortBy ? 'selected' : ''}>None</option>
+                                <option value="title_asc"  ${'title_asc'  == sortBy ? 'selected' : ''}>Title Ascending</option>
+                                <option value="title_desc" ${'title_desc' == sortBy ? 'selected' : ''}>Title Descending</option>
+                                <option value="rating_high" ${'rating_high' == sortBy ? 'selected' : ''}>Highest Rating</option>
+                                <option value="rating_low"  ${'rating_low'  == sortBy ? 'selected' : ''}>Lowest Rating</option>
+                                <option value="year_asc"    ${'year_asc'    == sortBy ? 'selected' : ''}>Year Ascending</option>
+                                <option value="year_desc"   ${'year_desc'   == sortBy ? 'selected' : ''}>Year Descending</option>
+                                <option value="price_high"  ${'price_high'  == sortBy ? 'selected' : ''}>Highest Price</option>
+                                <option value="price_low"   ${'price_low'   == sortBy ? 'selected' : ''}>Lowest Price</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Filter Categories</label>
+                            <input type="text" id="categorySelectorInput" class="input"
+                                placeholder="Include/Exclude Categories (Click to select)"
+                                readonly
+                                onclick="toggleCategoryTable()"
+                                value="${categorySummaryLabel}"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Authors</label>
+                            <input type="text" name="author" placeholder="Any" value="${author}" class="input">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Publication year</label>
+                            <input type="text"
+                                name="publishYear"
+                                id="publishYearInput"
+                                placeholder="Any"
+                                value="${publishYear}"
+                                class="input"
+                                maxlength="4"
+                                inputmode="numeric"
+                                pattern="[0-9]*">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Published before year</label>
+                            <input type="text"
+                                name="yearBefore"
+                                id="yearBeforeInput"
+                                placeholder="Any"
+                                value="${yearBefore}"
+                                class="input"
+                                maxlength="4"
+                                inputmode="numeric"
+                                pattern="[0-9]*">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Published after year</label>
+                            <input type="text"
+                                name="yearAfter"
+                                id="yearAfterInput"
+                                placeholder="Any"
+                                value="${yearAfter}"
+                                class="input"
+                                maxlength="4"
+                                inputmode="numeric"
+                                pattern="[0-9]*">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Price from (VND)</label>
+                            <input type="text"
+                                name="priceFrom"
+                                id="priceFromInput"
+                                placeholder="Min 1000"
+                                value="${priceFrom}"
+                                class="input"
+                                inputmode="numeric"
+                                pattern="[0-9]*">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Price up to (VND)</label>
+                            <input type="text"
+                                name="priceUpTo"
+                                id="priceUpToInput"
+                                placeholder="Min 1000"
+                                value="${priceUpTo}"
+                                class="input"
+                                inputmode="numeric"
+                                pattern="[0-9]*">
+                        </div>
+
+                        <!-- Giữ bối cảnh hiện tại khi sort -->
+                        <c:if test="${not empty title}">
+                            <input type="hidden" name="title" value="${title}"/>
+                        </c:if>
+                        <c:if test="${not empty includeCategories}">
+                            <input type="hidden" name="includeCategories" value="${includeCategories}"/>
+                        </c:if>
+                        <c:if test="${not empty excludeCategories}">
+                            <input type="hidden" name="excludeCategories" value="${excludeCategories}"/>
+                        </c:if>
+                        <c:if test="${not empty categoryId}">
+                            <input type="hidden" name="category" value="${categoryId}"/>
+                        </c:if>
+                        <input type="hidden" name="page" value="1"/>
+                        <input type="hidden" name="title" id="advancedTitleInput" value="${title}"/>
+                        <input type="hidden" name="action" id="advancedAction" value=""/>
+
+                        <div class="button-group advanced-footer">
+                            <button type="submit" class="btn btn-primary" onclick="syncTitleAndSubmit()">Apply Filters</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetAdvanceSearch()">Reset</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -43,6 +166,11 @@
                 <button type="button" class="btn btn-primary" onclick="submitFilterForm()">Apply Filter</button>
                 <button type="button" class="btn btn-secondary" onclick="toggleCategoryTable()">Close</button>
             </div>
+
+            <div class="category-hint">
+                <span class="hint-icon">ⓘ</span> Click on any tag once to include it. Click on it again to exclude it. Click once more to clear it.
+            </div>
+
             <c:forEach var="category" items="${categories}">
                 <div class="category-item" data-id="${category.id}" onclick="toggleCategory(this, ${category.id})">
                         ${category.name}
@@ -71,10 +199,10 @@
                             <div class="book-info">
                                 <h3 class="book-title">${book.title}</h3>
                                 <div class="book-price-row">
-                                            <span class="book-price-badge">
-                                                <fmt:formatNumber value="${book.getPrice()}" type="number" />
-                                                VND
-                                            </span>
+                                    <span class="book-price-badge">
+                                        <fmt:formatNumber value="${book.getPrice()}" type="number" />
+                                        VND
+                                    </span>
                                     <c:if test="${book.discountRate > 0}">
                                         <span class="discount">-${book.discountRate}%</span>
                                     </c:if>
@@ -82,15 +210,15 @@
                                 <p class="book-author">Author: ${book.author}</p>
                                 <p class="book-publisher">Publisher: ${book.publisher}</p>
 
-                                    <%--                                        <div class="book-rating">--%>
-                                    <%--                                            <jsp:include page="ratingStar.jsp">--%>
-                                    <%--                                                <jsp:param name="fullStars" value="${book.fullStars}" />--%>
-                                    <%--                                                <jsp:param name="partialFraction" value="${book.partialFraction}" />--%>
-                                    <%--                                                <jsp:param name="emptyStars" value="${book.emptyStars}" />--%>
-                                    <%--                                                <jsp:param name="size" value="16" />--%>
-                                    <%--                                            </jsp:include>--%>
-                                    <%--                                            <span class="rating-value">${book.rating} / 5</span>--%>
-                                    <%--                                        </div>--%>
+                                <div class="book-rating">
+                                    <jsp:include page="ratingStar.jsp">
+                                        <jsp:param name="fullStars" value="${book.fullStars}" />
+                                        <jsp:param name="partialFraction" value="${book.partialFraction}" />
+                                        <jsp:param name="emptyStars" value="${book.emptyStars}" />
+                                        <jsp:param name="size" value="16" />
+                                    </jsp:include>
+                                    <span class="rating-value">${book.averageRating} / 5</span>
+                                </div>
 
                             </div>
                         </a>
@@ -104,7 +232,7 @@
     <div class="pagination">
         <c:choose>
             <c:when test="${currentPage > 1}">
-                <a href="?page=${currentPage - 1}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&lt;</a>
+                <a href="?page=${currentPage - 1}&${queryString}">&lt;</a>
             </c:when>
             <c:otherwise>
                 <span class="disabled">&lt;</span>
@@ -112,7 +240,7 @@
         </c:choose>
 
         <c:if test="${showFirstEllipsis}">
-            <a href="?page=1&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">1</a>
+            <a href="?page=1&${queryString}">1</a>
             <span class="ellipsis">...</span>
         </c:if>
 
@@ -122,19 +250,19 @@
                     <span class="active">${pageNum}</span>
                 </c:when>
                 <c:otherwise>
-                    <a href="?page=${pageNum}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${pageNum}</a>
+                    <a href="?page=${pageNum}&${queryString}">${pageNum}</a>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
 
         <c:if test="${showLastEllipsis}">
             <span class="ellipsis">...</span>
-            <a href="?page=${totalPages}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">${totalPages}</a>
+            <a href="?page=${totalPages}&${queryString}">${totalPages}</a>
         </c:if>
 
         <c:choose>
             <c:when test="${currentPage < totalPages}">
-                <a href="?page=${currentPage + 1}&search=${search}&includeCategories=${includeCategories}&excludeCategories=${excludeCategories}${not empty categoryId ? '&category='.concat(categoryId) : ''}">&gt;</a>
+                <a href="?page=${currentPage + 1}&${queryString}">&gt;</a>
             </c:when>
             <c:otherwise>
                 <span class="disabled">&gt;</span>

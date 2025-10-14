@@ -76,9 +76,15 @@ public class CategoryBookService {
      */
     public static List<Book> filterBook(String title, String author,
                                         List<Long> includeCategories,
-                                        List<Long> excludeCategories,
-                                        int page) {
-        return CategoryBookDao.filterBooks(title, author, includeCategories, excludeCategories, page);
+                                        List<Long> excludeCategories, 
+                                        int page,
+                                        String sortBy,
+                                        Integer publishYear,
+                                        Integer yearBefore,
+                                        Integer yearAfter,
+                                        Long priceFrom,
+                                        Long priceUpTo) {
+        return CategoryBookDao.filterBooks(title, publishYear, includeCategories, excludeCategories, page, sortBy, author, yearBefore, yearAfter, priceFrom, priceUpTo);
     }
 
     /**
@@ -86,8 +92,13 @@ public class CategoryBookService {
      */
     public static int getTotalPage(String title, String author,
                                    List<Long> includeCategories,
-                                   List<Long> excludeCategories) {
-        long totalBooks = CategoryBookDao.countBooks(title, author, includeCategories, excludeCategories);
+                                   List<Long> excludeCategories,
+                                   Integer publishYear,
+                                   Integer yearBefore,
+                                   Integer yearAfter,
+                                   Long priceFrom,
+                                   Long priceUpTo) {
+        long totalBooks = CategoryBookDao.countBooks(title, publishYear, includeCategories, excludeCategories, author , yearBefore, yearAfter, priceFrom, priceUpTo);
         int totalPages = (int) Math.ceil((double) totalBooks / BOOKS_PER_PAGE);
         return Math.max(1, totalPages); // Đảm bảo luôn có ít nhất 1 trang
     }
@@ -97,5 +108,14 @@ public class CategoryBookService {
      */
     public static List<Category> getAllCategory() {
         return CategoryBookDao.getAllCategories();
+    }
+
+    // sort riêng biệt (không ảnh hưởng filter)
+    public static List<Book> sortAllBooks(String sortBy, int page) {
+        return CategoryBookDao.sortAllBooks(sortBy, page);
+    }
+
+    public static List<Book> sortBooksByCategory(int categoryId, String sortBy, int page) {
+        return CategoryBookDao.sortBooksByCategory(categoryId, sortBy, page);
     }
 }

@@ -96,7 +96,7 @@ public class PaymentProcessServlet extends HttpServlet {
             double discountAmount = 0.0;
             
             if (promotion != null) {
-                discountAmount = subtotal * promotion.getDiscount() / 100.0;
+                discountAmount = (subtotal + shippingFee) * promotion.getDiscount() / 100.0;
             }
             
             double total = subtotal + shippingFee - discountAmount;
@@ -145,7 +145,7 @@ public class PaymentProcessServlet extends HttpServlet {
             req.getSession().setAttribute("pendingMoMoNotes", notes);
 
             // Convert to long (VND - no decimal)
-            long amount = Math.round(total);
+            long amount = (long) total;
             String orderInfo = "Thanh toán đơn hàng BookieCake - " + orderId;
 
             String baseUrl = buildBaseUrl(req);
@@ -207,6 +207,18 @@ public class PaymentProcessServlet extends HttpServlet {
 
             // Save order to database
             orderService.createOrder(order);
+
+            // Gửi email xác nhận đơn hàng
+            try {
+                util.SendMailUtil.sendOrderConfirmationEmail(
+                    user.getEmail(),
+                    user.getName(),
+                    String.valueOf(order.getId()),
+                    String.format("%.0f", order.getTotalAmount())
+                );
+            } catch (Exception mailEx) {
+                log.warning("Không thể gửi email xác nhận đơn hàng: " + mailEx.getMessage());
+            }
 
             // Clear cart after successful order
             cartService.clearCart(user.getId());

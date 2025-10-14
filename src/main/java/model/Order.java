@@ -53,7 +53,7 @@ public class Order {
     @ToString.Exclude
     private List<OrderItem> items;
 
-    // ✅ Các trường chỉ để hiển thị (không lưu DB)
+    // Các trường chỉ để hiển thị (không lưu DB)
     @Transient
     private double subtotal;
 
@@ -63,7 +63,7 @@ public class Order {
     @Transient
     private double finalTotal;
 
-    // ✅ Hàm tiện ích: set tổng tiền tự động
+    // Hàm tiện ích: set tổng tiền tự động
     public void calculateTotals() {
         if (items != null) {
             this.subtotal = items.stream()

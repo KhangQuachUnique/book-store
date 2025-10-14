@@ -32,7 +32,7 @@
                                 </jsp:include>
                                     ${wishListItem.book.averageRating}
                             </span>
-                            <span class="wish-list-item-sold">Đã bán 238</span>
+                            <span class="wish-list-item-sold">Đã bán ${wishListItem.book.sold}</span>
                         </div>
                     </a>
                     <div class="wish-list-item-tail-part">

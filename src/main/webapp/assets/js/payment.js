@@ -1,7 +1,3 @@
-const injected = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : null;
-const contextPath = injected ?? (window.location.pathname.split("/")[1] ? `/${window.location.pathname.split("/")[1]}` : "");
-const BASE_URL = contextPath;
-
 document.addEventListener("DOMContentLoaded", function () {
     const applyBtn = document.querySelector(".apply-btn");
     const promoInput = document.getElementById("promoCodeInput");
@@ -9,8 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const discountRow = document.getElementById("discountRow");
     const totalValue = document.getElementById("totalValue");
 
-    applyBtn.addEventListener("click", async function () {
+    // Hàm xử lý áp dụng mã khuyến mãi
+    const applyPromoCode = async () => {
         const code = promoInput.value.trim();
+
+        // Kiểm tra nếu mã giảm giá trống
         if (!code) {
             promoMessage.style.color = "#a11a2b";
             promoMessage.textContent = "Vui lòng nhập mã khuyến mãi.";
@@ -18,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            const res = await fetch(BASE_URL + "/user/payment/apply-promotion", {
+            // Gửi yêu cầu đến servlet
+            const res = await fetch("/user/payment/apply-promotion", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: "promoCode=" + encodeURIComponent(code)
@@ -26,14 +26,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await res.json();
             console.log("Response:", data);
-            console.log(discountRow);
 
-
+            // Kiểm tra kết quả từ máy chủ và cập nhật giao diện
             if (data.success) {
                 promoMessage.style.color = "green";
                 promoMessage.textContent = data.message;
 
-                // Cập nhật Discount + Total
+                // Cập nhật Discount và Total
                 discountRow.innerHTML = `
                     <div class="summary-row">
                         <span>Discount (${data.promotionCode} - ${data.discountPercent}%)</span>
@@ -51,5 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
             promoMessage.style.color = "#a11a2b";
             promoMessage.textContent = "Có lỗi xảy ra khi áp dụng mã.";
         }
-    });
+    };
+
+    // Gán sự kiện click cho nút áp dụng mã
+    applyBtn.addEventListener("click", applyPromoCode);
 });

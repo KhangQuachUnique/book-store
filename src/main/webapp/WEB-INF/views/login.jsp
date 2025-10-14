@@ -41,8 +41,8 @@
     </form>
 
     <p class="register-link">
-        Not have an account? <a href="<%=request.getContextPath()%>/register">Register</a> |
-        <a href="<%=request.getContextPath()%>/forgot-password">Forgot password?</a>
+        Not have an account? <a href="/register">Register</a> |
+        <a href="/forgot-password">Forgot password?</a>
     </p>
 
 

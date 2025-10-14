@@ -3,6 +3,7 @@ package controller;
 import constant.PathConstants;
 import model.Order;
 import service.OrderManagementService;
+import service.NotificationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,7 @@ import java.util.Map;
 @WebServlet("/admin/orders/*")
 public class OrderManagementServlet extends HttpServlet {
     private final OrderManagementService orderService = new OrderManagementService();
+    private final NotificationService notificationService = new NotificationService();
     private static final int ORDERS_PER_PAGE = 5;
 
     @Override
@@ -119,11 +121,28 @@ public class OrderManagementServlet extends HttpServlet {
                 long orderId = Long.parseLong(req.getParameter("orderId"));
                 String status = req.getParameter("status");
 
+                // Lấy thông tin đơn hàng trước khi cập nhật
+                Order order = orderService.getOrderById(orderId);
+                
                 boolean updated = orderService.updateOrderStatus(orderId, status);
                 if (!updated) {
                     req.getSession().setAttribute("flash_error", "Failed to update order status");
                 } else {
                     req.getSession().setAttribute("flash_success", "Order status updated successfully");
+                    
+                    // Gửi thông báo cho người dùng về việc cập nhật trạng thái đơn hàng
+                    if (order != null && order.getUser() != null) {
+                        try {
+                            String statusMessage = getStatusMessage(status);
+                            String title = "Cập nhật trạng thái đơn hàng #" + orderId;
+                            String message = "Đơn hàng #" + orderId + " của bạn đã được cập nhật: " + statusMessage;
+                            
+                            notificationService.createNotification(order.getUser().getId(), title, message);
+                        } catch (Exception e) {
+                            // Log error nhưng không làm gián đoạn việc cập nhật đơn hàng
+                            System.err.println("Error creating notification: " + e.getMessage());
+                        }
+                    }
                 }
                 resp.sendRedirect(req.getContextPath() + "/admin/orders");
                 return;
@@ -146,6 +165,30 @@ public class OrderManagementServlet extends HttpServlet {
         } catch (Exception e) {
             req.getSession().setAttribute("flash_error", "Server error: " + e.getMessage());
             resp.sendRedirect(req.getContextPath() + "/admin/orders");
+        }
+    }
+
+    /**
+     * Chuyển đổi trạng thái đơn hàng thành thông điệp tiếng Việt
+     */
+    private String getStatusMessage(String status) {
+        if (status == null) return "Không xác định";
+        
+        switch (status.toUpperCase()) {
+            case "PROCESSING":
+                return "Đang xử lý";
+            case "CONFIRMED":
+                return "Đã xác nhận";
+            case "SHIPPING":
+                return "Đang giao hàng";
+            case "DELIVERED":
+                return "Đã giao hàng";
+            case "CANCELLED":
+                return "Đã hủy";
+            case "RETURNED":
+                return "Đã trả hàng";
+            default:
+                return status;
         }
     }
 }

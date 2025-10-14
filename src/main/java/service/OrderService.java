@@ -23,7 +23,7 @@ public class OrderService {
     }
 
     /**
-     * 🧾 Tạo đơn hàng mới (tính giá và lưu)
+     * Tạo đơn hàng mới (tính giá và lưu)
      */
     public void createOrder(Order order) {
         orderDAO.createOrder(order);

@@ -46,19 +46,41 @@ public class ApplyPromotionServlet extends HttpServlet {
             Cart cart = cartService.getCart(user.getId());
             List<CartItem> items = cart != null && cart.getItems() != null ? cart.getItems() : Collections.emptyList();
 
-            // Chuyển cart thành List<Map> để tính toán
-            List<Map<String, Object>> itemMaps = new ArrayList<>();
+            // Tính tổng giỏ hàng (subtotal)
+            double subtotal = 0;
             for (CartItem item : items) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("lineTotal", item.getSubtotal());
-                itemMaps.add(map);
+                subtotal += item.getSubtotal();
             }
+
+            // Giả sử phí vận chuyển cố định
+            double shippingCost = 30000; // Có thể lấy từ giỏ hàng nếu có
+            double totalBeforeDiscount = subtotal + shippingCost;
+
+            // Chuyển subtotal thành dạng List<Map<String, Object>> phù hợp với yêu cầu của applyPromotion
+            Map<String, Object> map = new HashMap<>();
+            map.put("lineTotal", totalBeforeDiscount);  // Cung cấp tổng (sản phẩm + phí ship) cho applyPromotion
+            List<Map<String, Object>> itemMaps = new ArrayList<>();
+            itemMaps.add(map);
 
             // Áp dụng mã khuyến mãi
             Map<String, Object> promoResult = promotionService.applyPromotion(promoCode, itemMaps);
 
+            // Lấy discountAmount từ kết quả trả về của applyPromotion
+            double discountAmount = (double) promoResult.get("discountAmount");
+            double finalTotal = totalBeforeDiscount - discountAmount;
+
+            // Trả về kết quả
+            jsonResponse.put("success", true);
+            jsonResponse.put("subtotal", subtotal);
+            jsonResponse.put("shipping", shippingCost);
+            jsonResponse.put("discountAmount", discountAmount);
+            jsonResponse.put("finalTotal", finalTotal);  // Trả về tổng sau khi giảm giá
+            jsonResponse.put("message", "Mã khuyến mãi đã được áp dụng thành công!");
+            jsonResponse.put("promotionCode", promoCode);
+            jsonResponse.put("discountPercent", promoResult.get("discountPercent"));  // Phần trăm giảm giá
+
             // Gửi phản hồi JSON
-            writeJson(response, promoResult);
+            writeJson(response, jsonResponse);
 
         } catch (Exception e) {
             e.printStackTrace();
