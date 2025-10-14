@@ -39,7 +39,7 @@ public class UpdateUserInfo extends HttpServlet {
     }
 
     private void updateInfoUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+            throws SQLException, IOException {
         User sessionUser = (User) request.getSession().getAttribute("user");
         List<Address> addresses = sessionUser.getAddresses();
         String defaultAddress = request.getSession().getAttribute("defaultAddress").toString();

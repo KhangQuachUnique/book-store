@@ -21,12 +21,7 @@ public class ShowInfoUser extends HttpServlet {
 
         User user = (User) req.getSession().getAttribute("user");
 
-        if (user == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
-            return;
-        }
-
-        String defaultAddress = null;
+        String defaultAddress = "None";
 
         List<Address> addressList = user.getAddresses();
 
@@ -36,10 +31,6 @@ public class ShowInfoUser extends HttpServlet {
                     defaultAddress = addr.getAddress();
                 }
             }
-        }
-
-        if (defaultAddress == null) {
-            defaultAddress = "None";
         }
 
         req.getSession().setAttribute("defaultAddress", defaultAddress);
