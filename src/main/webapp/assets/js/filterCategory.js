@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     // Fallback nếu không có localList (trường hợp trang không inject)
-                    const base = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : '';
-                    const checkUrl = `${base}/admin/category?action=checkName&name=${encodeURIComponent(val)}`;
+                    const base = '';
+                    const checkUrl = `$/admin/category?action=checkName&name=${encodeURIComponent(val)}`;
                     fetch(checkUrl)
                         .then(res => { if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
                         .then(data => {
@@ -99,8 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const idValue = idInput ? idInput.value.trim() : '';
         
         // Tạo URL với các tham số tìm kiếm
-        const contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
-        let url = `${contextPath}/admin/category`;
+        const contextPath = "";
+        let url = `/admin/category`;
         
         if (keywordValue || idValue) {
             url += '?action=search';

@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class OrderStatusService {
 
-    // ✅ Map ánh xạ status → tên hiển thị
+    // Map ánh xạ status → tên hiển thị
     private static final Map<OrderStatus, String> DISPLAY_NAMES = Map.of(
             OrderStatus.PENDING_PAYMENT, "Pending",
             OrderStatus.PROCESSING, "Processing",
@@ -21,7 +21,7 @@ public class OrderStatusService {
             OrderStatus.CANCELED, "Canceled"
     );
 
-    // ✅ Map ánh xạ status → class CSS (để đổi màu nhanh)
+    // Map ánh xạ status → class CSS (để đổi màu nhanh)
     private static final Map<OrderStatus, String> CSS_CLASSES = Map.of(
             OrderStatus.PENDING_PAYMENT, "pending",
             OrderStatus.PROCESSING, "processing",

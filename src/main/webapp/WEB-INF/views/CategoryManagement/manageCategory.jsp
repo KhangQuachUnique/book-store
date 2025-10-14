@@ -74,70 +74,72 @@
         </tbody>
     </table>
 
-    <!-- Phân trang -->
-    <div class="pagination-container d-flex justify-content-center mt-4">
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <!-- Nút Previous -->
-                <c:if test="${currentPage > 1}">
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${currentPage-1}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                </c:if>
-
-                <!-- Trang đầu tiên -->
-                <c:if test="${showFirstPage}">
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=1">1</a>
-                    </li>
-                    <!-- Hiển thị dấu "..." nếu không kề với trang đầu tiên -->
-                    <c:if test="${showEllipsisFirst}">
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
+    <!-- Phân trang (chỉ hiển thị khi không search) -->
+    <c:if test="${not isSearching}">
+        <div class="pagination-container d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- Nút Previous -->
+                    <c:if test="${currentPage > 1}">
+                        <li class="page-item">
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${currentPage-1}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
                         </li>
                     </c:if>
-                </c:if>
 
-                <!-- Các trang xung quanh trang hiện tại -->
-                <c:forEach begin="${startPage}" end="${endPage}" var="i">
-                    <c:choose>
-                        <c:when test="${currentPage == i}">
-                            <li class="page-item active"><a class="page-link" href="#">${i}</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${i}">${i}</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
+                    <!-- Trang đầu tiên -->
+                    <c:if test="${showFirstPage}">
+                        <li class="page-item">
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=1">1</a>
+                        </li>
+                        <!-- Hiển thị dấu "..." nếu không kề với trang đầu tiên -->
+                        <c:if test="${showEllipsisFirst}">
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        </c:if>
+                    </c:if>
 
-                <!-- Trang cuối cùng -->
-                <c:if test="${showLastPage}">
-                    <!-- Hiển thị dấu "..." nếu không kề với trang cuối -->
-                    <c:if test="${showEllipsisLast}">
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
+                    <!-- Các trang xung quanh trang hiện tại -->
+                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                        <c:choose>
+                            <c:when test="${currentPage == i}">
+                                <li class="page-item active"><a class="page-link" href="#">${i}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${i}">${i}</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
+                    <!-- Trang cuối cùng -->
+                    <c:if test="${showLastPage}">
+                        <!-- Hiển thị dấu "..." nếu không kề với trang cuối -->
+                        <c:if test="${showEllipsisLast}">
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        </c:if>
+                        <li class="page-item">
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${totalPages}">${totalPages}</a>
                         </li>
                     </c:if>
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${totalPages}">${totalPages}</a>
-                    </li>
-                </c:if>
 
-                <!-- Nút Next -->
-                <c:if test="${currentPage < totalPages}">
-                    <li class="page-item">
-                        <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${currentPage+1}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </c:if>
-            </ul>
-        </nav>
-    </div>
+                    <!-- Nút Next -->
+                    <c:if test="${currentPage < totalPages}">
+                        <li class="page-item">
+                            <a class="page-link" href="${pageContext.request.contextPath}/admin/category?action=list&page=${currentPage+1}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </c:if>
+                </ul>
+            </nav>
+        </div>
+    </c:if>
 </div>
 
 <script src="${pageContext.request.contextPath}/assets/js/filterCategory.js"></script>

@@ -19,7 +19,7 @@ public class PromotionDAO {
         this.emf = JPAUtil.getEntityManagerFactory();
     }
 
-    // ❇️ ADMIN: list all promotions
+    //  ADMIN: list all promotions
     public List<Promotion> findAll() {
         EntityManager em = emf.createEntityManager();
         try {
@@ -30,7 +30,7 @@ public class PromotionDAO {
         }
     }
 
-    // ❇️ ADMIN: find by id
+    //  ADMIN: find by id
     public Promotion findById(Long id) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -40,7 +40,7 @@ public class PromotionDAO {
         }
     }
 
-    // ❇️ ADMIN: check code exists (optionally excluding an id)
+    //  ADMIN: check code exists (optionally excluding an id)
     public boolean existsByCode(String code, Long excludeId) {
         if (code == null) return false;
         EntityManager em = emf.createEntityManager();
@@ -57,7 +57,7 @@ public class PromotionDAO {
         }
     }
 
-    // ✅ Find promotion by code (for client apply)
+    //  Find promotion by code (for client apply)
     public Promotion getPromotionByCode(String code) {
         EntityManager em = emf.createEntityManager();
         Promotion promotion = null;
@@ -78,7 +78,7 @@ public class PromotionDAO {
         return promotion;
     }
 
-    // ✅ Get all valid promotions (for client apply)
+    //  Get all valid promotions (for client apply)
     public List<Promotion> getAllValidPromotions() {
         EntityManager em = emf.createEntityManager();
         List<Promotion> promotions = new ArrayList<>();
@@ -95,7 +95,7 @@ public class PromotionDAO {
         return promotions;
     }
 
-    // ❇️ ADMIN: create promotion
+    //  ADMIN: create promotion
     public Long create(String code, double discount, OffsetDateTime expireAt) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -116,7 +116,7 @@ public class PromotionDAO {
         }
     }
 
-    // ❇️ ADMIN: update promotion
+    //  ADMIN: update promotion
     public void update(Long id, String code, double discount, OffsetDateTime expireAt) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -139,7 +139,7 @@ public class PromotionDAO {
         }
     }
 
-    // ❇️ ADMIN: delete promotion
+    //  ADMIN: delete promotion
     public void delete(Long id) {
         EntityManager em = emf.createEntityManager();
         try {
