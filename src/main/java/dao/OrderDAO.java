@@ -52,7 +52,7 @@ public class OrderDAO {
 
             List<Order> orders = query.getResultList();
 
-            // ✅ Tính tổng cho từng order (subtotal, discount, final)
+            //Tính tổng cho từng order (subtotal, discount, final)
             for (Order o : orders) {
                 o.calculateTotals();
             }

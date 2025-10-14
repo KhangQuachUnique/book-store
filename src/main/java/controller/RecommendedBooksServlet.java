@@ -54,6 +54,8 @@ public class RecommendedBooksServlet extends HttpServlet {
                     recommendedBooks.addAll(booksByCategory);
                 }
 
+
+
                 Collections.shuffle(recommendedBooks);
             }
         }
@@ -61,7 +63,9 @@ public class RecommendedBooksServlet extends HttpServlet {
         request.setAttribute("recommendedBooks", recommendedBooks);
 
         List<Book> topSellingBooks = bookService.getTopSellingBooks();
+        List<Book> topRatedBooks = bookService.getTopRatedBooks();
         request.setAttribute("topSellingBooks", topSellingBooks);
+        request.setAttribute("topRatedBooks", topRatedBooks);
 
         request.getRequestDispatcher("/WEB-INF/views/recommendedBooks.jsp").include(request, response);
     }

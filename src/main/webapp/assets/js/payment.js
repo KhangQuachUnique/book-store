@@ -1,7 +1,3 @@
-const injected = (typeof window !== 'undefined' && window.APP_CONTEXT) ? window.APP_CONTEXT : null;
-const contextPath = injected ?? (window.location.pathname.split("/")[1] ? `/${window.location.pathname.split("/")[1]}` : "");
-const BASE_URL = contextPath;
-
 document.addEventListener("DOMContentLoaded", function () {
     const applyBtn = document.querySelector(".apply-btn");
     const promoInput = document.getElementById("promoCodeInput");
@@ -22,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             // Gửi yêu cầu đến servlet
-            const res = await fetch(BASE_URL + "/user/payment/apply-promotion", {
+            const res = await fetch("/user/payment/apply-promotion", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: "promoCode=" + encodeURIComponent(code)
