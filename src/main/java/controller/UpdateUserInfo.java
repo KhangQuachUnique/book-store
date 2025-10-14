@@ -76,7 +76,7 @@ public class UpdateUserInfo extends HttpServlet {
                     addressService.setDefaultAddress(addressId, sessionUser.getId());
                 }
             } else {
-                addressService.createAddress(sessionUser.getId() , address, false);
+                addressService.createAddress(sessionUser.getId() , address, true);
             }
 
             List<Address> updatedAddresses = addressService.getAddressesByUserId(sessionUser.getId());

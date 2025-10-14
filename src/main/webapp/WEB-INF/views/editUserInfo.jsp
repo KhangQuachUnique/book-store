@@ -29,11 +29,25 @@
                    name="address"
                    value="${sessionScope.defaultAddress}" readonly />
 
-            <button type="button" class="dropdown-toggle">▼</button>
+            <button type="button" class="edit-button">Edit</button>
         </div>
 
-        <div class="address-list" id="addressList" style="display:none;">
-            <div class="address-item add-address">➕ Add new address</div>
+        <input class="submit" type="submit" value="Confirm update" />
+    </form>
+</div>
+
+<!-- Modal for address editing -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <h3>Edit Addresses</h3>
+        <!-- Ô nhập địa chỉ mới ở trên cùng -->
+        <div class="add-new-container">
+            <input type="text" class="add-new-input" id="newAddressInput" placeholder="Enter new address" />
+            <button type="button" class="add-button" id="addButton">Add</button>
+        </div>
+        <!-- Danh sách địa chỉ với scroll -->
+        <div class="address-list" id="addressList">
             <c:forEach var="addr" items="${sessionScope.user.addresses}">
                 <div class="address-item">
                     <label>
@@ -43,42 +57,60 @@
                 </div>
             </c:forEach>
         </div>
-
-        <input class="submit" type="submit" value="Confirm update" />
-    </form>
+    </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const toggleBtn = document.querySelector(".dropdown-toggle");
+        const editBtn = document.querySelector(".edit-button");
+        const modalOverlay = document.getElementById("modalOverlay");
+        const modalClose = document.getElementById("modalClose");
         const list = document.getElementById("addressList");
         const input = document.getElementById("address");
+        const newAddressInput = document.getElementById("newAddressInput");
+        const addButton = document.getElementById("addButton");
         const defaultAddress = "${sessionScope.defaultAddress}";
 
-        toggleBtn.addEventListener("click", () => {
-            list.style.display = list.style.display === "block" ? "none" : "block";
+        editBtn.addEventListener("click", () => {
+            modalOverlay.style.display = "flex";
+            setTimeout(() => { modalOverlay.classList.add("show"); }, 10); // Delay để transition
+            newAddressInput.value = ""; // Reset input mới
         });
 
+        modalClose.addEventListener("click", () => {
+            modalOverlay.classList.remove("show");
+            setTimeout(() => { modalOverlay.style.display = "none"; }, 300); // Delay đóng sau transition
+        });
+
+        // Chọn địa chỉ từ list
         list.addEventListener("change", (e) => {
             if (e.target.classList.contains("addr-radio")) {
                 input.value = e.target.value;
-                list.style.display = "none";
+                modalOverlay.classList.remove("show");
+                setTimeout(() => { modalOverlay.style.display = "none"; }, 300);
             }
         });
 
-        list.addEventListener("click", (e) => {
-            if (e.target.classList.contains("add-address")) {
+        // Thêm địa chỉ mới
+        addButton.addEventListener("click", () => {
+            const newAddr = newAddressInput.value.trim();
+            if (newAddr) {
                 input.removeAttribute("readonly");
                 input.setAttribute("required", "true");
-                input.value = "";
+                input.value = newAddr;
                 input.focus();
-                list.style.display = "none";
+                modalOverlay.classList.remove("show");
+                setTimeout(() => { modalOverlay.style.display = "none"; }, 300);
+            } else {
+                alert("Please enter a new address.");
             }
         });
 
+        // Đóng modal khi click ngoài
         document.addEventListener("click", (e) => {
-            if (!list.contains(e.target) && !toggleBtn.contains(e.target)) {
-                list.style.display = "none";
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove("show");
+                setTimeout(() => { modalOverlay.style.display = "none"; }, 300);
             }
         });
     });
