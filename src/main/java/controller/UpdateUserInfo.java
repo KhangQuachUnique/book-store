@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +24,7 @@ public class UpdateUserInfo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/views/changeUserInfo.jsp").forward(request, response);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class UpdateUserInfo extends HttpServlet {
         List<Address> addresses = sessionUser.getAddresses();
         String defaultAddress = request.getSession().getAttribute("defaultAddress").toString();
 
-        String message = "Information has not changed!";
+        String message = "Thông tin chưa thay đổi!";
         String url = "/user/info";
 
         String name = request.getParameter("name");
@@ -52,6 +54,28 @@ public class UpdateUserInfo extends HttpServlet {
         String address = request.getParameter("address");
 
         boolean isChanged = false;
+
+        String[] deleteIdsStr = request.getParameterValues("deleteAddresses");
+        if (deleteIdsStr != null) {
+            List<Long> deleteIds = Arrays.stream(deleteIdsStr)
+                    .map(Long::parseLong)
+                    .toList();
+
+            for (Long delId : deleteIds) {
+                Address addrToDel = addresses.stream()
+                        .filter(a -> a.getId() == delId)
+                        .findFirst()
+                        .orElse(null);
+
+                if (addrToDel != null && !addrToDel.getAddress().equals(defaultAddress)) {
+                    addressService.deleteAddress(delId, sessionUser.getId());
+                    isChanged = true;
+                }
+            }
+
+            addresses = addressService.getAddressesByUserId(sessionUser.getId());
+            sessionUser.setAddresses(addresses);
+        }
 
         if (!sessionUser.getName().equals(name) || !sessionUser.getPhoneNumber().equals(phone)) {
             isChanged = true;
@@ -87,7 +111,7 @@ public class UpdateUserInfo extends HttpServlet {
 
         if (isChanged) {
             request.getSession().setAttribute("user", sessionUser);
-            message = "Information updated successfully!";
+            message = "Cập nhật thông tin thành công!";
         }
 
         request.getSession().setAttribute("toastMessage", message);

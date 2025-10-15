@@ -33,7 +33,6 @@
     font-weight: bold;
 }
 
-/* Inputs */
 .container input[type="submit"] {
     width: 100%;
     padding: 10px;
@@ -43,7 +42,6 @@
     border-radius: 10px;
 }
 
-/* Button */
 input.submit {
     background-color: #a52a2a;
     color: #fff;
@@ -52,7 +50,6 @@ input.submit {
     transition: background-color 0.3s ease;
 }
 
-/* Error / Success messages */
 p.error {
     color: red;
     font-weight: bold;
@@ -70,43 +67,39 @@ span#error, span#success {
 }
 
 span#mismatch {
-    font-size: 0.85em; /* chữ nhỏ hơn */
-    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+    font-size: 0.85em;
+    font-style: italic;
 }
 
-/* Container chính */
 .container {
     width: 100%;
     max-width: 500px;
-    margin: 0 auto; /* căn ngang */
+    margin: 0 auto;
     padding: 20px;
-    background-color: #fff;          /* nền trắng */
-    border-radius: 10px;             /* bo tròn */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* bóng mờ xung quanh */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-/* User info container */
+
 .user-info {
     width: 100%;
     margin-bottom: 20px;
 }
 
-/* Dòng thông tin label/value */
 .info-row {
     display: flex;
-    justify-content: space-between; /* label bên trái, value bên phải */
+    justify-content: space-between;
     padding: 8px 0;
     margin-bottom: 15px;
     border-bottom: 1px solid #dfdfdf;
 }
 
-/* Label */
 .label {
     font-weight: bold;
     color: #2c3e50;
 }
 
-/* Value */
 .value {
     color: #7D7D7DFF;
     font-weight: 600
@@ -124,6 +117,10 @@ span#mismatch {
     border-radius: 10px;
 }
 
+input.email {
+    pointer-events: none;
+}
+
 .input-value {
     color: rgb(0, 0, 0);
     font-weight: 500;
@@ -138,9 +135,9 @@ span#mismatch {
 
 .warning {
     color: red;
-    display: none; /* ban đầu ẩn */
-    font-size: 0.85em; /* chữ nhỏ hơn */
-    font-style: italic; /* tuỳ chọn: in nghiêng cho mềm mại hơn */
+    display: none;
+    font-size: 0.85em;
+    font-style: italic;
     margin-top: 0;
 }
 
@@ -163,15 +160,24 @@ span#mismatch {
     transform: translateX(0);
 }
 
+.user-info .value {
+    display: inline-block;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
 .address-value {
     display: inline-block;
-    max-width: 350px;        /* giới hạn chiều rộng */
-    white-space: normal;     /* cho phép xuống dòng theo dấu cách */
-    word-wrap: break-word;   /* xuống dòng nếu có từ quá dài */
+    max-width: 350px;
+    white-space: normal;
+    word-wrap: break-word;
     overflow-wrap: break-word;
 
-    text-align: right;       /* căn chữ sang phải */
-    box-sizing: border-box;  /* tính cả padding vào max-width */
+    text-align: right;
+    box-sizing: border-box;
 }
 
 .address-container {
@@ -191,8 +197,8 @@ span#mismatch {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 10px;
-    height: 38px; /* Set chiều cao cố định để khớp với nút */
-    box-sizing: border-box; /* Đảm bảo padding và border tính vào height */
+    height: 38px;
+    box-sizing: border-box;
 }
 
 .dropdown-toggle {
@@ -214,27 +220,27 @@ span#mismatch {
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.3s ease; /* Thêm transition mượt mà */
+    transition: opacity 0.3s ease;
 }
 
 .modal-overlay.show {
-    opacity: 1; /* Class để trigger transition */
+    opacity: 1;
 }
 
 .modal-content {
     background: white;
-    padding: 25px; /* Tăng padding cho thoáng */
-    border-radius: 12px; /* Bo góc mềm mại hơn */
+    padding: 25px;
+    border-radius: 12px;
     max-width: 400px;
     width: 90%;
     position: relative;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Thêm bóng mờ mạnh hơn */
-    transition: transform 0.3s ease; /* Scale nhẹ khi mở */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
     transform: scale(0.95);
 }
 
 .modal-overlay.show .modal-content {
-    transform: scale(1); /* Effect zoom in */
+    transform: scale(1);
 }
 
 .modal-close {
@@ -242,62 +248,65 @@ span#mismatch {
     top: 10px;
     right: 10px;
     cursor: pointer;
-    font-size: 24px; /* Lớn hơn cho dễ click */
+    font-size: 24px;
     color: #666;
     transition: color 0.2s;
 }
 
 .modal-close:hover {
-    color: #000; /* Hover effect */
+    color: #000;
 }
 
 .add-new-container {
     display: flex;
-    margin-bottom: 20px; /* Khoảng cách lớn hơn */
+    margin-bottom: 20px;
 }
 
 .add-new-input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ddd; /* Border nhẹ */
+    border: 1px solid #ddd;
     border-radius: 6px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Bóng mờ bên trong input */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: border-color 0.2s;
 }
 
 .add-new-input:focus {
-    border-color: #a52a2a; /* Màu xanh khi focus */
+    border-color: #a52a2a;
     outline: none;
 }
 
 .add-button {
     margin-left: 10px;
     padding: 10px 15px;
-    background: #a52a2a; /* Màu xanh dương */
+    background: #a52a2a;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bóng mờ cho button */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background 0.2s, box-shadow 0.2s;
 }
 
 .add-button:hover {
-    background: #6b0000; /* Hover tối hơn */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Bóng mờ mạnh hơn khi hover */
+    background: #6b0000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .address-list {
-    max-height: 200px; /* Cố định chiều cao, scroll nếu dài */
+    max-height: 200px;
     overflow-y: auto;
-    border: 1px solid #eee; /* Border nhẹ cho list */
+    border: 1px solid #eee;
     border-radius: 6px;
     padding: 10px;
-    background: #f9f9f9; /* Nền nhẹ để nổi bật */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Bóng mờ cho list */
+    background: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .address-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
     padding: 8px;
     border-radius: 4px;
@@ -305,8 +314,34 @@ span#mismatch {
 }
 
 .address-item:hover {
-    background: #e9f2ff; /* Hover nhẹ xanh */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bóng mờ khi hover */
+    background: #e9f2ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addr-label {
+    flex: 1;
+}
+
+.delete-checkbox-label {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: #a52a2a;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.delete-checkbox-label:hover {
+    background: #6b0000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.delete-checkbox {
+    margin-right: 5px;
 }
 
 .edit-button {
@@ -334,4 +369,37 @@ span#mismatch {
     background: #6b0000;
     transform: scale(0.90);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#confirmButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#confirmBtnYes, #confirmBtnNo {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 45%;
+}
+
+#confirmBtnYes {
+    background: #a52a2a;
+    color: white;
+}
+
+#confirmBtnYes:hover {
+    background: #6b0000;
+}
+
+#confirmBtnNo {
+    background: #ccc;
+    color: #000;
+}
+
+#confirmBtnNo:hover {
+    background: #aaa;
 }
