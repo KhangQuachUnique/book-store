@@ -14,33 +14,31 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/userInfo.css">
 </head>
 <body>
-    <section class="profile-section">
-        <h2 class="title">Hồ Sơ Của Bạn</h2>
-        <div class = "container">
-            <div class="user-info">
-                <div class="info-row">
-                    <span class="label">Họ và tên:</span>
-                    <span class="value">${sessionScope.user.name}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Số điện thoại:</span>
-                    <span class="value">${sessionScope.user.phoneNumber}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Email:</span>
-                    <span class="value">${sessionScope.user.email}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Địa chỉ:</span>
-                    <span class="value address-value">${sessionScope.defaultAddress}</span>
-                </div>
+    <h2 class="title">Hồ Sơ Của Bạn</h2>
+    <div class = "container">
+        <div class="user-info">
+            <div class="info-row">
+                <span class="label">Họ và tên:</span>
+                <span class="value">${sessionScope.user.name}</span>
             </div>
-
-            <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">
-                <input type="hidden" name="action" value="edit"/>
-                <input class="submit" type="submit" value="Chỉnh sửa hồ sơ"/>
-            </form>
+            <div class="info-row">
+                <span class="label">Số điện thoại:</span>
+                <span class="value">${sessionScope.user.phoneNumber}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">${sessionScope.user.email}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Địa chỉ:</span>
+                <span class="value address-value">${sessionScope.defaultAddress}</span>
+            </div>
         </div>
-    </section>
+
+        <form class="form_bnt" action="${pageContext.request.contextPath}/user/edit" method="post">
+            <input type="hidden" name="action" value="edit"/>
+            <input class="submit" type="submit" value="Chỉnh sửa hồ sơ"/>
+        </form>
+    </div>
 </body>
 </html>
