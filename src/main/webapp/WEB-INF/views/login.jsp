@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng Nhập</title>
-    <h2 class="form-title">Đăng Nhập</h2>
-            <label for="password">Mật khẩu:</label> <input type="password" id="password" required>
-        <button type="submit" class="btn-submit">Đăng Nhập</button>
-        Chưa có tài khoản? <a href="/register">Đăng ký</a> |
-        <a href="/forgot-password">Quên mật khẩu?</a>
+    <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
+
+    <!-- JS -->
+    <script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
+    <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script></script>
+
     <!-- CSS global & form -->
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/styles/global.css">
@@ -29,20 +30,20 @@
     <span>Bookie Cake</span>
 </div>
 <div class="form-container">
-    <h2 class="form-title">Login</h2>
+    <h2 class="form-title">Đăng nhập</h2>
     <form id="loginForm" class="login-form">
         <div class="form-group">
             <label for="email">Email:</label> <input type="email" id="email" required>
         </div>
         <div class="form-group">
-            <label for="password">Password:</label> <input type="password" id="password" required>
+            <label for="password">Mật khẩu:</label> <input type="password" id="password" required>
         </div>
-        <button type="submit" class="btn-submit">Login</button>
+        <button type="submit" class="btn-submit">Đăng nhập</button>
     </form>
 
     <p class="register-link">
-        Not have an account? <a href="/register">Register</a> |
-        <a href="/forgot-password">Forgot password?</a>
+        Chưa có tài khoản ? <a href="/register">Đăng kí</a> |
+        <a href="/forgot-password">Quên mật khẩu ?</a>
     </p>
 
 

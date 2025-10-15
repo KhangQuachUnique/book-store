@@ -46,13 +46,13 @@
 <script src="${pageContext.request.contextPath}/assets/js/toast.js" defer></script>
 <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/categoryBook.js?v=6"></script>
-<script>
-    if (!window.ws || window.ws.readyState === WebSocket.CLOSED) {
-        window.ws = new WebSocket("ws://localhost:8080/bookiecake/ws/updates");
-        window.ws.onopen = () => console.log("Connected");
-        window.ws.onmessage = (e) => console.log("Received:", e.data);
-        window.ws.onclose = () => console.log("Disconnected");
-    }
-</script>
+<%--<script>--%>
+<%--    if (!window.ws || window.ws.readyState === WebSocket.CLOSED) {--%>
+<%--        window.ws = new WebSocket("ws://localhost:8080/bookiecake/ws/updates");--%>
+<%--        window.ws.onopen = () => console.log("Connected");--%>
+<%--        window.ws.onmessage = (e) => console.log("Received:", e.data);--%>
+<%--        window.ws.onclose = () => console.log("Disconnected");--%>
+<%--    }--%>
+<%--</script>--%>
 </body>
 </html>

@@ -9,12 +9,11 @@
 <html>
 <head>
     <title>Vui Lòng Đăng Nhập</title>
-    <h1>Vui lòng đăng nhập để truy cập tính năng này.</h1>
-    <a href="${pageContext.request.contextPath}/login" class="login-button">Đến Trang Đăng Nhập</a>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/pleaseLogin.css">
 <body>
 <div class="please-login-container">
-    <h1>Please log in to access this feature.</h1>
-    <a href="${pageContext.request.contextPath}/login" class="login-button">Go to Login Page</a>
+    <h1>Vui lòng đăng nhập để truy cập tính năng này.</h1>
+    <a href="${pageContext.request.contextPath}/login" class="login-button">Đến Trang Đăng Nhập</a>
 </div>
 </body>
 </html>
