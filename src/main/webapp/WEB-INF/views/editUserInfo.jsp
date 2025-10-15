@@ -43,7 +43,7 @@
         <h3>Chỉnh Sửa Địa Chỉ</h3>
 
         <div class="add-new-container">
-            <input type="text" class="add-new-input" id="newAddressInput" placeholder="Nhập địa chỉ mới" />
+            <label for="newAddressInput"></label><input type="text" class="add-new-input" id="newAddressInput" placeholder="Nhập địa chỉ mới" />
             <button type="button" class="add-button" id="addButton">Thêm</button>
         </div>
 
