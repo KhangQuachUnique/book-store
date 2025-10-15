@@ -16,11 +16,11 @@
     </div>
     <nav class="sidebar-nav">
         <ul>
-            <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-            <li><a href="${pageContext.request.contextPath}/categories">Categories</a></li>
-            <li><a href="${pageContext.request.contextPath}/user/history">Viewed History</a></li>
-            <li><a href="${pageContext.request.contextPath}/user/wishlist">Wish List</a></li>
-            <li><a href="${pageContext.request.contextPath}/user/order-tracking">Orders</a></li>
+            <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
+            <li><a href="${pageContext.request.contextPath}/categories">Danh Mục</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/history">Lịch Sử Xem</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/wishlist">Yêu Thích</a></li>
+            <li><a href="${pageContext.request.contextPath}/user/order-tracking">Đơn Hàng</a></li>
         </ul>
     </nav>
 </aside>

@@ -5,7 +5,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Reset Password - BookStore</title>
+            <title>Đặt Lại Mật Khẩu - BookStore</title>
             <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/form.css">
@@ -15,31 +15,30 @@
 
         <body>
             <div class="form-container">
-                <h2 class="form-title">Reset Password</h2>
-                <p style="text-align: center; margin-bottom: 25px; color: var(--text-secondary);">Enter your new
-                    password below.</p>
+                <h2 class="form-title">Đặt Lại Mật Khẩu</h2>
+                <p style="text-align: center; margin-bottom: 25px; color: var(--text-secondary);">Nhập mật khẩu mới của bạn bên dưới.</p>
 
                 <form id="resetForm">
                     <input type="hidden" name="token" value="${token}">
 
                     <div class="form-group">
-                        <label for="password">New Password:</label>
+                        <label for="password">Mật khẩu mới:</label>
                         <input type="password" id="password" name="password" required minlength="6">
                     </div>
 
                     <div class="form-group">
-                        <label for="confirmPassword">Confirm Password:</label>
+                        <label for="confirmPassword">Xác nhận mật khẩu:</label>
                         <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
                     </div>
 
-                    <button type="submit" class="btn-submit">Reset Password</button>
+                    <button type="submit" class="btn-submit">Đặt Lại Mật Khẩu</button>
                 </form>
 
                 <div id="spinner" class="spinner" style="display: none;"></div>
                 <div id="message" class="form-result"></div>
 
                 <p class="register-link">
-                    Remember your password? <a href="${pageContext.request.contextPath}/login">Back to Login</a>
+                    Nhớ mật khẩu? <a href="${pageContext.request.contextPath}/login">Quay lại Đăng nhập</a>
                 </p>
             </div>
 
@@ -56,7 +55,7 @@
                     console.log('Reset form submission - Token:', token, 'Password length:', password.length); // Debug log
 
                     if (password !== confirmPassword) {
-                        messageDiv.textContent = 'Passwords do not match';
+                        messageDiv.textContent = 'Mật khẩu không khớp';
                         messageDiv.className = 'form-result error';
                         messageDiv.style.display = 'block';
                         return;
@@ -98,7 +97,7 @@
                         .catch(error => {
                             console.error('Reset error:', error); // Debug log
                             spinner.style.display = 'none';
-                            messageDiv.textContent = 'An error occurred. Please try again.';
+                            messageDiv.textContent = 'Đã xảy ra lỗi. Vui lòng thử lại.';
                             messageDiv.className = 'form-result error';
                             messageDiv.style.display = 'block';
                         });

@@ -14,11 +14,11 @@ public class OrderStatusService {
 
     // Map ánh xạ status → tên hiển thị
     private static final Map<OrderStatus, String> DISPLAY_NAMES = Map.of(
-            OrderStatus.PENDING_PAYMENT, "Pending",
-            OrderStatus.PROCESSING, "Processing",
-            OrderStatus.WAITING_DELIVERY, "Waiting for Delivery",
-            OrderStatus.DELIVERED, "Delivered",
-            OrderStatus.CANCELED, "Canceled"
+            OrderStatus.PENDING_PAYMENT, "Chờ thanh toán",
+            OrderStatus.PROCESSING, "Đang xử lý",
+            OrderStatus.WAITING_DELIVERY, "Chờ giao hàng",
+            OrderStatus.DELIVERED, "Đã giao",
+            OrderStatus.CANCELED, "Đã hủy"
     );
 
     // Map ánh xạ status → class CSS (để đổi màu nhanh)

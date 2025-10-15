@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Oops...</title>
+    <title>Không Tìm Thấy</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/index.css">
     <style>
@@ -52,9 +52,9 @@
     </style>
 </head>
 <body>
-    <h1>404</h1>
-    <h2>Page Not Found</h2>
-    <p>The page you are looking for does not exist.</p>
-    <a href="${pageContext.request.contextPath}/home">Return to Home</a>
+<h1>404</h1>
+<h2>Không Tìm Thấy Trang</h2>
+<p>Trang bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+<a href="${pageContext.request.contextPath}/">Quay Lại Trang Chủ</a>
 </body>
 </html>

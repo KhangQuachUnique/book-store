@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/payment.css">
 
 <div class="payment-container">
-    <h2>Payment</h2>
+    <h2>Thanh Toán</h2>
 
     <!-- Show server-side error if present -->
     <c:if test="${not empty error}">
@@ -17,7 +17,7 @@
 
     <c:if test="${empty cart}">
         <div class="payment-content">
-            <p class="empty-payment">Your shopping cart is empty.</p>
+            <p class="empty-payment">Giỏ hàng của bạn đang trống.</p>
         </div>
     </c:if>
 
@@ -30,10 +30,10 @@
                     <table class="payment-table">
                         <thead>
                         <tr>
-                            <th>Book</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
+                            <th>Sách</th>
+                            <th>Số Lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,32 +57,32 @@
                 <!-- 💳 ORDER SUMMARY -->
                 <div class="pay-summary">
                     <div class="summary-section">
-                        <h3>Order Summary</h3>
+                        <h3>Tóm Tắt Đơn Hàng</h3>
 
                         <c:set var="shippingCost" value="${not empty shippingFee ? shippingFee : 30000}"/>
                         <c:set var="subtotal" value="${cartTotal}"/>
                         <c:set var="total" value="${subtotal + shippingCost}"/>
 
                         <div class="summary-row">
-                            <span>Subtotal</span>
+                            <span>Tạm tính</span>
                             <span><fmt:formatNumber value="${subtotal}" type="number" maxFractionDigits="0"/> ₫</span>
                         </div>
 
                         <div class="summary-row">
-                            <span>Shipping</span>
+                            <span>Phí vận chuyển</span>
                             <span><fmt:formatNumber value="${shippingCost}" type="number" maxFractionDigits="0"/> ₫</span>
                         </div>
 
                         <!-- 🧾 Promotion -->
                         <div class="summary-section">
-                            <h3>Promotion</h3>
+                            <h3>Khuyến Mãi</h3>
                             <div class="promo-wrapper">
-                                <label class="promo-label" for="promoCodeInput">Enter your promo code:</label>
+                                <label class="promo-label" for="promoCodeInput">Nhập mã khuyến mãi:</label>
                                 <div class="promo-flex">
                                     <input type="text" name="promoCode" id="promoCodeInput"
-                                           placeholder="e.g. BOOK20"
+                                           placeholder="Ví dụ: BOOK20"
                                            value="${appliedCode != null ? appliedCode : ''}" />
-                                    <button type="button" class="apply-btn">Apply</button>
+                                    <button type="button" class="apply-btn">Áp Dụng</button>
                                 </div>
                                 <p id="promoMessage" class="promo-message"></p>
                                 <div id="discountRow"></div>
@@ -91,14 +91,14 @@
 
                         <!-- 💰 Total -->
                         <div class="summary-row total" id="totalRow">
-                            <span>Total</span>
+                            <span>Tổng cộng</span>
                             <span id="totalValue"><fmt:formatNumber value="${total}" type="number" maxFractionDigits="0"/> ₫</span>
                         </div>
                     </div>
 
                     <!-- 📦 Shipping Address -->
                     <div class="payment-section">
-                        <h3>Shipping Address</h3>
+                        <h3>Địa Chỉ Giao Hàng</h3>
                         <c:if test="${not empty addresses}">
                             <select name="addressId" class="address-select" required>
                                 <c:forEach var="address" items="${addresses}">
@@ -113,23 +113,23 @@
 
                     <!-- 💳 Payment Method -->
                     <div class="payment-section">
-                        <h3>Payment Method</h3>
+                        <h3>Phương Thức Thanh Toán</h3>
                         <div class="payment-methods">
-                            <label class="payment-option"><input type="radio" name="paymentMethod" value="cod" checked>Cash on Delivery (COD)</label>
-                            <label class="payment-option"><input type="radio" name="paymentMethod" value="momo">MoMo E-Wallet</label>
+                            <label class="payment-option"><input type="radio" name="paymentMethod" value="cod" checked>Thanh toán khi nhận hàng (COD)</label>
+                            <label class="payment-option"><input type="radio" name="paymentMethod" value="momo">Ví điện tử MoMo</label>
                         </div>
                     </div>
 
                     <!-- 📝 Notes -->
                     <div class="payment-section">
-                        <h3>Order Notes</h3>
-                        <textarea name="notes" rows="3" placeholder="Any special instructions?" class="order-notes"></textarea>
+                        <h3>Ghi Chú Đơn Hàng</h3>
+                        <textarea name="notes" rows="3" placeholder="Có yêu cầu đặc biệt nào không?" class="order-notes"></textarea>
                     </div>
 
                     <div class="pay-actions" style="margin-top: 24px;">
                         <!-- Only show Place Order when user has at least one address -->
                         <c:if test="${not empty addresses}">
-                            <button type="submit" class="pay-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Place Order</button>
+                            <button type="submit" class="pay-btn" style="width:100%;font-size:1.1rem;letter-spacing:0.5px;">Đặt Hàng</button>
                         </c:if>
                         <!-- No button when there is no address; only the error label above -->
                     </div>

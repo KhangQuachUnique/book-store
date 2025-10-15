@@ -560,6 +560,12 @@
     display: inline-block;
 }
 
+.promo-flex {
+    display: flex;
+    height: 50px;
+    gap: 0.5rem;
+}
+
 .promo-flex input[type="text"] {
     flex: 1;
     padding: 0.8rem 1rem;
@@ -571,8 +577,8 @@
 }
 
 .apply-btn {
+    flex: 1;
     padding: 0.7rem 1.4rem;
-    font-size: 1rem;
     font-weight: 600;
     background: var(--primary-color); /* Sử dụng màu đỏ chủ đạo cho nút */
     color: white;

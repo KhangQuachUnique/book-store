@@ -5,7 +5,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Forgot Password - BookStore</title>
+            <title>Quên Mật Khẩu - BookStore</title>
             <link rel="icon" href="${pageContext.request.contextPath}/assets/images/BookieCakeLogo.svg">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/form.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/global.css">
@@ -15,8 +15,8 @@
 
         <body>
             <div class="form-container">
-                <h2 class="form-title">Forgot Password</h2>
-                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <h2 class="form-title">Quên Mật Khẩu</h2>
+                <p>Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn liên kết để đặt lại mật khẩu.</p>
 
                 <form id="forgotPasswordForm">
                     <div class="form-group">
@@ -24,14 +24,14 @@
                         <input type="email" id="email" name="email" required>
                     </div>
 
-                    <button type="submit" class="btn-submit">Send Reset Link</button>
+                    <button type="submit" class="btn-submit">Gửi Liên Kết Đặt Lại</button>
                 </form>
 
                 <div id="spinner" class="spinner" style="display: none;"></div>
                 <div id="forgotPasswordResult" class="form-result"></div>
 
                 <p class="register-link">
-                    Remember your password? <a href="${pageContext.request.contextPath}/login">Back to Login</a>
+                    Nhớ mật khẩu? <a href="${pageContext.request.contextPath}/login">Quay lại Đăng nhập</a>
                 </p>
             </div>
 
@@ -66,7 +66,7 @@
                             resultDiv.textContent = data.message;
 
                             // Set appropriate CSS class based on response
-                            if (data.message.includes('sent') || data.message.includes('Reset link')) {
+                            if (data.message.includes('sent') || data.message.includes('Reset link') || data.message.includes('gửi') || data.message.includes('Liên kết')) {
                                 resultDiv.className = 'form-result success';
                                 document.getElementById('forgotPasswordForm').reset();
                             } else {
@@ -76,7 +76,7 @@
                         .catch(error => {
                             console.error('Error:', error); // Debug log
                             spinner.style.display = 'none';
-                            resultDiv.textContent = 'An error occurred. Please try again.';
+                            resultDiv.textContent = 'Đã xảy ra lỗi. Vui lòng thử lại.';
                             resultDiv.className = 'form-result error';
                         });
                 });

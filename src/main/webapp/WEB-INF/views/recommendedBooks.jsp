@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <head>
     <title></title>
@@ -10,7 +11,7 @@
 <!-- ================== TOP SELLING BOOKS ================== -->
 <c:if test="${not empty requestScope.topSellingBooks}">
     <div class="recommended-section" id="topSellingSection">
-        <p>Best Sellers</p>
+        <p>Sách Bán Chạy</p>
         <div class="recommended-container">
             <button class="scroll-btn left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -67,7 +68,7 @@
 <!-- ================== RECOMMENDED BOOKS ================== -->
 <c:if test="${not empty requestScope.recommendedBooks}">
     <div class="recommended-section" id="recommendedSection">
-        <p>You May Also Like</p>
+        <p>Có Thể Bạn Cũng Thích</p>
         <div class="recommended-container">
             <button class="scroll-btn left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -124,7 +125,7 @@
 <!-- ================== TOP RATED BOOKS ================== -->
 <c:if test="${not empty requestScope.topRatedBooks}">
     <div class="recommended-section" id="topRatedSection">
-        <p>Top Rated Books</p>
+        <p>Sách Được Đánh Giá Cao Nhất</p>
         <div class="recommended-container">
             <button class="scroll-btn left">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">

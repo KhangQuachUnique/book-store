@@ -391,11 +391,11 @@
 }
 
 .book-description {
+    margin-top: 10px;
     line-height: 1.7;
     color: #555;
     font-size: 16px;
     text-align: justify;
-    margin: 0;
 }
 
 /* Related Actions */

@@ -3,12 +3,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-
-    <!-- JS -->
-    <script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
-    <script type="module" src="${pageContext.request.contextPath}/assets/js/pages/authPage.js"></script></script>
-
+    <title>Đăng Nhập</title>
+    <h2 class="form-title">Đăng Nhập</h2>
+            <label for="password">Mật khẩu:</label> <input type="password" id="password" required>
+        <button type="submit" class="btn-submit">Đăng Nhập</button>
+        Chưa có tài khoản? <a href="/register">Đăng ký</a> |
+        <a href="/forgot-password">Quên mật khẩu?</a>
     <!-- CSS global & form -->
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/styles/global.css">
