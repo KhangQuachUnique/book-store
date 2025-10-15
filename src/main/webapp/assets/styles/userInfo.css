@@ -163,25 +163,6 @@ span#mismatch {
     transform: translateX(0);
 }
 
-/*.user-info .value {*/
-/*    display: inline-block;        !* để width có hiệu lực *!*/
-/*    max-width: 250px;             !* giới hạn chiều rộng, bạn tùy chỉnh theo layout *!*/
-/*    white-space: nowrap;          !* không cho xuống dòng *!*/
-/*    overflow: hidden;             !* ẩn phần thừa *!*/
-/*    text-overflow: ellipsis;      !* hiển thị ... khi tràn *!*/
-/*    vertical-align: middle;*/
-/*}*/
-
-/*.user-info .value:hover {*/
-/*    overflow: visible;*/
-/*    white-space: normal;*/
-/*    background: #f9f9f9;*/
-/*    padding: 2px 4px;*/
-/*    border-radius: 4px;*/
-/*    position: relative;*/
-/*    z-index: 10;*/
-/*}*/
-
 .address-value {
     display: inline-block;
     max-width: 350px;        /* giới hạn chiều rộng */
