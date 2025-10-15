@@ -220,32 +220,6 @@ span#mismatch {
     margin-bottom: 15px;
 }
 
-/*.address-list {*/
-/*    border: 1px solid #ccc;*/
-/*    border-radius: 6px;*/
-/*    padding: 5px;*/
-/*    max-width: 300px;*/
-/*    background: #fff;*/
-/*    width: 100%;*/
-/*}*/
-
-/*.address-item {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*    padding: 6px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.address-item:hover {*/
-/*    background: #f0f0f0;*/
-/*}*/
-
-
-
-
-
-/* Modal styles */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -310,14 +284,14 @@ span#mismatch {
 }
 
 .add-new-input:focus {
-    border-color: #007bff; /* Màu xanh khi focus */
+    border-color: #a52a2a; /* Màu xanh khi focus */
     outline: none;
 }
 
 .add-button {
     margin-left: 10px;
     padding: 10px 15px;
-    background: #007bff; /* Màu xanh dương */
+    background: #a52a2a; /* Màu xanh dương */
     color: white;
     border: none;
     border-radius: 6px;
@@ -327,7 +301,7 @@ span#mismatch {
 }
 
 .add-button:hover {
-    background: #0056b3; /* Hover tối hơn */
+    background: #6b0000; /* Hover tối hơn */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Bóng mờ mạnh hơn khi hover */
 }
 
@@ -355,20 +329,27 @@ span#mismatch {
 
 .edit-button {
     margin-left: 10px;
-    padding: 0 10px; /* Điều chỉnh padding để chiều cao khớp (giả sử font-size 14px, padding 0 để height ~38px với line-height) */
-    background: #007bff;
+    padding: 0 10px;
+    background: #a52a2a;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background 0.2s, box-shadow 0.2s;
-    height: 38px; /* Set chiều cao cố định để thẳng hàng với input */
-    line-height: 38px; /* Căn chữ giữa theo chiều dọc */
+    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    height: 38px;
+    line-height: 38px;
     align-self: center;
+    outline: none;
 }
 
 .edit-button:hover {
-    background: #0056b3;
+    background: #8b0000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.edit-button:active {
+    background: #6b0000;
+    transform: scale(0.90);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
