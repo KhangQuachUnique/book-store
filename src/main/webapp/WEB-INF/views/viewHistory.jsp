@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/styles/history.css" />
 
 <section class="view-history">
-  <h1>View History</h1>
+  <h1>Lịch Sử Xem</h1>
 
   <c:choose>
     <c:when test="${empty history}">

@@ -17,17 +17,17 @@
     <div class="search-section">
         <div class="search-card">
             <div class="card-header">
-                <h2 class="card-title">Browse Books by Category</h2>
+                <h2 class="card-title">Duyệt Sách Theo Danh Mục</h2>
             </div>
             <div class="card-content">
                 <!-- Thanh tìm kiếm - cấu trúc hiện đại -->
                 <form action="${pageContext.request.contextPath}/categories" method="get" class="search-form">
                     <div class="form-group">
-                        <input type="text" name="title" id="mainTitleInput" placeholder="Search by title" value="${title}" class="input">
+                        <input type="text" name="title" id="mainTitleInput" placeholder="Tìm theo tiêu đề" value="${title}" class="input">
                     </div>
                     <div class="form-group button-group">
-                        <button type="button" class="btn btn-primary" onclick="toggleAdvanceSearch()">Advanced Search</button>
-                        <input type="submit" value="Find" class="btn btn-primary" onclick="setSearchAction('title')">
+                        <button type="button" class="btn btn-primary" onclick="toggleAdvanceSearch()">Tìm Kiếm Nâng Cao</button>
+                        <input type="submit" value="Tìm" class="btn btn-primary" onclick="setSearchAction('title')">
                     </div>
                     <input type="hidden" name="includeCategories" id="includeCategories" value="${includeCategories}">
                     <input type="hidden" name="excludeCategories" id="excludeCategories" value="${excludeCategories}">
@@ -39,43 +39,43 @@
                 </form>
                 <!-- Advanced Search Panel -->
                 <div id="advanceSearchPanel" class="advance-search-panel" style="display:none; margin-top:15px;">
-                    <h3>Advanced Search</h3>
+                    <h3>Tìm Kiếm Nâng Cao</h3>
                     <form action="${pageContext.request.contextPath}/categories" method="get" class="advance-search-form">
                         <div class="form-group">
-                            <label>Sort by</label>
+                            <label>Sắp xếp theo</label>
                             <select name="sortBy" class="input">
-                                <option value="" ${empty sortBy ? 'selected' : ''}>None</option>
-                                <option value="title_asc"  ${'title_asc'  == sortBy ? 'selected' : ''}>Title Ascending</option>
-                                <option value="title_desc" ${'title_desc' == sortBy ? 'selected' : ''}>Title Descending</option>
-                                <option value="rating_high" ${'rating_high' == sortBy ? 'selected' : ''}>Highest Rating</option>
-                                <option value="rating_low"  ${'rating_low'  == sortBy ? 'selected' : ''}>Lowest Rating</option>
-                                <option value="year_asc"    ${'year_asc'    == sortBy ? 'selected' : ''}>Year Ascending</option>
-                                <option value="year_desc"   ${'year_desc'   == sortBy ? 'selected' : ''}>Year Descending</option>
-                                <option value="price_high"  ${'price_high'  == sortBy ? 'selected' : ''}>Highest Price</option>
-                                <option value="price_low"   ${'price_low'   == sortBy ? 'selected' : ''}>Lowest Price</option>
+                                <option value="" ${empty sortBy ? 'selected' : ''}>Không</option>
+                                <option value="title_asc"  ${'title_asc'  == sortBy ? 'selected' : ''}>Tiêu đề A-Z</option>
+                                <option value="title_desc" ${'title_desc' == sortBy ? 'selected' : ''}>Tiêu đề Z-A</option>
+                                <option value="rating_high" ${'rating_high' == sortBy ? 'selected' : ''}>Đánh giá cao nhất</option>
+                                <option value="rating_low"  ${'rating_low'  == sortBy ? 'selected' : ''}>Đánh giá thấp nhất</option>
+                                <option value="year_asc"    ${'year_asc'    == sortBy ? 'selected' : ''}>Năm tăng dần</option>
+                                <option value="year_desc"   ${'year_desc'   == sortBy ? 'selected' : ''}>Năm giảm dần</option>
+                                <option value="price_high"  ${'price_high'  == sortBy ? 'selected' : ''}>Giá cao nhất</option>
+                                <option value="price_low"   ${'price_low'   == sortBy ? 'selected' : ''}>Giá thấp nhất</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Filter Categories</label>
+                            <label>Lọc Danh Mục</label>
                             <input type="text" id="categorySelectorInput" class="input"
-                                placeholder="Include/Exclude Categories (Click to select)"
+                                placeholder="Bao gồm/Loại trừ Danh mục (Click để chọn)"
                                 readonly
                                 onclick="toggleCategoryTable()"
                                 value="${categorySummaryLabel}"/>
                         </div>
 
                         <div class="form-group">
-                            <label>Authors</label>
-                            <input type="text" name="author" placeholder="Any" value="${author}" class="input">
+                            <label>Tác giả</label>
+                            <input type="text" name="author" placeholder="Bất kỳ" value="${author}" class="input">
                         </div>
 
                         <div class="form-group">
-                            <label>Publication year</label>
+                            <label>Năm xuất bản</label>
                             <input type="text"
                                 name="publishYear"
                                 id="publishYearInput"
-                                placeholder="Any"
+                                placeholder="Bất kỳ"
                                 value="${publishYear}"
                                 class="input"
                                 maxlength="4"
@@ -84,11 +84,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Published before year</label>
+                            <label>Xuất bản trước năm</label>
                             <input type="text"
                                 name="yearBefore"
                                 id="yearBeforeInput"
-                                placeholder="Any"
+                                placeholder="Bất kỳ"
                                 value="${yearBefore}"
                                 class="input"
                                 maxlength="4"
@@ -97,11 +97,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Published after year</label>
+                            <label>Xuất bản sau năm</label>
                             <input type="text"
                                 name="yearAfter"
                                 id="yearAfterInput"
-                                placeholder="Any"
+                                placeholder="Bất kỳ"
                                 value="${yearAfter}"
                                 class="input"
                                 maxlength="4"
@@ -110,11 +110,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Price from (VND)</label>
+                            <label>Giá từ (VND)</label>
                             <input type="text"
                                 name="priceFrom"
                                 id="priceFromInput"
-                                placeholder="Min 1000"
+                                placeholder="Tối thiểu 1000"
                                 value="${priceFrom}"
                                 class="input"
                                 inputmode="numeric"
@@ -122,11 +122,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Price up to (VND)</label>
+                            <label>Giá đến (VND)</label>
                             <input type="text"
                                 name="priceUpTo"
                                 id="priceUpToInput"
-                                placeholder="Min 1000"
+                                placeholder="Tối thiểu 1000"
                                 value="${priceUpTo}"
                                 class="input"
                                 inputmode="numeric"
@@ -151,8 +151,8 @@
                         <input type="hidden" name="action" id="advancedAction" value=""/>
 
                         <div class="button-group advanced-footer">
-                            <button type="submit" class="btn btn-primary" onclick="syncTitleAndSubmit()">Apply Filters</button>
-                            <button type="button" class="btn btn-secondary" onclick="resetAdvanceSearch()">Reset</button>
+                            <button type="submit" class="btn btn-primary" onclick="syncTitleAndSubmit()">Áp Dụng Bộ Lọc</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetAdvanceSearch()">Đặt Lại</button>
                         </div>
                     </form>
                 </div>
@@ -162,13 +162,13 @@
         <!-- Bảng category - chỉ hiển thị khi cần -->
         <div id="categoryTable" class="category-table">
             <div style="margin-bottom: 10px;">
-                <strong>Select Categories:</strong>
-                <button type="button" class="btn btn-primary" onclick="submitFilterForm()">Apply Filter</button>
-                <button type="button" class="btn btn-secondary" onclick="toggleCategoryTable()">Close</button>
+                <strong>Chọn Danh Mục:</strong>
+                <button type="button" class="btn btn-primary" onclick="submitFilterForm()">Áp Dụng Lọc</button>
+                <button type="button" class="btn btn-secondary" onclick="toggleCategoryTable()">Đóng</button>
             </div>
 
             <div class="category-hint">
-                <span class="hint-icon">ⓘ</span> Click on any tag once to include it. Click on it again to exclude it. Click once more to clear it.
+                <span class="hint-icon">ⓘ</span> Nhấp một lần để bao gồm. Nhấp lần nữa để loại trừ. Nhấp thêm lần nữa để xóa.
             </div>
 
             <c:forEach var="category" items="${categories}">
@@ -183,8 +183,8 @@
         <c:choose>
             <c:when test="${empty requestScope.books}">
                 <div class="no-results">
-                    <h3>No books found</h3>
-                    <p>Try different search criteria or browse all categories</p>
+                    <h3>Không tìm thấy sách</h3>
+                    <p>Thử tiêu chí tìm kiếm khác hoặc duyệt tất cả danh mục</p>
                 </div>
             </c:when>
             <c:otherwise>
@@ -207,8 +207,8 @@
                                         <span class="discount">-${book.discountRate}%</span>
                                     </c:if>
                                 </div>
-                                <p class="book-author">Author: ${book.author}</p>
-                                <p class="book-publisher">Publisher: ${book.publisher}</p>
+                                <p class="book-author">Tác giả: ${book.author}</p>
+                                <p class="book-publisher">Nhà xuất bản: ${book.publisher}</p>
 
                                 <div class="book-rating">
                                     <jsp:include page="ratingStar.jsp">

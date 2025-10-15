@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Đăng Ký</title>
 
     <!-- JS -->
     <script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
@@ -30,7 +30,7 @@
     <span>Bookie Cake</span>
 </div>
 <div class="form-container">
-    <h2 class="form-title">Register</h2>
+    <h2 class="form-title">Đăng Ký</h2>
 
     <%-- Xử lý chuẩn hóa số điện thoại --%>
     <%
@@ -53,15 +53,15 @@
             <input type="email" id="regEmail" name="email" required>
         </div>
         <div class="form-group">
-            <label for="regPassword">Password:</label>
+            <label for="regPassword">Mật khẩu:</label>
             <input type="password" id="regPassword" name="password" required>
         </div>
         <div class="form-group">
-            <label for="regName">Full Name:</label>
+            <label for="regName">Họ và tên:</label>
             <input type="text" id="regName" name="name" required>
         </div>
         <div class="form-group">
-            <label for="regPhone">Phone:</label>
+            <label for="regPhone">Số điện thoại:</label>
             <input type="text" id="regPhone" name="phone" required
                    placeholder="Ví dụ: 0987654321"
                    pattern="0[0-9]{9,10}"
@@ -69,12 +69,12 @@
                 <%= phone != null ? "value='" + phone + "'" : "" %>>
         </div>
 
-        <button type="submit" class="btn-submit">Register</button>
+        <button type="submit" class="btn-submit">Đăng Ký</button>
     </form>
 
     <p class="register-link">
-        Already have an account? <a
-            href="/login">Login</a>
+        Đã có tài khoản? <a
+            href="/login">Đăng nhập</a>
     </p>
 
     <div id="spinner" class="spinner" style="display: none;"></div>

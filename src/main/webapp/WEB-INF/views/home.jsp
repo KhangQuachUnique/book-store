@@ -6,7 +6,7 @@
     <title>Home</title>
 </head>
 <body>
-<section class="home" style="padding: 60px">
+<section class="home" style="padding: 40px 80px; background-color: #fff;">
 
     <jsp:include page="/recommend-books" />
 

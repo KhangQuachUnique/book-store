@@ -20,9 +20,9 @@
         <span>&copy; 2025 Bookie Cake</span>
     </div>
     <div class="footer-center">
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-        <a href="#privacy">Privacy</a>
+        <a href="#about">Giới Thiệu</a>
+        <a href="#contact">Liên Hệ</a>
+        <a href="#privacy">Chính Sách</a>
     </div>
     <div class="footer-right">
         <a href="#" aria-label="Facebook" class="footer-icon">

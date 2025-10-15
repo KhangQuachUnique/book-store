@@ -1,8 +1,8 @@
 /* Main Container Styles */
 .container {
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 60px;
+    background-color: #FFFFFF;
     font-family: Montserrat, sans-serif;
 }
 
@@ -54,10 +54,10 @@
 }
 
 .card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 32px;
+    font-weight: 800;
     margin: 0 0 1rem 0;
-    color: var(--primary);
+    color: var(--text-display);
 }
 
 .card-content {
