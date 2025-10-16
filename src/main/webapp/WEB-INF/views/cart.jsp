@@ -94,7 +94,7 @@
             </c:if>
             <c:if test="${empty addresses}">
                 <p class="no-address">Vui lòng thêm địa chỉ giao hàng</p>
-                <form action="${pageContext.request.contextPath}/user/edit" method="post">
+                <form action="${pageContext.request.contextPath}/user/info" method="post">
                     <input type="hidden" name="action" value="edit"/>
                     <input class="add-address-btn" type="submit" value="Thêm địa chỉ"/>
                 </form>
