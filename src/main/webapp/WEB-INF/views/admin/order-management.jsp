@@ -9,6 +9,12 @@
     <h1 class="page-title">Order Management</h1>
     <p class="text-muted" style="margin-bottom: 1rem;">Manage all customer orders, update status, and view details.</p>
 
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('orders')" id="ordersTab">Orders</button>
+        <button class="nav-tab" onclick="showTab('statistics')" id="statisticsTab">Statistics</button>
+    </div>
+
     <!-- Flash messages -->
     <c:if test="${not empty sessionScope.flash_success}">
         <div class="alert alert-success">${sessionScope.flash_success}</div>
@@ -18,6 +24,9 @@
         <div class="alert alert-danger">${sessionScope.flash_error}</div>
         <c:remove var="flash_error" scope="session"/>
     </c:if>
+
+    <!-- Orders Tab Content -->
+    <div id="ordersContent" class="tab-content">
 
     <!-- Search and Filter -->
     <div class="card search-card">
@@ -208,6 +217,13 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <!-- Statistics Tab Content -->
+    <div id="statisticsContent" class="tab-content" style="display: none;">
+        <!-- Include statistics content here -->
+        <jsp:include page="order-statistics-inline.jsp" />
+    </div>
 </div>
 
 <script>
@@ -276,4 +292,85 @@
     function clearSearch() {
         window.location.href = ctx + '/admin/orders';
     }
+
+    // Tab switching functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.getElementById('ordersContent').style.display = 'none';
+        document.getElementById('statisticsContent').style.display = 'none';
+        
+        // Remove active class from all tabs
+        document.getElementById('ordersTab').classList.remove('active');
+        document.getElementById('statisticsTab').classList.remove('active');
+        
+        // Show selected tab content
+        if (tabName === 'orders') {
+            document.getElementById('ordersContent').style.display = 'block';
+            document.getElementById('ordersTab').classList.add('active');
+        } else if (tabName === 'statistics') {
+            document.getElementById('statisticsContent').style.display = 'block';
+            document.getElementById('statisticsTab').classList.add('active');
+            // Load statistics data when tab is shown
+            if (typeof loadStatisticsData === 'function') {
+                loadStatisticsData();
+            }
+        }
+    }
 </script>
+
+<style>
+    /* Tab Navigation Styles */
+    .nav-tabs {
+        display: flex;
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 20px;
+        background: white;
+        border-radius: 8px 8px 0 0;
+        overflow: hidden;
+    }
+
+    .nav-tab {
+        flex: 1;
+        padding: 12px 24px;
+        border: none;
+        background: #f7fafc;
+        color: #4a5568;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+    }
+
+    .nav-tab:hover {
+        background: #edf2f7;
+        color: #2d3748;
+    }
+
+    .nav-tab.active {
+        background: white;
+        color: #3182ce;
+        border-bottom-color: #3182ce;
+    }
+
+    .tab-content {
+        background: white;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .nav-tabs {
+            flex-direction: column;
+        }
+        
+        .nav-tab {
+            border-radius: 0;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: none;
+        }
+        
+        .nav-tab:last-child {
+            border-bottom: none;
+        }
+    }
+</style>

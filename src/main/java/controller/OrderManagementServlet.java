@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet("/admin/orders/*")
 public class OrderManagementServlet extends HttpServlet {
@@ -87,12 +86,9 @@ public class OrderManagementServlet extends HttpServlet {
                 return;
             }
 
-            // Optional: statistics pages if needed
+            // Statistics page
             if ("/stats".equals(pathInfo)) {
-                String period = req.getParameter("period");
-                Map<String, Object> stats = orderService.getOrderStatistics(period);
-                req.setAttribute("stats", stats);
-                req.setAttribute("contentPage", "/WEB-INF/views/admin/order-stats.jsp");
+                req.setAttribute("contentPage", "/WEB-INF/views/admin/order-statistics.jsp");
                 req.getRequestDispatcher(PathConstants.VIEW_ADMIN_LAYOUT).forward(req, resp);
                 return;
             }
