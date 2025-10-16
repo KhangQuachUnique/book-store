@@ -46,7 +46,6 @@ public class UpdateUserInfo extends HttpServlet {
         List<Address> addresses = sessionUser.getAddresses();
         String defaultAddress = request.getSession().getAttribute("defaultAddress").toString();
 
-        String message = "Thông tin chưa thay đổi!";
         String url = "/user/info";
 
         String name = request.getParameter("name");
@@ -111,10 +110,8 @@ public class UpdateUserInfo extends HttpServlet {
 
         if (isChanged) {
             request.getSession().setAttribute("user", sessionUser);
-            message = "Cập nhật thông tin thành công!";
         }
 
-        request.getSession().setAttribute("toastMessage", message);
         response.sendRedirect(request.getContextPath() + url);
     }
 }
