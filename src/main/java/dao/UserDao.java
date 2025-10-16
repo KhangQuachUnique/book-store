@@ -9,6 +9,7 @@ import util.JPAUtil;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,7 +258,7 @@ public class UserDao {
                     "SELECT u FROM User u WHERE LOWER(u.name) LIKE :searchTerm OR LOWER(u.email) LIKE :searchTerm OR LOWER(u.phoneNumber) LIKE :searchTerm ORDER BY u.id", User.class);
             typedQuery.setParameter("searchTerm", searchTerm);
             typedQuery.setFirstResult(firstResult);
-            typedQuery.setMaxResults(pageSize);
+            typedQuery.setMaxResults(pageSize);;
             return typedQuery.getResultList();
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error searching users", e);
@@ -360,7 +361,7 @@ public class UserDao {
             User user = em.find(User.class, id);
             if (user != null) {
                 user.setIsBlocked(true);
-                user.setBlockedUntil(Timestamp.from(Instant.now().plus(1, ChronoUnit.MONTHS)));
+                user.setBlockedUntil(Timestamp.valueOf(LocalDateTime.now().plusMonths(1)));
                 em.getTransaction().commit();
             } else {
                 em.getTransaction().rollback();
@@ -375,6 +376,7 @@ public class UserDao {
             em.close();
         }
     }
+
 
     public void unblockUser(long id) throws SQLException {
         EntityManager em = getEntityManager();

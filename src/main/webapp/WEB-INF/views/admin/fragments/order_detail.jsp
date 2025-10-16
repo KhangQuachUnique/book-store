@@ -3,290 +3,313 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<style>
-    .order-detail-wrapper {
-        background: #fff;
-        border-radius: 8px;
-        padding: 24px;
-    }
+<c:if test="${not empty order}">
+    <div class="order-detail">
+        <!-- Order Header -->
+        <div class="order-header">
+            <h3>Order #${order.id}</h3>
+            <div class="order-status">
+                <span class="status-badge status-${fn:toLowerCase(order.status)}">${order.status}</span>
+            </div>
+        </div>
 
-    .order-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 16px;
-        border-bottom: 2px solid #e9ecef;
-        margin-bottom: 24px;
-    }
+        <!-- Customer Information -->
+        <div class="detail-section">
+            <h4>Customer Information</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Name:</label>
+                    <span>${order.user.name}</span>
+                </div>
+                <div class="info-item">
+                    <label>Email:</label>
+                    <span>${order.user.email}</span>
+                </div>
+                <div class="info-item">
+                    <label>Phone:</label>
+                    <span>${order.user.phone}</span>
+                </div>
+            </div>
+        </div>
 
-    .order-id-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #2c3e50;
-        margin: 0;
-    }
+        <!-- Order Items -->
+        <div class="detail-section">
+            <h4>Order Items</h4>
+            <div class="order-items">
+                <c:forEach var="item" items="${order.orderItems}">
+                    <div class="order-item">
+                        <div class="item-image">
+                            <img src="${pageContext.request.contextPath}/assets/images/${item.book.imageUrl}" 
+                                 alt="${item.book.title}" 
+                                 style="width: 60px; height: 80px; object-fit: cover; border-radius: 4px;">
+                        </div>
+                        <div class="item-details">
+                            <h5>${item.book.title}</h5>
+                            <p class="item-author">by ${item.book.author}</p>
+                            <div class="item-meta">
+                                <span>Quantity: ${item.quantity}</span>
+                                <span>Price: <fmt:formatNumber value="${item.price}" pattern="#,##0"/>₫</span>
+                            </div>
+                        </div>
+                        <div class="item-total">
+                            <strong><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,##0"/>₫</strong>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
 
-    .order-date {
-        font-size: 0.9rem;
-        color: #6c757d;
-        margin-top: 4px;
-    }
+        <!-- Order Summary -->
+        <div class="detail-section">
+            <h4>Order Summary</h4>
+            <div class="order-summary">
+                <div class="summary-row">
+                    <label>Subtotal:</label>
+                    <span><fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/>₫</span>
+                </div>
+                <div class="summary-row">
+                    <label>Payment Method:</label>
+                    <span>${order.paymentMethod}</span>
+                </div>
+                <div class="summary-row">
+                    <label>Order Date:</label>
+                    <span><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></span>
+                </div>
+                <c:if test="${not empty order.deliveryAddress}">
+                    <div class="summary-row">
+                        <label>Delivery Address:</label>
+                        <span>${order.deliveryAddress}</span>
+                    </div>
+                </c:if>
+                <div class="summary-row total">
+                    <label>Total Amount:</label>
+                    <span><strong><fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/>₫</strong></span>
+                </div>
+            </div>
+        </div>
 
-    .status-badge {
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+        <!-- Actions -->
+        <div class="detail-actions">
+            <button class="btn btn-primary" onclick="updateOrderStatus(${order.id})">
+                Update Status
+            </button>
+            <button class="btn btn-secondary" onclick="closeDetails()">
+                Close
+            </button>
+        </div>
+    </div>
 
-    .status-pending_payment { background: #fff3cd; color: #856404; }
-    .status-processing { background: #cce5ff; color: #004085; }
-    .status-waiting_delivery { background: #d1ecf1; color: #0c5460; }
-    .status-delivered { background: #d4edda; color: #155724; }
-    .status-canceled { background: #f8d7da; color: #721c24; }
-
-    .info-section {
-        margin-bottom: 24px;
-    }
-
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #495057;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .info-item {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .info-label {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: #6c757d;
-        letter-spacing: 0.5px;
-    }
-
-    .info-value {
-        font-size: 1rem;
-        color: #212529;
-        font-weight: 500;
-    }
-
-    .items-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .items-table thead {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-
-    .items-table thead th {
-        padding: 14px 16px;
-        font-weight: 600;
-        text-align: left;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .items-table tbody td {
-        padding: 14px 16px;
-        border-bottom: 1px solid #e9ecef;
-        font-size: 0.95rem;
-    }
-
-    .items-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    .items-table tbody tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    .book-title {
-        font-weight: 600;
-        color: #2c3e50;
-    }
-
-    .quantity-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        background: #e9ecef;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        color: #495057;
-    }
-
-    .price-cell {
-        font-weight: 600;
-        color: #495057;
-    }
-
-    .total-cell {
-        font-weight: 700;
-        color: #667eea;
-        font-size: 1.05rem;
-    }
-
-    .order-summary {
-        margin-top: 24px;
-        padding: 20px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .summary-label {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #495057;
-    }
-
-    .summary-amount {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #667eea;
-    }
-
-    .empty-message {
-        text-align: center;
-        padding: 40px;
-        color: #6c757d;
-        font-size: 1rem;
-    }
-
-    @media (max-width: 768px) {
-        .info-grid {
-            grid-template-columns: 1fr;
+    <style>
+        .order-detail {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .order-header {
-            flex-direction: column;
-            align-items: flex-start;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .order-header h3 {
+            margin: 0;
+            color: #1a202c;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-pending_payment { background: #fed7d7; color: #c53030; }
+        .status-processing { background: #bee3f8; color: #2b6cb0; }
+        .status-waiting_delivery { background: #faf089; color: #744210; }
+        .status-delivered { background: #c6f6d5; color: #22543d; }
+        .status-canceled { background: #fed7d7; color: #c53030; }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h4 {
+            margin: 0 0 15px 0;
+            color: #2d3748;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
         }
-    }
-</style>
 
-<c:choose>
-    <c:when test="${empty order}">
-        <div class="alert alert-danger">
-            <strong>Order not found.</strong>
-            <p class="mb-0 mt-2">The requested order could not be found in the system.</p>
-        </div>
-    </c:when>
-    <c:otherwise>
-        <div class="order-detail-wrapper">
-            <!-- Order Header -->
-            <div class="order-header">
-                <div>
-                    <h2 class="order-id-title">Order #${order.id}</h2>
-                    <div class="order-date">
-                        <fmt:formatDate value="${order.createdAt}" pattern="EEEE, dd MMMM yyyy 'at' HH:mm"/>
-                    </div>
-                </div>
-                <span class="status-badge status-${fn:toLowerCase(fn:replace(order.status, '_', '-'))}">
-                    ${order.status}
-                </span>
-            </div>
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
-            <!-- Customer & Payment Information -->
-            <div class="info-section">
-                <h3 class="section-title">Order Information</h3>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Customer Name</span>
-                        <span class="info-value">${order.user != null ? order.user.name : 'N/A'}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email Address</span>
-                        <span class="info-value">${order.user != null ? order.user.email : 'N/A'}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Payment Method</span>
-                        <span class="info-value">${order.paymentMethod}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Order Status</span>
-                        <span class="info-value">${order.status}</span>
-                    </div>
-                </div>
-            </div>
+        .info-item label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.875rem;
+        }
 
-            <!-- Order Items -->
-            <div class="info-section">
-                <h3 class="section-title">Order Items</h3>
-                <div class="table-responsive">
-                    <table class="items-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 50%">Book Title</th>
-                                <th style="width: 15%; text-align: center">Quantity</th>
-                                <th style="width: 17.5%; text-align: right">Unit Price</th>
-                                <th style="width: 17.5%; text-align: right">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:choose>
-                                <c:when test="${empty order.items}">
-                                    <tr>
-                                        <td colspan="4" class="empty-message">
-                                            No items in this order
-                                        </td>
-                                    </tr>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="item" items="${order.items}">
-                                        <tr>
-                                            <td>
-                                                <span class="book-title">
-                                                    ${item.book != null ? item.book.title : 'N/A'}
-                                                </span>
-                                            </td>
-                                            <td style="text-align: center">
-                                                <span class="quantity-badge">×${item.quantity}</span>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <span class="price-cell"><fmt:formatNumber value="${item.price}" pattern="#,##0"/>₫</span>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <span class="total-cell"><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,##0"/>₫</span>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        .info-item span {
+            color: #2d3748;
+        }
 
-            <!-- Order Summary -->
-            <div class="order-summary">
-                <span class="summary-label">Total Amount</span>
-                <span class="summary-amount"><fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/>₫</span>
-            </div>
-        </div>
-    </c:otherwise>
-</c:choose>
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h5 {
+            margin: 0 0 6px 0;
+            color: #1a202c;
+            font-size: 1rem;
+        }
+
+        .item-author {
+            margin: 0 0 8px 0;
+            color: #718096;
+            font-size: 0.875rem;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+
+        .item-total {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+
+        .order-summary {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-row.total {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .summary-row label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #3182ce;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2c5282;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        @media (max-width: 768px) {
+            .order-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .order-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .item-meta {
+                justify-content: center;
+            }
+
+            .detail-actions {
+                flex-direction: column;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</c:if>
+
+<c:if test="${empty order}">
+    <div class="alert alert-danger">
+        <h4>Order Not Found</h4>
+        <p>The requested order could not be found or may have been deleted.</p>
+    </div>
+</c:if>
