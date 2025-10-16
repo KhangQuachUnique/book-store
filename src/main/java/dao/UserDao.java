@@ -258,7 +258,7 @@ public class UserDao {
                     "SELECT u FROM User u WHERE LOWER(u.name) LIKE :searchTerm OR LOWER(u.email) LIKE :searchTerm OR LOWER(u.phoneNumber) LIKE :searchTerm ORDER BY u.id", User.class);
             typedQuery.setParameter("searchTerm", searchTerm);
             typedQuery.setFirstResult(firstResult);
-            typedQuery.setMaxResults(pageSize);;
+            typedQuery.setMaxResults(pageSize);
             return typedQuery.getResultList();
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error searching users", e);

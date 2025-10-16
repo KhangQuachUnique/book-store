@@ -47,22 +47,24 @@
             <button type="button" class="add-button" id="addButton">Thêm</button>
         </div>
 
-        <div class="address-list" id="addressList">
-            <c:forEach var="addr" items="${sessionScope.user.addresses}">
-                <c:if test="${addr.address != sessionScope.defaultAddress}">
-                    <div class="address-item" data-id="${addr.id}">
-                        <label class="addr-label">
-                            <input type="radio" name="addrRadio" class="addr-radio" value="${addr.address}">
-                                ${addr.address}
-                        </label>
-                        <label class="delete-checkbox-label">
-                            <input type="checkbox" name="deleteAddresses" value="${addr.id}" class="delete-checkbox">
-                            Xóa
-                        </label>
-                    </div>
-                </c:if>
-            </c:forEach>
-        </div>
+        <c:if test="${not empty sessionScope.user.addresses}">
+            <div class="address-list" id="addressList">
+                <c:forEach var="addr" items="${sessionScope.user.addresses}">
+                        <div class="address-item" data-id="${addr.id}">
+                            <label class="addr-label">
+                                <input type="radio" name="addrRadio" class="addr-radio" value="${addr.address}">
+                                    ${addr.address}
+                            </label>
+                            <c:if test="${addr.address != sessionScope.defaultAddress}">
+                            <label class="delete-checkbox-label">
+                                <input type="checkbox" name="deleteAddresses" value="${addr.id}" class="delete-checkbox">
+                                Xóa
+                            </label>
+                            </c:if>
+                        </div>
+                </c:forEach>
+            </div>
+        </c:if>
     </div>
 </div>
 
