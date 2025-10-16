@@ -10,7 +10,8 @@ import java.util.List;
 
 public class CategoryBookDao {
     private static final int BOOKS_PER_PAGE = 40;
-
+    private static final String DISCOUNTED_PRICE_JPQL = 
+            "b.originalPrice * (1 - COALESCE(b.discountRate, 0) / 100.0)";
     /**
      * Lấy tất cả sách với phân trang
      */
@@ -108,14 +109,14 @@ public class CategoryBookDao {
             if (yearAfter != null) {
                 jpql.append(" AND b.publishYear >= :yearAfter");
             }
-            
+
             if (priceFrom != null) {
-                jpql.append(" AND b.price >= :priceFrom");
+                jpql.append(" AND ").append(DISCOUNTED_PRICE_JPQL).append(" >= :priceFrom"); // ✅ Dùng công thức
             }
-            
+        
             if (priceUpTo != null) {
-                jpql.append(" AND b.price <= :priceUpTo");
-            }
+                jpql.append(" AND ").append(DISCOUNTED_PRICE_JPQL).append(" <= :priceUpTo"); // ✅ Dùng công thức
+            }         
 
             if (includeCategories != null && !includeCategories.isEmpty()) {
                 jpql.append(" AND b.category.id IN :includeCategories");
@@ -146,11 +147,11 @@ public class CategoryBookDao {
             }
             
             if (priceFrom != null) {
-                query.setParameter("priceFrom", priceFrom); 
+                query.setParameter("priceFrom", priceFrom.doubleValue());
             }
-            
+        
             if (priceUpTo != null) {
-                query.setParameter("priceUpTo", priceUpTo); 
+                query.setParameter("priceUpTo", priceUpTo.doubleValue());
             }
             
             if (publishYear != null) {
@@ -208,13 +209,14 @@ public class CategoryBookDao {
             if (yearAfter != null) {
                 jpql.append(" AND b.publishYear >= :yearAfter");
             }
-            
+
             if (priceFrom != null) {
-                jpql.append(" AND b.price >= :priceFrom");
-            }
+                jpql.append(" AND ").append(DISCOUNTED_PRICE_JPQL).append(" >= :priceFrom"); 
             
+            }
+
             if (priceUpTo != null) {
-                jpql.append(" AND b.price <= :priceUpTo");
+                jpql.append(" AND ").append(DISCOUNTED_PRICE_JPQL).append(" <= :priceUpTo"); 
             }
 
             if (includeCategories != null && !includeCategories.isEmpty()) {
@@ -248,11 +250,11 @@ public class CategoryBookDao {
             }
             
             if (priceFrom != null) {
-                query.setParameter("priceFrom", priceFrom); 
+                query.setParameter("priceFrom", priceFrom.doubleValue()); 
             }
             
             if (priceUpTo != null) {
-                query.setParameter("priceUpTo", priceUpTo);
+                query.setParameter("priceUpTo", priceUpTo.doubleValue());
             }
             
             if (includeCategories != null && !includeCategories.isEmpty()) {
@@ -267,7 +269,7 @@ public class CategoryBookDao {
         } finally {
             em.close();
         }
-    }
+}
 
     /**
      * Lấy tất cả categories
@@ -321,8 +323,8 @@ public class CategoryBookDao {
             case "rating_low":  return " ORDER BY b.averageRating ASC";
             case "year_asc":    return " ORDER BY b.publishYear ASC";
             case "year_desc":   return " ORDER BY b.publishYear DESC";
-            case "price_high":  return " ORDER BY b.originalPrice DESC";
-            case "price_low":   return " ORDER BY b.originalPrice ASC";
+            case "price_high":  return " ORDER BY " + DISCOUNTED_PRICE_JPQL + " DESC";
+            case "price_low":   return " ORDER BY " + DISCOUNTED_PRICE_JPQL + " ASC";
             default:            return " ORDER BY b.id";
         }
     }
