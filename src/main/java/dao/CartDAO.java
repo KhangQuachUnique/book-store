@@ -220,4 +220,29 @@ public class CartDAO {
             em.close();
         }
     }
+
+    /**
+     * Đếm tổng số lượng items trong giỏ hàng
+     *
+     * @param userId ID của user
+     * @return Tổng số lượng items (sum của quantity)
+     */
+    public int countItems(Long userId) {
+        EntityManager em = getEntityManager();
+        try {
+            Long count = em.createQuery("""
+                    SELECT COUNT(ci.id)
+                    FROM CartItem ci
+                    WHERE ci.cart.user.id = :userId
+                    """, Long.class)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+            return count != null ? count.intValue() : 0;
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error counting cart items", e);
+            return 0;
+        } finally {
+            em.close();
+        }
+    }
 }

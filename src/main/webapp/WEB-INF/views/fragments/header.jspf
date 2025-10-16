@@ -113,6 +113,6 @@
 </header>
 <script>
     window.APP_CONTEXT = '${pageContext.request.contextPath}';
-    // Optional: if you still prefer Font Awesome, ensure it is loaded globally.
 </script>
+<script src="${pageContext.request.contextPath}/assets/js/services/cartCountService.js"></script>
 <script src="${pageContext.request.contextPath}/assets/js/services/notificationService.js"></script>
