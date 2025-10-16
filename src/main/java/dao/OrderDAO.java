@@ -1,9 +1,7 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
+import model.Book;
 import model.Order;
 import model.OrderItem;
 import model.OrderStatus;
@@ -109,19 +107,38 @@ public class OrderDAO {
      * Tạo mới một đơn hàng.
      */
     public void createOrder(Order order) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
-
         try {
             tx.begin();
 
             double totalAmount = 0.0;
 
+            // Update book stock and sold for each order item
             for (OrderItem item : order.getItems()) {
-                double discountedPrice = item.getBook().getOriginalPrice()
-                        * (1 - (item.getBook().getDiscountRate() / 100.0));
+                Integer bookId = item.getBook().getId();
+                Book book = em.find(Book.class, bookId, LockModeType.PESSIMISTIC_WRITE);
+
+                if (book == null) {
+                    throw new IllegalArgumentException("Book not found: " + bookId);
+                }
+
+                int orderedQty = item.getQuantity();
+                if (book.getStock() < orderedQty) {
+                    throw new IllegalStateException("Insufficient stock for book: " + book.getTitle());
+                }
+
+                // Update stock and sold
+                book.setStock(book.getStock() - orderedQty);
+                book.setSold((book.getSold() == null ? 0 : book.getSold()) + orderedQty);
+                em.merge(book);
+
+                // Calculate price and set order reference
+                double discountedPrice = book.getOriginalPrice() * (1 - (book.getDiscountRate() / 100.0));
                 item.setPrice(discountedPrice);
                 item.setOrder(order);
+                item.setBook(book);
+
                 totalAmount += discountedPrice * item.getQuantity();
             }
 
@@ -129,7 +146,7 @@ public class OrderDAO {
             em.persist(order);
 
             tx.commit();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if (tx.isActive()) tx.rollback();
             throw e;
         } finally {

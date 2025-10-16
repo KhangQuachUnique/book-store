@@ -1,13 +1,7 @@
 package service;
 
 import dao.OrderDAO;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
 import model.Order;
-import model.OrderItem;
-import model.OrderStatus;
-import util.JPAUtil;
 
 import java.util.List;
 
