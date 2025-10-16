@@ -49,6 +49,38 @@ public class CartServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Lấy action từ request
+        String action = req.getParameter("action");
+
+        // XỬ LÝ ACTION COUNT - Trả về số lượng items trong giỏ hàng (cho AJAX)
+        if ("count".equals(action)) {
+            User user = (User) req.getSession().getAttribute("user");
+
+            // Nếu chưa đăng nhập, trả về 401
+            if (user == null) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":false,\"message\":\"Not logged in\"}");
+                return;
+            }
+
+            try {
+                // Lấy số lượng items từ service
+                int count = cartService.getItemCount(user.getId());
+
+                // Trả về JSON response
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":true,\"count\":" + count + "}");
+                return;
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Failed to count cart items", e);
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":false,\"message\":\"Server error\"}");
+                return;
+            }
+        }
+
         // Lấy user hiện tại từ session
         User user = (User) req.getSession().getAttribute("user");
 
@@ -76,7 +108,7 @@ public class CartServlet extends HttpServlet {
             req.setAttribute("shippingFee", SHIPPING_FEE);   // Phí ship
             req.setAttribute("cart", items);                 // Danh sách sản phẩm
             req.setAttribute("addresses", addresses);        // Địa chỉ giao hàng
-            
+
             // Forward sang layout.jsp để render
             req.getRequestDispatcher(PathConstants.VIEW_LAYOUT).forward(req, resp);
         } catch (Exception e) {
@@ -94,7 +126,7 @@ public class CartServlet extends HttpServlet {
      * 1. "add" - Thêm sản phẩm vào giỏ
      * 2. "remove" - Xóa sản phẩm khỏi giỏ
      * 3. "update" - Cập nhật số lượng sản phẩm (AJAX)
-     * 
+     *
      * Parameters:
      * - action: loại thao tác (add/remove/update)
      * - bookId: ID sách (dùng cho add)
@@ -122,7 +154,7 @@ public class CartServlet extends HttpServlet {
                 }
                 // Gọi service để thêm vào database
                 cartService.addToCart(userId, bookId, quantity);
-                
+
                 // Kiểm tra xem có phải AJAX request không
                 // (Nếu là AJAX thì trả về JSON thay vì redirect)
                 String requestedWith = req.getHeader("X-Requested-With");
@@ -133,20 +165,20 @@ public class CartServlet extends HttpServlet {
                     resp.getWriter().write("{\"success\":true,\"message\":\"Book added to cart successfully!\"}");
                     return;
                 }
-            } 
+            }
             // ACTION 2: XÓA SẢN PHẨM KHỎI GIỎ HÀNG
             else if ("remove".equals(action)) {
                 // Lấy ID của cart item cần xóa
                 Long cartId = Long.parseLong(req.getParameter("cartId"));
                 // Gọi service để xóa khỏi database
                 cartService.removeItem(userId, cartId);
-            } 
+            }
             // ACTION 3: CẬP NHẬT SỐ LƯỢNG (REAL-TIME AJAX)
             else if ("update".equals(action)) {
                 // Lấy ID cart item và số lượng mới
                 Long cartId = Long.parseLong(req.getParameter("cartId"));
                 int quantity = Integer.parseInt(req.getParameter("quantity"));
-                
+
                 // Cập nhật số lượng và nhận kết quả tính toán
                 CartService.CartUpdateResult result = cartService.updateItemQuantity(userId, cartId, quantity);
 
@@ -160,7 +192,7 @@ public class CartServlet extends HttpServlet {
                         result.cartTotal()));  // Tổng tiền toàn giỏ
                 return; // Kết thúc, không redirect
             }
-            
+
             // Redirect về trang giỏ hàng (trừ action "update" vì đã return JSON)
             if (!"update".equals(action)) {
                 resp.sendRedirect(req.getContextPath() + "/user/cart");
@@ -169,12 +201,12 @@ public class CartServlet extends HttpServlet {
         } catch (Exception e) {
             // Xử lý lỗi
             log.log(Level.SEVERE, "Cart action failed", e);
-            
+
             // Kiểm tra xem có phải AJAX request không để trả về response phù hợp
             String requestedWith = req.getHeader("X-Requested-With");
             String ajax = req.getParameter("ajax");
             boolean isAjax = "XMLHttpRequest".equals(requestedWith) || "true".equals(ajax);
-            
+
             if ("update".equals(action) || isAjax) {
                 // Trả về JSON error cho AJAX
                 resp.setContentType("application/json");

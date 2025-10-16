@@ -43,7 +43,6 @@
                             <input type="number" name="quantity" value="${item.quantity}" min="1" class="cart-quantity-input"/>
                         </form>
         </div>
-        <script src="${pageContext.request.contextPath}/assets/js/cart.js"></script>
         </td>
         <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.effectiveUnitPrice}" type="number" maxFractionDigits="0"/> ₫</span></td>
         <td><span style="white-space: nowrap;"><fmt:formatNumber value="${item.subtotal}" type="number" maxFractionDigits="0"/> ₫</span></td>
@@ -108,3 +107,5 @@
     </div>
 </c:if>
 </div>
+
+<script src="${pageContext.request.contextPath}/assets/js/cart.js"></script>

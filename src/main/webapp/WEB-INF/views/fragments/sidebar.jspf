@@ -21,6 +21,9 @@
             <li><a href="${pageContext.request.contextPath}/user/history">Lịch Sử Xem</a></li>
             <li><a href="${pageContext.request.contextPath}/user/wishlist">Yêu Thích</a></li>
             <li><a href="${pageContext.request.contextPath}/user/order-tracking">Đơn Hàng</a></li>
+            <c:if test="${sessionScope.user != null && sessionScope.user.role == 'ADMIN'}">
+                <li><a href="${pageContext.request.contextPath}/admin/user">Quản Trị</a></li>
+            </c:if>
         </ul>
     </nav>
 </aside>
